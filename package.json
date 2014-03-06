@@ -1,0 +1,11 @@
+{
+  "name": "registries",
+  "version": "0.0.0",
+  "description": "Example application to demo generic registry",
+  "main": "app.js",
+  "repository": "",
+  "author": "Pavol Starek",
+  "dependencies": {
+    "express": "~3.2.4"
+  }
+}

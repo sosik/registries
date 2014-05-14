@@ -1,0 +1,307 @@
+var expect = require('chai').expect;
+var fs = require('fs.extra');
+var path = require('path');
+var async = require('async');
+var util = require('util');
+var stream = require('stream');
+var fsCtrlModule = require(process.cwd() + '/build/server/FsCtrl.js');
+
+var testDataPath = path.join(process.cwd(), 'testData');
+
+describe('FsCtrl', function() {
+	beforeEach(function(done) {
+		fs.mkdir(testDataPath, function(err) {
+			if (err) {
+				if (err.code !== 'EEXIST') {
+					throw err;
+				}
+			}
+			done();
+		});
+	});
+
+	afterEach(function(done) {
+		fs.rmrf(testDataPath, function(err) {
+			done();
+		});
+	});
+
+	var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+	it('should be instantiated correctly by require()', function(done) {
+		expect(fsCtrlModule).to.include.key('FsCtrl');
+
+		done();
+	});
+
+	it('should accept custom confuguration', function(done) {
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		expect(fsCtrl.getCfg().rootPath).to.be.equal(testDataPath);
+		done();
+	});
+
+	it('should sanitize configuration', function(done) {
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: 'data/../data/'});
+
+		expect(fsCtrl.getCfg().rootPath).to.be.equal(path.join(process.cwd(), 'data'));
+		done();
+	});
+
+	it('should identify save/unsafe paths', function(done) {
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		expect(fsCtrl.isPathSafe(path.join(testDataPath, '../data/'))).to.be.false;
+		expect(fsCtrl.isPathSafe(path.join(testDataPath, '/data/'))).to.be.true;
+		done();
+	});
+
+	it('should calculate intended fs path from url', function(done) {
+		var fsCtrl = new fsCtrlModule.FsCtrl({
+			rootPath: testDataPath,
+			filePathRegexp: /^\/fs\/\w+\//i
+		});
+		
+		expect(fsCtrl.calculateFsPath('/fs/getfile/dir/file.jpg')).to.be.equal(path.join(testDataPath, '/dir/file.jpg'));
+
+		done();
+	});
+
+	it('should list directory', function(done) {
+		fs.mkdirSync(path.join(testDataPath, 'lsDir'));
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/f1'), "xxxx");
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/f2'), "yyy");
+		fs.mkdirSync(path.join(testDataPath, 'lsDir/subdir'));
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = {path: '/fs/ls/lsDir'};
+		var resMock = {
+			statusCode: null,
+			data: null,
+			send: function(code, data) {
+				this.statusCode = code;
+				this.data = data;
+			}
+		};
+
+		fsCtrl.ls(reqMock, resMock, function(err) {
+			expect(err).to.not.exist;
+			expect(resMock.statusCode).to.be.equal(200);
+			expect(resMock.data.length).to.be.equal(3);
+
+			done();
+		});
+	});
+
+	it('should remove files and directories', function(done) {
+		fs.mkdirSync(path.join(testDataPath, 'lsDir'));
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/f1'), "xxxx");
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/f2'), "yyy");
+		fs.mkdirSync(path.join(testDataPath, 'lsDir/subdir'));
+		fs.mkdirSync(path.join(testDataPath, 'lsDir/subdir2'));
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/subdir2/f3'), "yyy");
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = function(_path) {
+			this.path = _path;
+		};
+
+		var resMock = function() {
+			this.statusCode = null;
+			this.data = null;
+			this.send = function(code, data) {
+				this.statusCode = code;
+				this.data = data;
+			};
+		};
+
+		async.parallel([
+			function(callback) {
+				var req = new reqMock('/fs/ls/lsDir/f1');
+				var res = new resMock();
+
+				fsCtrl.rm(req, res, function(err) {
+					expect(err).to.not.exist;
+					
+					fs.exists(req.path, function(exists) {
+						expect(exists).to.be.false;
+						callback();
+					});
+				});
+			},
+			function(callback) {
+				var req = new reqMock('/fs/ls/lsDir/subdir');
+				var res = new resMock();
+
+				fsCtrl.rm(req, res, function(err) {
+					expect(err).to.not.exist;
+					
+					fs.exists(req.path, function(exists) {
+						expect(exists).to.be.false;
+						callback();
+					});
+				});
+			},
+			function(callback) {
+				var req = new reqMock('/fs/ls/lsDir/subdir2');
+				var res = new resMock();
+
+				fsCtrl.rm(req, res, function(err) {
+					expect(err).to.not.exist;
+					expect(res.statusCode).to.be.equal(500);
+					callback();
+				});
+			},
+			function(callback) {
+				var req = new reqMock('/fs/ls/lsDir/nonexisting');
+				var res = new resMock();
+
+				fsCtrl.rm(req, res, function(err) {
+					expect(err).to.not.exist;
+					expect(res.statusCode).to.be.equal(404);
+					callback();
+				});
+			}
+		],
+		function(err) {
+			done();
+		});
+	});
+
+	it('should get file', function(done) {
+		fs.writeFileSync(path.join(testDataPath, 'f1'), "xxxx");
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = function(_path) {
+			this.path = _path;
+		};
+
+		var resMock = function() {
+			require('stream').Writable.call(this);
+			this.statusCode = null;
+			this.data = '';
+			this.send = function(code, data) {
+				this.statusCode = code;
+				if (data) {
+					this.data += data;
+				}
+			};
+		};
+		util.inherits(resMock, require('stream').Writable);
+
+		resMock.prototype._write = function(chunk, encoding, callback) {
+			if (chunk) {
+				this.data += chunk.toString('utf8');
+			}
+
+			callback();
+		};
+
+		fsCtrl.get(new reqMock('f1'), res = new resMock(), function(err) {
+			expect(err).to.not.exist;
+			expect(res.data).to.be.equal('xxxx');
+			done();
+		});
+	});
+
+	it('should create directory', function(done) {
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = function(_path) {
+			this.path = _path;
+		};
+
+		var resMock = function() {
+			this.statusCode = null;
+			this.data = null;
+			this.send = function(code, data) {
+				this.statusCode = code;
+				this.data = data;
+			};
+		};
+
+		fsCtrl.mkdir(new reqMock('/xxx'), res = new resMock(), function(err) {
+			expect(err).to.not.exist;
+			expect(res.statusCode).to.be.equal(200);
+			fs.exists(path.join(testDataPath, '/xxx'), function(exists) {
+				expect(exists).to.be.true;
+				done();
+			});
+		});
+	});
+
+	it('should put file', function(done) {
+		fs.writeFileSync(path.join(testDataPath, 'f1'), "xxxx");
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = function(_path, _data) {
+			stream.Readable.call(this);
+			this.path = _path;
+			this.data = _data;
+		};
+		util.inherits(reqMock, stream.Readable);
+
+		reqMock.prototype._read = function(size) {
+			this.push(this.data);
+			this.push(null);
+		};
+
+		var resMock = function() {
+			require('stream').Writable.call(this);
+			this.statusCode = null;
+			this.data = '';
+			this.send = function(code, data) {
+				this.statusCode = code;
+				if (data) {
+					this.data += data;
+				}
+			};
+		};
+		util.inherits(resMock, require('stream').Writable);
+
+		resMock.prototype._write = function(chunk, encoding, callback) {
+			if (chunk) {
+				this.data += chunk.toString(encoding);
+			}
+
+			callback();
+		};
+
+		async.parallel([function(callback) {
+			// saving to existing file
+			var req = new reqMock('f1', 'abcd');
+			var res = new resMock();
+			fsCtrl.put(req, res, function(err) {
+				expect(err).to.not.exist;
+				expect(res.statusCode).to.be.equal(500);
+				callback();
+			});
+		}, function(callback) {
+			// correct save
+			var req = new reqMock('f2', 'abcd');
+			var res = new resMock();
+			fsCtrl.put(req, res, function(err) {
+				expect(err).to.not.exist;
+				expect(res.statusCode).to.be.equal(200);
+				expect(fs.readFileSync(path.join(testDataPath, 'f2'), {encoding:'utf8'})).to.be.eql('abcd');
+				callback();
+			});
+		}, function(callback) {
+			// wrong path
+			var req = new reqMock('../../../f2', 'abcd');
+			var res = new resMock();
+			fsCtrl.put(req, res, function(err) {
+				expect(err).to.not.exist;
+				expect(res.statusCode).to.be.equal(500);
+				callback();
+			});
+		}],
+		function(err) {
+			done();
+		});
+	});
+});

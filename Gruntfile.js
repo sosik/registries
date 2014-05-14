@@ -6,7 +6,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-mocha-test');
 
 	grunt.registerTask('build:server', ['copy:server']);
-	grunt.registerTask('build:client', ['copy:html', 'copy:css', 'copy:js', 'copy:img']);
+	grunt.registerTask('build:client', ['copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server']);
 	grunt.registerTask('test', ['build', 'mochaTest:unitServer']);
@@ -22,6 +22,13 @@ module.exports = function(grunt) {
 					{expand: true, cwd: 'src/client/html', src: ['**'], dest: 'build/client/'}
 				]
 			},
+			
+			htmlpartials: {
+				files: [
+					{expand: true, cwd: 'src/client/partials', src: ['**'], dest: 'build/client/partials'}
+				]
+			},
+			
 			css: {
 				files: [
 					{expand: true, cwd: 'src/client/css', src: ['**'], dest: 'build/client/css/'}
@@ -69,7 +76,7 @@ module.exports = function(grunt) {
 				tasks: ['build:server']
 			},
 			client: {
-				files: ['src/client/**', 'src/client/html', 'src/client/css', 'src/client/js', 'src/client/img'],
+				files: ['src/client/**', 'src/client/html', 'src/client/css', 'src/client/js', 'src/client/img','src/client/html-partials'],
 				tasks: ['build:client']
 			}
 		},

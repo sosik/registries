@@ -1,11 +1,21 @@
 {
   "name": "registries",
   "version": "0.0.0",
-  "description": "Example application to demo generic registry",
-  "main": "app.js",
-  "repository": "",
+  "description": "Registries application",
+  "main": "build/server.server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sosik/registries"
+  },
   "author": "Pavol Starek",
   "dependencies": {
     "express": "~3.2.4"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha-test": "^0.10.2"
   }
 }

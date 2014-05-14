@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('build:client', ['copy:html', 'copy:css', 'copy:js', 'copy:img']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server']);
-	grunt.registerTask('test', ['build', 'mochaTest:unitServer', 'mochaTest:integration']);
+	grunt.registerTask('test', ['build', 'mochaTest:unitServer']);
 	grunt.registerTask('unitTest', ['build', 'mochaTest:unitServer']);
 	grunt.registerTask('integrationTest', ['build', 'mochaTest:integration']);
 

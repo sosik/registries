@@ -1,0 +1,12 @@
+<section id="editor" ng-app="doc.ui-ace" ng-cloak>
+	<div class="row" ng-controller="AceCtrl">
+		<div ui-ace="{
+            useWrapMode : true,
+            showGutter: true,
+            theme:'twilight',
+            mode: 'json'
+          }" ng-model="aceModel">Ace here</div>
+	</div>
+	<button title="Send" class="btn btn-primary" ng-click="postData()">send</button>
+	
+</section>

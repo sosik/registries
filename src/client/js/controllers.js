@@ -3,21 +3,18 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', ['$scope', function($scope) {
+
+.controller('MyCtrl1',
+		[ '$scope', function($scope) {
+
+		} ])
+
+.controller('SchemaList', ['$scope', 'schemaApiService', function($scope,schemaApiService) {
+
+	  $scope.schemaList = [];
 	  
-
-  }])
-  .controller('MyCtrl2', ['$scope', function($scope) {
-
-  }])
-
-   .controller('SchemaList', ['$scope', function($scope) {
-    $scope.schemaList = [
-                         {
-                        	    "type": "f",
-                        	    "size": 0,
-                        	    "contentType": "image/jpeg",
-                        	    "name": "test.jpg"
-                        	  }
-                        ];
-    }]);
+	  schemaApiService.getSchemaList().success(function(data) {
+	    $scope.schemaList = data;
+	  });
+	 
+} ]);

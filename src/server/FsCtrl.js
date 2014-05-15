@@ -296,6 +296,42 @@ var FsCtrl = function(options) {
 			});
 		}
 	};
+	
+	/**
+	 * Replaces content to file
+	 */
+	this.replace = function(req, res, next) {
+		var p = this.calculateFsPath(req.path);
+
+		if (!this.isPathSafe(p)) {
+			res.send(500);
+			next();
+		} else {
+			// path is safe
+			fs.exists(p, function(exists) {
+				if (exists) {
+					res.send(500, 'Entity already exists');
+					next();
+				} else {
+					var ws = fs.createWriteStream(p);
+					ws.on('error', function(evt) {
+						res.send(500);
+						next();
+					});
+					req.on('error', function(evt) {
+						res.send(500);
+						next();
+					});
+					ws.on('finish', function(evt) {
+						res.send(200);
+						next();
+					});
+					req.pipe(ws);
+				}
+			});
+		}
+	};
+	
 };
 
 module.exports = {

@@ -1,19 +1,19 @@
 'use strict';
 
-var extend  = require('extend');
+var extend = require('extend');
 var fs = require('fs');
 var async = require('async');
 var path = require('path');
 
 var DEFAULT_CFG = {
-	rootPath: '/tmp/',
-	routeToSubtract: '/fs/',
-	filePathRegexp: /^\/fs\/\w+\//
+	rootPath : '/tmp/',
+	routeToSubtract : '/fs/',
+	filePathRegexp : /^\/fs\/\w+\//
 };
 
 var contentTypes = {
 	'.bin' : 'application/octet-stream',
-	'.jpg'  : 'image/jpeg',
+	'.jpg' : 'image/jpeg',
 	'.jpeg' : 'image/jpeg'
 };
 
@@ -33,11 +33,10 @@ var getPathWithoutRoutePrefix = function(inPath) {
 	return inPath.substr(cfg.routeToSubtract.length) || '/';
 };
 
-
 var FsCtrl = function(options) {
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 	var realPathCache = {};
-	
+
 	cfg.rootPath = path.resolve(cfg.rootPath);
 	var safePathPrefixRegexp = new RegExp("^" + cfg.rootPath);
 
@@ -50,18 +49,20 @@ var FsCtrl = function(options) {
 
 	/**
 	 * Calculates real intended file path
-	 *
-	 * @param {string} p - path provided in request
+	 * 
+	 * @param {string}
+	 *            p - path provided in request
 	 */
 	this.calculateFsPath = function(p) {
-		return path.resolve(path.join(cfg.rootPath, p.replace(cfg.filePathRegexp, '')));
+		return path.resolve(path.join(cfg.rootPath, p.replace(
+				cfg.filePathRegexp, '')));
 	};
 
 	/**
-	 * Checks if provided path is save, it means it is:
-	 * - path has prefix of rootPath
-	 *
-	 *   @return {boolean} - true if path is safe, otherwise false
+	 * Checks if provided path is save, it means it is: - path has prefix of
+	 * rootPath
+	 * 
+	 * @return {boolean} - true if path is safe, otherwise false
 	 */
 	this.isPathSafe = function(p) {
 		return safePathPrefixRegexp.test(path.normalize(p));
@@ -78,65 +79,98 @@ var FsCtrl = function(options) {
 			next();
 		} else {
 			// path is safe
-			fs.lstat(p, function(err, stat) {
-				if (err) {
-					if (err.code === 'ENOENT') {
-						res.send(404, 'Directory not found');
-					} else {
-						res.send(500, 'Failed to stat directory');
-					}
-					next();
-				} else {
-					if (!stat.isDirectory()) {
-										console.log('not a dir');
-						res.send(500, 'Path is not directory');
-						next();
-					} else {
-						fs.readdir(p, function(err, entries) {
-							if (err) {
-								res.send(500);
-								next();
-							} else {
-								var result = [];
-								async.each(entries, function(item, callback) {
-									fs.lstat(path.join(p, item), function(err, stat) {
-										if (err) {
-											callback(err);
-											return;
-										} 
-
-										var res = {};
-										if (stat.isFile()) {
-											res.type = 'f';
-											res.size = stat.size;
-											res.contentType = getContentTypeByExt(path.extname(item));
-										} else if (stat.isDirectory()) {
-											res.type = 'd';
-										} else {
-											// unsupported object type, skipping
-											callback();
-											return;
-										}
-
-										res.name = item;
-
-										result.push(res);
-										callback();
-										return;
-									});
-								}, function(err) {
-									if (err) {
-										res.send(500);
+			fs
+					.lstat(
+							p,
+							function(err, stat) {
+								if (err) {
+									if (err.code === 'ENOENT') {
+										res.send(404, 'Directory not found');
 									} else {
-										res.send(200, result);
+										res.send(500,
+												'Failed to stat directory');
 									}
 									next();
-								});
-							}
-						});
-					}
-				}
-			});
+								} else {
+									if (!stat.isDirectory()) {
+										console.log('not a dir');
+										res.send(500, 'Path is not directory');
+										next();
+									} else {
+										fs
+												.readdir(
+														p,
+														function(err, entries) {
+															if (err) {
+																res.send(500);
+																next();
+															} else {
+																var result = [];
+																async
+																		.each(
+																				entries,
+																				function(
+																						item,
+																						callback) {
+																					fs
+																							.lstat(
+																									path
+																											.join(
+																													p,
+																													item),
+																									function(
+																											err,
+																											stat) {
+																										if (err) {
+																											callback(err);
+																											return;
+																										}
+
+																										var res = {};
+																										if (stat
+																												.isFile()) {
+																											res.type = 'f';
+																											res.size = stat.size;
+																											res.contentType = getContentTypeByExt(path
+																													.extname(item));
+																										} else if (stat
+																												.isDirectory()) {
+																											res.type = 'd';
+																										} else {
+																											// unsupported
+																											// object
+																											// type,
+																											// skipping
+																											callback();
+																											return;
+																										}
+
+																										res.name = item;
+
+																										result
+																												.push(res);
+																										callback();
+																										return;
+																									});
+																				},
+																				function(
+																						err) {
+																					if (err) {
+																						res
+																								.send(500);
+																					} else {
+																						res
+																								.send(
+																										200,
+																										result);
+																					}
+																					next();
+																				});
+															}
+														});
+									}
+								}
+							});
 		}
 	};
 
@@ -296,6 +330,53 @@ var FsCtrl = function(options) {
 			});
 		}
 	};
+
+	/**
+	 * moves file to non-existing index
+	 */
+	
+	this.moveRotate = function(srcFile, dstProposal, next) {
+		
+		console.log('candidate %s', dstProposal);
+		
+		var fileExists = true;
+		
+		var index = 0;
+		var candidate = dstProposal;
+		var count = 0;
+		
+		async.whilst(
+				function () { return fileExists },
+				function (callback) {
+					
+					fs.exists(candidate, function(exists) {
+						if (exists) {
+							console.log('cadidate exist %s', candidate);
+							index++;
+							candidate = dstProposal + "." + index;
+							console.log('new candidate %s', candidate);
+						} else {
+							console.log('candidate does not exist exiting %s', candidate);
+							fileExists=false;
+						}
+						callback();
+					});
+				},
+				function (err) {
+					if (err){
+						console.log(error);	
+					}
+					else {
+						fs.rename(srcFile, candidate,function (err) {
+							  if (err) throw err;
+							  console.log('rename %s -> %s', srcFile, candidate);
+							});
+					} 
+					next();
+				}
+		);
+		
+	};
 	
 	/**
 	 * Replaces content to file
@@ -303,17 +384,22 @@ var FsCtrl = function(options) {
 	this.replace = function(req, res, next) {
 		var p = this.calculateFsPath(req.path);
 
-		if (!this.isPathSafe(p)) {
+		var tmpPath = p + ".tmp";
+
+		var ctrl=this;
+		
+
+		if (!this.isPathSafe(tmpPath)) {
 			res.send(500);
 			next();
 		} else {
 			// path is safe
-			fs.exists(p, function(exists) {
+			fs.exists(tmpPath, function(exists) {
 				if (exists) {
 					res.send(500, 'Entity already exists');
 					next();
 				} else {
-					var ws = fs.createWriteStream(p);
+					var ws = fs.createWriteStream(tmpPath);
 					ws.on('error', function(evt) {
 						res.send(500);
 						next();
@@ -324,14 +410,20 @@ var FsCtrl = function(options) {
 					});
 					ws.on('finish', function(evt) {
 						res.send(200);
-						next();
+						//moves actual to end 
+						ctrl.moveRotate(p, p, function() {ctrl.moveRotate(tmpPath, p, next);} );
+						//moves tmp to actual
+						
 					});
 					req.pipe(ws);
 				}
 			});
 		}
-	};
 	
+		
+	};
+
+
 };
 
 module.exports = {

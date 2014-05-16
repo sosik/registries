@@ -1,5 +1,15 @@
 'use strict';
 
+
+var config = require("ace/config");
+//config.set("packaged",true)
+
+var path = "/lib/ace-builds/src";
+config.set("workerPath", path);
+config.set("modePath", path);
+config.set("themePath", path);
+
+
 angular.module('ace-ctrl', [ 'ui.ace' ]).controller(
 		'AceCtrl',
 		[
@@ -12,33 +22,28 @@ angular.module('ace-ctrl', [ 'ui.ace' ]).controller(
 
 					$scope.modes = [ 'JSON', 'Scheme', 'XML', 'Javascript' ];
 					$scope.mode = $scope.modes[0];
-
-//					// The ui-ace option
-//					$scope.aceOption = {
-//						mode : "json",
-//						theme : "twilight",
-//						onLoad : function(_ace) {
-//							_ace.getSession().setMode('ace/mode/json');
-//							_ace.getSession().setTheme("ace/theme/twilight");
-//							// HACK to have the ace instance in the scope...
-//							$scope.modeChanged = function() {
-//
-//							};
-//
-//						}
-//					};
-
 					$scope.path = $routeParams.id;
 
+					
+					$scope.aceLoaded = function(_editor) {
+					    // Options
+					    _editor.setReadOnly(false);
+					    _editor.getSession().setMode('ace/mode/json');
+					    ace.config.set("basePath", "/libs/ace-builds/src");
+					  };
+
+					
 					schemaApiService.getFileContent($scope.path).success(
 							function(data) {
 								$scope.aceModel = JSON.stringify(data, null, 4);;
 							});
 
-					schemaApiService.getPostContent();
-					$scope.postData= function (){
-						var f=schemaApiService.getPostContent($scope.path,$scope.aceModel);
-						f();
+					$scope.postData= function (data){
+						 console.log('%j' ,$scope.aceModel );
+						 schemaApiService.getPostContent($scope.path,data).success(
+									function(data) {
+										console.log('upload done',$scope.path,data);
+									});
 					}
 					
 				} ]);

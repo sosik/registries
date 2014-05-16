@@ -24,7 +24,7 @@ module.factory('schemaApiService', function($http) {
 	    
 	    
 	    schemaApi.getPostContent = function (path,bytes){
-	    	var pathContext = 'fs/put/'+path+'1';
+	    	var pathContext = 'fs/replace/'+path;
 	    	return $http({ 
 	        method: 'PUT',
 	        url: pathContext,

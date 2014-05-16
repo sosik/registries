@@ -170,14 +170,141 @@ describe('FsCtrl', function() {
 		});
 	});
 
+	
+	it('should increment index if existing dstfile', function(done) {
+		
+		fs.mkdirSync(path.join(testDataPath, 'replaceDir'));
+		
+		fs.writeFileSync(path.join(testDataPath, 'replaceDir/f1'), "xxxx");
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = function(_path, _data) {
+			stream.Readable.call(this);
+			this.path = _path;
+			this.data = _data;
+		};
+		util.inherits(reqMock, stream.Readable);
+
+		reqMock.prototype._read = function(size) {
+			this.push(this.data);
+			this.push(null);
+		};
+
+		var resMock = function() {
+			require('stream').Writable.call(this);
+			this.statusCode = null;
+			this.data = '';
+			this.send = function(code, data) {
+				this.statusCode = code;
+				if (data) {
+					this.data += data;
+				}
+			};
+		};
+		util.inherits(resMock, require('stream').Writable);
+
+		resMock.prototype._write = function(chunk, encoding, callback) {
+			if (chunk) {
+				this.data += chunk.toString(encoding);
+			}
+
+			callback();
+		};
+		async.parallel([
+			function(callback) {
+				var req = new reqMock('/fs/replace/replaceDir/f1','yyyy');
+				var res = new resMock();
+				
+
+				fsCtrl.replace(req, res, function(err) {
+
+					expect(err).to.not.exist;
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f1.1"))).to.be.true;
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f1"))).to.be.true;
+					callback();
+				});
+			}
+		],
+		function(err) {
+			done();
+		});
+	});
+	
+
+	
+	it('should create new file index if dst does not exist no index files', function(done) {
+		
+		fs.mkdirSync(path.join(testDataPath, 'replaceDir'));
+		
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = function(_path, _data) {
+			stream.Readable.call(this);
+			this.path = _path;
+			this.data = _data;
+		};
+		util.inherits(reqMock, stream.Readable);
+
+		reqMock.prototype._read = function(size) {
+			this.push(this.data);
+			this.push(null);
+		};
+
+		var resMock = function() {
+			require('stream').Writable.call(this);
+			this.statusCode = null;
+			this.data = '';
+			this.send = function(code, data) {
+				this.statusCode = code;
+				if (data) {
+					this.data += data;
+				}
+			};
+		};
+		util.inherits(resMock, require('stream').Writable);
+
+		resMock.prototype._write = function(chunk, encoding, callback) {
+			if (chunk) {
+				this.data += chunk.toString(encoding);
+			}
+
+			callback();
+		};
+		async.parallel([
+			function(callback) {
+				var req = new reqMock('/fs/replace/replaceDir/f2','yyyy');
+				var res = new resMock();
+				
+
+				fsCtrl.replace(req, res, function(err) {
+
+					expect(err).to.not.exist;
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f2.1"))).to.be.false;
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f2"))).to.be.true;
+					callback();
+				});
+			}
+		],
+		function(err) {
+			done();
+		});
+	});
+	
+
+	
+	
 	it('should get file', function(done) {
 		fs.writeFileSync(path.join(testDataPath, 'f1'), "xxxx");
 
+		
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
 
 		var reqMock = function(_path) {
 			this.path = _path;
 		};
+		
 
 		var resMock = function() {
 			require('stream').Writable.call(this);

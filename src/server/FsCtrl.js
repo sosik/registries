@@ -337,7 +337,6 @@ var FsCtrl = function(options) {
 	
 	this.moveRotate = function(srcFile, dstProposal, next) {
 		
-		console.log('candidate %s', dstProposal);
 		
 		var fileExists = true;
 		
@@ -351,12 +350,9 @@ var FsCtrl = function(options) {
 					
 					fs.exists(candidate, function(exists) {
 						if (exists) {
-							console.log('cadidate exist %s', candidate);
 							index++;
 							candidate = dstProposal + "." + index;
-							console.log('new candidate %s', candidate);
 						} else {
-							console.log('candidate does not exist exiting %s', candidate);
 							fileExists=false;
 						}
 						callback();
@@ -364,22 +360,29 @@ var FsCtrl = function(options) {
 				},
 				function (err) {
 					if (err){
-						console.log(error);	
+						console.log(error);
+						next();
 					}
 					else {
-						fs.rename(srcFile, candidate,function (err) {
-							  if (err) throw err;
-							  console.log('rename %s -> %s', srcFile, candidate);
-							});
+						if (srcFile==candidate){
+							next();
+						}
+						else{
+							fs.rename(srcFile, candidate,function (err) {
+								  if (err) throw err;
+								  next();
+								});	
+						}
+						
 					} 
-					next();
+					
 				}
 		);
 		
 	};
 	
 	/**
-	 * Replaces content to file
+	 * Replaces content of file, Original file is moved to lowest free index
 	 */
 	this.replace = function(req, res, next) {
 		var p = this.calculateFsPath(req.path);

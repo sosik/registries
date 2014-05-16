@@ -8,7 +8,7 @@ var path = require('path');
 var DEFAULT_CFG = {
 	rootPath : '/tmp/',
 	routeToSubtract : '/fs/',
-	filePathRegexp : /^\/fs\/\w+\//
+	filePathRegexp : /^\/fs\/\w+/
 };
 
 var contentTypes = {
@@ -72,6 +72,7 @@ var FsCtrl = function(options) {
 	 * get directory listing
 	 */
 	this.ls = function(req, res, next) {
+		
 		var p = this.calculateFsPath(req.path);
 
 		if (!this.isPathSafe(p)) {
@@ -79,8 +80,7 @@ var FsCtrl = function(options) {
 			next();
 		} else {
 			// path is safe
-			fs
-					.lstat(
+			fs.lstat(
 							p,
 							function(err, stat) {
 								if (err) {

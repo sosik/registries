@@ -10,7 +10,9 @@ var app = express();
 app.disable('view cache');
 
 // FSController
+app.get('/fs/ls', function(req, res) {fsCtrl.ls(req, res, noop);});
 app.get('/fs/ls/*', function(req, res) {fsCtrl.ls(req, res, noop);});
+
 app.get('/fs/get/*', function(req, res) {fsCtrl.get(req, res, noop);});
 app.get('/fs/rm/*', function(req, res) {fsCtrl.rm(req, res, noop);});
 app.get('/fs/mkdir/*', function(req, res) {fsCtrl.mkdir(req, res, noop);});

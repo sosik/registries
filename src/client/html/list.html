@@ -1,0 +1,9 @@
+<div style="padding-left:10px;text-align: left; padding-bottom: 10px;font-size:30px;">Zoznam</div>
+<table>
+	<tr class="list-header">
+		<td ng-repeat="header in headers">{{header.title}}</td>
+	</tr>
+	<tr ng-repeat="obj in objs" ng-click="rowClick(obj.id);" class="list-row">
+		<td ng-repeat="header in headers">{{getVal("obj." + header.field)}} {{$eval("obj."+header.field)}}</td>
+	</tr>
+</table>

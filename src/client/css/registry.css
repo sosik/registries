@@ -1,0 +1,202 @@
+body {
+	font-size: 19px;
+	margin: 0 0 0 0;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.white-button {
+	border: transparent solid 1px;
+	background-color: transparent;
+	fill: white;
+	transition: all .25s;
+	height: 50px;
+	width: 50px;
+	padding: 3px 3px 3px 3px;
+	border-radius: 5px;
+}
+
+.white-button .ps-gui-button-glyph {
+	transition: all .25s;
+}
+
+.white-button:hover {
+	border: #FCFFD3 solid 1px;
+	transition: all .25s;
+}
+
+.white-button.ps-gui-selected {
+	border: #FCFFD3 solid 1px;
+	background-color: #FCFFD3;
+	transition: all .25s;
+	fill: black;
+}
+
+.menu-button {
+	border: transparent solid 1px;
+	background-color: transparent;
+	fill: black;
+	transition: all .25s;
+	height: 50px;
+	width: 50px;
+	padding: 3px 3px 3px 3px;
+	border-radius: 5px;
+}
+
+.menu-button .ps-gui-button-glyph {
+	transition: all .25s;
+}
+
+.menu-button:hover {
+	border: black solid 1px;
+	transition: all .25s;
+}
+
+#main-menu {
+	background-color: #EAEAEA;
+	margin-top: 14px;
+	border-radius: 5px;
+}
+
+#main-menu .heading {
+	background-color: #669900;
+	margin-top: 14px;
+	border-radius: 5px;
+	color: white;
+}
+.on-edit {
+	border: #669900 solid 1px;
+}
+
+.ps-table {
+	display: table;
+	float: left;
+}
+
+.ps-table-row {
+	display: table-row;
+}
+
+.ps-table-label {
+	font-size: 16px;
+	color: gray;
+	display: table-cell;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+.ps-table-value {
+	font-size: 16px;
+	color: black;
+	font-weight: 700;
+	display: table-cell;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+ps-gui-clickedit-text {
+	display: inline-block;
+	border: transparent solid 1px;
+	width: 300px;
+	height: 28px;
+	position: relative;
+}
+ps-gui-clickedit-text.ng-invalid.ng-dirty {
+	background-color: red;
+}
+
+ps-gui-clickedit-text.hovered {
+	border: silver dotted 1px;
+}
+
+ps-gui-clickedit-text.edit {
+	border: #669900 solid 1px;
+}
+
+ps-gui-clickedit-text>ps-gui-button.editButton {
+	height: 26px;
+	width: 26px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display:none !important;
+}
+ps-gui-clickedit-text.hovered>ps-gui-button.editButton {
+	display:inline-block !important;
+}
+ps-gui-clickedit-text.edit>ps-gui-button.editButton {
+	display:none !important;
+}
+
+ps-gui-clickedit-text>ps-gui-button.okButton {
+	height: 26px;
+	width: 26px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display:none !important;
+}
+
+ps-gui-clickedit-text.edit>ps-gui-button.okButton {
+	display:inline-block !important;
+}
+
+ps-gui-clickedit-text>ps-gui-button.cancelButton {
+	height: 26px;
+	width: 26px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display:none !important;
+	padding-right: 28px;
+}
+
+ps-gui-clickedit-text.edit>ps-gui-button.cancelButton {
+	display:inline-block !important;
+}
+
+ps-gui-clickedit-text>INPUT {
+	border: white none 0px;
+	font-size: inherit;
+	font-weight: inherit;
+	font-family: inherit;
+	width: 99%;
+	height: 99%;
+	padding: 5px 5px 5px 5px;
+	box-sizing:border-box;
+	background-color: transparent;
+}
+
+ps-gui-clickedit-text>DIV {
+	border: white none 0px;
+	font-size: inherit;
+	font-weight: inherit;
+	font-family: inherit;
+	width: 99%;
+	height: 99%;
+	padding: 5px 5px 5px 5px;
+	box-sizing:border-box;
+}
+
+.ps-schema-form-header {
+	background-color: black;
+	color: white;
+}
+
+.ps-schema-form-table {
+	display: table;
+	float:left;
+	width:500px;
+
+}
+
+.list-header: {
+	color: white;
+	background-color: black;
+}
+
+.list-row:hover {
+	background-color: #669900;
+}

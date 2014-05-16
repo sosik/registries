@@ -1,0 +1,62 @@
+.ps-gui-button {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.ps-gui-button .ps-gui-button-glyph {
+	vertical-align: middle;
+	display: inline-block;
+	height: 100%;
+	width: 100%;
+	fill: inherit;
+}
+
+.ps-gui-button-glyph svg {
+	width: 100%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.ps-gui-inplace-edit-wrapper {
+	display: inline-block;
+	white-space: nowrap;
+	box-sizing: border-box;
+	border: transparent solid 1px;
+}
+
+.ps-gui-inplace-edit-buttons-placeholder {
+	display: inline-block;
+	position:relative;
+	top: 0px;
+	height: 100%;
+	width: 0px;
+	white-space:nowrap;
+	line-height: 100%;
+	vertical-align: top;
+}
+
+.ps-gui-inplace-edit-buttons-holder {
+	display: block;
+	background-color:white;
+	width: auto;
+	white-space: nowrap;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.ps-gui-hidden {
+	display: none;
+}
+
+.ps-gui-inplace-edit-buttons {
+	height: 20px;
+	background-color: green;
+	margin-right: 5px;
+	padding: 2px 1px 2px 1px;
+	fill: white;
+}
+
+.ps-gui-inplace-edit-buttons:hover {
+	background-color: black;
+}

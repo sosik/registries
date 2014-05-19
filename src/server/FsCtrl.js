@@ -54,8 +54,7 @@ var FsCtrl = function(options) {
 	 *            p - path provided in request
 	 */
 	this.calculateFsPath = function(p) {
-		return path.resolve(path.join(cfg.rootPath, p.replace(
-				cfg.filePathRegexp, '')));
+		return path.resolve(path.join(cfg.rootPath, p.replace(cfg.filePathRegexp, '')));
 	};
 
 	/**
@@ -69,10 +68,10 @@ var FsCtrl = function(options) {
 	};
 
 	/**
-	 * get directory listing
+	 * get directory listing filter is applied to result
 	 */
-	this.ls = function(req, res, next) {
-		
+	this.ls = function(req, res, filter, next) {
+
 		var p = this.calculateFsPath(req.path);
 
 		if (!this.isPathSafe(p)) {
@@ -80,97 +79,75 @@ var FsCtrl = function(options) {
 			next();
 		} else {
 			// path is safe
-			fs.lstat(
-							p,
-							function(err, stat) {
-								if (err) {
-									if (err.code === 'ENOENT') {
-										res.send(404, 'Directory not found');
+			fs.lstat(p, function(err, stat) {
+				if (err) {
+					if (err.code === 'ENOENT') {
+						res.send(404, 'Directory not found');
+					} else {
+						res.send(500, 'Failed to stat directory');
+					}
+					next();
+				} else {
+					if (!stat.isDirectory()) {
+						console.log('not a dir');
+						res.send(500, 'Path is not directory');
+						next();
+					} else {
+						fs.readdir(p, function(err, entries) {
+							if (err) {
+								res.send(500);
+								next();
+							} else {
+								var result = [];
+								async.each(entries, function(item, callback) {
+									fs.lstat(path.join(p, item), function(err, stat) {
+										if (err) {
+											callback(err);
+											return;
+										}
+
+										var res = {};
+										if (stat.isFile()) {
+											res.type = 'f';
+											res.size = stat.size;
+											res.contentType = getContentTypeByExt(path.extname(item));
+										} else if (stat.isDirectory()) {
+											res.type = 'd';
+										} else {
+											// unsupported
+											// object
+											// type,
+											// skipping
+											callback();
+											return;
+										}
+
+										console.log('filter ', filter);
+										res.name = item;
+										if (filter != null) {
+											if (filter(res)==true) {
+												result.push(res);
+											}
+										} else {
+											result.push(res);
+										}
+
+										callback();
+										return;
+									});
+								}, function(err) {
+									if (err) {
+										res.send(500);
 									} else {
-										res.send(500,
-												'Failed to stat directory');
+										res.send(200, result);
 									}
 									next();
-								} else {
-									if (!stat.isDirectory()) {
-										console.log('not a dir');
-										res.send(500, 'Path is not directory');
-										next();
-									} else {
-										fs
-												.readdir(
-														p,
-														function(err, entries) {
-															if (err) {
-																res.send(500);
-																next();
-															} else {
-																var result = [];
-																async
-																		.each(
-																				entries,
-																				function(
-																						item,
-																						callback) {
-																					fs
-																							.lstat(
-																									path
-																											.join(
-																													p,
-																													item),
-																									function(
-																											err,
-																											stat) {
-																										if (err) {
-																											callback(err);
-																											return;
-																										}
-
-																										var res = {};
-																										if (stat
-																												.isFile()) {
-																											res.type = 'f';
-																											res.size = stat.size;
-																											res.contentType = getContentTypeByExt(path
-																													.extname(item));
-																										} else if (stat
-																												.isDirectory()) {
-																											res.type = 'd';
-																										} else {
-																											// unsupported
-																											// object
-																											// type,
-																											// skipping
-																											callback();
-																											return;
-																										}
-
-																										res.name = item;
-
-																										result
-																												.push(res);
-																										callback();
-																										return;
-																									});
-																				},
-																				function(
-																						err) {
-																					if (err) {
-																						res
-																								.send(500);
-																					} else {
-																						res
-																								.send(
-																										200,
-																										result);
-																					}
-																					next();
-																				});
-															}
-														});
-									}
-								}
-							});
+								});
+							}
+						});
+					}
+				}
+			});
 		}
 	};
 
@@ -334,53 +311,49 @@ var FsCtrl = function(options) {
 	/**
 	 * moves file to non-existing index
 	 */
-	
+
 	this.moveRotate = function(srcFile, dstProposal, next) {
-		
-		
+
 		var fileExists = true;
-		
+
 		var index = 0;
 		var candidate = dstProposal;
 		var count = 0;
-		
-		async.whilst(
-				function () { return fileExists },
-				function (callback) {
-					
-					fs.exists(candidate, function(exists) {
-						if (exists) {
-							index++;
-							candidate = dstProposal + "." + index;
-						} else {
-							fileExists=false;
-						}
-						callback();
-					});
-				},
-				function (err) {
-					if (err){
-						console.log(error);
-						next();
-					}
-					else {
-						if (srcFile==candidate){
-							next();
-						}
-						else{
-							fs.rename(srcFile, candidate,function (err) {
-								  if (err) throw err;
-								  next();
-								});	
-						}
-						
-					} 
-					
+
+		async.whilst(function() {
+			return fileExists
+		}, function(callback) {
+
+			fs.exists(candidate, function(exists) {
+				if (exists) {
+					index++;
+					candidate = dstProposal + "." + index;
+				} else {
+					fileExists = false;
 				}
-		);
-		
+				callback();
+			});
+		}, function(err) {
+			if (err) {
+				console.log(error);
+				next();
+			} else {
+				if (srcFile == candidate) {
+					next();
+				} else {
+					fs.rename(srcFile, candidate, function(err) {
+						if (err)
+							throw err;
+						next();
+					});
+				}
+
+			}
+
+		});
+
 	};
-	
+
 	/**
 	 * Replaces content of file, Original file is moved to lowest free index
 	 */
@@ -389,8 +362,7 @@ var FsCtrl = function(options) {
 
 		var tmpPath = p + ".tmp";
 
-		var ctrl=this;
-		
+		var ctrl = this;
 
 		if (!this.isPathSafe(tmpPath)) {
 			res.send(500);
@@ -413,19 +385,19 @@ var FsCtrl = function(options) {
 					});
 					ws.on('finish', function(evt) {
 						res.send(200);
-						//moves actual to end 
-						ctrl.moveRotate(p, p, function() {ctrl.moveRotate(tmpPath, p, next);} );
-						//moves tmp to actual
-						
+						// moves actual to end
+						ctrl.moveRotate(p, p, function() {
+							ctrl.moveRotate(tmpPath, p, next);
+						});
+						// moves tmp to actual
+
 					});
 					req.pipe(ws);
 				}
 			});
 		}
-	
-		
-	};
 
+	};
 
 };
 

@@ -85,7 +85,7 @@ describe('FsCtrl', function() {
 			}
 		};
 
-		fsCtrl.ls(reqMock, resMock, function(err) {
+		fsCtrl.ls(reqMock, resMock, null,  function(err) {
 			expect(err).to.not.exist;
 			expect(resMock.statusCode).to.be.equal(200);
 			expect(resMock.data.length).to.be.equal(3);
@@ -94,6 +94,46 @@ describe('FsCtrl', function() {
 		});
 	});
 
+	
+	it('should list directory and filter reults', function(done) {
+		fs.mkdirSync(path.join(testDataPath, 'lsDir'));
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/f1'), "xxxx");
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/f3.1'), "xxxx.2");
+		fs.writeFileSync(path.join(testDataPath, 'lsDir/f2'), "yyy");
+		fs.mkdirSync(path.join(testDataPath, 'lsDir/subdir'));
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = {path: '/fs/ls/lsDir'};
+		var resMock = {
+			statusCode: null,
+			data: null,
+			send: function(code, data) {
+				this.statusCode = code;
+				this.data = data;
+			}
+		};
+
+		var filter= function( item){
+			var regexp = /.*\.[0-9]+/;
+			if (!regexp.test(item.name)) {
+				console.log('matched ',item );
+				return true;
+			}
+			console.log('not matched ',item );
+
+			return false;
+		};
+		
+		fsCtrl.ls(reqMock, resMock, filter,  function(err) {
+			expect(err).to.not.exist;
+			expect(resMock.statusCode).to.be.equal(200);
+			expect(resMock.data.length).to.be.equal(3);
+
+			done();
+		});
+	});
+	
 	it('should remove files and directories', function(done) {
 		fs.mkdirSync(path.join(testDataPath, 'lsDir'));
 		fs.writeFileSync(path.join(testDataPath, 'lsDir/f1'), "xxxx");

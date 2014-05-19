@@ -18,7 +18,7 @@ app.disable('view cache');
 // FSController
 
 var lsfilter= function( item){
-	if ( /.*\.js/.test(item.name)) {
+	if ( /.*Schema[0-9]*\.js/.test(item.name)) {
 		return true;
 	}
 	return false;

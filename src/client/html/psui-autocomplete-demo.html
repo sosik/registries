@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+<head>
+	<title>psui-autocomplete-demo</title>
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular-route/angular-route.js"></script>
+	<script src="js/psui-autocomplete-demo.js"></script>
+	<script src="js/psui-autocomplete.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/psui.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-autocomplete.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-autocomplete-demo.css">
+</head>
+<body ng-app="psui-autocomplete-demo">
+<div ng-controller="psui-autocomplete-demo-simple" id="demo1">
+	<h1>demo 1</h1>
+	<input psui-autocomplete psui-options="autocompleteOptions1" ng-model="autocomplete1val"></input>
+	<button ng-click="addDataToAutocomplete1()">Add to data</button>
+	<pre>{{autocompleteOptions1|json}}</pre>
+	{{autocomplete1val}}
+</div>
+</body>
+</html>

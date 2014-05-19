@@ -1,0 +1,10 @@
+.psui-wrapper {
+	display: inline-block;
+	position: relative;
+	box-sizing: border-box;
+	line-height: 1em;
+}
+
+.psui-hidden {
+	display: none;
+}

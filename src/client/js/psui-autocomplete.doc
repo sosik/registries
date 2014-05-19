@@ -1,0 +1,19 @@
+# Autocomplete directive
+
+Autocomplete directive can show dropdown select box for quick selection of data.
+
+## Configuration
+Directive can be instantiated as `<psui-autocomlete>` tag or by adding `psui-autocomplete` attribute to input tag.
+
+* `psuiAutocompleteData` - optional - data used to calculate autocomplete values
+* `psuiAutocompleteOnChange`- optional - function used to select values among data `function(text, data)` where *text* is value entered by user, *data* is set of data for calculation, it should return array
+* `psuiAutocompleteRender` - optional - function to render every individual value `function(text, data)` where *text* is value entered by user, *data* is individual record, it should return textual or dom representation of html element
+* `psuiAutocompleteParseValue` - optional - function `function(data)` to convert data object to value of field (mainly used for combobox implementation)
+
+All those parameters should be applied as tag attributes and are optional.
+
+Parameters can be submitted even by `psui-options` attribute. related object should have these properties:
+* `data` - same as psuiAutocompleteData
+* `onChange` - same as psuiAutocompleteOnChange
+* `render` - same as psuiAutocompleteRender
+* `parseValue` - same as psuiAutocompleteParseValue

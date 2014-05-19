@@ -117,11 +117,8 @@ describe('FsCtrl', function() {
 		var filter= function( item){
 			var regexp = /.*\.[0-9]+/;
 			if (!regexp.test(item.name)) {
-				console.log('matched ',item );
 				return true;
 			}
-			console.log('not matched ',item );
-
 			return false;
 		};
 		

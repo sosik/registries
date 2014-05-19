@@ -122,7 +122,6 @@ var FsCtrl = function(options) {
 											return;
 										}
 
-										console.log('filter ', filter);
 										res.name = item;
 										if (filter != null) {
 											if (filter(res)==true) {

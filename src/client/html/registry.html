@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular-route/angular-route.js"></script>
+	<script src="js/registry.js"></script>
+	<script src="js/ps-gui.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/ps-gui.css">
+	<link rel="stylesheet" type="text/css" href="css/registry.css">
+</head>
+<body ng-app="design">
+<div style="position:fixed;width:100%;display:table;">
+	<div style="font-weight: bold; top: 0px; width: 100%; background-color: #669900; display: table-cell; vertical-align: middle;" ng-controller="design-menu">
+		<span style="margin: 10px 10px 10px 10px; font-size: 36px; color: white; display: inline-block;">Matrika</span>
+		<span style="position: relative;float: right; margin: 3px 3px 3px 3px;">
+			<ps-gui-button ps-gui-icon="img/iconmonstr-key-8-icon.svg" class="white-button"></ps-gui-button>
+			<ps-gui-button ps-gui-selectable="menuSelected" ps-gui-on-toggle="menuToggle" ps-gui-icon="img/menu.svg" class="white-button"></ps-gui-button>
+			<div id="main-menu" class="ps-gui-hidden" style="position: absolute; top:100%; right: 0; padding: 0 0 0 0;">
+				<div style="display: table;width:100%;">
+					<div style="display: table-row;">
+						<div style="display: table-cell; width:100%; padding: 5px 3px 5px 3px;" class="heading">Člen</div>
+					</div>
+				</div>
+				<div style="display: table;">
+					<div style="display: table-row;">
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button" ng-click="go('/new/peopleSchema')"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-magnifier-icon.svg" class="menu-button" ng-click="go('/list/peopleSchema')"></ps-gui-button>
+						</div>
+					</div>
+				</div>
+				<div style="display: table;width:100%;">
+					<div style="display: table-row;">
+						<div style="display: table-cell; width:100%; padding: 5px 3px 5px 3px;" class="heading">Člen 2</div>
+					</div>
+				</div>
+				<div style="display: table;">
+					<div style="display: table-row;">
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button" ng-click="go('/new/peopleSchema2')"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-magnifier-icon.svg" class="menu-button" ng-click="go('/list/peopleSchema2')"></ps-gui-button>
+						</div>
+					</div>
+				</div>
+				<div style="display: table;width:100%;">
+					<div style="display: table-row;">
+						<div style="display: table-cell; width:100%; padding: 5px 3px 5px 3px;" class="heading">Člen hokej</div>
+					</div>
+				</div>
+				<div style="display: table;">
+					<div style="display: table-row;">
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button" ng-click="go('/new/hokejSchema')"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-magnifier-icon.svg" class="menu-button" ng-click="go('/list/hokejSchema')"></ps-gui-button>
+						</div>
+					</div>
+				</div>
+				<div style="display: table;width:100%;">
+					<div style="display: table-row;">
+						<div style="display: table-cell; width:100%; padding: 5px 3px 5px 3px;" class="heading">Nastavenia</div>
+					</div>
+				</div>
+				<div style="display: table;">
+					<div style="display: table-row;">
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-magnifier-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+					</div>
+					<div style="display: table-row;">
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-plus-5-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+						<div style="display: table-cell;">
+							<ps-gui-button ps-gui-icon="img/iconmonstr-magnifier-icon.svg" class="menu-button"></ps-gui-button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</span>
+		<div style="background-color: black; height:8px;"></div>
+	</div>
+</div>
+	
+<div ng-controller="new-people" style="height:100%; padding-top: 80px;">
+</div>
+<ng-view></ng-view>
+	{{obj|json}}
+</body>
+</html>

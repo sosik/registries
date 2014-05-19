@@ -17,12 +17,6 @@ app.disable('view cache');
 
 // FSController
 
-var lsfilter= function( item){
-	if ( /.*Schema[0-9]*\.js/.test(item.name)) {
-		return true;
-	}
-	return false;
-};
 
 
 // Static data
@@ -32,6 +26,12 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	if (err) {
 		throw err;
 	}
+	var lsfilter= function( item){
+		if ( /.*Schema[0-9]*\.js/.test(item.name)) {
+			return true;
+		}
+		return false;
+	};
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver);
 	app.put('/udao/save/:table', express.bodyParser(), function(req, res){udc.save(req, res);});
 	app.get('/udao/get/:table/:id', express.bodyParser(), function(req, res){udc.get(req, res);});

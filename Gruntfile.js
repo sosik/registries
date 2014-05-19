@@ -13,6 +13,10 @@ module.exports = function(grunt) {
 	grunt.registerTask('unitTest', ['build', 'mochaTest:unitServer']);
 	grunt.registerTask('integrationTest', ['build', 'mochaTest:integration']);
 
+	grunt.renameTask('clean', '_clean');
+	grunt.registerTask('clean', ['_clean:build']);
+	grunt.registerTask('mrpropper', ['_clean:node_modules', '_clean:bower_components']);
+
 	grunt.registerTask('default', ['build', 'unitTest']);
 
 	grunt.initConfig({
@@ -73,8 +77,10 @@ module.exports = function(grunt) {
 				tasks: ['build:client']
 			}
 		},
-		clean: {
-			build: ['build/']
+		_clean: {
+			build: ['build/'],
+			node_modules: ['node_modules/'],
+			bower_components: ['bower_components/']
 		}
 	});
 };

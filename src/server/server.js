@@ -2,7 +2,7 @@
 
 var express = require('express');
 var path = require('path');
-var fsCtrl = new (require('./FsCtrl.js')).FsCtrl({rootPath: path.join(process.cwd(),'data')});
+var fsCtrl = new (require('./FsCtrl.js')).FsCtrl({rootPath: path.join(process.cwd(),'build/client/js')});
 
 var noop = function() {return;};
 

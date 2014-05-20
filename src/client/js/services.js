@@ -12,19 +12,19 @@ module.factory('schemaApiService', function($http) {
 	    var schemaApi = {};
 
 	    schemaApi.getSchemaList = function() {
-	      return $http({method: 'GET', url: '/fs/ls/', })
+	      return $http({method: 'GET', url: '/schema/ls/', })
 	    };
 	    
 	    
 	    schemaApi.getFileContent = function(path) {
-	    	  var pathContext = 'fs/get/'+path;
+	    	  var pathContext = 'schema/get/'+path;
 		      return $http({method: 'GET', url: pathContext,responseType: 'text'})
 		    };
 
 	    
 	    
 	    schemaApi.getPostContent = function (path,bytes){
-	    	var pathContext = 'fs/replace/'+path;
+	    	var pathContext = 'schema/replace/'+path;
 	    	return $http({ 
 	        method: 'PUT',
 	        url: pathContext,

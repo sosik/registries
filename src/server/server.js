@@ -39,7 +39,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	    
 	    // Map schema editor services
 	    var lsfilter= function( item){
-			if ( /.*Schema[0-9]*\.js/.test(item.name)) {
+			if ( /.*Schema[0-9]*\.js$/.test(item.name)) {
 				return true;
 			}
 			return false;

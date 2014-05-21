@@ -4,17 +4,23 @@
 
 angular.module('myApp.controllers', [])
 
-.controller('MyCtrl1',
-		[ '$scope', function($scope) {
+.controller('MyCtrl1', [ '$scope', function($scope) {
 
-		} ])
+} ])
 
-.controller('SchemaList', ['$scope', 'schemaApiService', function($scope,schemaApiService) {
+.controller('LoginCtrl', [ '$scope', 'LoginApiService', function($scope, LoginApiService) {
 
-	  $scope.schemaList = [];
-	  
-	  schemaApiService.getSchemaList().success(function(data) {
-	    $scope.schemaList = data;
-	  });
-	 
+	$scope.user = 'johndoe';
+	$scope.password = 'johndoe';
+
+	$scope.login = function() {
+		console.log($scope.user + ':' + $scope.password);
+
+		LoginApiService.getLogin($scope.user, $scope.password);
+	}
+
+	$scope.logout = function() {
+		LoginApiService.getLogout();
+	}
+
 } ]);

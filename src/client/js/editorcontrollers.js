@@ -39,7 +39,6 @@ angular.module('ace-ctrl', [ 'ui.ace' ]).controller(
 							});
 
 					$scope.postData= function (data){
-						 console.log('%j' ,$scope.aceModel );
 						 schemaApiService.getPostContent($scope.path,data).success(
 									function(data) {
 										console.log('upload done',$scope.path,data);

@@ -1,0 +1,18 @@
+<section id="LoginForm" ng-app="doc.ui-ace" ng-cloak>
+	     
+    
+    
+    <form ng-controller="LoginCtrl">
+
+        <legend>Create User</legend>
+        <label>User Id</label> 
+        <input type="text" id="name" name="name" ng-model="user" placeholder="User Name"> 
+
+        <label>Password</label>
+        <input type="password" id="pwd" name="pwd" ng-model="password" placeholder="Password">
+
+        <button ng-click="login()" class="btn btn-primary">Prihlásenie</button>
+		<button ng-click="logout()" class="btn btn-primary">Odhlásenie</button>
+    </form>
+    
+</section>

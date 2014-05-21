@@ -6,8 +6,9 @@ var schemaRepoApp=require('./fsController.js');
 
 var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js'));
 var config = require(path.join(process.cwd(), '/build/server/config.js'));
-var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
+
 var universalDaoControllerModule = require(process.cwd() + '/build/server/UniversalDaoController.js');
+var loginControllerModule = require('./loginController.js');
 
 
 var app = express();
@@ -22,10 +23,17 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	}
 	
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver);
+	var loginCtrl= new loginControllerModule.LoginController(mongoDriver);
+	
+	app.use(express.cookieParser());
+	app.use(loginCtrl.authFilter );
+	
 	app.put('/udao/save/:table', express.bodyParser(), function(req, res){udc.save(req, res);});
 	app.get('/udao/get/:table/:id', express.bodyParser(), function(req, res){udc.get(req, res);});
 	app.get('/udao/list/:table', express.bodyParser(), function(req, res){udc.list(req, res);});
 
+	app.post('/login', express.bodyParser(), function(req, res){loginCtrl.login(req, res);});
+	app.get('/logout', express.bodyParser(), function(req, res){loginCtrl.logout(req, res);});
 	
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));
@@ -46,6 +54,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		};
 	    schemaRepoApp.cfg({rootPath: process.cwd() + '/build/client/js' ,fileFilter: lsfilter});
 	    app.use('/schema',schemaRepoApp);
+	    
 	});
 
 

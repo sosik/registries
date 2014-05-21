@@ -30,3 +30,6 @@ angular.module('psui-autocomplete-demo',['psui-autocomplete'])
 
 	$scope.autocomplete1val = 10;
 }])
+.controller('psui-contenteditable-demo-simple', ['$scope', function($scope) {
+	$scope.data = 'fgdfgdfgdfg';
+}])

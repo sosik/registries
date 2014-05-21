@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+	<title>psui-autocomplete-demo</title>
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular-route/angular-route.js"></script>
+	<script src="js/psui-demo.js"></script>
+	<script src="js/psui-autocomplete.js"></script>
+	<script src="js/psui-contenteditable.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/psui.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-autocomplete.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-contenteditable.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-demo.css">
+</head>
+<body ng-app="psui-autocomplete-demo">
+<div ng-controller="psui-autocomplete-demo-simple" id="demo1">
+	<h1>demo 1 - autocomplete</h1>
+	<input psui-autocomplete psui-options="autocompleteOptions1" ng-model="autocomplete1val"></input>
+	<button ng-click="addDataToAutocomplete1()">Add to data</button>
+	<pre>{{autocompleteOptions1|json}}</pre>
+	{{autocomplete1val}}
+</div>
+<div ng-controller="psui-contenteditable-demo-simple" id="demo2">
+	<table width="100%"><tr><td width="50%">
+				<div psui-contenteditable ng-model="data"><img src="http://www.google.com/images/srpr/logo11w.png" height="71" width="202"><br>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<table><tr><td>xxx</td><td>ttt</td></tr><tr><td>xxx</td><td>ttt</td></tr></table></div>
+	</td><td style="text-align:top;">
+		{{data}}
+	</td></tr></table
+</div>
+</body>
+</html>

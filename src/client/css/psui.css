@@ -5,6 +5,14 @@
 	line-height: 1em;
 }
 
+.psui-buttons-holder {
+	position: absolute;
+	right: 0;
+	top: 0;
+	box-sizing: border-box;
+	text-align: right;
+}
+
 .psui-hidden {
 	display: none;
 }

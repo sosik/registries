@@ -50,7 +50,7 @@ describe('FsService', function() {
 			filePathRegexp: /^\/fs\/\w+\//i
 		});
 		
-		expect(fsCtrl.calculateFsPath('/fs/getfile/dir/file.jpg')).to.be.equal(path.join(testDataPath, '/dir/file.jpg'));
+		expect(fsCtrl.calculateFsPath('/dir/file.jpg')).to.be.equal(path.join(testDataPath, '/dir/file.jpg'));
 
 		done();
 	});
@@ -63,7 +63,7 @@ describe('FsService', function() {
 
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
 
-		var reqMock =  '/fs/ls/lsDir';
+		var reqMock =  '/lsDir';
 		var resMock = {
 			statusCode: null,
 			data: null,
@@ -72,7 +72,7 @@ describe('FsService', function() {
 				this.data = data;
 			}
 		};
-
+		
 		fsCtrl.ls(reqMock, resMock,  function(err) {
 			expect(err).to.not.exist;
 			expect(resMock.statusCode).to.be.equal(200);
@@ -100,7 +100,7 @@ describe('FsService', function() {
 		
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath, fileFilter:filterMeth});
 
-		var reqMock = '/fs/ls/lsDir';
+		var reqMock = '/lsDir';
 		var resMock = {
 			statusCode: null,
 			data: null,

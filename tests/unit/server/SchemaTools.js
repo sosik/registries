@@ -290,8 +290,6 @@ describe('SchemaTools', function() {
 
 		var defObj = schemaTools.createDefaultObject("uri://registries/commonRedef#user");
 
-		console.log(defObj);
-
 		expect(defObj).to.have.deep.property('securityCredentials');
 		expect(defObj).to.have.deep.property('securityCredentials.permissions');
 		expect(defObj.securityCredentials.permissions).to.have.deep.property('System User', true);

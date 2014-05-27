@@ -6,8 +6,8 @@ var util = require('util');
 var stream = require('stream');
 
 
-var universalDaoModule = require('./../../../build/server/UniversalDao.js');
-var mongoDriver = require('./../../../build/server/mongoDriver.js');
+var universalDaoModule = require('./../../build/server/UniversalDao.js');
+var mongoDriver = require('./../../build/server/mongoDriver.js');
 var config = require(process.cwd() + '/build/server/config.js');
 
 var loginControllerModule = require(process.cwd() + '/build/server/loginController.js');

@@ -1,6 +1,9 @@
 'use strict';
 
 var express = require('express');
+var cookieParser = require('cookie-parser')
+var bodyParser = require('body-parser')
+var errorhandler = require('errorhandler')
 var path = require('path');
 var schemaRepoApp=require('./fsController.js');
 
@@ -25,41 +28,35 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver);
 	var loginCtrl= new loginControllerModule.LoginController(mongoDriver);
 	
-	app.use(express.cookieParser());
+	app.use(cookieParser());
 	app.use(loginCtrl.authFilter );
 	
-	app.put('/udao/save/:table', express.bodyParser(), function(req, res){udc.save(req, res);});
-	app.get('/udao/get/:table/:id', express.bodyParser(), function(req, res){udc.get(req, res);});
-	app.get('/udao/list/:table', express.bodyParser(), function(req, res){udc.list(req, res);});
+	app.put('/udao/save/:table', bodyParser(), function(req, res){udc.save(req, res);});
+	app.get('/udao/get/:table/:id', bodyParser(), function(req, res){udc.get(req, res);});
+	app.get('/udao/list/:table', bodyParser(), function(req, res){udc.list(req, res);});
 
-	app.post('/login', express.bodyParser(), function(req, res){loginCtrl.login(req, res);});
-	app.get('/logout', express.bodyParser(), function(req, res){loginCtrl.logout(req, res);});
+	app.post('/login', bodyParser(), function(req, res){loginCtrl.login(req, res);});
+	app.get('/logout', bodyParser(), function(req, res){loginCtrl.logout(req, res);});
 	
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));
 
 //	app.all('/my*',fsCtrl2.handle);
 	
-	app.configure('development', function () {
-
-	    app.use(express.static(__dirname + '/public'));
-	    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-	    
-	    // Map schema editor services
-	    var lsfilter= function( item){
-			if ( /.*Schema[0-9]*\.js$/.test(item.name)) {
-				return true;
-			}
-			return false;
-		};
-	    schemaRepoApp.cfg({rootPath: process.cwd() + '/build/client/js' ,fileFilter: lsfilter});
-	    app.use('/schema',schemaRepoApp);
-	    
-	});
-
-
+	app.use(express.static(__dirname + '/public'));
+	app.use(errorhandler({ dumpExceptions: true, showStack: true }));
 	
-	var server = app.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+	// Map schema editor services
+	var lsfilter= function( item){
+		if ( /.*Schema[0-9]*\.js$/.test(item.name)) {
+			return true;
+		}
+		return false;
+	};
+	schemaRepoApp.cfg({rootPath: process.cwd() + '/build/client/js' ,fileFilter: lsfilter});
+	app.use('/schema',schemaRepoApp);
+	    
+	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
 		console.log("Http server listening at %j", server.address());
 	});
 });

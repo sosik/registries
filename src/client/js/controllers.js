@@ -8,8 +8,17 @@ angular.module('myApp.controllers', [])
 
 } ])
 
-.controller('LoginCtrl', [ '$scope', 'LoginApiService', function($scope, LoginApiService) {
+.controller('SchemaListCtrl', [ '$scope', 'schemaApiService', function($scope, schemaApiService) {
 
+	$scope.schemaList = [];
+
+	schemaApiService.getSchemaList().success(function(data) {
+		$scope.schemaList = data;
+	});
+
+} ])
+
+.controller('LoginCtrl', [ '$scope', 'LoginApiService', function($scope, LoginApiService) {
 	$scope.user = 'johndoe';
 	$scope.password = 'johndoe';
 

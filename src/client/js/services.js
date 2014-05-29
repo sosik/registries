@@ -60,13 +60,41 @@ module.factory('LoginApiService', function($http) {
 
 	};
 
-	service.getLogout = function() {
+	service.getResetPassword = function(user) {
 
+		console.log(user);
+
+		return $http({
+		    method : 'POST',
+		    url : '/resetPassword/',
+		    data : {
+			    login : user
+		    }
+		})
+
+	};
+
+	service.getChangePassword = function(currentPassword,newPassword) {
+
+		console.log(currentPassword,'',newPassword);
+
+		return $http({
+		    method : 'POST',
+		    url : '/changePassword',
+		    data : {
+			    currentPassword : currentPassword,
+			    newPassword : newPassword 
+		    }
+		})
+
+	};
+	
+	service.getLogout = function() {
 
 		return $http({
 		    method : 'GET',
 		    url : '/logout/',
-		  
+
 		})
 
 	};

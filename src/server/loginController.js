@@ -3,11 +3,14 @@ var crypto = require("crypto");
 var extend = require('extend');
 var uuid = require('node-uuid');
 
+var nodemailer = require("nodemailer");
+
 var collectionName = 'user';
 
 var DEFAULT_USER = {
     "loginName" : "johndoe",
     "passwordHash" : "johndoe",
+
     "salt" : "johndoe",
     "groups" : {},
     "permissions" : {
@@ -24,9 +27,12 @@ var DEFAULT_CFG = {
     tokenIdColumnName : 'tokenId',
     securityTokenCookie : 'securityToken',
     loginNameCookie : 'loginName',
-    tokenExpiration : 900000
+    tokenExpiration : 900000,
+    generatedPasswordLen : 8
 
 };
+
+var transport = nodemailer.createTransport("Sendmail");
 
 var LoginController = function(mongoDriver, options) {
 
@@ -61,19 +67,17 @@ var LoginController = function(mongoDriver, options) {
 				throw err;
 			}
 
-			if (data.length > 0) {
+			if (data.length == 1) {
 				var user = data[0];
 
 				if (user != null) {
 
-					t.hashPassword(user.salt, req.body.password, function(err, hashPass) {
+					t.verifyUserPassword(user, req.body.password, function(err) {
+
+						console.log('verifyUserPassword', err);
 						if (err) {
-							resp.send(500, err);
-							return;
-						}
-
-						if (user.passwordHash.toString() == hashPass.toString()) {
-
+							resp.send(500, 'Not authenticated.');
+						} else {
 							t.createToken(user.loginName, req.ip, function(token) {
 								t.storeToken(token, user.loginName, req.ip, function(err, data) {
 									if (err != null)
@@ -81,20 +85,45 @@ var LoginController = function(mongoDriver, options) {
 									t.setCookies(resp, token, user.loginName);
 								})
 							})
-						} else {
-							resp.send(500, 'Not authenticated');
 						}
 
 					});
 				}
 
 				else {
-					resp.send(500, 'Not authenticated');
+					resp.send(500, 'Not authenticated.');
 				}
 
 			}
 
 		});
+
+	};
+
+	this.verifyUserPassword = function(user, passwordSample, callback) {
+
+		console.log('verifyUserPassword');
+		if (!user) {
+			callback('user null');
+
+		} else {
+
+			this.hashPassword(user.salt, passwordSample, function(err, hashPass) {
+				if (err) {
+					resp.send(500, err);
+					return;
+				}
+				console.log(user.passwordHash);
+				console.log(hashPass.toString('base64'));
+
+				if (user.passwordHash == hashPass.toString('base64')) {
+					callback(null);
+				} else {
+					callback('password does not match');
+				}
+			});
+
+		}
 
 	};
 
@@ -111,6 +140,7 @@ var LoginController = function(mongoDriver, options) {
 		    user : user,
 		    ip : ip,
 		    created : now,
+		    valid : true,
 		    touched : now
 		};
 
@@ -147,27 +177,186 @@ var LoginController = function(mongoDriver, options) {
 
 				if (tokens.length > 0) {
 					var token = tokens[0];
-					tokenDao.remove(token.id, function(err, data) {
+					token.valid = false;
 
+					tokenDao.update(token, function(err, data) {
 						if (err) {
+							cosole.log(err);
 							resp.send(500, err);
-							return;
+						} else {
+							resp.clearCookie(cfg.securityTokenCookie);
+							resp.clearCookie(cfg.loginNameCookie);
+							resp.send(200);
+							console.log(token);
 						}
 
-						resp.clearCookie(cfg.securityTokenCookie);
-						resp.clearCookie(cfg.loginNameCookie);
-						resp.send(200);
-					});
+					})
+
 				} else {
 					resp.send(500, 'Token does not exist.');
 				}
 
 			});
 		} else {
-			resp.send(500, 'Security Token Missings.');
+			resp.send(500, 'SecurityToken Missings.');
 		}
 
 	};
+
+	/**
+	 * method should be used to re-generate new password for user Method should
+	 * be used by authorized person ( no 'accidental' password resets)
+	 */
+	this.resetPassword = function(req, resp) {
+
+		var t = this;
+		userDao.list({
+			crits : [ {
+			    f : cfg.loginColumnName,
+			    v : req.body.login,
+			    op : 'eq'
+			} ]
+		}, function(err, data) {
+
+			if (err) {
+				res.send(500, err);
+				throw err;
+			}
+
+			if (data.lenght > 1) {
+				res.send(500, 'multiple matching users');
+				throw 'multiple matching users';
+			}
+
+			var randomPass = t.generatePassword();
+			var newsalt = t.generatePassword();
+
+			user = data[0];
+			if (user.email) {
+
+				console.log('Random pass: ' + randomPass);
+				t.hashPassword(newsalt, randomPass, function(err, passwordHash) {
+
+					console.log(passwordHash);
+					user.passwordHash = passwordHash.toString('base64');
+
+					user.salt = newsalt;
+
+					// console.log("user to store: \n%j ",user);
+
+					userDao.update(user, function(err, data) {
+						if (err) {
+							resp.send(500, err);
+						}
+
+						console.log('user password reset done');
+						t.sendResetPasswordMail(user.email, randomPass);
+
+						resp.send(200);
+					});
+
+				})
+
+			} else {
+				resp.send(500, 'User mail not specified');
+
+			}
+
+		})
+
+	};
+
+	this.sendResetPasswordMail = function(email, newPass, callback) {
+		var mailOptions = {
+		    from : "petugez@gmail.com",
+		    to : email,
+		    subject : "[Registry] Your new password ",
+		    text : "Your new password is: " + newPass,
+		    html : "<h3>New Password</h3><h4> Your new password is: <b>" + newPass + " </b> </h4>"
+		}
+
+		console.log('Sending mail ', mailOptions);
+
+		transport.sendMail(mailOptions, callback);
+
+	}
+
+	/**
+	 * method should be used to re-generate new password for user Method should
+	 * be used by authorized person ( no 'accidental' password resets)
+	 */
+	this.changePassword = function(req, resp) {
+
+		if (!req.loginName) {
+			resp.send(500, 'User must be logged in for password change');
+			throw 'User must be logged in for password change';
+		}
+
+		var t = this;
+		userDao.list({
+			crits : [ {
+			    f : cfg.loginColumnName,
+			    v : req.loginName,
+			    op : 'eq'
+			} ]
+		}, function(err, data) {
+
+			if (err) {
+				res.send(500, err);
+			} else {
+
+				if (data.length != 1) {
+					resp.send(500, 'user not found');
+					console.log(data.length + ' users found.');
+				} else {
+					var user = data[0];
+					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
+						if (err) {
+							resp.send(500, err);
+						} else {
+
+							var newPass = req.body.newPassword;
+							var newsalt = t.generatePassword();
+
+							t.hashPassword(newsalt, newPass, function(err, passwordHash) {
+
+								console.log(passwordHash);
+								user.passwordHash = passwordHash.toString('base64');
+
+								user.salt = newsalt;
+
+								userDao.update(user, function(err, data) {
+									if (err) {
+										resp.send(500, err);
+									} else {
+										console.log('user password change done');
+										resp.send(200);
+									}
+
+								});
+
+							})
+
+						}
+					})
+
+				}
+
+			}
+
+		})
+
+	};
+
+	this.generatePassword = function generatePassword() {
+		var length = cfg.generatedPasswordLen, charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", retVal = "";
+
+		for (var i = 0, n = charset.length; i < length; ++i) {
+			retVal += charset.charAt(Math.floor(Math.random() * n));
+		}
+
+		return retVal;
+	}
 
 	this.hashPassword = function(salt, password, callback) {
 		crypto.pbkdf2(password, salt.toString('base64'), 1000, 256, callback);
@@ -194,7 +383,7 @@ var LoginController = function(mongoDriver, options) {
 					var token = tokens[0];
 					// TODO validate IP
 					var now = new Date().getTime();
-					if (req.ip == token.ip && token.touched > (now - cfg.tokenExpiration)) {
+					if (token.valid && req.ip == token.ip && token.touched > (now - cfg.tokenExpiration)) {
 						token.touched = now;
 						// TODO maybe some filtering for updates
 						tokenDao.update(token, function(err, data) {

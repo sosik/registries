@@ -18,6 +18,7 @@
     "express": "*",
     "extend": "*",
     "fs.extra": "*",
+    "nodemailer": "*",
     "grunt": "*",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "*",

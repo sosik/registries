@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('psui-autocomplete', [])
+angular.module('psui-contenteditable', [])
 .directive('psuiContenteditable', ['$timeout', function ($timeout) {
 	return {
 		restrict: 'AE',
@@ -49,14 +49,12 @@ angular.module('psui-autocomplete', [])
 			var buttonRemoveFormat = angular.element('<button>Remove format</button>');
 			var buttonLink = angular.element('<button>Link</button>');
 			var buttonImage = angular.element('<button>Image</button>');
-			var buttonXXX = angular.element('<button>XXX</button>');
 
 			buttonsHolder.append(buttonBold);
 			buttonsHolder.append(buttonItalic);
 			buttonsHolder.append(buttonRemoveFormat);
 			buttonsHolder.append(buttonLink);
 			buttonsHolder.append(buttonImage);
-			buttonsHolder.append(buttonXXX);
 
 			buttonBold.on('click', function(evt) {
 				document.execCommand('bold', false, null);
@@ -90,10 +88,6 @@ angular.module('psui-autocomplete', [])
 				}
 			});
 
-			buttonXXX.on('click', function(evt) {
-				alert(JSON.stringify(document.queryCommandValue('insertImage'));
-			});
-			
 			var buttonsHide = function() {
 				buttonsHolder.addClass('psui-hidden');
 			};

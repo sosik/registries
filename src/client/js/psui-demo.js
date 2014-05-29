@@ -1,4 +1,4 @@
-angular.module('psui-autocomplete-demo',['psui-autocomplete'])
+angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable'])
 .controller('psui-autocomplete-demo-simple', ['$scope', function($scope) {
 	$scope.autocompleteOptions1 = {
 		data: ['Fero', 'Jozo', 'Peter', 'Palo', 'Frantisek', 'Ernest', 'Gregor', 'Marek', 'Milan', 'Albert', 'Tamara', 'Urban', 'Stanislav', 'Hurban', 'Eva'],

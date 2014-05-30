@@ -1,6 +1,7 @@
 var universalDaoModule = require('./UniversalDao.js');
 var crypto = require("crypto");
 var extend = require('extend');
+
 var uuid = require('node-uuid');
 
 var nodemailer = require("nodemailer");
@@ -64,36 +65,38 @@ var LoginController = function(mongoDriver, options) {
 		}, function(err, data) {
 
 			if (err) {
-				throw err;
-			}
+				resp.send(500, err)
+			} else {
 
-			if (data.length == 1) {
-				var user = data[0];
+				if (data.length === 1) {
+					var user = data[0];
 
-				if (user != null) {
+					if (user != null) {
 
-					t.verifyUserPassword(user, req.body.password, function(err) {
+						t.verifyUserPassword(user, req.body.password, function(err) {
 
-						console.log('verifyUserPassword', err);
-						if (err) {
-							resp.send(500, 'Not authenticated.');
-						} else {
-							t.createToken(user.loginName, req.ip, function(token) {
-								t.storeToken(token, user.loginName, req.ip, function(err, data) {
-									if (err != null)
-										return;
-									t.setCookies(resp, token, user.loginName);
+							if (err) {
+								resp.send(500, 'Not authenticated.');
+							} else {
+								t.createToken(user.loginName, req.ip, function(token) {
+									t.storeToken(token, user.loginName, req.ip, function(err, data) {
+										if (err != null)
+											return;
+										t.setCookies(resp, token, user.loginName);
+									})
 								})
-							})
-						}
+							}
 
-					});
+						});
+					}
+
+					else {
+						resp.send(500, 'Not authenticated.');
+					}
+
+				} else {
+					resp.send(500, 'users found ' + data.length);
 				}
-
-				else {
-					resp.send(500, 'Not authenticated.');
-				}
-
 			}
 
 		});
@@ -102,7 +105,6 @@ var LoginController = function(mongoDriver, options) {
 
 	this.verifyUserPassword = function(user, passwordSample, callback) {
 
-		console.log('verifyUserPassword');
 		if (!user) {
 			callback('user null');
 
@@ -113,8 +115,6 @@ var LoginController = function(mongoDriver, options) {
 					resp.send(500, err);
 					return;
 				}
-				console.log(user.passwordHash);
-				console.log(hashPass.toString('base64'));
 
 				if (user.passwordHash == hashPass.toString('base64')) {
 					callback(null);
@@ -172,28 +172,33 @@ var LoginController = function(mongoDriver, options) {
 				    f : cfg.tokenIdColumnName
 				} ]
 			}, function(err, tokens) {
-				if (err)
+
+				if (err) {
 					resp.send(500, err);
 
-				if (tokens.length > 0) {
-					var token = tokens[0];
-					token.valid = false;
-
-					tokenDao.update(token, function(err, data) {
-						if (err) {
-							cosole.log(err);
-							resp.send(500, err);
-						} else {
-							resp.clearCookie(cfg.securityTokenCookie);
-							resp.clearCookie(cfg.loginNameCookie);
-							resp.send(200);
-							console.log(token);
-						}
-
-					})
-
 				} else {
-					resp.send(500, 'Token does not exist.');
+
+					if (tokens.length > 0) {
+						var token = tokens[0];
+						token.valid = false;
+
+						tokenDao.update(token, function(err, data) {
+							if (err) {
+								cosole.log(err);
+								resp.send(500, err);
+
+							} else {
+								resp.clearCookie(cfg.securityTokenCookie);
+								resp.clearCookie(cfg.loginNameCookie);
+								resp.send(200);
+							}
+
+						})
+
+					} else {
+						resp.send(500, 'Token does not exist.');
+					}
+
 				}
 
 			});
@@ -234,22 +239,17 @@ var LoginController = function(mongoDriver, options) {
 			user = data[0];
 			if (user.email) {
 
-				console.log('Random pass: ' + randomPass);
 				t.hashPassword(newsalt, randomPass, function(err, passwordHash) {
 
-					console.log(passwordHash);
 					user.passwordHash = passwordHash.toString('base64');
 
 					user.salt = newsalt;
-
-					// console.log("user to store: \n%j ",user);
 
 					userDao.update(user, function(err, data) {
 						if (err) {
 							resp.send(500, err);
 						}
 
-						console.log('user password reset done');
 						t.sendResetPasswordMail(user.email, randomPass);
 
 						resp.send(200);
@@ -307,7 +307,6 @@ var LoginController = function(mongoDriver, options) {
 
 				if (data.length != 1) {
 					resp.send(500, 'user not found');
-					console.log(data.length + ' users found.');
 				} else {
 					var user = data[0];
 					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
@@ -320,26 +319,19 @@ var LoginController = function(mongoDriver, options) {
 
 							t.hashPassword(newsalt, newPass, function(err, passwordHash) {
 
-								console.log(passwordHash);
 								user.passwordHash = passwordHash.toString('base64');
 
 								user.salt = newsalt;
-
 								userDao.update(user, function(err, data) {
 									if (err) {
 										resp.send(500, err);
 									} else {
-										console.log('user password change done');
 										resp.send(200);
 									}
-
 								});
-
 							})
-
 						}
 					})
-
 				}
 
 			}

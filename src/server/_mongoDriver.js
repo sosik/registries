@@ -57,7 +57,9 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			}
 
 			var set = {};
-			var unset = {};
+			
+			//FIXME:[PS] this need to be validated, mongo 2.6.1 requires this map to be non empty 
+			var unset = {congo_bongo : 1};
 			// TODO handle arrays, functions, etc.
 			var propIterator = function(prefix, obj) {
 				var key;

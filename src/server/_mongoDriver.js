@@ -57,6 +57,7 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			}
 
 			var set = {};
+			
 			var unset = {};
 			// TODO handle arrays, functions, etc.
 			var propIterator = function(prefix, obj) {
@@ -79,6 +80,12 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			};
 
 			propIterator(null, obj);
+			
+			if ( Object.keys(unset).length === 0 ) { 
+				return {$set: set};
+			}
+			
+			
 
 			return {$set: set, $unset: unset};
 		},

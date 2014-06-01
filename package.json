@@ -18,7 +18,6 @@
     "express": "*",
     "extend": "*",
     "fs.extra": "*",
-    "nodemailer": "*",
     "grunt": "*",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "*",
@@ -26,7 +25,8 @@
     "grunt-contrib-watch": "*",
     "grunt-mocha-test": "*",
     "mongodb": "*",
-    "node-uuid": "*"
+    "node-uuid": "*",
+    "nodemailer": "^0.6.5"
   },
   "devDependencies": {},
   "scripts": {

@@ -2048,6 +2048,130 @@
       "version": "1.4.1",
       "from": "node-uuid@*",
       "resolved": "https://registry.npmjs.org/node-uuid/-/node-uuid-1.4.1.tgz"
+    },
+    "nodemailer": {
+      "version": "0.6.5",
+      "from": "nodemailer@",
+      "resolved": "https://registry.npmjs.org/nodemailer/-/nodemailer-0.6.5.tgz",
+      "dependencies": {
+        "mailcomposer": {
+          "version": "0.2.11",
+          "from": "mailcomposer@~0.2.10",
+          "resolved": "https://registry.npmjs.org/mailcomposer/-/mailcomposer-0.2.11.tgz",
+          "dependencies": {
+            "mimelib": {
+              "version": "0.2.16",
+              "from": "mimelib@~0.2.15",
+              "resolved": "https://registry.npmjs.org/mimelib/-/mimelib-0.2.16.tgz",
+              "dependencies": {
+                "encoding": {
+                  "version": "0.1.7",
+                  "from": "encoding@~0.1.7",
+                  "resolved": "https://registry.npmjs.org/encoding/-/encoding-0.1.7.tgz",
+                  "dependencies": {
+                    "iconv-lite": {
+                      "version": "0.2.11",
+                      "from": "iconv-lite@~0.2.11",
+                      "resolved": "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.2.11.tgz"
+                    }
+                  }
+                },
+                "addressparser": {
+                  "version": "0.2.1",
+                  "from": "addressparser@~0.2.1",
+                  "resolved": "https://registry.npmjs.org/addressparser/-/addressparser-0.2.1.tgz"
+                }
+              }
+            },
+            "mime": {
+              "version": "1.2.11",
+              "from": "mime@~1.2.11",
+              "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
+            },
+            "punycode": {
+              "version": "1.2.4",
+              "from": "punycode@~1.2.4",
+              "resolved": "https://registry.npmjs.org/punycode/-/punycode-1.2.4.tgz"
+            },
+            "follow-redirects": {
+              "version": "0.0.3",
+              "from": "follow-redirects@0.0.3",
+              "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-0.0.3.tgz",
+              "dependencies": {
+                "underscore": {
+                  "version": "1.6.0",
+                  "from": "underscore@",
+                  "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
+                }
+              }
+            },
+            "dkim-signer": {
+              "version": "0.1.2",
+              "from": "dkim-signer@~0.1.1",
+              "resolved": "https://registry.npmjs.org/dkim-signer/-/dkim-signer-0.1.2.tgz"
+            }
+          }
+        },
+        "simplesmtp": {
+          "version": "0.3.32",
+          "from": "simplesmtp@~0.2 || ~0.3.30",
+          "resolved": "https://registry.npmjs.org/simplesmtp/-/simplesmtp-0.3.32.tgz",
+          "dependencies": {
+            "rai": {
+              "version": "0.1.11",
+              "from": "rai@~0.1.11",
+              "resolved": "https://registry.npmjs.org/rai/-/rai-0.1.11.tgz"
+            },
+            "xoauth2": {
+              "version": "0.1.8",
+              "from": "xoauth2@~0.1.8",
+              "resolved": "https://registry.npmjs.org/xoauth2/-/xoauth2-0.1.8.tgz"
+            }
+          }
+        },
+        "directmail": {
+          "version": "0.1.8",
+          "from": "directmail@~0.1.7",
+          "resolved": "https://registry.npmjs.org/directmail/-/directmail-0.1.8.tgz"
+        },
+        "he": {
+          "version": "0.3.6",
+          "from": "he@~0.3.6",
+          "resolved": "https://registry.npmjs.org/he/-/he-0.3.6.tgz"
+        },
+        "public-address": {
+          "version": "0.1.1",
+          "from": "public-address@~0.1.1",
+          "resolved": "https://registry.npmjs.org/public-address/-/public-address-0.1.1.tgz"
+        },
+        "readable-stream": {
+          "version": "1.1.13-1",
+          "from": "readable-stream@~1.1.9",
+          "resolved": "https://registry.npmjs.org/readable-stream/-/readable-stream-1.1.13-1.tgz",
+          "dependencies": {
+            "core-util-is": {
+              "version": "1.0.1",
+              "from": "core-util-is@~1.0.0",
+              "resolved": "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.1.tgz"
+            },
+            "isarray": {
+              "version": "0.0.1",
+              "from": "isarray@0.0.1",
+              "resolved": "https://registry.npmjs.org/isarray/-/isarray-0.0.1.tgz"
+            },
+            "string_decoder": {
+              "version": "0.10.25-1",
+              "from": "string_decoder@~0.10.x",
+              "resolved": "https://registry.npmjs.org/string_decoder/-/string_decoder-0.10.25-1.tgz"
+            },
+            "inherits": {
+              "version": "2.0.1",
+              "from": "inherits@~2.0.1",
+              "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
+            }
+          }
+        }
+      }
     }
   }
 }

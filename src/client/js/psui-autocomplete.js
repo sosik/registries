@@ -89,7 +89,7 @@ angular.module('psui-autocomplete', [])
 				// we are attribute
 			}
 
-			var dropdown = angular.element('<div class="psui-dropdown psui-hidden">xxx</div>');
+			var dropdown = angular.element('<div class="psui-dropdown psui-hidden"></div>');
 			wrapper.append(dropdown);
 
 			// handle ng-model

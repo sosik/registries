@@ -4,12 +4,15 @@
 	<title>psui-autocomplete-demo</title>
 	<script src="lib/angular/angular.js"></script>
 	<script src="lib/angular-route/angular-route.js"></script>
+	<script src="js/psui.js"></script>
 	<script src="js/psui-autocomplete.js"></script>
 	<script src="js/psui-contenteditable.js"></script>
+	<script src="js/psui-selectbox.js"></script>
 	<script src="js/psui-demo.js"></script>
 	<link rel="stylesheet" type="text/css" href="css/psui.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-autocomplete.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-contenteditable.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-selectbox.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-demo.css">
 </head>
 <body ng-app="psui-demo">
@@ -28,7 +31,13 @@
 <table><tr><td>xxx</td><td>ttt</td></tr><tr><td>xxx</td><td>ttt</td></tr></table></div>
 	</td><td style="vertical-align: top;" width="50%">
 		{{data}}
-	</td></tr></table
+	</td></tr></table>
 </div>
+<div ng-controller="psui-selectbox-demo-simple" id="demo3">
+	<h1>demo 3 - selectbox</h1>
+	<div psui-selectbox psui-options="selectBoxOpts" ng-model="model.selected">xxxxxxxxxxxxxxxxxxxx</div>
+	{{model.selected}}
+</div>
+	<h1>demo 3 - selectbox</h1>
 </body>
 </html>

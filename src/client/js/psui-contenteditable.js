@@ -44,18 +44,23 @@ angular.module('psui-contenteditable', [])
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
 
+			var buttonCenter = angular.element('<button>Center</button>');
 			var buttonBold = angular.element('<button><b>Bold</b></button>');
 			var buttonItalic = angular.element('<button><i>Italic</i></button>');
 			var buttonRemoveFormat = angular.element('<button>Remove format</button>');
 			var buttonLink = angular.element('<button>Link</button>');
 			var buttonImage = angular.element('<button>Image</button>');
 
+			buttonsHolder.append(buttonCenter);
 			buttonsHolder.append(buttonBold);
 			buttonsHolder.append(buttonItalic);
 			buttonsHolder.append(buttonRemoveFormat);
 			buttonsHolder.append(buttonLink);
 			buttonsHolder.append(buttonImage);
 
+			buttonCenter.on('click', function(evt) {
+				document.execCommand('justifyCenter', false, null);
+			});
 			buttonBold.on('click', function(evt) {
 				document.execCommand('bold', false, null);
 			});

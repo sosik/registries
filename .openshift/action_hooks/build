@@ -1,4 +1,5 @@
 #!/bin/bash
 
 (cd $OPENSHIFT_REPO_DIR && HOME=$OPENSHIFT_REPO_DIR $OPENSHIFT_REPO_DIR/node_modules/.bin/bower --config.interactive=false install )
-(cd $OPENSHIFT_REPO_DIR && ./node_modules/.bin/grunt build)
+(cd $OPENSHIFT_REPO_DIR && gem install sass)
+(cd $OPENSHIFT_REPO_DIR && PATH=$PATH:$OPENSHIFT_HOMEDIR/.gem/bin/ ./node_modules/.bin/grunt build)

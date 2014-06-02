@@ -1,79 +1,101 @@
 #main-menu{
-  position: fixed;
-  top: $header-height + 1;
-  bottom: 0px;
-  left: 0px;
-  
-  .sidebar{
-    float:left;
-    height: 100%;
-    border-top: 1px solid $sidebar-border-color-light;
-    /*border-right: 1px solid $sidebar-border-color-dark;*/
-    background-color: $sidebar-light-bg;
-    width: $sidebar-close-width;
-    /*width: auto;*/
-    overflow: hidden;
-    @include transition(width .5s);
-    
-    &:hover{
-      width: 150px;
-      @include transition(width 0.5s);
-    }
-    li{
-      white-space: nowrap;
-    }
-    
-    a{
-      display: block;
-      height: $sidebar-close-width;
-      line-height: $sidebar-close-width;
-      color: $sidebar-color-base;
-      padding-right: 11px;
-      /*width: 100%;*/
-      
-      i{
-        font-size: 20px;
-        padding: 0px 11px;
-        line-height: $sidebar-close-width
-      }
-      &:hover i{
-        color: $sisebar-color-light;
-      }
-      &.separator{
-        border-top: 4px solid $sidebar-separator-bg;
-      }
-      span{
-        position: relative;
-        top: -3px;
-      }
-      &.active{
-        background-color: white;
-        i{
-          color: $sisebar-color-dark;
-        }
-        &:hover{
-          color: $sidebar-color-base;
-        }
-      }
-    }
-    
-    header{
-      display: block;
-      height: $sidebar-close-width; 
-      a{
-        border-bottom: 1px solid $sidebar-border-color-dark;
-      }
-    }
+	position: fixed;
+	top: $header-height;
+	bottom: 0px;
+	left: 0px;
 
-    &.submenu{
-      background-color: white;
-      a{
-        &:hover i{
-          color: $sisebar-color-dark;
-        } 
-      }
-    }
-  }
+	.sidebar{
+		float:left;
+		height: 100%;
+		/*border-top: 1px solid $sidebar-border-color-light;*/
+		background-color: $sidebar-light-bg;
+		width: $sidebar-close-width;
+		/*width: auto;*/
+		overflow: hidden;
+		@include transition(width .5s);
+
+		&:hover{
+			width: 150px;
+			@include transition(width 0.5s);
+		}
+		li{
+			white-space: nowrap;
+		}
+
+		a{
+			display: block;
+			height: $sidebar-close-width;
+			line-height: $sidebar-close-width;
+			color: $sidebar-color-base;
+			padding-right: 11px;
+
+			i{
+				font-size: $sidebar-icon-size;
+				padding: 0px 11px;
+				line-height: $sidebar-close-width
+			}
+			&:hover i{
+				color: $sidebar-color-light;
+			}
+			&.separator{
+				border-top: 4px solid $sidebar-separator-bg;
+			}
+			span{
+				position: relative;
+				top: -3px;
+			}
+			&.active{
+				background-color: $sidebar-dark-bg;
+				color: $sidebar-color-light;
+/*				i{
+					color: $sidebar-color-dark;
+				}
+				&:hover{
+					color: $sidebar-color-base;
+				}*/
+			}
+		}
+
+		header{
+			display: block;
+			height: $sidebar-close-width; 
+			a{
+				border-bottom: 1px solid $sidebar-border-color-dark;
+			}
+		}
+
+		&.submenu{
+			background-color: $sidebar-dark-bg;
+			border-right: 1px solid $sidebar-border-color-light;
+/*			a{
+				&:hover i{
+					color: $sidebar-color-dark;
+				} 
+			}*/
+		}
+	}
+}
+
+#main-wrapper{
+	> header{
+		.toogle-menu{
+			display: block;
+			line-height:  $header-height;
+			padding: 0px 10px;
+			width: $sidebar-close-width;
+			background-color: $sidebar-light-bg;
+			i{
+				font-size: $sidebar-icon-size;
+				line-height:  $header-height;
+				color: $sidebar-color-base;
+			}
+			&:hover{
+				i{
+					color: $sidebar-color-light;
+				}
+			}
+		}
+	}
 }
 
 

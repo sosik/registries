@@ -9,6 +9,7 @@ $font-color-dark: #636363 !default;
 $font-color-light: #ffffff !default;
 $page-bg: #ffffff !default;
 
+
 // Typography
 $font-family-base: "Open Sans",helvetica,arial,sans-serif !default;
 $font-size-base: 12px !default;
@@ -40,6 +41,6 @@ $sidebar-light-bg: #2f3337 !default;
 $sidebar-separator-bg: #262a2e !default;
 $sidebar-close-width: 43px !default;
 $sidebar-color-base: #757677 !default;
-$sisebar-color-light: $font-color-light !default;
-$sisebar-color-dark: $sidebar-border-color-dark !default;
-/*$sidebar-open-width: ;*/
+$sidebar-color-light: $font-color-light !default;
+$sidebar-color-dark: $sidebar-border-color-dark !default;
+$sidebar-icon-size: 20px;

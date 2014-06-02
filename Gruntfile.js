@@ -4,9 +4,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-mocha-test');
+	grunt.loadNpmTasks('grunt-contrib-sass');
 
 	grunt.registerTask('build:server', ['copy:server']);
-	grunt.registerTask('build:client', ['copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img']);
+	grunt.registerTask('build:client', ['copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass:compile']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server']);
 	grunt.registerTask('test', ['build', 'mochaTest:unitServer']);
@@ -48,6 +49,11 @@ module.exports = function(grunt) {
 					{expand: true, cwd: 'src/client/img', src: ['**'], dest: 'build/client/img'}
 				]
 			},
+			fonts: {
+				files: [
+					{expand: true, cwd: 'src/client/fonts', src: ['**'], dest: 'build/client/fonts'}
+				]
+			},
 			bower: {
 				files: [
 					{expand: true, cwd: 'bower_components', src: ['**'], dest: 'build/client/lib/'}
@@ -72,7 +78,6 @@ module.exports = function(grunt) {
 				},
 				src: ['tests/integration/**/*']
 			}
-
 		},
 		watch: {
 			server: {
@@ -80,14 +85,33 @@ module.exports = function(grunt) {
 				tasks: ['build:server']
 			},
 			client: {
-				files: ['src/client/**', 'src/client/html', 'src/client/css', 'src/client/js', 'src/client/img','src/client/html-partials'],
+				files: ['src/client/html/**', 'src/client/css/**', 'src/client/js/**', 'src/client/img/**','src/client/html-partials/**', 'src/client/fonts/**'],
 				tasks: ['build:client']
+			},
+			sass: {
+				files: ['src/client/scss/**'],
+				tasks: ['sass:compile']
 			}
 		},
 		_clean: {
 			build: ['build/'],
 			node_modules: ['node_modules/'],
 			bower_components: ['bower_components/']
+		},
+		sass: {
+			compile: {
+				options: {
+					unixNewlines: true,
+					sourcemap: true
+				},
+				files: [{
+					expand: true,
+					cwd: 'src/client/scss/',
+					src: ['*.scss'],
+					dest: 'build/client/css/',
+					ext: '.css'
+				}]
+			}
 		}
 	});
 };

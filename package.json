@@ -28,7 +28,9 @@
     "node-uuid": "*",
     "nodemailer": "^0.6.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt-contrib-sass": "^0.7.3"
+  },
   "scripts": {
     "test": "grunt test",
     "start": "supervisor -- build/server/server.js"

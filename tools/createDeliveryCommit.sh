@@ -14,7 +14,7 @@ TMPFILE=`mktemp`
 
 echo $DEPLOYMENT_HEADER $1 >$TMPFILE
 echo >>$TMPFILE
-git log $LAST_DEPL..HEAD|egrep -i '\[FINIS.* #[0-9]*\]'|sed -e 's/^.*\[FIN\w* #\([0-9]*\)\].*$/\[DELIVERED #\1\]/i'|sort -u >>$TMPFILE
+git log $LAST_DEPL..HEAD|egrep -i '\[FINIS|FIX.* #[0-9]*\]'|sed -e 's/^.*\[\(FIN\|FIX\)\w* #\([0-9]*\)\].*$/\[DELIVERED #\2\]/i'|sort -u >>$TMPFILE
 
 cat $TMPFILE
 git commit --allow-empty -F $TMPFILE

@@ -1,5 +1,6 @@
 'use strict';
 
+var log = require('./logging.js').getLogger('FsCtrl.js');
 var extend = require('extend');
 var fs = require('fs');
 var async = require('async');
@@ -89,7 +90,7 @@ var FsCtrl = function(options) {
 					next();
 				} else {
 					if (!stat.isDirectory()) {
-						console.log('not a dir');
+						log.verbose('not a dir');
 						res.send(500, 'Path is not directory');
 						next();
 					} else {
@@ -334,7 +335,7 @@ var FsCtrl = function(options) {
 			});
 		}, function(err) {
 			if (err) {
-				console.log(error);
+				log.verbose(err);
 				next();
 			} else {
 				if (srcFile == candidate) {

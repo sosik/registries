@@ -5,14 +5,15 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-mocha-test');
 	grunt.loadNpmTasks('grunt-contrib-sass');
+	grunt.loadNpmTasks('grunt-env');
 
 	grunt.registerTask('build:server', ['copy:server']);
 	grunt.registerTask('build:client', ['copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass:compile']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server']);
-	grunt.registerTask('test', ['build', 'mochaTest:unitServer']);
-	grunt.registerTask('unitTest', ['build', 'mochaTest:unitServer']);
-	grunt.registerTask('integrationTest', ['build', 'mochaTest:integration']);
+	grunt.registerTask('test', ['env:test', 'build', 'mochaTest:unitServer']);
+	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer']);
+	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 
 	grunt.renameTask('clean', '_clean');
 	grunt.registerTask('clean', ['_clean:build']);
@@ -111,6 +112,11 @@ module.exports = function(grunt) {
 					dest: 'build/client/css/',
 					ext: '.css'
 				}]
+			}
+		},
+		env: {
+			test: {
+				NODE_ENV: 'test'
 			}
 		}
 	});

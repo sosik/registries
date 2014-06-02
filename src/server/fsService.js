@@ -1,5 +1,6 @@
 'use strict';
 
+var log = require('./logging.js').getLogger('fsService.js');
 var extend = require('extend');
 var fs = require('fs');
 var async = require('async');
@@ -32,7 +33,7 @@ var FsCtrl = function(options) {
 	this.cfg={};
 	this.cfg = extend(true, {}, DEFAULT_CFG, options);
 	
-	console.log('%j',this.cfg);
+	log.silly(this.cfg);
 	
 	var realPathCache = {};
 

@@ -24,10 +24,12 @@
     "grunt-contrib-copy": "*",
     "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-watch": "*",
+    "grunt-env": "^0.4.1",
     "grunt-mocha-test": "*",
     "mongodb": "*",
     "node-uuid": "*",
-    "nodemailer": "^0.6.5"
+    "nodemailer": "^0.6.5",
+    "winston": "^0.7.3"
   },
   "devDependencies": {
     "grunt-contrib-sass": "^0.7.3"

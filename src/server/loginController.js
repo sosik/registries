@@ -1,3 +1,6 @@
+'use strict';
+
+var log = require('./logging.js').getLogger('loginController.js');
 var universalDaoModule = require('./UniversalDao.js');
 var crypto = require("crypto");
 var extend = require('extend');
@@ -275,7 +278,7 @@ var LoginController = function(mongoDriver, options) {
 		    html : "<h3>New Password</h3><h4> Your new password is: <b>" + newPass + " </b> </h4>"
 		}
 
-		console.log('Sending mail ', mailOptions);
+		log.verbose('Sending mail ', mailOptions);
 
 		transport.sendMail(mailOptions, callback);
 

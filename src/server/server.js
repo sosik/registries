@@ -1,5 +1,6 @@
 'use strict';
 
+var log = require('./logging.js').getLogger('server.js');
 var express = require('express');
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
@@ -59,6 +60,6 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use('/schema',schemaRepoApp);
 	    
 	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
-		console.log("Http server listening at %j", server.address());
+		log.info("Http server listening at %j", server.address(), {});
 	});
 });

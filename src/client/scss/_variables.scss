@@ -1,0 +1,45 @@
+// Devices
+$device-mobile-tablet-width: 768px !default;
+$device-tablet-width: 1024px !default;
+$device-desktop-width: 1280px !default;
+
+// Colors
+$font-color-base: #333333 !default;
+$font-color-dark: #636363 !default;
+$font-color-light: #ffffff !default;
+$page-bg: #ffffff !default;
+
+// Typography
+$font-family-base: "Open Sans",helvetica,arial,sans-serif !default;
+$font-size-base: 12px !default;
+
+$line-height-base:        1.428571429 !default; // 20/14
+$line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
+
+// Iconography
+/*$icon-font-path: "../fonts/" !default;
+$icon-font-name: "font" !default;
+$icon-font-svg-id: "font" !default;
+$icon-font-family: "font" !default;*/
+
+// Header
+$header-height: 46px !default;
+$header-font-size: 13px !default;
+$header-line-height: floor(($header-font-size * $line-height-base));
+$header-bg: #256188 !default;
+$header-light-bg: #4c7d9d !default;
+$header-color-base: $font-color-light !default;
+$header-notification-color: red !default;
+
+// Main Menu
+$sidebar-width: 42px !default;
+$sidebar-border-color-dark: #000000 !default;
+$sidebar-border-color-light: #393a3c !default;
+$sidebar-dark-bg: #212123 !default;
+$sidebar-light-bg: #2f3337 !default;
+$sidebar-separator-bg: #262a2e !default;
+$sidebar-close-width: 43px !default;
+$sidebar-color-base: #757677 !default;
+$sisebar-color-light: $font-color-light !default;
+$sisebar-color-dark: $sidebar-border-color-dark !default;
+/*$sidebar-open-width: ;*/

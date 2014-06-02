@@ -1,0 +1,34 @@
+// base layout
+body {
+  font-family: $font-family-base;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  background: $page-bg;
+}
+
+[class^="glyphicon-"], [class*="glyphicon-"] {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a{
+  &:hover{
+    text-decoration: none;
+  }
+}
+
+// Content
+#content-wrapper{
+  margin-top: $header-height + 1 + 10;
+  margin-left: 2 * $sidebar-close-width + 10;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  color: $font-color-light;
+}

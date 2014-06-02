@@ -1,49 +1,119 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="lib/html5-boilerplate/css/normalize.css">
-  <link rel="stylesheet" href="lib/html5-boilerplate/css/main.css">
-  <link rel="stylesheet" href="css/app.css"/>
-  <script src="lib/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js"></script>
+<!--[if lt IE 7 ]> <html class="ie ie6 ie-lt10 ie-lt9 ie-lt8 ie-lt7 no-js" lang="en"> <![endif]-->
+<!--[if IE 7 ]>    <html class="ie ie7 ie-lt10 ie-lt9 ie-lt8 no-js" lang="en"> <![endif]-->
+<!--[if IE 8 ]>    <html class="ie ie8 ie-lt10 ie-lt9 no-js" lang="en"> <![endif]-->
+<!--[if IE 9 ]>    <html class="ie ie9 ie-lt10 no-js" lang="en"> <![endif]-->
+<!--[if gt IE 9]><!--><html class="no-js" lang="en"><!--<![endif]-->
 
-</head>
-<body>
-  <ul class="menu">
-    <li><a href="#/schemalist">schemaList</a></li>
-     <li><a href="#/login">login</a></li>
-     <li><a href="#/changepassword">change password</a></li>
-  </ul>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="author" content="" />
+    <meta name="description" content="" />
+    <meta name="copyright" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" />
 
-  <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/bootstrap-theme.css" />
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div id="main-wrapper">
+      <header>
+        <nav>
+          <ul>
+            <li><a href="#" class="active"><i class="glyphicon glyphicon-envelope"></i><span class="label">10</span></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-cog"></i><span>Settings</span></a></li>
+            <li><a href="#"><span>My Settings</span></a></li>
+          </ul>
+        </nav>
 
-  <div ng-view></div>
+        <div class="search-box">
+          <form action="#">
+            <input type="text" placeholder="Search text">
+            <!--<input type="submit" />-->
+          </form>
+        </div>
 
-  <div class="version">V<span app-version></span></div>
-
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
-  -->
-  <script src="lib/angular/angular.js"></script>
-  <script src="lib/angular-ui-ace/ui-ace.js" data-ace-base="src" type="text/javascript" charset="utf-8">
-  </script>
-   <script src="lib/ace-builds/src/ace.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/angular-route/angular-route.js"></script>
-  <script src="js/editorcontrollers.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/services.js"></script>
-  <script src="js/controllers.js"></script>
-  <script src="js/filters.js"></script>
-  <script src="js/directives.js"></script>
-  
-</body>
+        <div class="logo-wrapper">
+          LOGO
+        </div>
+      </header>
+      <!-- /main-navbar -->
+      
+      <div id="main-menu">
+        <div class="sidebar">
+          <header>
+            <a href="#"><i class="glyphicon-align-justify"></i></a>
+          </header>
+          <section>
+            <ul>
+              <li><a href="#" class="active"><i class="glyphicon-list"></i><span>Register</span></a></li>
+              <li><a href="#"><i class="glyphicon-th"></i><span>Comm.</span></a></li>
+              <li><a href="#"><i class="glyphicon-glass"></i><span>Events</span></a></li>
+              <li><a href="#"><i class="glyphicon-paperclip"></i><span>Documents</span></a></li>
+              <li><a href="#" class="separator"><i class="glyphicon-euro"></i><span>Finance</span></a></li>
+              <li><a href="#"><i class="glyphicon-repeat"></i><span>Requests</span></a></li>
+            </ul>
+          </section>
+          <footer></footer>
+        </div>
+        <div class="sidebar submenu">
+          <header></header>
+          <section>
+            <ul>
+              <li><a href="#"><i class="glyphicon-tasks"></i><span>List</span></a></li>
+              <li><a href="#"><i class="glyphicon-plus"></i><span>Add</span></a></li>
+              <li><a href="#"><i class="glyphicon-pencil"></i><span>Detail</span></a></li>
+            </ul>
+          </section>
+          <footer></footer>
+        </div>
+      </div>
+      <!-- /main-menu -->
+      
+      <div id="content-wrapper">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean quis mollis odio. Donec ullamcorper, erat eu adipiscing convallis, ante urna ullamcorper tellus, quis malesuada nisl tellus vel leo. Quisque non dignissim metus, vitae fringilla arcu. Integer quis ante magna. Mauris porttitor lorem sed metus vestibulum iaculis. In sollicitudin tellus vitae arcu blandit, sit amet dignissim libero ultricies. Cras pulvinar, sapien id varius dignissim, odio nisi tempor urna, id feugiat purus ante sed mi. Donec pellentesque augue quis porttitor mattis. Fusce cursus pharetra lacus a laoreet. Mauris sed vulputate tellus. Suspendisse mi libero, aliquam id condimentum quis, placerat blandit eros.
+      </div>
+      <!-- /content-wrapper -->
+    </div>
+    
+    
+    <!--    <header>
+          <nav>
+            <ul>
+              <li><a href="#">link1</a></li>
+              <li><a href="#">link2</a></li>
+            </ul>
+          </nav>
+          
+          <div class="search-box">
+            <form action="#">
+              <input class="search-box-text" type="text" placeholder="Search text">
+              <input class="search-box-button" type="submit" />
+            </form>
+          </div>
+          
+          <div class="logo-wrapper">
+            LOGO
+          </div>
+      </header>
+      
+      <div id="main">
+        <div></div>
+        <div id="content-wrapper"></div>
+        <div id="content-wrapper">
+          
+        </div>
+      </div>
+        
+      <footer>
+          <p><small>&copy; Copyright Unionsoft 2013. All Rights Reserved.</small></p>
+      </footer>
+    -->
+  </body>
 </html>

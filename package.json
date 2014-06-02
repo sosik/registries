@@ -29,6 +29,7 @@
     "mongodb": "*",
     "node-uuid": "*",
     "nodemailer": "^0.6.5",
+    "supervisor": "^0.6.0",
     "winston": "^0.7.3"
   },
   "devDependencies": {
@@ -36,6 +37,6 @@
   },
   "scripts": {
     "test": "grunt test",
-    "start": "supervisor -- build/server/server.js"
+    "start": "supervisor --watch 'build/' -- build/server/server.js"
   }
 }

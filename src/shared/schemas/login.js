@@ -1,0 +1,23 @@
+{
+	"$schema": "http://json-schema.org/schema#",
+	"id": "uri://registries/common#login",
+	"login": {
+	      "type": "object",
+	      "properties": {
+	        "loginName": {
+	          "title": "Prihlasovacie meno",
+	          "type": "string"
+	        },
+	        "passwordHash": {
+	          "title": "Hash hesla",
+	          "description": ""
+	          "type": "string"
+	        },
+	        "salt": {
+	          "title": "Salt pre hash hesla",
+	          "description": ""
+	          "type": "string"
+	        }
+	      }	
+
+}

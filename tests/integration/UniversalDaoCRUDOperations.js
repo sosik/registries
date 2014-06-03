@@ -138,6 +138,45 @@ describe('universalDaoCRUDOperations', function() {
 			});
 		});
 	});
+	
+	it('Update - dao should update saved object empty unset', function(done) {
+		var cn = 'testCol';
+		var d = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{collectionName: cn}
+		);
+
+		var updatedUser = {
+			id: user1.id,
+			name: {
+				firstName: 'Jim'
+			},
+			address: {
+				city: 'notnullcity'
+			}
+		};
+
+		d.update(updatedUser, function(err, count){
+			if (err) {
+				throw new Error(err);
+			}
+			
+			expect(count).to.be.equal(1);
+			
+			mongoDriver.getDb().collection(cn).findOne({"_id": new ObjectID.createFromHexString(user1.id)}, function(err, mongoData) {
+				if (err) {
+					throw new Error(err);
+				}
+				expect(mongoData._id.toHexString()).to.be.equal(updatedUser.id);
+				expect(mongoData.name.firstName).to.be.equal(updatedUser.name.firstName);
+				expect(mongoData.name.lastName).to.be.equal(user1.name.lastName);
+				expect(mongoData.address).to.include.key('city');
+
+				done();
+			});
+		});
+	});
+	
 	it('Delete - dao should remove saved object', function(done) {
 		var cn = 'testCol';
 		var d = new universalDaoModule.UniversalDao(

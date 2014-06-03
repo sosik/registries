@@ -1,3 +1,4 @@
+// Transition
 @mixin transition($args...) {
   -webkit-transition: $args;
   -moz-transition: $args;
@@ -6,12 +7,14 @@
   transition: $args;
 }
 
+// Opacity
 @mixin opacity($opacity) {
   opacity: $opacity;
   $opacity-ie: $opacity * 100;
   filter: alpha(opacity=$opacity-ie); //IE8
 }
 
+// Clearfix
 @mixin clearfix() {
   &:before,
   &:after {
@@ -21,4 +24,22 @@
   &:after {
     clear: both;
   }
+}
+
+// Placeholder text
+@mixin placeholder($color: $input-color-placeholder) {
+  &::-moz-placeholder           { color: $color;   // Firefox
+                                  opacity: 1; } // See https://github.com/twbs/bootstrap/pull/11526
+  &:-ms-input-placeholder       { color: $color; } // Internet Explorer 10+
+  &::-webkit-input-placeholder  { color: $color; } // Safari and Chrome
+}
+
+// Drop shadows
+//
+// Note: Deprecated `.box-shadow()` as of v3.1.0 since all of Bootstrap's
+//   supported browsers that have box shadow capabilities now support the
+//   standard `box-shadow` property.
+@mixin box-shadow($shadow...) {
+  -webkit-box-shadow: $shadow; // iOS <4.3 & Android <4.1
+          box-shadow: $shadow;
 }

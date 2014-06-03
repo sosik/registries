@@ -1,0 +1,14 @@
+label {
+	font-weight: normal;
+}
+
+@include media-tablet-up{
+	.control-label {
+		text-align: left;
+	}
+}
+
+.form-control {
+  font-size: $font-size-small;
+  @include box-shadow(none);
+}

@@ -1,7 +1,7 @@
 // Devices
 $device-mobile-tablet-width: 768px !default;
-$device-tablet-width: 1024px !default;
-$device-desktop-width: 1280px !default;
+/*$device-tablet-width: 1024px !default;*/
+$device-desktop-width: 1200px !default;
 
 // Colors
 $font-color-base: #333333 !default;
@@ -12,10 +12,20 @@ $page-bg: #ffffff !default;
 
 // Typography
 $font-family-base: "Open Sans",helvetica,arial,sans-serif !default;
-$font-size-base: 12px !default;
-
+$font-size-base:          14px !default;
 $line-height-base:        1.428571429 !default; // 20/14
 $line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
+
+$font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
+$font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
+$font-size-mini:		  ceil(($font-size-base * 0.56)) !default; // ~12px
+
+$font-size-h1:            floor(($font-size-base * 2.6)) !default; // ~36px
+$font-size-h2:            floor(($font-size-base * 2.15)) !default; // ~30px
+$font-size-h3:            ceil(($font-size-base * 1.7)) !default; // ~24px
+$font-size-h4:            ceil(($font-size-base * 1.25)) !default; // ~18px
+$font-size-h5:            $font-size-base !default;
+$font-size-h6:            ceil(($font-size-base * 0.85)) !default; // ~12px
 
 // Iconography
 /*$icon-font-path: "../fonts/" !default;
@@ -25,7 +35,7 @@ $icon-font-family: "font" !default;*/
 
 // Header
 $header-height: 46px !default;
-$header-font-size: 13px !default;
+$header-font-size: $font-size-base !default;
 $header-line-height: floor(($header-font-size * $line-height-base));
 $header-bg: #256188 !default;
 $header-light-bg: #4c7d9d !default;
@@ -43,4 +53,4 @@ $sidebar-close-width: 43px !default;
 $sidebar-color-base: #757677 !default;
 $sidebar-color-light: $font-color-light !default;
 $sidebar-color-dark: $sidebar-border-color-dark !default;
-$sidebar-icon-size: 20px;
+$sidebar-icon-size: $font-size-large;

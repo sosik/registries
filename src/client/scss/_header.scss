@@ -1,99 +1,101 @@
 #main-wrapper{
-  min-width: 320px;
+	min-width: 320px;
 
-  > header{
-    position: fixed;
-    top: 0px;
-    height: $header-height;
-    background-color: $header-bg;
-    color: $header-color-base;
-    width: 100%;
-    overflow: hidden;
-    /*border-bottom: 1px solid $header-bg;*/
+	> header{
+		position: fixed;
+		top: 0px;
+		height: $header-height;
+		background-color: $header-bg;
+		color: $header-color-base;
+		width: 100%;
+		overflow: hidden;
 
-    a{
-      color: $header-color-base;
-      text-decoration: none;
-    }
+		a{
+			color: $header-color-base;
+			text-decoration: none;
+		}
 
-    .logo-wrapper{
-      font-weight: bold;
-      line-height:  $header-height;
-      padding-left: 10px;
-    }
+		.logo-wrapper,
+		.toogle-menu{
+			float: left;
+		}
+		
+		.logo-wrapper{
+			font-weight: bold;
+			line-height:  $header-height;
+			padding-left: 10px;
+		}
 
-    nav{
-      float: right;
+		nav{
+			float: right;
 
-      li{
-        display: block;
-        float: left;
-        height: 100%;
-        position: relative;
-        a {
-          line-height: $header-height;
-          font-size: 14px;
-          padding: 0px 15px;
-          /*border-left: 1px solid $header-light-bg;*/
-          display: block;
-          height:100%;
-          @include transition(all .5s);
+			li{
+				display: block;
+				float: left;
+				height: 100%;
+				position: relative;
+				a {
+					line-height: $header-height;
+					font-size: 14px;
+					padding: 0px 15px;
+					display: block;
+					height:100%;
+					@include transition(all .5s);
 
-          &:hover{
-            background-color: $header-light-bg;
-            @include transition(all .5s);
-          }
-          &.active{
-            background: $page-bg;
-            /*                        background: $header-color-base;
-                                    color: $header-bg;*/
-          }
-          span{
-            text-transform: uppercase;
-            position: relative;
-            top: -1px;
-            &.label{
-              position: absolute;
-              background-color: $header-notification-color;
-              font-size: 8px;
-              padding: 0 3px;
-              line-height: 10px;
-              display: block;
-              right: 10px;
-              top: 10px;
-              text-align: center;
-              white-space: nowrap;
-              vertical-align: baseline;
-              border-radius: .25em;
-            }
-          }
-          i{
-            + span{
-              margin-left: 10px;
-            }
-          }
-        }    
-      }
+					&:hover{
+						background-color: $header-light-bg;
+						@include transition(all .5s);
+					}
+					&.active{
+						background: $page-bg;
+						color: $font-color-dark;
+					}
+					span{
+						text-transform: uppercase;
+						position: relative;
+						top: -1px;
+						&.label{
+							position: absolute;
+							background-color: $header-notification-color;
+							font-size: 8px;
+							padding: 0 3px;
+							line-height: 10px;
+							display: block;
+							right: 10px;
+							top: 10px;
+							text-align: center;
+							white-space: nowrap;
+							vertical-align: baseline;
+							border-radius: .25em;
+						}
+					}
+					i{
+						+ span{
+							margin-left: 10px;
+						}
+					}
+				}    
+			}
 
-    }
+		}
 
-    .search-box{
-      float: right;
-      margin: 8px 10px;
+		.search-box{
+			float: right;
+			margin: 8px 10px;
 
-      input[type="text"]{
-        color: $header-color-base;
-        border: 1px solid $header-light-bg;
-        background-color: $header-light-bg;
-        border-radius: 5px;
-        height: 30px;
-        padding: 0px 5px;
+			input[type="text"]{
+				color: $header-color-base;
+				border: 1px solid $header-light-bg;
+				background-color: $header-light-bg;
+				border-radius: 5px;
+				height: 30px;
+				padding: 0px 5px;
 
-        &:hover,&:focus {
-          border-color:$header-color-base;
-          @include transition(all .5s);
-        }
-      }
-    }
-  }
+				&:hover,&:focus {
+					border-color:$header-color-base;
+					@include transition(all .5s);
+				}
+			}
+		}
+	}
 }

@@ -14,6 +14,8 @@ var config = require(path.join(process.cwd(), '/build/server/config.js'));
 var universalDaoControllerModule = require(process.cwd() + '/build/server/UniversalDaoController.js');
 var loginControllerModule = require('./loginController.js');
 
+var securityControllerModule = require('./securityController.js');
+
 
 var app = express();
 app.disable('view cache');
@@ -29,6 +31,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver);
 	var loginCtrl= new loginControllerModule.LoginController(mongoDriver);
 	
+	var securityCtrl= new  securityControllerModule.SecurityController({});
+	
+	
 	app.use(cookieParser());
 	app.use(loginCtrl.authFilter );
 	
@@ -39,8 +44,11 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/login', bodyParser(), function(req, res){loginCtrl.login(req, res);});
 	app.get('/logout', bodyParser(), function(req, res){loginCtrl.logout(req, res);});
 	app.post('/resetPassword', bodyParser(), function(req, res){loginCtrl.resetPassword(req, res);});
-        app.post('/changePassword', bodyParser(), function(req, res){loginCtrl.changePassword(req, res);});
-	
+    app.post('/changePassword', bodyParser(), function(req, res){loginCtrl.changePassword(req, res);});
+
+    app.get('/security/roles',function(req,res){securityCtrl.getRoles(req,res)});
+    
+    
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));
 

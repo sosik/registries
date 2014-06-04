@@ -12,6 +12,25 @@ var util = require('util');
 //TODO handle recursive schemas properly
 var SchemaTools = function() {
 
+	// object representation of $objectLink
+	var objectLinkSchema = {
+	$schema: "http://json-schema.org/schema#",
+	id: "uri://registries/objectLink#",
+	type: 'object',
+		properties: {
+			registry: {
+				type: 'string'
+			},
+			oid: {
+				type: 'string'
+			}
+		},
+		additionalProperties: {
+			refData: {
+				type: 'object'
+			}
+		}
+	}
 	// hashTable storing registered caches
 	var schemasCache = {};
 
@@ -129,6 +148,7 @@ var SchemaTools = function() {
 	}
 
 	this.parse = function() {
+		// TODO consider property ID only if it is defined in main structure not in "properties"
 		for (var schemaUri in schemasCache) {
 			parseInternal(schemaUri, schemasCache[schemaUri], schemasCache[schemaUri].url.hash);
 		}
@@ -147,6 +167,11 @@ var SchemaTools = function() {
 					// there is still work to do
 					return false;
 				}
+			} else if (('object' === typeof obj[prop]) && ('$objectLink' in obj[prop])) {
+				//TODO text if it is only property (same as $ref)
+				//TODO support for local reference
+				var compiled = extend(obj[prop], objectLinkSchema);
+				return compiled;
 			} else if (prop === '$ref') {
 				//TODO check if it os only property
 				var compiled = that.getSchema(obj.$ref).compiled;
@@ -233,6 +258,23 @@ var SchemaTools = function() {
 
 		return iterateSchema(compiledSchema.compiled);
 	}
+
+	this.schemaPathToObjectPath = function(schemaPath) {
+		var result = '';
+		var inProperty = true;
+		for (var i = 0; i< schemaPath.length; i++) {
+			var char = schemaPath.charAt(i);
+
+			switch (chat) {
+				case '.':
+					break;
+				default:
+					result += char;
+			}
+		}
+
+		return result;
+	};
 };
 
 module.exports = {

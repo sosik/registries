@@ -296,4 +296,36 @@ describe('SchemaTools', function() {
 
 		done();
 	});
+
+	it('$objectLink compilation test', function(done) {
+		var objSchema = {
+			"id": "uri://test/objSchema#",
+			"properties": {
+				"name": {
+					"type": "string"
+				},
+				"club": {
+					"$objectLink": {
+						"name": "name",
+						"city": "address.city"
+					}
+				}
+			}
+
+		};
+
+		var schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, objSchema);
+
+		schemaTools.parse();
+		schemaTools.compile();
+
+		var r = schemaTools.getSchema("uri://test/objSchema#");
+
+		expect(r.compiled.properties.club).to.have.property('$objectLink');
+		expect(r.compiled.properties.club.$objectLink).to.have.property('city');
+		expect(r.compiled.properties.club.properties).to.have.property('registry');
+		expect(r.compiled.properties.club.properties).to.have.property('oid');
+		done();
+	});
 });

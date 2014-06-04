@@ -1,5 +1,6 @@
 'use strict';
 
+var log = require('./logging.js').getLogger('fsService.js');
 var URL = require('url');
 var path = require('path');
 var extend = require('extend');
@@ -44,6 +45,7 @@ var SchemaTools = function() {
 	 */
 	this.registerSchema = function(uri, schema, override) {
 		var schemaObj = null;
+		
 
 		if (typeof schema === 'string') {
 			schemaObj = JSON.parse(schema);
@@ -55,14 +57,16 @@ var SchemaTools = function() {
 			throw new Error('Failed to parse schema object');
 		}
 		
+		
 		// if there is no uri provided, extract one from schema itself
 		var url;
 		if (uri) {
 			url = normalizeURL(URL.parse(uri));
 		} else {
 			// extract id from schema
-			if (schema.id) {
-				url = normalizeURL(URL.parse(schema.id));
+			if (schemaObj.id) {
+				url = normalizeURL(URL.parse(schemaObj.id));
+				
 			} else {
 				throw new Error('Neither uri or schema.id defined');
 			}
@@ -73,7 +77,7 @@ var SchemaTools = function() {
 		}
 		schemasCache[URL.format(url)] = {
 			url: url,
-			def: schema,
+			def: schemaObj,
 			compiled: null
 		};
 	};
@@ -195,12 +199,14 @@ var SchemaTools = function() {
 
 	this.createDefaultObject = function(uri) {
 		var compiledSchema = schemasCache[uri];
+		
 
 		if (!compiledSchema) {
 			return false;
 		}
 
 		var iterateSchema = function(schemaFragment) {
+			
 			if ('default' in schemaFragment) {
 				// there is default so lets use it
 				if ('object' === schemaFragment.default) {

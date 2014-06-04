@@ -8,9 +8,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-env');
 
 	grunt.registerTask('build:server', ['copy:server']);
+	grunt.registerTask('build:shared', ['copy:shared_schemas']);
 	grunt.registerTask('build:client', ['copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass:compile']);
 
-	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server']);
+	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:shared']);
 	grunt.registerTask('test', ['env:test', 'build', 'mochaTest:unitServer']);
 	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
@@ -60,6 +61,11 @@ module.exports = function(grunt) {
 					{expand: true, cwd: 'bower_components', src: ['**'], dest: 'build/client/lib/'}
 				]
 			},
+			shared_schemas: {
+				files: [
+					{expand: true, cwd: 'src/shared/schemas', src: ['**'], dest: 'build/shared/schemas/'}
+				]
+			},
 			server: {
 				files: [
 					{expand: true, cwd: 'src/server', src: ['**'], dest: 'build/server/'}
@@ -88,6 +94,11 @@ module.exports = function(grunt) {
 			client: {
 				files: ['src/client/html/**', 'src/client/css/**', 'src/client/js/**', 'src/client/img/**','src/client/html-partials/**', 'src/client/fonts/**'],
 				tasks: ['build:client']
+			},
+			
+			shared: {
+				files: ['src/shared/schemas/**'],
+				tasks: ['build:shared']
 			},
 			sass: {
 				files: ['src/client/scss/**'],

@@ -18,6 +18,16 @@ angular.module('myApp.controllers', [])
 
 } ])
 
+.controller('SecurityCtrl', [ '$scope', 'securityApiService', function($scope, securityApiService) {
+
+	$scope.roleList = [];
+
+	securityApiService.getSecurityRoles().success(function(data) {
+		$scope.roleList = data;
+	});
+
+} ])
+
 .controller('LoginCtrl', [ '$scope', 'LoginApiService', function($scope, LoginApiService) {
 	$scope.user = 'johndoe';
 	$scope.password = 'johndoe';

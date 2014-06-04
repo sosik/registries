@@ -15,6 +15,8 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/schemaeditor/:id', {templateUrl: 'partials/schemaEditor.html', controller: 'AceCtrl'});
   $routeProvider.when('/login', {templateUrl: 'partials/LoginPage.html', controller: 'LoginCtrl'});
   
+  $routeProvider.when('/security/roles', {templateUrl: 'partials/securityRoleList.html', controller: 'SecurityCtrl'})
+  
   $routeProvider.when('/changepassword', {templateUrl: 'partials/ChangePasswordPage.html', controller: 'LoginCtrl'});
   $routeProvider.otherwise({redirectTo: '/view1'});
 }]);

@@ -101,3 +101,23 @@ module.factory('LoginApiService', function($http) {
 
 	return service;
 });
+
+module.factory('securityApiService', function($http) {
+
+	var service = {};
+
+	service.getSecurityRoles = function() {
+
+
+		return $http({
+		    method : 'GET',
+		    url : '/security/roles',
+		    
+		})
+
+	};
+
+	
+
+	return service;
+});

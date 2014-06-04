@@ -140,7 +140,7 @@ var FsCtrl = function(options) {
 
 										res.name = item;
 										if (filter != null) {
-											if (filter(res) == true) {
+											if (filter(res) === true) {
 												result.push(res);
 											}
 										} else {
@@ -228,7 +228,7 @@ var FsCtrl = function(options) {
 			if (err) {
 				callback(err);
 			} else {
-				if (srcFile == candidate) {
+				if (srcFile === candidate) {
 					next();
 				} else {
 					fs.rename(srcFile, candidate, function(err) {

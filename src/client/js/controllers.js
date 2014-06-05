@@ -20,13 +20,67 @@ angular.module('myApp.controllers', [])
 
 .controller('SecurityCtrl', [ '$scope', 'securityApiService', function($scope, securityApiService) {
 
-	$scope.roleList = [];
+	$scope.permissions = [];
 
-	securityApiService.getSecurityRoles().success(function(data) {
-		$scope.roleList = data;
+	securityApiService.getSecurityPermissions().success(function(data) {
+		$scope.permissions = data;
 	});
 
 } ])
+
+.controller('UserCtrl', [ '$scope', 'userApiService', function($scope, userApiService) {
+
+	$scope.userList = [];
+
+	userApiService.getUserList().success(function(data) {
+		$scope.userList = data;
+	});
+
+} ])
+
+.controller('UserEditCtrl',
+        [ '$scope', 'userApiService', 'securityApiService', '$routeParams', function($scope, userApiService, securityApiService, $routeParams) {
+
+
+	        $scope.user = {};
+	        $scope.user.permissions=[];
+
+	        var remove = function(arr, item) {
+	        	for (var i = arr.length; i--;) {
+			        if (arr[i] === item) {
+				        arr.splice(i, 1);
+			        }
+		        }
+	        }
+
+	        securityApiService.getSecurityPermissions().success(function(data) {
+		        $scope.permissions = data;
+		        securityApiService.getUserPermissions($routeParams.id).success(function(data) {
+		        	$scope.user = data;
+		        	
+		        	for (var i = data.permissions.length; i--;) {
+		        		remove( $scope.permissions,data.permissions[i]);
+			        }
+		        	
+		        });
+	        });
+
+
+	        $scope.addPermission = function(value) {
+		        $scope.user.permissions.push(value);
+		        remove($scope.permissions, value);
+
+	        };
+	        $scope.removePermission = function(value) {
+		        $scope.permissions.push(value);
+		        remove($scope.user.permissions, value);
+	        };
+
+	        $scope.updatePermissions = function() {
+		        securityApiService.updatePermissions($routeParams.id, $scope.user.permissions);
+	        }
+
+        } ])
 
 .controller('LoginCtrl', [ '$scope', 'LoginApiService', function($scope, LoginApiService) {
 	$scope.user = 'johndoe';
@@ -36,7 +90,6 @@ angular.module('myApp.controllers', [])
 	$scope.newPassword = 'johndoe2';
 
 	$scope.login = function() {
-		console.log($scope.user + ':' + $scope.password);
 
 		LoginApiService.getLogin($scope.user, $scope.password);
 	};
@@ -50,7 +103,6 @@ angular.module('myApp.controllers', [])
 	};
 
 	$scope.changePassword = function() {
-		console.log('change pass');
 		LoginApiService.getChangePassword($scope.currentPassword, $scope.newPassword);
 	};
 

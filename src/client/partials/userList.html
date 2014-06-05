@@ -8,8 +8,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="role in permissions">
-				<td>{{role}}</td>
+			<tr ng-repeat="user in userList">
+				<td>{{user.loginName}}</td>
+				<td><a href="{{ '#/user/edit/'+user.id}}">edit </a></td>
 			</tr>
 		</tbody>
 	</table>

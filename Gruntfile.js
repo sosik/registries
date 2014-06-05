@@ -92,7 +92,7 @@ module.exports = function(grunt) {
 				tasks: ['build:server']
 			},
 			client: {
-				files: ['src/client/html/**', 'src/client/css/**', 'src/client/js/**', 'src/client/img/**','src/client/html-partials/**', 'src/client/fonts/**'],
+				files: ['src/client/html/**', 'src/client/css/**', 'src/client/js/**', 'src/client/img/**','src/client/partials/**', 'src/client/fonts/**'],
 				tasks: ['build:client']
 			},
 			

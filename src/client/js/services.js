@@ -47,8 +47,6 @@ module.factory('LoginApiService', function($http) {
 
 	service.getLogin = function(user, password) {
 
-		console.log(user + ':' + password);
-
 		return $http({
 		    method : 'POST',
 		    url : '/login/',
@@ -62,7 +60,6 @@ module.factory('LoginApiService', function($http) {
 
 	service.getResetPassword = function(user) {
 
-		console.log(user);
 
 		return $http({
 		    method : 'POST',
@@ -74,21 +71,20 @@ module.factory('LoginApiService', function($http) {
 
 	};
 
-	service.getChangePassword = function(currentPassword,newPassword) {
+	service.getChangePassword = function(currentPassword, newPassword) {
 
-		console.log(currentPassword,'',newPassword);
 
 		return $http({
 		    method : 'POST',
 		    url : '/changePassword',
 		    data : {
-			    currentPassword : currentPassword,
-			    newPassword : newPassword 
+		        currentPassword : currentPassword,
+		        newPassword : newPassword
 		    }
 		})
 
 	};
-	
+
 	service.getLogout = function() {
 
 		return $http({
@@ -106,18 +102,52 @@ module.factory('securityApiService', function($http) {
 
 	var service = {};
 
-	service.getSecurityRoles = function() {
-
+	service.getSecurityPermissions = function() {
 
 		return $http({
 		    method : 'GET',
-		    url : '/security/roles',
-		    
+		    url : '/security/permissions',
+
 		})
 
 	};
 
-	
+	service.getUserPermissions = function(userId) {
+
+		return $http({
+		    method : 'GET',
+		    url : '/user/permissions/' + userId
+		})
+
+	};
+
+	service.updatePermissions = function(userId, permissions) {
+
+		return $http({
+		    method : 'POST',
+		    url : '/user/permissions/update',
+		    data : {
+		        userId : userId,
+		        permissions : permissions
+		    }
+		});
+	}
+
+	return service;
+});
+
+module.factory('userApiService', function($http) {
+
+	var service = {};
+
+	service.getUserList = function() {
+
+		return $http({
+		    method : 'GET',
+		    url : '/user/list',
+		});
+
+	};
 
 	return service;
 });

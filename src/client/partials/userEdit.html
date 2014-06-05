@@ -1,0 +1,29 @@
+<p>This user permissions management</p>
+
+<div>
+	<h4>{{user.loginName}}</h4>
+
+	<p> users permisions
+	<table border="1">
+		<tbody>
+			<tr ng-repeat="perm in user.permissions">
+				<td  ng-click="removePermission(perm)" >{{perm}}</td>
+				<td><a href="" ng-click="removePermission(perm)">remove </a></td>
+			</tr>
+		</tbody>
+
+	</table>
+	<br>
+	<p> available perm to assign
+	<table border="1">
+		<tbody >
+			<tr ng-repeat="perm in permissions">
+				<td  ng-click="addPermission(perm)">{{perm}}</td>
+				<td><a href="" ng-click="addPermission(perm)">add </a></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<button ng-click="updatePermissions()" >save</button>
+	
+</div>

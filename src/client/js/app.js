@@ -17,6 +17,10 @@ config(['$routeProvider', function($routeProvider) {
   
   $routeProvider.when('/security/roles', {templateUrl: 'partials/securityRoleList.html', controller: 'SecurityCtrl'})
   
+  $routeProvider.when('/user/list', {templateUrl: 'partials/userList.html', controller: 'UserCtrl'});
+  
+  $routeProvider.when('/user/edit/:id', {templateUrl: 'partials/userEdit.html', controller: 'UserEditCtrl'});
+  
   $routeProvider.when('/changepassword', {templateUrl: 'partials/ChangePasswordPage.html', controller: 'LoginCtrl'});
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  //$routeProvider.otherwise({redirectTo: '/schemalist'});
 }]);

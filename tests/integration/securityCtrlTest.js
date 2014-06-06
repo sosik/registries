@@ -12,7 +12,7 @@ describe('SecurityCtrl', function() {
 		done();
 	});
 
-	var securityCtrl = new securityModule.SecurityController();
+	var securityCtrl = new securityModule.SecurityController(null, {});
 
 	it('getRoles should return non empty list of roles', function(done) {
 		

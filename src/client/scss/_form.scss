@@ -9,6 +9,119 @@ label {
 }
 
 .form-control {
-  font-size: $font-size-small;
-  @include box-shadow(none);
+	font-size: $font-size-small;
+	@include box-shadow(none);
+	background-color: #f8f8f8;
+	border: 1px solid #b0b0b0;	
+	border-radius: 0px;
+}
+
+.input-group{
+	> .input-group-btn{
+		> .btn{
+			line-height: 20px;
+			/*background-color: #f8f8f8;*/
+			border: 1px solid #b0b0b0;
+			border-radius: 0px;
+			border-left: 0px;
+			&.btn-default{
+				background-color: #f8f8f8;
+				border: 1px solid #b0b0b0;
+				border-left: 0px;
+			}
+			&.btn-warning{
+				border-color: #f0f0f0;
+				border: 1px solid #b0b0b0;
+				border-left: 0px;
+			}
+			&.btn-success{
+				border-color: #f0f0f0;
+				border: 1px solid #b0b0b0;
+				border-left: 0px;
+			}
+			&.btn-error{
+				background-color: #ff0000;
+				color: #ffffff;
+				border: 1px solid #b0b0b0;
+				border-left: 0px;
+			}
+		}
+	}
+}
+
+.btn{	
+	border-radius: 0px;	 
+}
+
+button[type="submit"]{
+	i {
+		margin-right: 10px;
+	}
+}
+
+.has-warning{ 
+	.input-group{
+		> .input-group-btn{
+			> .btn{
+				border-left: 0px;
+				&.btn-default{
+					border: 1px solid #ff0000;
+					border-left-color: #b0b0b0;
+					border-left: 0px;
+				}
+				&.btn-warning{
+					border: 1px solid #ff0000;
+					border-left-color: #b0b0b0;
+					border-left: 0px;
+				}
+				&.btn-success{
+					border: 1px solid #ff0000;
+					border-left-color: #b0b0b0;
+					border-left: 0px;
+				}
+				&.btn-error{
+					border: 1px solid #ff0000;
+					border-left-color: #b0b0b0;
+					border-left: 0px;
+				}
+			}
+		}
+	}
+}
+
+.form {
+	fieldset{
+		> label{
+			text-transform: uppercase;
+			
+			display: block;
+			padding: 10px 0px;
+			margin-bottom: 15px;
+			border-bottom: 1px solid #b0b0b0;
+			span{
+				font-weight: bold;
+				/*border-bottom: 4px solid #f0f0f0;*/
+			}
+		}
+		.control-label {
+			text-align: right;
+		}
+
+	}
+}
+
+.btn-success{
+	@include gradient-vertical(#47a447, darken(#47a447, 20%));	
+}
+
+.btn-warning{
+	@include gradient-vertical(#ed9c28, darken(#ed9c28, 20%));	
+}
+
+.btn-default{
+	@include gradient-vertical(#f8f8f8, darken(#f8f8f8, 30%));	
+}
+
+.btn-error{
+	@include gradient-vertical(#ff0000, darken(#ff0000, 20%));	
 }

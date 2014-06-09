@@ -26,6 +26,8 @@ a{
 
 h1{
     font-size: $font-size-h1;
+	font-weight: bold;
+	text-transform: uppercase;
 }
 
 h2{
@@ -34,9 +36,18 @@ h2{
 
 // Content
 #content-wrapper{
-  margin-top: $header-height + 1 + 10;
-  margin-left: 2 * $sidebar-close-width + 10;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-top: $header-height;
+  margin-left: 2 * $sidebar-close-width;
+/*  margin-right: 10px;
+  margin-bottom: 10px;*/
   color: $font-color-base;
+}
+
+#content{
+	padding: 18px 20px;
+	h1{
+		margin-top: 0px;
+		margin-left: 15px;
+	}
+	
 }

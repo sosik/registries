@@ -3,6 +3,7 @@
 	top: $header-height;
 	bottom: 0px;
 	left: 0px;
+	z-index: 4;
 
 	.sidebar{
 		float:left;
@@ -15,7 +16,7 @@
 		@include transition(width .5s);
 
 		&:hover{
-			width: 150px;
+			width: $sidebar-open-width;
 			@include transition(width 0.5s);
 		}
 		li{
@@ -31,7 +32,7 @@
 
 			i{
 				font-size: $sidebar-icon-size;
-				padding: 0px 11px;
+				padding: 0px 16px;
 				line-height: $sidebar-close-width
 			}
 			&:hover i{
@@ -81,7 +82,7 @@
 		.toogle-menu{
 			display: block;
 			line-height:  $header-height;
-			padding: 0px 10px;
+			padding: 0px 16px;
 			width: $sidebar-close-width;
 			background-color: $sidebar-light-bg;
 			i{

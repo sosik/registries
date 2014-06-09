@@ -24,7 +24,10 @@
 		.logo-wrapper{
 			font-weight: bold;
 			line-height:  $header-height;
-			padding-left: 10px;
+			padding-left: 16px;
+			img{
+				height:27px;
+			}
 		}
 
 		nav{

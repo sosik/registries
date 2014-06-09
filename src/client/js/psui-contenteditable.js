@@ -45,22 +45,58 @@ angular.module('psui-contenteditable', [])
 			wrapper.append(buttonsHolder);
 
 			var buttonCenter = angular.element('<button>Center</button>');
+			var buttonLeft = angular.element('<button>Left</button>');
+			var buttonRight = angular.element('<button>Right</button>');
+			var buttonJustify = angular.element('<button>Justify</button>');
 			var buttonBold = angular.element('<button><b>Bold</b></button>');
 			var buttonItalic = angular.element('<button><i>Italic</i></button>');
 			var buttonRemoveFormat = angular.element('<button>Remove format</button>');
+			var buttonRemoveHeading = angular.element('<button>Remove heading</button>');
 			var buttonLink = angular.element('<button>Link</button>');
 			var buttonImage = angular.element('<button>Image</button>');
+			var buttonUndo = angular.element('<button>Undo</button>');
+			var buttonRedo = angular.element('<button>Redo</button>');
+			var buttonH1 = angular.element('<button>H1</button>');
+			var buttonH2 = angular.element('<button>H2</button>');
+			var buttonH3 = angular.element('<button>H3</button>');
 
 			buttonsHolder.append(buttonCenter);
+			buttonsHolder.append(buttonLeft);
+			buttonsHolder.append(buttonRight);
+			buttonsHolder.append(buttonJustify);
 			buttonsHolder.append(buttonBold);
 			buttonsHolder.append(buttonItalic);
 			buttonsHolder.append(buttonRemoveFormat);
+			buttonsHolder.append(buttonRemoveHeading);
 			buttonsHolder.append(buttonLink);
 			buttonsHolder.append(buttonImage);
+			buttonsHolder.append(buttonUndo);
+			buttonsHolder.append(buttonRedo);
+			buttonsHolder.append(buttonH1);
+			buttonsHolder.append(buttonH2);
+			buttonsHolder.append(buttonH3);
 
 			buttonCenter.on('click', function(evt) {
 				document.execCommand('justifyCenter', false, null);
 			});
+			
+			buttonLeft.on('click', function(evt) {
+				document.execCommand('justifyLeft', false, null);
+				//var htmlNodes = rangy.getSelection().getRangeAt(0).getNodes([1]);
+				var htmlNodes = rangy.getSelection().getAllRanges();
+				console.log(htmlNodes);
+				console.log(rangy.getSelection())
+				
+			});
+			
+			buttonRight.on('click', function(evt) {
+				document.execCommand('justifyRight', false, null);
+			});
+			
+			buttonJustify.on('click', function(evt) {
+				document.execCommand('justifyFull', false, null);
+			});
+			
 			buttonBold.on('click', function(evt) {
 				document.execCommand('bold', false, null);
 			});
@@ -72,6 +108,11 @@ angular.module('psui-contenteditable', [])
 			buttonRemoveFormat.on('click', function(evt) {
 				document.execCommand('removeFormat', false, null);
 			});
+			
+			buttonRemoveHeading.on('click', function(evt) {
+				document.execCommand('formatBlock', false, 'div');
+			});
+
 
 			buttonImage.on('click', function(evt) {
 				//TODO propper image url selection dialog
@@ -91,6 +132,26 @@ angular.module('psui-contenteditable', [])
 				if (url) {
 					document.execCommand('createLink', false, url);
 				}
+			});
+			
+			buttonUndo.on('click', function(evt) {
+				document.execCommand('undo', false, null)
+			});
+			
+			buttonRedo.on('click', function(evt) {
+				document.execCommand('redo', false, null)
+			});
+			
+			buttonH1.on('click', function(evt) {
+				document.execCommand('formatBlock', false, "H1")
+			});
+			
+			buttonH2.on('click', function(evt) {
+				document.execCommand('formatBlock', false, "H2")
+			});
+			
+			buttonH3.on('click', function(evt) {
+				document.execCommand('formatBlock', false, "H3")
 			});
 
 			var buttonsHide = function() {

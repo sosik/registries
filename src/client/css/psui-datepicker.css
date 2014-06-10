@@ -1,0 +1,17 @@
+table.psui-datepicker {
+	border-spacing:0px;
+}
+table.psui-datepicker td {
+	text-align: center;
+	padding: 3px 5px;
+}
+table.psui-datepicker tr.days {
+	font-weight: bold;
+}
+table.psui-datepicker tr.month {
+	font-weight: bold;
+	background-color: #ccc;
+}
+table.psui-datepicker td.other {
+	color: #ccc;
+}

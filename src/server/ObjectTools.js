@@ -1,15 +1,18 @@
+var log = require('./logging.js').getLogger('ObjectTools.js');
+var async = require('async');
+
 var ObjectTools = function() {
 
 	/**
 	 * Function iterated in depth object structure and calls visitor on
-	 * property which name comply to provided propertyNameRegexp.
+	 * property paths that comply to provided propertyPathRegexp.
 	 *
 	 * Visitor function should look like function(value, propertyPath, origObj)
 	 * value - value of property
 	 * propertyPath - name of property dot denoted from root of original object
 	 * origObj - original object
 	 */
-	this.propertyVisitor = function(obj, propertyNameRegexp, visitor, localPath, localObj) {
+	this.propertyVisitor = function(obj, propertyPathRegexp, visitor, localPath, localObj) {
 		// TODO prevent infinite loop in cyclic objects
 		if (!localPath) {
 			// initialize
@@ -28,11 +31,11 @@ var ObjectTools = function() {
 				var nextLocalObj = localObj[prop];
 				var nextLocalPath = localPath + prop;
 
-				if (propertyNameRegexp.test(nextLocalPath)) {
+				if (propertyPathRegexp.test(nextLocalPath)) {
 					visitor(nextLocalObj, nextLocalPath, obj);
 				}
 
-				this.propertyVisitor(obj, propertyNameRegexp, visitor, nextLocalPath + '.', nextLocalObj);
+				this.propertyVisitor(obj, propertyPathRegexp, visitor, nextLocalPath + '.', nextLocalObj);
 			}
 		}
 	}
@@ -105,6 +108,92 @@ var ObjectTools = function() {
 		}
 
 		return evalPathInternal(obj, pathArr);
+	}
+
+	/**
+	 * Strippes number of segments from end of path
+	 */
+	this.stripFromPath = function(path, noOfSegments) {
+		//TODO add support for quoted parameters
+		var lastDot = path.length;
+
+		for (var i=0; i < noOfSegments; i++) {
+			var dotIndex = path.lastIndexOf('.', lastDot - 1);
+			if (dotIndex > -1) {
+				lastDot = dotIndex;
+			} else {
+				log.error('There is not enought segments in path to strip', {path: path, noOfSegments: noOfSegments});
+				throw new Error('There is not enought segments in path to strip');
+			}
+		}
+		
+		return path.substr(0, lastDot);
+	}
+
+	// this is VERY but VERY nasty function, IT HAS TO BE FIXED. it do not handle lot of corner cases
+	// FIXME FIX THIS NASTY FUNCTION
+	this.schemaPathToObjectPath = function(schemaPath) {
+		return schemaPath.replace(/properties\./g, '');
+	};
+
+	/**
+	 * resolves all objectLinks for definded in schemaObj
+	 *
+	 * This funcition directly mutates object parameter
+	 *
+	 * @param schemaObj - expects schema.compiled
+	 * @param object - object in which to resolve objectLinks
+	 * @param iterator - function that gets registry, oid, fields (if null all fields should be provided), callback - callback is function(err, data) where data is hashtable of resutls
+	 * @param callback - function(err, data), err in case of error, object returns enriched original object
+	 */
+	this.resolveObjectLinks = function(schemaObj, object, iterator, callback) {
+		var linkSchemaPaths = [];
+		var that = this;
+
+		this.propertyVisitor(schemaObj, /.\$objectLink$/, function(val, path, obj) {
+			linkSchemaPaths.push(that.stripFromPath(path, 1));
+		});
+
+		// Internal iterator
+		var objectLinkResolver = function(item, callback) {
+			var schemaFragment = that.evalPath(schemaObj, item);
+			var fields = [];
+			for (var prop in schemaFragment.$objectLink) {
+				if (prop !== "$registry") {
+					fields.push(schemaFragment.$objectLink[prop]);
+				}
+			}
+
+			if (fields.length === 0) {
+				fields = null;
+			}
+
+			var objectFragment = that.evalPath(object, that.schemaPathToObjectPath(item));
+
+			if (objectFragment && objectFragment.$registry && objectFragment.$oid && fields) {
+				iterator(objectFragment.$registry, objectFragment.$oid, fields, function(err, data) {
+					if (err) {
+						callback(err);
+					}
+
+					objectFragment.$refData = objectFragment.$refData || {};
+					for (var prop in schemaFragment.$objectLink) {
+						if (prop !== "$registry") {
+							objectFragment.$refData[prop] = data[schemaFragment.$objectLink[prop]];
+						}
+					}
+				
+					callback(null, object);
+				});
+			} else {
+				// not enought params to call iterator
+				callback(null, object);
+			}
+		}
+
+		async.map(linkSchemaPaths, objectLinkResolver, function(err, data) {
+			callback(err, object);
+		});
 	}
 }
 

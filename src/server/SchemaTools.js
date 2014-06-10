@@ -258,23 +258,6 @@ var SchemaTools = function() {
 
 		return iterateSchema(compiledSchema.compiled);
 	}
-
-	this.schemaPathToObjectPath = function(schemaPath) {
-		var result = '';
-		var inProperty = true;
-		for (var i = 0; i< schemaPath.length; i++) {
-			var char = schemaPath.charAt(i);
-
-			switch (chat) {
-				case '.':
-					break;
-				default:
-					result += char;
-			}
-		}
-
-		return result;
-	};
 };
 
 module.exports = {

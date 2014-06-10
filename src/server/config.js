@@ -14,7 +14,8 @@ module.exports = {
 								level: 'warn',
 								colorize: true,
 								prettyPrint: true,
-								timestamp: false
+								timestamp: false,
+								silent: true
 							},
 						},
 						addLabel: true

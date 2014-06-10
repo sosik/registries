@@ -126,8 +126,8 @@ var SchemaTools = function() {
 					var propLocalPath = null;
 					var propUrl = null;
 
-					if (schema.def[prop].id) {
-						// id is defined, lets override canonical resolution
+					if (schema.def[prop].id && prop !== 'properties') {
+						// id is defined, lets override canonical resolution, but only if it is not inside properties
 						propUrl = URL.resolve(uri, schema.def[prop].id);
 						// make id argument absolute
 						schema.def[prop].id = propUrl;

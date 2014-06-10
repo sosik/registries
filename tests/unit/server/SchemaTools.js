@@ -328,4 +328,44 @@ describe('SchemaTools', function() {
 		expect(r.compiled.properties.club.properties).to.have.property('oid');
 		done();
 	});
+
+	it('[reg #7] id in properties', function(done) {
+		var commonSchema = {
+			"$schema": "http://json-schema.org/schema#",
+			"id": "uri://registries/common#",
+			"address": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "number"
+					},
+					"street": {
+						"type": "string"
+					},
+				}
+			},
+			"user": {
+				"id": "uri://registries/common#user",
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "number"
+					},
+					"firstName": {
+						"type": "string"
+					},
+				}
+			}
+		};
+
+		var schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, commonSchema);
+
+		schemaTools.parse();
+		schemaTools.compile();
+
+		expect(schemaTools.getSchema('uri://registries/common#user').compiled).to.exist;
+
+		done();
+	});
 });

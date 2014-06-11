@@ -1,17 +1,86 @@
 
 
-test
-<div>
-	<table>
-		<thead>
-			<tr>
-				<th colspan="4">Schemas to edit</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="role in permissions">
-				<td>{{role}}</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+
+<section id="SearchPage" ng-app="doc.ui-ace" class="ng-scope">
+	<form class="ng-pristine ng-valid form form-horizontal">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3">
+
+					<div ng-show="alert" class="alert alert-danger alert-dismissable">
+						<button type="button" class="close" data-dismiss="alert"
+							aria-hidden="true">&times;</button>
+						<strong>Validation Failure</strong> {{alert}}
+					</div>
+
+					<fieldset>
+						<legend>Search Page</legend>
+
+						<div class="form-group">
+							<label for="name" class="col-sm-3 control-label">Attribute</label>
+							<div class="col-sm-7">
+
+								<select ng-model="critTempAtt"
+									ng-options="att.title for att in searchDef.attributes">
+								</select>
+
+
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="name" class="col-sm-3 control-label">Operator</label>
+							<div class="col-sm-7">
+								<select ng-model="critTempOper"
+									ng-options="op.title for op in searchDef.operators">
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="name" class="col-sm-3 control-label">Value</label>
+							<div class="col-sm-7">
+								<input type="text" id="name" name="name" ng-model="critTempVal"
+									placeholder="value" class="ng-pristine ng-valid form-control"
+									autocomplete="off">
+							</div>
+
+						</div>
+						<div class="form-group">
+							<div class="col-sm-3">&nbsp;</div>
+							<div class="col-sm-7">
+								<button ng-click="addCrit()" class="btn btn-primary">Add</button>
+								<button ng-click="search()" class="btn btn-primary">Search</button>
+
+							</div>
+						</div>
+
+
+
+					</fieldset>
+					<fieldset>
+						<legend>Applied Criteria</legend>
+
+
+						<table>
+							<thead>
+								<tr>
+									<th colspan="4">Applied Criteria</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="crit in searchCrit" ng-click="editCrit($index)">
+									
+									<td><a href="" ng-click="removeCrit($index)"><i class="glyphicon glyphicon-minus"></i></a>&nbsp;</td>
+									<td>{{crit.attribute.title}}</td>
+									<td>{{crit.oper.title}}</td>
+									<td>{{crit.value}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</fieldset>
+
+
+				</div>
+			</div>
+		</div>
+	</form>
+</section>

@@ -53,20 +53,68 @@ var SearchController = function(mongoDriver, options) {
 
 	this.getSearchDef = function(req, res) {
 
-		var schema = schemaRegistryCtrl.getSchema('uri://registries/person');
+		var schema = schemaRegistryCtrl.getSchema('uri://registries/people#person');
 		var retval = {};
 
-		retval.prop = [];
-		retval.schema = schema;
-		for ( var prop in schema) {
-			retval.prop.push(prop);
+		function collectProperties(pathPrefix, objectDef, resultArr) {
+			for ( var pr in objectDef.properties) {
+				if (objectDef.properties[pr].type === 'object') {
+					collectProperties(pr + '.', objectDef.properties[pr], resultArr)
+				} else {
+					resultArr.push({
+					    path : pathPrefix + pr,
+					    type : objectDef.properties[pr].type,
+					    title : objectDef.properties[pr].title
+					});
+				}
+			}
+
 		}
 
+		retval.schema='uri://registries/people#person';
+		retval.attributes = [];
+		retval.operators = [ {
+		    title : '=',
+		    value : 'eq'
+		}, {
+		    title : '>',
+		    value : 'gt'
+		}, {
+		    title : '<',
+		    value : 'lt'
+		}, {
+		    title : '!=',
+		    value : 'ne'
+		} ];
+
+		collectProperties('', schema.compiled, retval.attributes);
+
+		console.log(retval);
 		res.send(200, retval);
 
 	};
 
-	this.search = function(crit) {
+	this.search = function(req, resp) {
+
+		console.log('congo ',req.body);
+		
+		var schema = schemaRegistryCtrl.getSchema(req.body.searchSchema);
+
+		console.log(schema);
+		
+		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
+			collectionName : schema.def.table
+		});
+
+		dao.list({
+			crits : req.body.criteria
+		}, function(err, data) {
+			if (err) {
+				resp.send(500, err);
+			} else {
+				resp.send(200, data)
+			}
+		});
 
 	}
 

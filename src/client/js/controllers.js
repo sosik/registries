@@ -28,16 +28,73 @@ angular.module('myApp.controllers', [])
 
 } ])
 
+.controller('SearchCtrl', [ '$scope', 'searchApiService', function($scope, searchApiService) {
 
+	$scope.searchDef = {};
 
-.controller('SearchCtrl', [ '$scope', 'searchApiService', function($scope, securityApiService) {
+	$scope.alert = null;
+	$scope.searchCrit = [];
 
-	$scope.searchDef = {makak:'makak'};
-	$scope.searchCrit = {};
+	searchApiService.getSearchDef('makak').success(function(data) {
 
-	securityApiService.getSearchDef().success(function(data) {
 		$scope.searchDef = data;
+	}).error(function(err) {
+		$scope.alert = err;
 	});
+
+	$scope.addCrit = function() {
+		$scope.alert = null;
+
+		if (!$scope.critTempAtt) {
+			$scope.alert = "Attribute must be specified";
+			return;
+		}
+
+		if (!$scope.critTempOper) {
+			$scope.alert = "Operator must be specified";
+			return;
+		}
+
+		if (!$scope.critTempVal) {
+			$scope.alert = "Value must be specified";
+			return;
+		}
+
+		$scope.searchCrit.push({
+		    attribute : $scope.critTempAtt,
+		    oper : $scope.critTempOper,
+		    value : $scope.critTempVal
+		});
+		$scope.critTempAtt = null;
+		$scope.critTempOper = null;
+		$scope.critTempVal = null;
+		console.log($scope.searchCrit);
+	};
+
+	$scope.removeCrit = function(index) {
+		$scope.searchCrit.splice(index, 1);
+	};
+
+	$scope.editCrit = function(index) {
+		$scope.critTempAtt = $scope.searchCrit[index].attribute;
+		$scope.critTempOper = $scope.searchCrit[index].oper;
+		$scope.critTempVal = $scope.searchCrit[index].value;
+	};
+	
+	function convertCriteria(crit){
+		
+		var retval=[];
+		for(var c in crit){
+			retval.push({f:c.attribute.path,v:c.value,op: c.oper.value });
+		}
+		return retval;
+		
+	}
+	$scope.search = function() {
+		searchApiService.getSearch($scope.searchDef.schema,  $scope.searchCrit).success(function(data) {
+			$scope.data = data;
+		});
+	};
 
 } ])
 
@@ -54,12 +111,11 @@ angular.module('myApp.controllers', [])
 .controller('UserEditCtrl',
         [ '$scope', 'userApiService', 'securityApiService', '$routeParams', function($scope, userApiService, securityApiService, $routeParams) {
 
-
 	        $scope.user = {};
-	        $scope.user.permissions=[];
+	        $scope.user.permissions = [];
 
 	        var remove = function(arr, item) {
-	        	for (var i = arr.length; i--;) {
+		        for (var i = arr.length; i--;) {
 			        if (arr[i] === item) {
 				        arr.splice(i, 1);
 			        }
@@ -69,15 +125,14 @@ angular.module('myApp.controllers', [])
 	        securityApiService.getSecurityPermissions().success(function(data) {
 		        $scope.permissions = data;
 		        securityApiService.getUserPermissions($routeParams.id).success(function(data) {
-		        	$scope.user = data;
-		        	
-		        	for (var i = data.permissions.length; i--;) {
-		        		remove( $scope.permissions,data.permissions[i]);
+			        $scope.user = data;
+
+			        for (var i = data.permissions.length; i--;) {
+				        remove($scope.permissions, data.permissions[i]);
 			        }
-		        	
+
 		        });
 	        });
-
 
 	        $scope.addPermission = function(value) {
 		        $scope.user.permissions.push(value);

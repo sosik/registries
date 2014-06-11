@@ -60,7 +60,6 @@ module.factory('LoginApiService', function($http) {
 
 	service.getResetPassword = function(user) {
 
-
 		return $http({
 		    method : 'POST',
 		    url : '/resetPassword/',
@@ -72,7 +71,6 @@ module.factory('LoginApiService', function($http) {
 	};
 
 	service.getChangePassword = function(currentPassword, newPassword) {
-
 
 		return $http({
 		    method : 'POST',
@@ -136,19 +134,29 @@ module.factory('securityApiService', function($http) {
 	return service;
 });
 
-
-
 module.factory('searchApiService', function($http) {
 
 	var service = {};
-	
-	service.getSearchSchemaDef = function(searchSchema) {
+
+	service.getSearchDef = function(searchSchema) {
 
 		return $http({
 		    method : 'POST',
 		    url : '/search/def',
 		    data : {
-		    	searchSchema : searchSchema
+			    searchSchema : searchSchema
+		    }
+		});
+	}
+
+	service.getSearch = function(searchSchema, criteria) {
+
+		return $http({
+		    method : 'POST',
+		    url : '/search',
+		    data : {
+		        searchSchema : searchSchema,
+		        criteria : criteria
 		    }
 		});
 	}

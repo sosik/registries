@@ -177,7 +177,65 @@ angular.module('psui-contenteditable', [])
 				document.execCommand('indent', false, null)
 			});
 			
-			buttonTable.on('click', function(evt) {
+			buttonTable.on('click', function(evt) {	
+			
+			
+			
+			
+			function pasteHtmlAtCaret(html, selectPastedContent) {
+			
+				var sel, range;
+				if (window.getSelection) {
+					// IE9 and non-IE
+					sel = window.getSelection();
+					if (sel.getRangeAt && sel.rangeCount) {
+						range = sel.getRangeAt(0);
+						range.deleteContents();
+
+						// Range.createContextualFragment() would be useful here but is
+						// only relatively recently standardized and is not supported in
+						// some browsers (IE9, for one)
+						var el = document.createElement("div");
+						el.innerHTML = html;
+						var frag = document.createDocumentFragment(), node, lastNode;
+						while ( (node = el.firstChild) ) {
+							lastNode = frag.appendChild(node);
+						}
+						var firstNode = frag.firstChild;
+						range.insertNode(frag);
+						
+						// Preserve the selection
+						if (lastNode) {
+							range = range.cloneRange();
+							range.setStartAfter(lastNode);
+							if (selectPastedContent) {
+								range.setStartBefore(firstNode);
+							} else {
+								range.collapse(true);
+							}
+							sel.removeAllRanges();
+							sel.addRange(range);
+						}
+					}
+				} else if ( (sel = document.selection) && sel.type != "Control") {
+					// IE < 9
+					var originalRange = sel.createRange();
+					originalRange.collapse(true);
+					sel.createRange().pasteHTML(html);
+					if (selectPastedContent) {
+						range = sel.createRange();
+						range.setEndPoint("StartToStart", originalRange);
+						range.select();
+					}
+				}
+			}
+			
+			
+			
+			
+			
+			
+			
 				var rowstext = prompt("enter rows");
 				var colstext = prompt("enter cols");
 				var rows = parseInt(rowstext);
@@ -197,8 +255,10 @@ angular.module('psui-contenteditable', [])
 						tbody.append(tr);
 					}
 					table.append(tbody);
-					//TODO create table at cursor position
-					elm.append(table);
+					
+					
+					pasteHtmlAtCaret(table[0].outerHTML, elm);
+					
 				}
 			});
 			
@@ -255,8 +315,12 @@ angular.module('psui-contenteditable', [])
 								if (htmlNodes.getAttribute('align')){
 									htmlElements.push(htmlNodes.getAttribute('align'));
 									
+								}else if(getComputedStyle(htmlNodes).getPropertyValue('text-align')){
+								
+									htmlElements.push(getComputedStyle(htmlNodes).getPropertyValue('text-align'));
+									
 								}else{
-								htmlElements2.push(htmlNodes.nodeName);
+									htmlElements2.push(htmlNodes.nodeName);
 								}
 							}
 						}
@@ -264,6 +328,7 @@ angular.module('psui-contenteditable', [])
 						htmlElements = htmlElements.concat(htmlElements2);
 					}
 					
+					console.log(htmlElements);
 					
 					var isBold = false;
 					var isItalic = false;

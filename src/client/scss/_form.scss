@@ -9,83 +9,172 @@ label {
 }
 
 .form-control {
-	font-size: $font-size-small;
 	@include box-shadow(none);
-	background-color: #f8f8f8;
-	border: 1px solid #b0b0b0;	
+	background-color: $input-bg;
+	border: 1px solid $input-border-color;	
 	border-radius: 0px;
+	
+	&:focus,
+	&:hover,
+	&:active {
+		@include box-shadow(none !important);
+		border: 1px solid $input-border-color;
+	}
 }
 
-.input-group{
-	> .input-group-btn{
-		> .btn{
-			line-height: 20px;
-			/*background-color: #f8f8f8;*/
-			border: 1px solid #b0b0b0;
-			border-radius: 0px;
-			border-left: 0px;
-			&.btn-default{
-				background-color: #f8f8f8;
-				border: 1px solid #b0b0b0;
-				border-left: 0px;
-			}
-			&.btn-warning{
-				border-color: #f0f0f0;
-				border: 1px solid #b0b0b0;
-				border-left: 0px;
-			}
-			&.btn-success{
-				border-color: #f0f0f0;
-				border: 1px solid #b0b0b0;
-				border-left: 0px;
-			}
-			&.btn-error{
-				background-color: #ff0000;
-				color: #ffffff;
-				border: 1px solid #b0b0b0;
-				border-left: 0px;
-			}
+.has-warning{
+	.form-control{
+		&:focus,
+		&:hover,
+		&:active {
+			border-color: red;
+		}
+	}
+	.btn{
+		&.warning{
+			display: inline-block;
 		}
 	}
 }
 
+.require{
+	.control-label{
+		font-weight: bold;
+	}
+}
+
+// input-group
+.form{
+	.input-group{
+		width: 100%;
+	}
+}
+.input-group{
+	.form-control{
+		z-index: inherit;
+	}
+	
+	.input-group-button{
+		display: block;
+		position: absolute;
+		top: 1px;
+		right: 0px;
+		.btn{
+			border: 0px;
+			background: none;
+		}
+	}
+}
+
+.glyphicon-play.rotate{
+	@include rotate(90deg);
+}
+
+//view-group
+.view-group{
+	position: relative;
+	.view-block{
+		border-width: 1px;
+		border-color: white;
+		border-style: dashed;
+		padding: $padding-base-vertical $padding-base-horizontal*3 $padding-base-vertical $padding-base-horizontal;	
+	}
+	&:hover{
+		.view-block{
+			border-width: 1px;
+			border-color: $input-border-color;
+			border-style: dashed;
+		}
+		
+		.view-icon{
+			position: absolute;
+			display: block;
+			top: 1px;
+			right: 1px;
+			bottom: 1px;
+			background-color: $input-bg;
+			padding: 6px;
+		}
+	}
+	.view-icon{
+		display: none;
+	}
+}
+
+.view-block{
+	display: block;
+	width: 100%;
+/*	height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)*/
+	padding: $padding-base-vertical $padding-base-horizontal;
+	font-size: $font-size-base;
+	line-height: $line-height-base;
+}
+
+// input-group-action
+.input-group-action{
+	display: block;
+	position: absolute;
+	right: 0px;
+	top: -30px;
+	display: block;
+	padding: 4px;
+	background-color: $input-bg; 
+	border: 1px solid $input-border-color;
+	border-bottom: 0px;
+	@include box-shadow(0px -2px 10px 0px lighten($input-border-color, 20%));
+	
+	.btn{
+		border: 0px;
+		padding: 0px 3px;
+		i{
+			margin-right: 5px;
+			position: relative;
+			top: 1px;
+			&.glyphicon-remove{
+				top: 2px;
+			}
+		}
+		span{
+			display: none;
+		}
+		border-right: 1px solid lighten($input-border-color, 10%);
+		&:last-child{
+			border-right: 0px;
+		}
+	}
+	
+}
+
+// buttons
 .btn{	
 	border-radius: 0px;	 
+	line-height: $button-line-height;
+	/*@include gradient-vertical(lighten($input-bg, 10%), darken($input-bg, 10%));*/
+	background-color: $input-bg;
+	border-color: $input-border-color;
+	color: lighten($font-color-base,20%);
+	@include transition(all .3s);
+	
+	&:hover,
+    &:focus,
+    &:active,
+    &.active {
+		color: $font-color-base;
+		/*@include gradient-vertical(lighten($input-bg, 30%), $input-bg);*/	
+		@include transition(all .3s);
+    }
+	
+	&.warning{
+		color: red;
+		display: none;
+	}
 }
 
 button[type="submit"]{
+	background-color: $button-submit-bg;
+	border-color: $button-submit-border-color;
 	i {
 		margin-right: 10px;
-	}
-}
-
-.has-warning{ 
-	.input-group{
-		> .input-group-btn{
-			> .btn{
-				border-left: 0px;
-				&.btn-default{
-					border: 1px solid #ff0000;
-					border-left-color: #b0b0b0;
-					border-left: 0px;
-				}
-				&.btn-warning{
-					border: 1px solid #ff0000;
-					border-left-color: #b0b0b0;
-					border-left: 0px;
-				}
-				&.btn-success{
-					border: 1px solid #ff0000;
-					border-left-color: #b0b0b0;
-					border-left: 0px;
-				}
-				&.btn-error{
-					border: 1px solid #ff0000;
-					border-left-color: #b0b0b0;
-					border-left: 0px;
-				}
-			}
-		}
 	}
 }
 
@@ -100,28 +189,18 @@ button[type="submit"]{
 			border-bottom: 1px solid #b0b0b0;
 			span{
 				font-weight: bold;
-				/*border-bottom: 4px solid #f0f0f0;*/
 			}
 		}
 		.control-label {
 			text-align: right;
 		}
-
 	}
 }
 
-.btn-success{
-	@include gradient-vertical(#47a447, darken(#47a447, 20%));	
-}
-
-.btn-warning{
-	@include gradient-vertical(#ed9c28, darken(#ed9c28, 20%));	
-}
-
-.btn-default{
-	@include gradient-vertical(#f8f8f8, darken(#f8f8f8, 30%));	
-}
-
-.btn-error{
-	@include gradient-vertical(#ff0000, darken(#ff0000, 20%));	
+// select-box
+.input-select-box{
+	input{
+		padding-right: 35px;
+		
+	}
 }

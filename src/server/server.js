@@ -18,6 +18,8 @@ var securityControllerModule = require('./securityController.js');
 var userControllerModule = require('./userController.js');
 
 
+var searchControllerModule = require('./searchController.js');
+
 var app = express();
 app.disable('view cache');
 
@@ -34,6 +36,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,{});
 	var userCtrl = new  userControllerModule.UserController(mongoDriver,{});
+	
+	
+	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,{});
 	
 	app.use(cookieParser());
 	app.use(loginCtrl.authFilter );
@@ -52,6 +57,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
     app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
     app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res)});
     app.post('/user/permissions/update', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res)});
+    
+    app.post('/search/def', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res)});
     
     
 	// Static data

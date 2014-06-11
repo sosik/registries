@@ -136,6 +136,26 @@ module.factory('securityApiService', function($http) {
 	return service;
 });
 
+
+
+module.factory('searchApiService', function($http) {
+
+	var service = {};
+	
+	service.getSearchSchemaDef = function(searchSchema) {
+
+		return $http({
+		    method : 'POST',
+		    url : '/search/def',
+		    data : {
+		    	searchSchema : searchSchema
+		    }
+		});
+	}
+
+	return service;
+});
+
 module.factory('userApiService', function($http) {
 
 	var service = {};

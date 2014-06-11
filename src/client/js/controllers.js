@@ -28,11 +28,11 @@ angular.module('myApp.controllers', [])
 
 } ])
 
+
+
 .controller('SearchCtrl', [ '$scope', 'searchApiService', function($scope, securityApiService) {
 
-	$scope.searchDef = {
-		makak : 'makak'
-	};
+	$scope.searchDef = {makak:'makak'};
 	$scope.searchCrit = {};
 
 	securityApiService.getSearchDef().success(function(data) {
@@ -95,7 +95,7 @@ angular.module('myApp.controllers', [])
 
         } ])
 
-.controller('LoginCtrl', [ '$scope', '$location', '$window', 'LoginApiService', function($scope, $location, $window, LoginApiService) {
+.controller('LoginCtrl', [ '$scope', 'LoginApiService', function($scope, LoginApiService) {
 	$scope.user = 'johndoe';
 	$scope.password = 'johndoe';
 
@@ -104,9 +104,7 @@ angular.module('myApp.controllers', [])
 
 	$scope.login = function() {
 
-		LoginApiService.getLogin($scope.user, $scope.password).success(function(data) {
-			$window.location='/index.html';
-		}).error(function(err,status){$scope.alert='asdsadsa'});
+		LoginApiService.getLogin($scope.user, $scope.password);
 	};
 
 	$scope.logout = function() {

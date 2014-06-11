@@ -10,6 +10,7 @@
 		width: 100%;
 		overflow: hidden;
 		z-index: 4;
+		@include box-shadow(0px 0px 4px 2px  $header-box-shadow);
 		
 		a{
 			color: $header-color-base;
@@ -38,6 +39,27 @@
 				float: left;
 				height: 100%;
 				position: relative;
+				.text-block{
+					line-height: $header-height;
+					font-size: $font-size-base;
+					padding: 0px 15px;
+					display: block;
+					height:100%;
+					i{
+						+ span{
+							margin-left: 10px;
+						}
+					}
+					span{
+						text-transform: uppercase;
+						position: relative;
+						top: -1px;
+						+ i{
+							margin-left: 10px;
+						}
+					}
+				}
+				
 				a {
 					line-height: $header-height;
 					font-size: $font-size-base;
@@ -78,6 +100,12 @@
 							margin-left: 10px;
 						}
 					}
+					
+					span{
+						+ i{
+							margin-left: 10px;
+						}
+					}
 				}    
 			}
 
@@ -86,19 +114,26 @@
 		.search-box{
 			float: right;
 			margin: 8px 10px;
+			position: relative;
 
 			input[type="text"]{
-				color: $header-color-base;
-				border: 1px solid $header-light-bg;
-				background-color: $header-light-bg;
+				color: $font-color-light;
+				border: 1px solid $header-color-base;
+				background-color: $header-color-base;
 				border-radius: 5px;
 				height: 30px;
-				padding: 0px 5px;
+				padding: 0px 25px 0 5px;
 
 				&:hover,&:focus {
 					border-color:$header-color-base;
 					@include transition(all .5s);
 				}
+			}
+			i{
+				position: absolute;
+				right: 6px;
+				top: 9px;
+				color: $font-color-light;
 			}
 		}
 	}

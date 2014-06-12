@@ -5,7 +5,13 @@ var extend = require('extend');
 
 var universalDaoModule = require('./UniversalDao.js');
 
-var DEFAULT_CFG = {};
+var DEFAULT_CFG = {
+		
+		entityToNs: { 
+			"user": "uri://registries/people#person"
+		}
+		
+};
 
 var schemaRegistryModule = require('./schemaRegistry.js');
 
@@ -53,7 +59,12 @@ var SearchController = function(mongoDriver, options) {
 
 	this.getSearchDef = function(req, res) {
 
-		var schema = schemaRegistryCtrl.getSchema('uri://registries/people#person');
+		
+		var entity=req.body.entity;
+		var schemaUri=DEFAULT_CFG.entityToNs[entity];
+		
+		console.log(entity,schemaUri);
+		var schema = schemaRegistryCtrl.getSchema(schemaUri);
 		var retval = {};
 
 		function collectProperties(pathPrefix, objectDef, resultArr) {
@@ -71,7 +82,7 @@ var SearchController = function(mongoDriver, options) {
 
 		}
 
-		retval.schema='uri://registries/people#person';
+		retval.schema = schemaUri;
 		retval.attributes = [];
 		retval.operators = [ {
 		    title : '=',
@@ -84,24 +95,25 @@ var SearchController = function(mongoDriver, options) {
 		    value : 'lt'
 		}, {
 		    title : '!=',
-		    value : 'ne'
+		    value : 'neq'
+		}, {
+		    title : 'starts',
+		    value : 'starts'
+		}, {
+		    title : 'exists',
+		    value : 'ex'
 		} ];
 
 		collectProperties('', schema.compiled, retval.attributes);
 
-		console.log(retval);
 		res.send(200, retval);
 
 	};
 
 	this.search = function(req, resp) {
 
-		console.log('congo ',req.body);
-		
 		var schema = schemaRegistryCtrl.getSchema(req.body.searchSchema);
 
-		console.log(schema);
-		
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName : schema.def.table
 		});

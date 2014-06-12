@@ -138,13 +138,14 @@ module.factory('searchApiService', function($http) {
 
 	var service = {};
 
-	service.getSearchDef = function(searchSchema) {
+	service.getSearchDef = function(entity) {
 
 		return $http({
 		    method : 'POST',
 		    url : '/search/def',
 		    data : {
 			    searchSchema : searchSchema
+			    entity:entity
 		    }
 		});
 	}

@@ -21,7 +21,7 @@ config(['$routeProvider', function($routeProvider) {
   
   $routeProvider.when('/user/edit/:id', {templateUrl: 'partials/userEdit.html', controller: 'UserEditCtrl'});
   
-  $routeProvider.when('/search', {templateUrl: 'partials/searchPage.html', controller: 'SearchCtrl'});
+  $routeProvider.when('/search/:entity', {templateUrl: 'partials/searchPage.html', controller: 'SearchCtrl'});
   
   $routeProvider.when('/changepassword', {templateUrl: 'partials/ChangePasswordPage.html', controller: 'LoginCtrl'});
   //$routeProvider.otherwise({redirectTo: '/schemalist'});

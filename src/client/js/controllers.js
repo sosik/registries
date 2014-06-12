@@ -28,14 +28,16 @@ angular.module('myApp.controllers', [])
 
 } ])
 
-.controller('SearchCtrl', [ '$scope', 'searchApiService', function($scope, searchApiService) {
+.controller('SearchCtrl', [ '$scope','$routeParams', 'searchApiService', function($scope,$routeParams, searchApiService) {
 
+	var entity=$routeParams.entity;
+	
 	$scope.searchDef = {};
 
 	$scope.alert = null;
 	$scope.searchCrit = [];
 
-	searchApiService.getSearchDef('makak').success(function(data) {
+	searchApiService.getSearchDef(entity).success(function(data) {
 
 		$scope.searchDef = data;
 	}).error(function(err) {
@@ -68,7 +70,6 @@ angular.module('myApp.controllers', [])
 		$scope.critTempAtt = null;
 		$scope.critTempOper = null;
 		$scope.critTempVal = null;
-		console.log($scope.searchCrit);
 	};
 
 	$scope.removeCrit = function(index) {
@@ -93,6 +94,29 @@ angular.module('myApp.controllers', [])
 	$scope.search = function() {
 		searchApiService.getSearch($scope.searchDef.schema,  $scope.searchCrit).success(function(data) {
 			$scope.data = data;
+
+	var convertCriteria = function(crit) {
+
+		var retval = [];
+
+		crit.map(function(c) {
+			retval.push({
+			    f : c.attribute.path,
+			    v : c.value,
+			    op : c.oper.value
+			});
+		})
+
+		return retval;
+
+	}
+	$scope.search = function() {
+		$scope.alert=null;
+		searchApiService.getSearch($scope.searchDef.schema, convertCriteria($scope.searchCrit)).success(function(data) {
+			$scope.data = data;
+			$scope.alert = ' REMOVE ME: '+JSON.stringify( data,null,2); 
+		}).error(function(err) {
+			$scope.alert = err;
 		});
 	};
 

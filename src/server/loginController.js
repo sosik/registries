@@ -4,6 +4,7 @@ var log = require('./logging.js').getLogger('loginController.js');
 var universalDaoModule = require('./UniversalDao.js');
 var crypto = require("crypto");
 var extend = require('extend');
+var QueryFilter = require('./QueryFilter.js');
 
 var uuid = require('node-uuid');
 
@@ -12,21 +13,24 @@ var nodemailer = require("nodemailer");
 var collectionName = 'user';
 
 var DEFAULT_USER = {
-    "loginName" : "johndoe",
-    "passwordHash" : "johndoe",
-
-    "salt" : "johndoe",
-    "groups" : {},
-    "permissions" : {
-        "Registry - read" : true,
-        "System User" : true,
-        "Registry - write" : true
-    }
+	"systemCredentials": {
+		"login": {
+			"loginName" : "johndoe",
+			"passwordHash" : "johndoe",
+			"salt" : "johndoe",
+		},
+		"groups" : {},
+		"permissions" : {
+			"Registry - read" : true,
+			"System User" : true,
+			"Registry - write" : true
+		}
+	}
 };
 
 var DEFAULT_CFG = {
-    userCollection : 'user',
-    loginColumnName : 'loginName',
+    userCollection : 'people',
+    loginColumnName : 'systemCredentials.login.loginName',
     tokenCollection : 'token',
     tokenIdColumnName : 'tokenId',
     securityTokenCookie : 'securityToken',
@@ -50,84 +54,83 @@ var LoginController = function(mongoDriver, options) {
 		collectionName : cfg.tokenCollection
 	});
 
+	/**
+	 * Does login based on provided password and login name. It queries DB
+	 * and if verification of crediatials successed it stores new security token into DB
+	 * and sets that token as cookies.
+	 */
 	this.login = function(req, resp) {
-
-		if (req.authenticated == true) {
-			resp.send(500, 'User authenticated');
-			return;
-		}
+		log.silly('login atempt', req.body.login);
+		// more problems than benefits
+		// if (req.authenticated) {
+		//	log.verbose('User is already authenticated');
+		//	resp.send(500, 'User already authenticated');
+		//	return;
+		//}
 
 		var t = this;
 
-		userDao.list({
-			crits : [ {
-			    f : cfg.loginColumnName,
-			    v : req.body.login,
-			    op : 'eq'
-			} ]
-		}, function(err, data) {
-
+		userDao.list(QueryFilter.create()
+				.addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login)
+		, function(err, data) {
 			if (err) {
-				resp.send(500, err)
-			} else {
-
-				if (data.length === 1) {
-					var user = data[0];
-
-					if (user != null) {
-
-						t.verifyUserPassword(user, req.body.password, function(err) {
-
-							if (err) {
-								resp.send(500, 'Not authenticated.');
-							} else {
-								t.createToken(user.loginName, req.ip, function(token) {
-									t.storeToken(token, user.loginName, req.ip, function(err, data) {
-										if (err != null)
-											return;
-										t.setCookies(resp, token, user.loginName);
-									})
-								})
-							}
-
-						});
-					}
-
-					else {
-						resp.send(500, 'Not authenticated.');
-					}
-
-				} else {
-					resp.send(500, 'users found ' + data.length);
-				}
+				log.error('Failed to list users from DB', err);
+				resp.send(500, err);
+				return;
 			}
 
-		});
+			if (data.length !== 1) {
+				log.verbose('Found more or less then 1 user with provided credentials', data.length);
+				resp.send(500, 'users found ' + data.length);
+				return;
+			}
 
+			// we are sure there is exactly one user
+			var user = data[0];
+
+			t.verifyUserPassword(user, req.body.password, function(err) {
+				if (err) {
+					log.verbose('Password verification failed', err);
+					resp.send(500, 'Not authenticated.');
+					return;
+				}
+				t.createToken(user.loginName, req.ip, function(token) {
+					t.storeToken(token, user.loginName, req.ip, function(err, data) {
+						if (err) {
+							log.error('Failed to store login token', err);
+							resp.send(500, 'Internal Error');
+							return;
+						}
+						t.setCookies(resp, token, user.systemCredentials.login.loginName);
+
+						resp.send(200, user);
+						return;
+					});
+				});
+			});
+		});
 	};
 
 	this.verifyUserPassword = function(user, passwordSample, callback) {
-
 		if (!user) {
-			callback('user null');
+			log.error('user parameter cannot be null!');
+			callback(new Error('User parameter cannot be null'));
+		} 
 
-		} else {
+		this.hashPassword(user.systemCredentials.login.salt, passwordSample, function(err, hashPass) {
+			if (err) {
+				log.error('Failed to hash password');
+				callback(new Error('Failed to hash password'));
+				return;
+			}
 
-			this.hashPassword(user.salt, passwordSample, function(err, hashPass) {
-				if (err) {
-					resp.send(500, err);
-					return;
-				}
-
-				if (user.passwordHash == hashPass.toString('base64')) {
-					callback(null);
-				} else {
-					callback('password does not match');
-				}
-			});
-
-		}
-
+			if (user.systemCredentials.login.passwordHash === hashPass.toString('base64')) {
+				callback(null);
+			} else {
+				log.verbose('Password does not match stored password');
+				callback(new Error('Password does not match'));
+			}
+		});
 	};
 
 	this.createToken = function(user, ip, callback) {
@@ -159,7 +162,6 @@ var LoginController = function(mongoDriver, options) {
 		resp.cookie(cfg.loginNameCookie, loginName, {
 			httpOnly : true
 		});
-		resp.send(200);
 	};
 
 	this.logout = function(req, resp) {
@@ -187,19 +189,19 @@ var LoginController = function(mongoDriver, options) {
 
 						tokenDao.update(token, function(err, data) {
 							if (err) {
-								cosole.log(err);
+								log.error('Failed to update security token', err);
 								resp.send(500, err);
-
-							} else {
-								resp.clearCookie(cfg.securityTokenCookie);
-								resp.clearCookie(cfg.loginNameCookie);
-								resp.send(200);
+								return;
 							}
 
-						})
+							resp.clearCookie(cfg.securityTokenCookie);
+							resp.clearCookie(cfg.loginNameCookie);
+							resp.send(200);
+						});
 
 					} else {
 						resp.send(500, 'Token does not exist.');
+						return;
 					}
 
 				}
@@ -207,6 +209,7 @@ var LoginController = function(mongoDriver, options) {
 			});
 		} else {
 			resp.send(500, 'SecurityToken Missings.');
+			return;
 		}
 
 	};
@@ -216,15 +219,11 @@ var LoginController = function(mongoDriver, options) {
 	 * be used by authorized person ( no 'accidental' password resets)
 	 */
 	this.resetPassword = function(req, resp) {
-
+		//FIXME construct criteria bt QueryFilter
 		var t = this;
-		userDao.list({
-			crits : [ {
-			    f : cfg.loginColumnName,
-			    v : req.body.login,
-			    op : 'eq'
-			} ]
-		}, function(err, data) {
+		userDao.list(QueryFilter.create()
+				.addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login)
+		, function(err, data) {
 
 			if (err) {
 				res.send(500, err);
@@ -244,15 +243,16 @@ var LoginController = function(mongoDriver, options) {
 
 				t.hashPassword(newsalt, randomPass, function(err, passwordHash) {
 
-					user.passwordHash = passwordHash.toString('base64');
+					user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
 
-					user.salt = newsalt;
+					user.systemCredentials.login.salt = newsalt;
 
 					userDao.update(user, function(err, data) {
 						if (err) {
 							resp.send(500, err);
 						}
 
+						//FIXME make mail address field as configurable parameter
 						t.sendResetPasswordMail(user.email, randomPass);
 
 						resp.send(200);
@@ -296,13 +296,9 @@ var LoginController = function(mongoDriver, options) {
 		}
 
 		var t = this;
-		userDao.list({
-			crits : [ {
-			    f : cfg.loginColumnName,
-			    v : req.loginName,
-			    op : 'eq'
-			} ]
-		}, function(err, data) {
+		userDao.list(QueryFilter.create()
+				.addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login)
+		, function(err, data) {
 
 			if (err) {
 				res.send(500, err);
@@ -322,7 +318,7 @@ var LoginController = function(mongoDriver, options) {
 
 							t.hashPassword(newsalt, newPass, function(err, passwordHash) {
 
-								user.passwordHash = passwordHash.toString('base64');
+								user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
 
 								user.salt = newsalt;
 								userDao.update(user, function(err, data) {

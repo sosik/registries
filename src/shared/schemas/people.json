@@ -10,6 +10,9 @@
 		{"field":"contactInfo.city", "title":"Mesto"}
 	],
 	"properties": {
+		"systemCredentials": {
+			"$ref": "uri://registries/security#systemCredentials"
+		},
 		"baseData": {
 			"title": "Základné údaje",
 			"type": "object",

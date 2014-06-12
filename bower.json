@@ -23,6 +23,7 @@
     "angular-mocks": "~1.2.x",
     "html5-boilerplate": "~4.3.0",
     "angular-ui-ace": "*",
-    "ngRangy": "*"
+    "ngRangy": "*",
+    "angular-cookies": "~1.2.17"
   }
 }

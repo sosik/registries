@@ -124,11 +124,11 @@ var UniversalDao = function(mongoDriver, options) {
 	/**
 	 * List objects by criteria
 	 *
-	 * @param {Object} options - search options
+	 * @param {Object} queryFilter - search options - use QueryFilter class
 	 * @param {resultCallback} callback - async callback, result parameter contains found objects
 	 */
-	this.list = function(options, callback) {
-		var _findOptions = mongoDriver.constructSearchQuery(options);
+	this.list = function(queryFilter, callback) {
+		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
 		
 		_collection.find(_findOptions.selector, _findOptions, function(err, cursor){
 			if (err) {

@@ -150,28 +150,3 @@ angular.module('myApp.controllers', [])
 
         } ])
 
-.controller('LoginCtrl', [ '$scope', 'LoginApiService', function($scope, LoginApiService) {
-	$scope.user = 'johndoe';
-	$scope.password = 'johndoe';
-
-	$scope.currentPassword = 'johndoe';
-	$scope.newPassword = 'johndoe2';
-
-	$scope.login = function() {
-
-		LoginApiService.getLogin($scope.user, $scope.password);
-	};
-
-	$scope.logout = function() {
-		LoginApiService.getLogout();
-	};
-
-	$scope.resetPassword = function() {
-		LoginApiService.getResetPassword($scope.user);
-	};
-
-	$scope.changePassword = function() {
-		LoginApiService.getChangePassword($scope.currentPassword, $scope.newPassword);
-	};
-
-} ]);

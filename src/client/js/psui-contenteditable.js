@@ -327,9 +327,7 @@ angular.module('psui-contenteditable', [])
 						
 						htmlElements = htmlElements.concat(htmlElements2);
 					}
-					
-					console.log(htmlElements);
-					
+
 					var isBold = false;
 					var isItalic = false;
 					var isH1 = false;

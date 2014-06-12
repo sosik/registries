@@ -60,3 +60,20 @@ body {
 #demo3 .psui-dropdown .psui-selected {
 	background-color: silver;
 }
+
+#demo4 .psui-datepicker {
+	padding: 0 0 0 0;
+	box-sizing: border-box;
+	border: silver solid 1px;
+	padding-left: 5px;
+	width: 150px;
+}
+
+#demo4 .psui-dropdown {
+	max-height: 100px;
+	background-color: white;
+	border: silver solid 1px;
+	padding-left: 5px;
+	z-index:1000;
+}
+

@@ -8,6 +8,7 @@
 	<script src="js/psui-autocomplete.js"></script>
 	<script src="js/psui-contenteditable.js"></script>
 	<script src="js/psui-selectbox.js"></script>
+	<script src="js/psui-datepicker.js"></script>
 	<script src="js/psui-demo.js"></script>
 	<script src="js/psui-uploadable-image.js"></script>
 	<script src="lib/rangy/rangy-core.js"></script>
@@ -22,6 +23,7 @@
 	<link rel="stylesheet" type="text/css" href="css/psui-autocomplete.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-contenteditable.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-selectbox.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-datepicker.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-demo.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-uploadable-image.css">
 </head>
@@ -48,18 +50,29 @@
 	<div psui-selectbox psui-options="selectBoxOpts" ng-model="model.selected">xxxxxxxxxxxxxxxxxxxx</div>
 	{{model.selected}}
 </div>
-	<h1>demo 3 - selectbox</h1>
+<h1>demo 4 - datepicker</h1>	
+<div id="demo4">
+	<h1>demo 4 - datepicker</h1>
+	<div psui-datepicker></div>
 	
+</div>
+<div id="demo4-2">
+	<h1>datepicker v2</h1>
+	<input psui-datepicker name="date" type="text">
+</div>
 	
-	<div style="height: 200px; " ui-ace="{
+<h1>demo 5 - Ace editor</h1>	
+<div style="height: 200px; " ui-ace="{
   useWrapMode : true,
   showGutter: false,
   theme:'twilight',
   mode: 'xml',
   onLoad: aceLoaded,
   onChange: aceChanged
-}"></div>
+}">
+</div>
 
+<h1>demo 6 - Uploadable image</h1>
 <div ng-controller="psui-uploadable-image-demo">
 	<h1>demo - uploadable immage</h1>
 	<psui-uploadable-image style="height: 100px; width:100px;"></psui-uploadable-image>

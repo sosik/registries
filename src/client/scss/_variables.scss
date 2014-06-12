@@ -42,19 +42,24 @@ $header-bg: $main-color !default;
 $header-color-base: $font-color-base !default;
 $header-light-bg: lighten($header-bg, 30%) !default;
 $header-notification-color: red !default;
-$header-box-shadow: lighten(#393a3c, 40%);
+$header-box-shadow: lighten(#383838, 40%);
 
 // Main Menu
-$sidebar-open-width: 150px !default;
-$sidebar-close-width: 55px !default;
-$sidebar-border-color-dark: #000000 !default;
+$sidebar-size: 55px;
+$sidebar-width: 150px !default;
+$sidebar-color-base: $font-color-light !default;
+$sidebar-first-level-color-bg: #212121 !default;
+$sidebar-secound-level-color-bg: lighten($sidebar-first-level-color-bg, 10%) !default;
+$sidebar-menu-item-padding: 16px;
+/*$sidebar-close-width: 55px !default;*/
+/*$sidebar-border-color-dark: #000000 !default;
 $sidebar-border-color-light: #393a3c !default;
-$sidebar-dark-bg: #212123 !default;
-$sidebar-light-bg: #2f3337 !default;
-$sidebar-separator-bg: #262a2e !default;
+$sidebar-dark-bg: #212121 !default;
+$sidebar-light-bg: #2f2f2f !default;
+$sidebar-separator-bg: #252525 !default;
 $sidebar-color-base: $font-color-light !default;
 $sidebar-color-light: $font-color-light !default;
-$sidebar-color-dark: $sidebar-border-color-dark !default;
+$sidebar-color-dark: $sidebar-border-color-dark !default;*/
 $sidebar-icon-size: 23px !default;
 $sidebar-color-hover: $main-color;
 

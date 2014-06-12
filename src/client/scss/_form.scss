@@ -43,6 +43,25 @@ label {
 	}
 }
 
+.form {
+	fieldset{
+		> label{
+			text-transform: uppercase;
+			
+			display: block;
+			padding: 10px 0px;
+			margin-bottom: 15px;
+			border-bottom: 1px solid #b0b0b0;
+			span{
+				font-weight: bold;
+			}
+		}
+		.control-label {
+			text-align: right;
+		}
+	}
+}
+
 // input-group
 .form{
 	.input-group{
@@ -178,29 +197,14 @@ button[type="submit"]{
 	}
 }
 
-.form {
-	fieldset{
-		> label{
-			text-transform: uppercase;
-			
-			display: block;
-			padding: 10px 0px;
-			margin-bottom: 15px;
-			border-bottom: 1px solid #b0b0b0;
-			span{
-				font-weight: bold;
-			}
-		}
-		.control-label {
-			text-align: right;
-		}
+.btn-group{
+	.btn + .btn{
+		margin-left: 10px;
 	}
 }
-
 // select-box
 .input-select-box{
 	input{
 		padding-right: 35px;
-		
 	}
 }

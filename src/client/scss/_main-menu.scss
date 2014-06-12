@@ -2,77 +2,80 @@
 	position: fixed;
 	top: $header-height;
 	bottom: 0px;
-	left: 0px;
 	z-index: 4;
-
 	.sidebar{
-		float:left;
-		height: 100%;
-		/*border-top: 1px solid $sidebar-border-color-light;*/
-		background-color: $sidebar-light-bg;
-		width: $sidebar-close-width;
-		/*width: auto;*/
-		overflow: hidden;
-		@include transition(width .5s);
-
-		&:hover{
-			width: $sidebar-open-width;
-			@include transition(width 0.5s);
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		/*height: 100%;*/
+		background-color: $sidebar-first-level-color-bg;
+		/*overflow: hidden;*/
+		/*width: $sidebar-width;*/
+		left: -300px;
+		@include transition(left .9s);
+		
+		&.active{
+			left: 0px;
+			@include transition(left .5s);
 		}
+		
 		li{
 			white-space: nowrap;
+			&:last-child{
+				a{
+					border-bottom: 0px;
+				}
+			}
 		}
-
+		
 		a{
 			display: block;
-			height: $sidebar-close-width;
-			line-height: $sidebar-close-width;
+			/*height: $sidebar-size;*/
+			line-height: $sidebar-size;
 			color: $sidebar-color-base;
-			padding-right: 11px;
+			padding-right: 2 * $sidebar-menu-item-padding;
+			border-bottom: 1px solid $sidebar-secound-level-color-bg;
 
 			i{
 				font-size: $sidebar-icon-size;
-				padding: 0px 16px;
-				line-height: $sidebar-close-width
+				padding: 0px $sidebar-menu-item-padding;
+				line-height: $sidebar-size;
 			}
-			&:hover i{
+			
+			&:hover,
+			&.active{
 				color: $sidebar-color-hover;
 			}
-			&.separator{
+			/*&.separator{
 				border-top: 4px solid $sidebar-separator-bg;
-			}
+			}*/
 			span{
 				position: relative;
-				top: -3px;
+				top: -4px;
 			}
-			&.active{
+/*			&.active{
 				background-color: $sidebar-dark-bg;
 				color: $sidebar-color-light;
-/*				i{
-					color: $sidebar-color-dark;
-				}
-				&:hover{
-					color: $sidebar-color-base;
-				}*/
-			}
-		}
-
-		header{
-			display: block;
-			height: $sidebar-close-width; 
-			a{
-				border-bottom: 1px solid $sidebar-border-color-dark;
-			}
-		}
-
-		&.submenu{
-			background-color: $sidebar-dark-bg;
-			border-right: 1px solid $sidebar-border-color-light;
-/*			a{
-				&:hover i{
-					color: $sidebar-color-dark;
-				} 
 			}*/
+			
+		}
+		
+		ul ul{
+			a{
+				background-color: $sidebar-secound-level-color-bg;
+				padding-left: $sidebar-size;
+				line-height: inherit;
+				padding-top: $sidebar-menu-item-padding;
+				span{
+					top: -1px;
+				}
+			}
+			li:last-child{
+				a{
+					padding-bottom: $sidebar-menu-item-padding;
+				}
+			}
+			
 		}
 	}
 }
@@ -81,19 +84,16 @@
 	> header{
 		.toogle-menu{
 			display: block;
-			line-height:  $header-height;
-			padding: 0px 16px;
-			width: $sidebar-close-width;
-			background-color: $sidebar-light-bg;
+			padding: 0px $sidebar-menu-item-padding;
+			width: $sidebar-size;
+			background-color: $sidebar-first-level-color-bg;
+			color: $sidebar-color-base;
 			i{
 				font-size: $sidebar-icon-size;
 				line-height:  $header-height;
-				color: $sidebar-color-base;
 			}
-			&:hover{
-				i{
-					color: $sidebar-color-light;
-				}
+			&:hover {
+				color: $sidebar-color-hover;
 			}
 		}
 	}

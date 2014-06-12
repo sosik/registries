@@ -1,5 +1,5 @@
 angular.module('security', [])
-.factory('security.LoginService', function($http) {
+.factory('security.SecurityService', ['$http', '$rootScope', function($http, $rootScope) {
 	var service = {};
 
 	service.getLogin = function(user, password) {
@@ -41,9 +41,34 @@ angular.module('security', [])
 		});
 	};
 
+	/**
+	 * checks if current user has all required permissions
+	 */
+	service.hasPermissions = function(requiredPermissions) {
+		if (!requiredPermissions || requiredPermissions.length < 1) {
+			// there are no permissions to check, so we have permission
+			return true;
+		}
+
+		if ($rootScope.security.currentUser && $rootScope.security.currentUser.systemCredentials && $rootScope.security.currentUser.systemCredentials.login &&
+				$rootScope.security.currentUser.systemCredentials.login.permissions) {
+			for (var i in requiredPermissions) {
+				if ($rootScope.security.currentUser.systemCredentials.login.permissions[requiredPermissions[i]] !== true) {
+					//missing permission
+					return false;
+				}
+			}
+
+			return true;
+		} else {
+			// non valid current user, no permissions
+			return false;
+		}
+	}
+
 	return service;
-})
-.controller('security.loginCtrl', [ '$scope', 'security.LoginService', '$rootScope', '$location', function($scope, LoginService, $rootScope, $location) {
+}])
+.controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
 	// FIXME remove this in production
 	$scope.user = 'johndoe';
 	$scope.password = 'johndoe';
@@ -53,7 +78,7 @@ angular.module('security', [])
 	 * Login button click
 	 */
 	$scope.login = function() {
-		LoginService.getLogin($scope.user, $scope.password)
+		SecurityService.getLogin($scope.user, $scope.password)
 		.success(function(data, status, headers, config) {
 			$rootScope.security.currentUser = data;
 			$scope.alert = null;
@@ -65,22 +90,19 @@ angular.module('security', [])
 		});
 	};
 
-	$scope.logout = function() {
-		LoginService.getLogout();
-	};
-
 	$scope.resetPassword = function() {
-		LoginService.getResetPassword($scope.user);
+		SecurityService.getResetPassword($scope.user);
 	};
 
 	$scope.changePassword = function() {
-		LoginService.getChangePassword($scope.currentPassword, $scope.newPassword);
+		SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword);
 	};
 
 } ])
-.controller('security.logoutCtrl', ["$scope", "security.LoginService", "$location", '$cookieStore', function($scope, LoginService, $location, $cookieStore) {
+.controller('security.logoutCtrl', ["$scope", "security.SecurityService", "$location", '$cookieStore', '$rootScope', function($scope, SecurityService, $location, $cookieStore, $rootScope) {
 	$scope.logout = function() {
-		LoginService.getLogout().then(function(data, status, headers, config){
+		SecurityService.getLogout().then(function(data, status, headers, config){
+			$scope.security.currentUser = undefined;
 			$cookieStore.remove('loginName');
 			$cookieStore.remove('securityToken');
 			$location.path('/login');

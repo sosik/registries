@@ -93,11 +93,6 @@ angular.module('security', [])
 	$scope.resetPassword = function() {
 		SecurityService.getResetPassword($scope.user);
 	};
-
-	$scope.changePassword = function() {
-		SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword);
-	};
-
 } ])
 .controller('security.logoutCtrl', ["$scope", "security.SecurityService", "$location", '$cookieStore', '$rootScope', function($scope, SecurityService, $location, $cookieStore, $rootScope) {
 	$scope.logout = function() {
@@ -108,4 +103,23 @@ angular.module('security', [])
 			$location.path('/login');
 		})
 	}
+}])
+.controller('security.personalChangePasswordCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
+	$scope.currentPassword = '';
+	$scope.newPassword = '';
+	$scope.newPasswordCheck = '';
+	$scope.alert = null;
+
+	$scope.changePassword = function() {
+		if ($scope.newPassword !== $scope.newPasswordCheck) {
+			$scope.alert = "Nové a kontrolné heslo sa nerovnajú!!!";
+		}
+		SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword)
+		.success(function(data, status, headers, config){
+			$scope.alert = 'Heslo zmenene';
+		})
+		.error(function(data, status, headers, config){
+			$scope.alert = 'Heslo sa nepodarilo zmeniť ' + data;
+		});
+	};
 }]);

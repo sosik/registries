@@ -94,8 +94,8 @@ var LoginController = function(mongoDriver, options) {
 					resp.send(500, 'Not authenticated.');
 					return;
 				}
-				t.createToken(user.loginName, req.ip, function(token) {
-					t.storeToken(token, user.loginName, req.ip, function(err, data) {
+				t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
+					t.storeToken(token, user.systemCredentials.login.loginName, req.ip, function(err, data) {
 						if (err) {
 							log.error('Failed to store login token', err);
 							resp.send(500, 'Internal Error');
@@ -150,6 +150,7 @@ var LoginController = function(mongoDriver, options) {
 		    touched : now
 		};
 
+		log.silly('Storing security token', token);
 		tokenDao.save(token, callback);
 
 	};
@@ -289,7 +290,7 @@ var LoginController = function(mongoDriver, options) {
 	 * be used by authorized person ( no 'accidental' password resets)
 	 */
 	this.changePassword = function(req, resp) {
-
+		log.silly('Changing password for user', req.loginName);
 		if (!req.loginName) {
 			resp.send(500, 'User must be logged in for password change');
 			throw 'User must be logged in for password change';
@@ -297,7 +298,7 @@ var LoginController = function(mongoDriver, options) {
 
 		var t = this;
 		userDao.list(QueryFilter.create()
-				.addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login)
+				.addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName)
 		, function(err, data) {
 
 			if (err) {
@@ -306,11 +307,14 @@ var LoginController = function(mongoDriver, options) {
 
 				if (data.length != 1) {
 					resp.send(500, 'user not found');
+					return;
 				} else {
 					var user = data[0];
 					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
 						if (err) {
-							resp.send(500, err);
+							log.verbose('Old passwrod does not match!');
+							resp.send(500, 'Old password does not match!');
+							return;
 						} else {
 
 							var newPass = req.body.newPassword;
@@ -320,12 +324,15 @@ var LoginController = function(mongoDriver, options) {
 
 								user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
 
-								user.salt = newsalt;
+								user.systemCredentials.login.salt = newsalt;
 								userDao.update(user, function(err, data) {
 									if (err) {
 										resp.send(500, err);
+										return;
 									} else {
+										log.silly('Password successfully changed');
 										resp.send(200);
+										return;
 									}
 								});
 							})
@@ -361,6 +368,7 @@ var LoginController = function(mongoDriver, options) {
 		var tokenId = req.cookies.securityToken;
 
 		if (tokenId != null) {
+			log.silly('security token found', tokenId);
 			tokenDao.list({
 				crits : [ {
 				    op : 'eq',
@@ -368,8 +376,10 @@ var LoginController = function(mongoDriver, options) {
 				    f : cfg.tokenIdColumnName
 				} ]
 			}, function(err, tokens) {
-				if (err)
-					resp.send(500, err);
+				if (err) {
+					log.error('Failed to get data from DB', err);
+					next(err);
+				}
 				if (tokens.length == 1) {
 					var token = tokens[0];
 					// TODO validate IP
@@ -378,11 +388,16 @@ var LoginController = function(mongoDriver, options) {
 						token.touched = now;
 						// TODO maybe some filtering for updates
 						tokenDao.update(token, function(err, data) {
+							if (err) {
+								log.verbose('Failed to update security token in DB, sillently dropping', err);
+							}
 						})
+
+						log.silly('Setting auth info to', token);
 						req.authenticated = true;
 						req.loginName = token.user;
 					} else {
-
+						log.verbose('Found token %s is not valid, removing cookies', tokenId, {});
 						res.clearCookie(cfg.securityTokenCookie);
 						res.clearCookie(cfg.loginNameCookie);
 					}
@@ -391,8 +406,8 @@ var LoginController = function(mongoDriver, options) {
 				next();
 
 			});
-
 		} else {
+			log.verbose('no security token found');
 			next();
 		}
 

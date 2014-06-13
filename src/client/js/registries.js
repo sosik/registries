@@ -9,11 +9,27 @@ angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page
  * Main function, initializes all required data and scopes. For configuration of $providers
  * use .config
  */
-.run(["$rootScope", '$location', 'security.SecurityService', function($rootScope, $location, SecurityService) {
+.run(["$rootScope", '$location', 'security.SecurityService', '$cookies', function($rootScope, $location, SecurityService,$cookies) {
 	$rootScope.security = $rootScope.security || {};
 	// by default, current user is undefined, as there is noone logged in
-	$rootScope.security.currentUser = undefined;
-
+	
+	$rootScope.cookies=$cookies;
+	
+	if ($cookies.loginName){
+		SecurityService.getCurrentUser()
+		.success(function(data, status, headers, config) {
+			$rootScope.security.currentUser = data;
+		})
+		.error(function(data, status, headers, config) {
+			delete $rootScope.security.currentUser;
+			$rootScope.security.currentUser = undefined;
+		});
+		
+	}
+	else {
+		$rootScope.security.currentUser = undefined;
+	}
+	
 	// hang on route change, so we can check if user meets security criteria
 	$rootScope.$on('$routeChangeStart', function(evt, nextRoute, currentRoute) {
 		console.log(nextRoute);

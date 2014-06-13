@@ -13,6 +13,13 @@ angular.module('security', [])
 		});
 	};
 
+	service.getCurrentUser = function() {
+		return $http({
+		    method : 'GET',
+		    url : '/user/current'
+		});
+	};
+	
 	service.getResetPassword = function(user) {
 		return $http({
 		    method : 'POST',
@@ -89,6 +96,8 @@ angular.module('security', [])
 			$scope.alert = data;
 		});
 	};
+	
+	
 
 	$scope.resetPassword = function() {
 		SecurityService.getResetPassword($scope.user);

@@ -49,6 +49,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	app.post('/login', bodyParser(), function(req, res){loginCtrl.login(req, res);});
 	app.get('/logout', bodyParser(), function(req, res){loginCtrl.logout(req, res);});
+	app.get('/user/current', bodyParser(), function(req, res){loginCtrl.getCurrentUser(req, res);});
+	
 	app.post('/resetPassword', bodyParser(), function(req, res){loginCtrl.resetPassword(req, res);});
     app.post('/changePassword', bodyParser(), function(req, res){loginCtrl.changePassword(req, res);});
 

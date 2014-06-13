@@ -4,6 +4,10 @@ angular.module('psui-datepicker', ['psui'])
 .directive('psuiDatepicker', ['psui.dropdownFactory', function (dropdownFactory) {
 	return {
 		restrict: 'AE',
+		scope: {
+	//		ngModel: "=?"
+	//	},
+	//	require: ['?ngModel'],
 		link: function(scope, elm, attrs, ctrls) {
 			var wrapper;
 			var isDropdownVisible = false;
@@ -24,13 +28,30 @@ angular.module('psui-datepicker', ['psui'])
 				// we are attribute
 			}
 			
-			/*var input = angular.element('<input type="text" name="date">');
-			elm.append(input);*/
-			
+		//	var commitChange = function(val) {
+		//	};
+		//	
+		//	if (ctrls[1]) {
+		//		var ngModelCtrl = ctrls[1];
+		//		//ng-model controller is there
+		//		
+		//		var commitChange = function(date) {
+		//			scope.$apply(function() {
+		//				ngModelCtrl.$setViewValue(date);
+		//			});
+		//		};
+		//		
+		//		ngModelCtrl.$render = function() {
+		//			elm.val(ngModelCtrl.viewValue() || '')
+		//		}
+		//	}
+		//	
 			elm.addClass('psui-datepicker')
 			
 			var dropdown = angular.element('<div class="psui-dropdown psui-hidden"></div>');
 			wrapper.append(dropdown);
+			
+			dropdown.addClass('psui-datepicker-dropdown');
 			
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
@@ -40,6 +61,15 @@ angular.module('psui-datepicker', ['psui'])
 			buttonShowDropdown.on('click', function(evt) {
 				if (dropdown.hasClass('psui-hidden')) {
 					dropdown.removeClass('psui-hidden');
+					if (elm.val()){
+						var arr = elm.val().split(".");
+						if((arr[0] && arr[1] && arr[2]) && arr[2]<2200 && arr[2]>1800 && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
+							arr[1]= arr[1]-1;
+							var datum = new Date(arr[2], arr[1], arr[0]);
+							dateTbody.empty();
+							makeDateTable(datum);
+						}
+					}
 				} else {
 					dropdown.addClass('psui-hidden');
 				}
@@ -47,6 +77,15 @@ angular.module('psui-datepicker', ['psui'])
 			
 			elm.on('dblclick', function(evt){
 				if (dropdown.hasClass('psui-hidden')) {
+					if(elm.val()){
+						var arr = elm.val().split(".");
+						if((arr[0] && arr[1] && arr[2]) && arr[2]<2200 && arr[2]>1800 && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
+							arr[1]= arr[1]-1;
+							var datum = new Date(arr[2], arr[1], arr[0]);
+							dateTbody.empty();
+							makeDateTable(datum);
+						}
+					}
 					dropdown.removeClass('psui-hidden');
 				} else {
 					dropdown.addClass('psui-hidden');
@@ -57,6 +96,7 @@ angular.module('psui-datepicker', ['psui'])
 			var dateTbody = angular.element('<tbody></tbody>');
 			dateTable.append(dateTbody);
 			dropdown.append(dateTable);
+			
 			
 			var whichMonth = function(month){
 				if (month == 0){
@@ -104,6 +144,13 @@ angular.module('psui-datepicker', ['psui'])
 				})
 				tr.append(td);
 				td = angular.element('<td colspan="5">' + whichMonth(date.getMonth()) + ' ' + date.getFullYear() + '</td>'); 
+				td.data("datum",new Date(date.getTime()));
+				td.on('click',function(evt){
+					var element = angular.element(evt.target);
+					var thisMonth = new Date (element.data("datum").getTime());
+					dateTbody.empty();
+					makeMonthTable(thisMonth);
+				})
 				tr.append(td);
 				td = angular.element('<td>&raquo;</td>'); 
 				td.data("datum",new Date(date.getTime()));
@@ -186,12 +233,13 @@ angular.module('psui-datepicker', ['psui'])
 							var chosenDay = element.data("datum").getDate();
 							var chosenMonth = element.data("datum").getMonth() + 1;
 							var chosenYear = element.data("datum").getFullYear();
-							console.log(elm[0].nodeName);
+							
 							if (elm[0].nodeName == "DIV"){
 								elm.text(chosenDay + '.' + chosenMonth + '.' + chosenYear);
 							} else {
 								elm.val(chosenDay + '.' + chosenMonth + '.' + chosenYear);
 							}
+							//commitChange(element.data("datum"))
 							dropdown.addClass('psui-hidden');
 						})
 						tr.append(td);
@@ -202,9 +250,159 @@ angular.module('psui-datepicker', ['psui'])
 			
 			}
 			
+			
+			var makeMonthTable = function(date){
+				var tr,td;
+				
+				tr = angular.element('<tr class="month"></tr>');
+			
+				td = angular.element('<td>&laquo;</td>'); 
+				td.data("datum",new Date(date.getTime()));
+				td.on('click', function(evt){
+					
+					var element = angular.element(evt.target);
+					var prevYear = new Date (element.data("datum").getTime());
+					prevYear.setFullYear(prevYear.getFullYear()-1);
+					dateTbody.empty();
+					makeMonthTable(prevYear);
+				})
+				tr.append(td);
+				td = angular.element('<td colspan="2">' + date.getFullYear() + '</td>'); 
+				td.data("datum",new Date(date.getTime()));
+				td.on('click',function(evt){
+					var element = angular.element(evt.target);
+					var thisYear = new Date (element.data("datum").getTime());
+					dateTbody.empty();
+					makeYearTable(thisYear);
+				})
+				tr.append(td);
+				td = angular.element('<td>&raquo;</td>'); 
+				td.data("datum",new Date(date.getTime()));
+				td.on('click', function(evt){
+					
+					var element = angular.element(evt.target);
+					var nextYear = new Date (element.data("datum").getTime());
+					nextYear.setFullYear(nextYear.getFullYear()+1);
+					dateTbody.empty();
+					makeMonthTable(nextYear);
+				})
+				tr.append(td);
+				dateTbody.append(tr);
+				
+				tr = angular.element('<tr class="month"></tr>');
+				td = angular.element('<td colspan="7">Current Day</td>');
+				td.data("datum", new Date() );
+				td.on('click', function(evt){
+				
+					var element = angular.element(evt.target);
+					var curDate = new Date (element.data("datum").getTime());
+					dateTbody.empty();
+					makeDateTable(curDate);
+				
+				})
+				tr.append(td);
+				dateTbody.append(tr);
+				
+				var month = 0;
+				var dateMonthTable = new Date (date.getTime());
+				for (var i = 0; i<3; i++){
+					tr = angular.element('<tr></tr>');
+					for (var j = 0; j<4; j++){
+						td = angular.element('<td>' + whichMonth(month) + '</td>');
+						dateMonthTable.setMonth(month);
+						td.data("datum",new Date(dateMonthTable.getTime()));
+						
+						td.on('click', function(evt){
+							var element = angular.element(evt.target);
+							var thisDate = new Date (element.data("datum").getTime());
+							dateTbody.empty();
+							makeDateTable(thisDate);
+						})
+						tr.append(td);
+						month = month + 1;
+					}
+					dateTbody.append(tr);
+				}
+			
+			}
+			
+			var makeYearTable = function(date){
+				var tr,td;
+				
+				tr = angular.element('<tr class="month"></tr>');
+			
+				td = angular.element('<td>&laquo;</td>'); 
+				td.data("datum",new Date(date.getTime()));
+				td.on('click', function(evt){
+					
+					var element = angular.element(evt.target);
+					var prevYears = new Date (element.data("datum").getTime());
+					prevYears.setFullYear(prevYears.getFullYear()-9);
+					dateTbody.empty();
+					makeYearTable(prevYears);
+				})
+				tr.append(td);
+				td = angular.element('<td></td>'); 
+				tr.append(td);
+				td = angular.element('<td>&raquo;</td>'); 
+				td.data("datum",new Date(date.getTime()));
+				td.on('click', function(evt){
+					
+					var element = angular.element(evt.target);
+					var nextYears = new Date (element.data("datum").getTime());
+					nextYears.setFullYear(nextYears.getFullYear()+9);
+					dateTbody.empty();
+					makeYearTable(nextYears);
+				})
+				tr.append(td);
+				dateTbody.append(tr);
+				
+				tr = angular.element('<tr class="month"></tr>');
+				td = angular.element('<td colspan="7">Current Day</td>');
+				td.data("datum", new Date() );
+				td.on('click', function(evt){
+				
+					var element = angular.element(evt.target);
+					var curDate = new Date (element.data("datum").getTime());
+					dateTbody.empty();
+					makeDateTable(curDate);
+				
+				})
+				tr.append(td);
+				dateTbody.append(tr);
+				
+				var year = date.getFullYear() - 4;
+				var dateYearTable = new Date (date.getTime());
+				
+				for (var i = 0; i<3; i++){
+					tr = angular.element('<tr></tr>');
+					for (var j = 0; j<3; j++){
+						td = angular.element('<td>' + year + '</td>');
+						dateYearTable.setFullYear(year);
+						td.data("datum",new Date(dateYearTable.getTime()));
+						
+						td.on('click', function(evt){
+							var element = angular.element(evt.target);
+							var thisYear = new Date (element.data("datum").getTime());
+							dateTbody.empty();
+							makeMonthTable(thisYear);
+						})
+						tr.append(td);
+						year = year + 1;
+					}
+					dateTbody.append(tr);
+				}
+			
+			}
+			
+			
+			
 			var d = new Date();
 			
 			makeDateTable(d);
+			
+			
+			
 			
 		}
 	}

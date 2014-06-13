@@ -70,10 +70,12 @@ body {
 }
 
 #demo4 .psui-dropdown {
-	max-height: 100px;
 	background-color: white;
-	border: silver solid 1px;
-	padding-left: 5px;
+	z-index:1000;
+}
+
+#demo4-2 .psui-dropdown {
+	background-color: white;
 	z-index:1000;
 }
 

@@ -1,17 +1,28 @@
-table.psui-datepicker {
+.psui-datepicker-dropdown table {
 	border-spacing:0px;
 }
-table.psui-datepicker td {
+.psui-datepicker-dropdown table td {
 	text-align: center;
 	padding: 3px 5px;
 }
-table.psui-datepicker tr.days {
+.psui-datepicker-dropdown table tr.days {
 	font-weight: bold;
 }
-table.psui-datepicker tr.month {
+.psui-datepicker-dropdown table tr.month {
 	font-weight: bold;
 	background-color: #ccc;
 }
-table.psui-datepicker td.other {
+.psui-datepicker-dropdown table td.other {
 	color: #ccc;
+}
+
+.psui-datepicker-dropdown{
+	width:225px;
+	height:198px;
+	overflow-y: hidden;
+}
+
+.psui-datepicker-dropdown table{
+	width:208px;
+	height:198px;
 }

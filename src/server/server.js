@@ -74,12 +74,12 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	// Map schema editor services
 	var lsfilter= function( item){
-		if ( /.*Schema[0-9]*\.js$/.test(item.name)) {
+		if ( /.*[0-9]*\.json$/.test(item.name)) {
 			return true;
 		}
 		return false;
 	};
-	schemaRepoApp.cfg({rootPath: process.cwd() + '/build/client/js' ,fileFilter: lsfilter});
+	schemaRepoApp.cfg({rootPath: process.cwd() + '/build/shared/schemas' ,fileFilter: lsfilter});
 	app.use('/schema',schemaRepoApp);
 	    
 	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){

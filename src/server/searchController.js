@@ -8,7 +8,9 @@ var universalDaoModule = require('./UniversalDao.js');
 var DEFAULT_CFG = {
 		
 		entityToNs: { 
-			"user": "uri://registries/people#person"
+			"user": "uri://registries/people#person",
+			"person": "uri://registries/people#person",
+			"company": "uri://registries/company"
 		}
 		
 };
@@ -58,7 +60,7 @@ var SearchController = function(mongoDriver, options) {
 	}
 
 	this.getSearchDef = function(req, res) {
-
+		
 		
 		var entity=req.body.entity;
 		var schemaUri=DEFAULT_CFG.entityToNs[entity];

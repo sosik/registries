@@ -38,4 +38,8 @@ angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page
 			$location.path('/login');
 		}
 	});
+
+	$rootScope.app = {
+		mainMenu: false
+	};
 }]);

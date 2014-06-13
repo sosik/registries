@@ -1,36 +1,8 @@
-angular.module('design', ['ps-gui', 'ngRoute'])
-.config(function($routeProvider) {
-    $routeProvider
-        .when('/empty', {
-            templateUrl: 'empty.html',
-            controller: 'emptyController'
-        })
-        .when('/new/:schema', {
-            templateUrl: 'new.html',
-            controller: 'newController'
-        })
-        .when('/view/:schema/:id', {
-            templateUrl: 'view.html',
-            controller: 'viewController'
-        })
-        .when('/list/:schema', {
-            templateUrl: 'list.html',
-            controller: 'listController'
-        })
-        .when('/edit/:oid', {
-            templateUrl: 'templates/edit.html',
-            controller: 'editController'
-        })
-        .when('/new', {
-            templateUrl: 'templates/edit.html',
-            controller: 'newController'
-        })
-        .otherwise({
-            redirectTo: '/empty'
-        });
-})
-.controller('design-menu', ['$scope', '$location', function($scope, $location) {
-	$scope.menuSelected = false;
+angular.module('registry', [])
+.controller('registry.newCtrl', ['$scope', '$location', function($scope, $location) {
+	$scope.model = {
+		aaa :''
+	};
 
 	$scope.menuToggle = function() {
 		if ($scope.menuSelected) {
@@ -46,119 +18,265 @@ angular.module('design', ['ps-gui', 'ngRoute'])
 		$location.path(where);
 	};
 }])
-.controller('emptyController', [function(){
-}])
-.controller('newController', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
-	var generateObjectFromSchema = function(schema, obj) {
-		var _obj = obj;
-		angular.forEach(schema.properties, function(value, key){
-			if (value.type === 'object') {
-				_obj[key] = {};
-				generateObjectFromSchema(value, _obj[key]);
-			} else {
-				_obj[key] = '';
+/**
+ * places validation mark to element
+ */
+.directive('psuiInlineedit', ['$timeout', function($timeout) {
+	return {
+		restrict: 'A',
+		require: ['^ngModel'],
+		link: function(scope, elm, attrs, controller) {
+			var mode = attrs.psuiInlineedit;
+			var wrapper;
+			var oldValue = '';
+
+			var commit = function() {
 			}
-		});
-	}
 
-	$scope.save = function() {
-		$http({url: '/udao/save/'+$scope.schema.table, method: 'PUT',data: $scope.obj})
-		.success(function(data, status, headers, config){
-			$location.path('/view/' + $routeParams.schema + '/' + data.id);
-		});
-	}
-	//$scope.peopleSchema = {};
-	$scope.obj = {};
-	$http({url: 'js/' + $routeParams.schema + '.js', responseType: 'text'})
-	.success(function(data, status, headers, config){
-			$scope.schema = data;
-			generateObjectFromSchema($scope.schema, $scope.obj);
-	});
-}])
-.controller('viewController', ['$scope', '$routeParams', '$http', function($scope, $routeParams, $http) {
-	var generateObjectFromSchema = function(schema, obj) {
-		var _obj = obj;
-		angular.forEach(schema.properties, function(value, key){
-			if (value.type === 'object') {
-				_obj[key] = {};
-				generateObjectFromSchema(value, _obj[key]);
-			} else {
-				_obj[key] = '';
+			var cancel = function() {
 			}
-		});
-	}
 
-	$scope.$on('model_changed', function() {
-		$http({url: '/udao/save/'+$scope.schema.table, method: 'PUT',data: $scope.obj})
-		.success(function(data, status, headers, config){
-		});
-	});
-	//$scope.peopleSchema = {};
-	$scope.obj = {};
-	$http({url: 'js/' + $routeParams.schema + '.js', responseType: 'text'})
-	.success(function(data, status, headers, config){
-			$scope.schema = data;
-			generateObjectFromSchema($scope.schema, $scope.obj);
+			var ngModel = null;
+			if (controller[0]) {
+				ngModel = controller[0];
+			}
+			// there is ngModel, define commit and cancel
+			if (ngModel) {
+				ngModel.$render = function() {
+					elm.val(ngModel.$viewValue || '');
+				}
 
-			$http({url: '/udao/get/'+$scope.schema.table+'/'+$routeParams.id})
-			.success(function(data, status, headers, config){
-				$scope.obj = data;
+				commit = function() {
+					scope.$apply( function() {
+						ngModel.$setViewValue(elm.val());
+					});
+					changeMode('view');
+				}
+
+				cancel = function() {
+					scope.$apply(function() {
+						elm.val(oldValue);
+						ngModel.$setViewValue(elm.val());
+					});
+					changeMode('view');
+				}
+			}
+			elm.addClass('psui-inlineedit-edit');
+			// create base html elements
+			if (elm.parent().hasClass('psui-wrapper')) {
+				// element is wrapped, we are going to use this wrapper
+				wrapper = angular.element(elm.parent());
+			} else {
+				// there is no wrapper, we have to create one
+				wrapper = angular.element('<span class="psui-wrapper"></span>');
+				elm.wrap(wrapper);
+			}
+
+			// check it there is psui-buttons-holder
+			var wrapperChildren = wrapper.children();
+			var actionsHolder = null;
+			for (var i = 0; i<wrapperChildren.length; i++) {
+				if (angular.element(wrapperChildren[i]).hasClass('psui-actions-holder')) {
+					actionsHolder = angular.element(wrapperChildren[i]);
+				}
+			}
+
+			if (!actionsHolder) {
+				console.log('No button holder');
+				actionsHolder = angular.element('<span class="psui-actions-holder"></span>');
+				wrapper.append(actionsHolder);
+			}
+
+			var commitBtn = angular.element('<span class="psui-commit-btn"><i></i><span>save</span></span>');
+			var cancelBtn = angular.element('<span class="psui-cancel-btn"><i></i><span>cancel</span></span>');
+			var editBtn = angular.element('<span class="psui-edit-btn"><i></i><span>edit</span></span>');
+
+			actionsHolder.append(commitBtn);
+			actionsHolder.append(cancelBtn);
+			actionsHolder.append(editBtn);
+
+			viewElement = angular.element('<div></div>');
+			viewElement.addClass('psui-inlineedit-view');
+			wrapper.prepend(viewElement);
+			viewElement.text(elm.val());
+
+			var changeMode = function(newMode) {
+				//TODO validate newMode
+				mode = newMode;
+
+				if (mode === 'view') {
+					editBtn.removeClass('psui-hidden');
+					commitBtn.addClass('psui-hidden');
+					cancelBtn.addClass('psui-hidden');
+					viewElement.text(elm.val());
+					viewElement.removeClass('psui-hidden');
+					elm.addClass('psui-hidden');
+					if (editBtnHideTimeout) {
+						$timeout.cancel(editBtnHideTimeout);
+						editBtnHideTimeout = null;
+					}
+					editBtnHideTimeout = $timeout(function() {
+						editBtn.addClass('psui-hidden');
+					}, 500);
+				} else if (mode === 'edit') {
+					editBtn.addClass('psui-hidden');
+					commitBtn.removeClass('psui-hidden');
+					cancelBtn.removeClass('psui-hidden');
+					viewElement.addClass('psui-hidden');
+					elm.removeClass('psui-hidden');
+					oldValue = elm.val();
+				}
+			}
+
+			commitBtn.on('click', function(evt) {
+				commit();
+				changeMode('view');
 			});
-	});
-}])
-.controller('listController', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
-	var generateTableHeaders = function(schema, obj) {
-		var _obj = obj;
-		angular.forEach(schema.properties, function(value, key){
-			if (value.type === 'object') {
-				_obj[key] = {};
-				generateObjectFromSchema(value, _obj[key]);
-			} else {
-				_obj[key] = '';
-			}
-		});
-	}
 
-	$scope.rowClick = function(id) {
-		$location.path('/view/' + $routeParams.schema + '/' + id);
-	}
-
-	$scope.getVal = function(exp) {
-		return $scope.$eval(exp);
-	}
-	//$scope.peopleSchema = {};
-	$scope.headers = {};
-	$http({url: 'js/' + $routeParams.schema + '.js', responseType: 'text'})
-	.success(function(data, status, headers, config){
-			$scope.schema = data;
-			$scope.headers = data.listFields;
-
-			$http({url: '/udao/list/'+$scope.schema.table})
-			.success(function(data, status, headers, config){
-				$scope.objs = data;
+			cancelBtn.on('click', function(evt) {
+				cancel();
+				changeMode('view');
 			});
-	});
-}])
-.controller('new-people', ['$scope', '$http', function($scope, $http) {
-	var generateObjectFromSchema = function(schema, obj) {
-		var _obj = obj;
-		angular.forEach(schema.properties, function(value, key){
-			if (value.type === 'object') {
-				_obj[key] = {};
-				generateObjectFromSchema(value, _obj[key]);
-			} else {
-				_obj[key] = '';
-			}
-		});
-	}
 
-	//$scope.peopleSchema = {};
-	$scope.obj = {};
-	$http({url: 'js/peopleSchema.js', responseType: 'text'})
-	.success(function(data, status, headers, config){
-			$scope.peopleSchema = data;
-			generateObjectFromSchema($scope.peopleSchema, $scope.obj);
-	});
+			editBtn.on('click', function(evt) {
+				changeMode('edit');
+			});
+
+			wrapper.on('dblclick', function(evt) {
+				changeMode('edit');
+			});
+
+			var editBtnHideTimeout;
+
+			editBtn.on('mouseover', function(evt) {
+				editBtn.removeClass('psui-hidden');
+				if (editBtnHideTimeout) {
+					$timeout.cancel(editBtnHideTimeout);
+					editBtnHideTimeout = null;
+				}
+			});
+
+			wrapper.on('mouseover', function(evt) {
+				if (mode === 'view') {
+					editBtn.removeClass('psui-hidden');
+				if (editBtnHideTimeout) {
+					$timeout.cancel(editBtnHideTimeout);
+					editBtnHideTimeout = null;
+				}
+				}
+			});
+			wrapper.on('mouseleave', function(evt) {
+				if (mode === 'view') {
+					if (editBtnHideTimeout) {
+						$timeout.cancel(editBtnHideTimeout);
+						editBtnHideTimeout = null;
+					}
+					editBtnHideTimeout = $timeout(function() {
+						editBtn.addClass('psui-hidden');
+					}, 500);
+				}
+			});
+
+			elm.on('keypress keydown', function(evt) {
+				if (evt.which === 27) {
+					cancel();
+					evt.preventDefault();
+				} else if (evt.which === 13) {
+					commit();
+					evt.preventDefault();
+				} else if (evt.which === 9) {
+					commit();
+				}
+			});
+
+
+			changeMode(mode);
+		}
+	}
+}])
+.directive('psuiValidityMark', [function() {
+	return {
+		restrict: 'A',
+		require: ['^ngModel'],
+		link: function(scope, elm, attrs, controller) {
+			var wrapper;
+
+			var ngModel = null;
+			if (controller[0]) {
+				ngModel = controller[0];
+			}
+
+			// create base html elements
+			if (elm.parent().hasClass('psui-wrapper')) {
+				// element is wrapped, we are going to use this wrapper
+				wrapper = elm.parent;
+			} else {
+				// there is no wrapper, we have to create one
+				wrapper = angular.element('<span class="psui-wrapper"></span>');
+				elm.wrap(wrapper);
+			}
+
+			// check it there is psui-buttons-holder
+			var wrapperChildren = wrapper.children();
+			var actionsHolder = null;
+			for (var i = 0; i<wrapperChildren.length; i++) {
+				if (angular.element(wrapperChildren[i]).hasClass('psui-actions-holder')) {
+					actionsHolder = wrapperChildren[i];
+				}
+			}
+
+			if (!actionsHolder) {
+				console.log('No button holder');
+				actionsHolder = angular.element('<span class="psui-actions-holder"></span>');
+				wrapper.append(actionsHolder);
+			}
+
+			var validationMark = angular.element('<span class="psui-validation-mark"><i></i><span>error</span></span>');
+			validationMark.addClass('psui-hidden');
+
+			actionsHolder.append(validationMark);
+
+			errors = angular.element('<div class="psui-errors"><div>');
+			errors.addClass('psui-hidden');
+			validationMark.append(errors);
+			validationMark.on('mouseover', function(evt) {
+				errors.removeClass('psui-hidden');
+			});
+			validationMark.on('mouseleave', function(evt) {
+				errors.addClass('psui-hidden');
+			});
+
+			if (ngModel) {
+				scope.$watch(function(scope) {return ngModel.$invalid;}, function(nv, ov) {
+					if (nv) {
+						validationMark.addClass('ng-invalid');
+						validationMark.removeClass('psui-hidden');
+					} else {
+						validationMark.removeClass('ng-invalid');
+						validationMark.addClass('psui-hidden');
+					}
+				});
+
+				scope.$watch(function(scope) {return ngModel.$pristine;}, function(nv, ov) {
+					if (nv) {
+						validationMark.addClass('ng-pristine');
+					} else {
+						validationMark.removeClass('ng-pristine');
+					}
+				});
+
+				scope.$watchCollection(function(scope) {return ngModel.$error;}, function(nv, ov) {
+					errors.empty();
+					console.log(nv);
+					for (e in nv) {
+						if (nv[e]) {
+							errors.append('<div class="psui-error">'+e+'</div>');
+						}
+					}
+				});
+			}
+		}
+	}
 }])
 .directive('psSchemaForm', ['$compile', function($compile){
 	return {

@@ -50,3 +50,8 @@ angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-s
 		selected: 'xxx'
 	}
 }])
+.controller('psui-datepicker-demo-simple', ['$scope', function($scope) {
+	$scope.date = {
+		selected: 'xxx'
+	}
+}])

@@ -59,6 +59,21 @@ angular.module('psui-datepicker', [])
 			}
 
 			elm.addClass('psui-datepicker');
+		//	if (ctrls[1]) {
+		//		var ngModelCtrl = ctrls[1];
+		//		//ng-model controller is there
+		//		
+		//		var commitChange = function(date) {
+		//			scope.$apply(function() {
+		//				ngModelCtrl.$setViewValue(date);
+		//			});
+		//		};
+		//		
+		//		ngModelCtrl.$render = function() {
+		//			elm.val(ngModelCtrl.viewValue() || '')
+		//		}
+		//	}
+		//	
 			
 			var dropdown = angular.element('<div class="psui-dropdown psui-hidden"></div>');
 			wrapper.append(dropdown);

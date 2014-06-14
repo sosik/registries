@@ -1,22 +1,78 @@
 angular.module('registry', [])
-.controller('registry.newCtrl', ['$scope', '$location', function($scope, $location) {
-	$scope.model = {
-		aaa :''
-	};
-
-	$scope.menuToggle = function() {
-		if ($scope.menuSelected) {
-			angular.element(document.getElementById('main-menu')).addClass('ps-gui-hidden');
-			$scope.menuSelected = false;
-		} else {
-			angular.element(document.getElementById('main-menu')).removeClass('ps-gui-hidden');
-			$scope.menuSelected = true;
-		}
+.controller('registry.newCtrl', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+	var generateObjectFromSchema = function(schema, obj) {
+		var _obj = obj;
+		angular.forEach(schema.properties, function(value, key){
+			if (value.type === 'object') {
+				_obj[key] = {};
+				generateObjectFromSchema(value, _obj[key]);
+			} else {
+				_obj[key] = '';
+			}
+		});
 	}
 
-	$scope.go = function(where) {
-		$location.path(where);
+	$scope.model = {};
+	$scope.model.obj = {};
+	
+	$scope.schemaFormOptions = {
+		modelPath: 'model.obj',
+		schema: {}
 	};
+
+	$scope.save = function() {
+		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
+		.success(function(data, status, headers, config){
+			$location.path('/registry/view/' + $routeParams.schema + '/' + data.id);
+		});
+	}
+	//$scope.peopleSchema = {};
+	//TODO read by schema services
+	$http({url: 'js/' + $routeParams.schema + '.js', responseType: 'text'})
+	.success(function(data, status, headers, config){
+			$scope.schemaFormOptions.schema = data;
+			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+	});
+}])
+.controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+	var generateObjectFromSchema = function(schema, obj) {
+		var _obj = obj;
+		angular.forEach(schema.properties, function(value, key){
+			if (value.type === 'object') {
+				_obj[key] = {};
+				generateObjectFromSchema(value, _obj[key]);
+			} else {
+				_obj[key] = '';
+			}
+		});
+	}
+
+	$scope.model = {};
+	$scope.model.obj = {};
+	
+	$scope.schemaFormOptions = {
+		modelPath: 'model.obj',
+		schema: {}
+	};
+
+	$scope.save = function() {
+		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
+		.success(function(data, status, headers, config){
+			$location.path('/registry/view/' + $routeParams.schema + '/' + $scope.model.obj.id);
+		});
+	}
+	//$scope.peopleSchema = {};
+	//TODO read by schema services
+	$http({url: 'js/' + $routeParams.schema + '.js', responseType: 'text'})
+	.success(function(data, status, headers, config){
+			$scope.schemaFormOptions.schema = data;
+			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+
+			$http({url: '/udao/get/'+$scope.schemaFormOptions.schema.table+'/'+$routeParams.id})
+			.success(function(data, status, headers, config){
+				$scope.model.obj = data;
+			});
+	});
 }])
 /**
  * places validation mark to element
@@ -40,11 +96,18 @@ angular.module('registry', [])
 			if (controller[0]) {
 				ngModel = controller[0];
 			}
+			var viewElement = angular.element('<div></div>');
+			viewElement.addClass('psui-inlineedit-view');
 			// there is ngModel, define commit and cancel
 			if (ngModel) {
 				ngModel.$render = function() {
 					elm.val(ngModel.$viewValue || '');
+					viewElement.text(ngModel.$viewValue || '');
 				}
+
+				scope.$watch(function(scope) {return ngModel.$viewValue;}, function() {
+					viewElement.text(ngModel.$viewValue || '');
+				})
 
 				commit = function() {
 					scope.$apply( function() {
@@ -95,10 +158,8 @@ angular.module('registry', [])
 			actionsHolder.append(cancelBtn);
 			actionsHolder.append(editBtn);
 
-			viewElement = angular.element('<div></div>');
-			viewElement.addClass('psui-inlineedit-view');
 			wrapper.prepend(viewElement);
-			viewElement.text(elm.val());
+			//viewElement.text(elm.val());
 
 			var changeMode = function(newMode) {
 				//TODO validate newMode
@@ -267,7 +328,6 @@ angular.module('registry', [])
 
 				scope.$watchCollection(function(scope) {return ngModel.$error;}, function(nv, ov) {
 					errors.empty();
-					console.log(nv);
 					for (e in nv) {
 						if (nv[e]) {
 							errors.append('<div class="psui-error">'+e+'</div>');
@@ -278,12 +338,88 @@ angular.module('registry', [])
 		}
 	}
 }])
+.directive('psuiSchemaForm', ['$compile', function($compile) {
+	return {
+		restrict: 'A',
+		transclude: true,
+		link: function(scope, element, attrs, controller) {
+			var options = scope[attrs.psuiSchemaForm];
+
+			var render = function() {
+				var properties = options.schema.properties;
+				console.log(properties);
+				angular.forEach(properties, function(value, key) {
+					if (value.type === 'object') {
+						var fieldSet = angular.element('<fieldset></fieldset');
+						element.append(fieldSet);
+						fieldSet.wrap('<div class="col-md-6"></div>');
+						fieldSet.append('<lable>'+value.title+'</label>');
+						angular.forEach(value.properties, function(value2, key2) {
+							fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+value2.title+'</label>'
+							+'<div class="col-sm-8"><div class="input-group">'
+							+'<input psui-validity-mark required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
+						});
+
+						//var tableElm = generateTableElement(value.title);
+						$compile(fieldSet)(scope);
+						
+						//generateTableRows(tableElm, properties[key], 'formObject.'+key);
+					} else {
+					}
+					//element.append('<div class="ps-table-row"><div class="ps-table-label">Priezvisko:</div><div class="ps-table-value"><ps-gui-clickedit-text show-buttons="false" ng-model="tezt">Stárek</ps-gui-clickedit-text></div></div>');
+				});
+			};
+
+			scope.$watchCollection(function() {return options}, function() {
+				console.log('options changed');
+				render();
+			});
+		}
+	}
+}])
+.directive('psuiSchemaForm2', ['$compile', function($compile) {
+	return {
+		restrict: 'A',
+		transclude: true,
+		link: function(scope, element, attrs, controller) {
+			var options = scope[attrs.psuiSchemaForm2];
+
+			var render = function() {
+				var properties = options.schema.properties;
+				console.log(properties);
+				angular.forEach(properties, function(value, key) {
+					if (value.type === 'object') {
+						var fieldSet = angular.element('<fieldset></fieldset');
+						element.append(fieldSet);
+						fieldSet.wrap('<div class="col-md-6"></div>');
+						fieldSet.append('<lable>'+value.title+'</label>');
+						angular.forEach(value.properties, function(value2, key2) {
+							fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+value2.title+'</label>'
+							+'<div class="col-sm-8"><div class="input-group">'
+							+'<input psui-validity-mark psui-inlineedit="view" required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
+						});
+
+						//var tableElm = generateTableElement(value.title);
+						$compile(fieldSet)(scope);
+						
+						//generateTableRows(tableElm, properties[key], 'formObject.'+key);
+					} else {
+					}
+					//element.append('<div class="ps-table-row"><div class="ps-table-label">Priezvisko:</div><div class="ps-table-value"><ps-gui-clickedit-text show-buttons="false" ng-model="tezt">Stárek</ps-gui-clickedit-text></div></div>');
+				});
+			};
+
+			scope.$watchCollection(function() {return options}, function() {
+				console.log('options changed');
+				render();
+			});
+		}
+	}
+}])
 .directive('psSchemaForm', ['$compile', function($compile){
 	return {
 		restrict: 'E',
 		scope: {
-			renderMode: '@',
-			showButtons: '@',
 			formSchema: "=",
 			formObject: "=",
 			formObjectText: "@formObject",
@@ -332,105 +468,5 @@ angular.module('registry', [])
 			});
 		}
 	};
-}])
-.directive('psGuiClickeditText', ['$compile', function($compile){
-	return {
-		restrict: 'E',
-		require: '?ngModel',
-		scope: {
-			renderMode: '@',
-			showButtons: '@',
-			saveAction: '&'
-
-		},
-		link: function(scope, element, attrs, controller) {
-			if(!controller) return;
-
-			var renderMode = scope.renderMode || 'view';
-			element.empty();	
-			var viewElm = angular.element('<div></div>');
-			var editElm = angular.element('<input></input>');
-			var editButton = angular.element('<ps-gui-button class="editButton" ps-gui-icon="img/iconmonstr-pencil-9-icon.svg"></ps-gui-button>');
-			var okButton = angular.element('<ps-gui-button class="okButton" ps-gui-icon="img/iconmonstr-check-mark-6-icon.svg"></ps-gui-button>');
-			var cancelButton = angular.element('<ps-gui-button class="cancelButton" ps-gui-icon="img/iconmonstr-x-mark-5-icon.svg"></ps-gui-button>');
-
-			$compile(editButton)(scope);
-			$compile(okButton)(scope);
-			$compile(cancelButton)(scope);
-
-			var setRenderMode = function(mode) {
-				renderMode = mode;
-
-				if (renderMode === 'view') {
-					viewElm.removeClass('ps-gui-hidden');
-					editElm.addClass('ps-gui-hidden');
-					element.removeClass('edit');
-				} else {
-					viewElm.addClass('ps-gui-hidden');
-					editElm.removeClass('ps-gui-hidden');
-					editElm[0].focus();
-					element.addClass('edit');
-				}
-			};
-			setRenderMode(renderMode);
-
-			viewElm.on('dblclick', function() {
-				setRenderMode('edit');
-			});
-
-			element.on('mouseenter', function() {
-				element.addClass('hovered');
-			});
-			element.on('mouseleave', function() {
-				element.removeClass('hovered');
-			});
-
-			var cancelEdit = function() {
-				editElm.val(controller.$modelValue);
-				controller.$setViewValue(controller.$modelValue);
-				setRenderMode('view');
-			};
-
-			var commitEdit = function() {
-				controller.$setViewValue(editElm.val());
-				viewElm.text(controller.$viewValue || '');
-				setRenderMode('view');
-				scope.$emit('model_changed');
-			};
-
-			editElm.on('keypress keydown', function(evt) {
-				if (evt.which === 27) {
-					scope.$apply(cancelEdit);
-					evt.preventDefault();
-				} else if (evt.which === 13) {
-					scope.$apply(commitEdit);
-					evt.preventDefault();
-				} else if (evt.which === 9) {
-					scope.$apply(commitEdit);
-				}
-			});
-
-			editElm.on('blur', function() {
-				scope.$apply(cancelEdit);
-			});
-			element.append(editElm);
-			element.append(viewElm);
-
-			if (scope.showButtons === 'true') {
-				element.append(editButton);
-				element.append(okButton);
-				element.append(cancelButton);
-			}
-
-			controller.$render = function() {
-				editElm.val(controller.$modelValue || '');
-				viewElm.text(controller.$modelValue || '');
-			};
-
-		}
-	}
-}])
-.controller('teztController', ['$scope', function($scope) {
-	$scope.tezt = 'Jozef';
 }]);
 

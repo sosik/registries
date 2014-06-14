@@ -35,7 +35,7 @@ angular.module('generic-search', [])
 
 	return service;
 } ])
-.controller('SearchCtrl', [ '$scope', '$routeParams', 'GenericSearchService', function($scope, $routeParams, searchService) {
+.controller('SearchCtrl', [ '$scope', '$routeParams', 'GenericSearchService', '$location', function($scope, $routeParams, searchService, $location) {
 
 	var entity = $routeParams.entity;
 
@@ -45,6 +45,7 @@ angular.module('generic-search', [])
 	$scope.alert = null;
 	$scope.searchCrit = [];
 
+	$scope.data = [];
 	searchService.getSearchDef(entity).success(function(data) {
 
 		$scope.searchDef = data;
@@ -132,10 +133,16 @@ angular.module('generic-search', [])
 		$scope.alert = null;
 		searchService.getSearch($scope.searchDef.schema, convertCriteria($scope.searchCrit)).success(function(data) {
 			$scope.data = data;
-			$scope.alert = ' REMOVE ME: ' + JSON.stringify(data, null, 2);
 		}).error(function(err) {
 			$scope.alert = err;
 		});
 	};
 
+	$scope.goView = function(i) {
+		if ($scope.entity === 'company') {
+			$location.path('registry/view/companySchema/'+$scope.data[i].id);
+		} else {
+			$location.path('registry/view/peopleSchema/'+$scope.data[i].id);
+		}
+	}
 } ]);

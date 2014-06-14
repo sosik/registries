@@ -21,9 +21,10 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	_collection.drop();
 	_collection.ensureIndex({
-		login : 1
+		"systemCredentials.login.loginName" : 1
 	}, {
-		unique : true
+		unique : true,
+		sparse : true
 	}, function(err) {
 		if (err){ 
 			console.log(err);

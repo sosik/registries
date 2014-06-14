@@ -58,8 +58,15 @@ h3 {
     white-space: nowrap;
 	text-transform: none;
 	border-collapse: separate;
+	animation: blink 2s ease 0;
+	animation-iteration-count:infinite;
 
 }
+@keyframes blink {
+    0%   {color: red;}
+    50%  {color: #FABF41;}
+    100%   {color: red;}
+} 
 
 .psui-edit-btn span {
 	display: none;
@@ -250,8 +257,7 @@ padding-right: 0px;
 padding-top: 0px;
 position: relative;
 vertical-align: baseline;
-width: 201px;
-
+width:inherit;
 }
 
 .psui-inlineedit-view {

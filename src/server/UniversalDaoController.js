@@ -6,11 +6,13 @@ var UniversalDaoController = function(mongoDriver) {
 	this.save = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
-			{collectionName: req.route.params.table}
+			{collectionName: req.params.table}
 		);
 
-		log.verbose(req.body);
-		_dao.save(req.body, function(err, data){
+		log.verbose("data to save", req.body);
+
+		var obj = req.body;
+		_dao.save(obj, function(err, data){
 			if (err) {
 				throw err;
 			}
@@ -22,11 +24,11 @@ var UniversalDaoController = function(mongoDriver) {
 	this.get = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
-			{collectionName: req.route.params.table}
+			{collectionName: req.params.table}
 		);
 
-		log.verbose(req.route.params);
-		_dao.get(req.route.params.id, function(err, data){
+		log.verbose(req.params);
+		_dao.get(req.params.id, function(err, data){
 			if (err) {
 				throw err;
 			}
@@ -38,7 +40,7 @@ var UniversalDaoController = function(mongoDriver) {
 	this.list = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
-			{collectionName: req.route.params.table}
+			{collectionName: req.params.table}
 		);
 
 		_dao.list({}, function(err, data){

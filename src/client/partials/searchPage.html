@@ -78,6 +78,28 @@
 						</table>
 					</fieldset>
 
+					<fieldset>
+						<legend>Results</legend>
+
+
+						<table>
+							<thead>
+								<tr>
+									<th>oid</th>
+									<th>id</th>
+									<th>name</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="d in data" ng-click="goView($index)">
+									
+									<td>{{d.id}}</td>
+									<td>{{d.baseData.id}}</td>
+									<td>{{d.baseData.name}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</fieldset>
 
 				</div>
 			</div>

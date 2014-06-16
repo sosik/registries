@@ -23,7 +23,6 @@ angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page
 		SecurityService.getCurrentUser()
 		.success(function(data, status, headers, config) {
 			$rootScope.security.currentUser = data;
-			console.log('getCurrentUser done');
 			changeRouteRuleActive=true;
 		})
 		.error(function(data, status, headers, config) {
@@ -41,9 +40,6 @@ angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page
 	
 	// hang on route change, so we can check if user meets security criteria
 	$rootScope.$on('$routeChangeStart', function(evt, nextRoute, currentRoute) {
-		console.log('$routeChangeStart');
-		console.log(nextRoute);
-		console.log($rootScope.security);
 		if (changeRouteRuleActive && (!$rootScope.security.currentUser || !SecurityService.hasPermissions(nextRoute.permissions))) {
 			evt.preventDefault();
 			$location.path('/login');

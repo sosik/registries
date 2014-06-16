@@ -13,11 +13,16 @@
 	<script src="lib/rangy/rangy-selectionsaverestore.js"></script>
 	<script src="lib/rangy/rangy-serializer.js"></script>
 	<script src="lib/rangy/rangy-cssclassapplier.js"></script>
+	<script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
+	<script src="lib/angular-ui-ace/ui-ace.js"></script>
+	
+
 	<link rel="stylesheet" type="text/css" href="css/psui.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-autocomplete.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-contenteditable.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-selectbox.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-demo.css">
+	
 </head>
 <body ng-app="psui-demo">
 <div ng-controller="psui-autocomplete-demo-simple" id="demo1">
@@ -43,5 +48,16 @@
 	{{model.selected}}
 </div>
 	<h1>demo 3 - selectbox</h1>
+	
+	
+	<div style="height: 200px; " ui-ace="{
+  useWrapMode : true,
+  showGutter: false,
+  theme:'twilight',
+  mode: 'xml',
+  onLoad: aceLoaded,
+  onChange: aceChanged
+}"></div>
+
 </body>
 </html>

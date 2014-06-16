@@ -19,6 +19,7 @@ var userControllerModule = require('./userController.js');
 
 
 var searchControllerModule = require('./searchController.js');
+var schemaControllerModule = require('./schemaController.js');
 
 var app = express();
 app.disable('view cache');
@@ -39,6 +40,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	
 	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,{});
+	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,{});
 	
 	app.use(cookieParser());
 	app.use(loginCtrl.authFilter );
@@ -55,6 +57,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
     app.post('/changePassword', bodyParser(), function(req, res){loginCtrl.changePassword(req, res);});
 
     app.get('/security/permissions',function(req,res){securityCtrl.getPermissions(req,res)});
+    
+    app.get('/schema/compiled/*',bodyParser(),function(req,res){schemaCtrl.getCompiledSchema(req,res)});
     
     app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
     app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res)});

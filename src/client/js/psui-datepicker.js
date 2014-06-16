@@ -5,10 +5,39 @@ angular.module('psui-datepicker', ['psui'])
 	return {
 		restrict: 'AE',
 		scope: {
-	//		ngModel: "=?"
-	//	},
-	//	require: ['?ngModel'],
+			ngModel: "=?"
+		},
+		require: ['?ngModel'],
 		link: function(scope, elm, attrs, ctrls) {
+		
+		
+			var ngModel = null;
+			if (ctrls && ctrls[0]) {
+				ngModel = ctrls[0];
+			}
+
+			// use empty function to commit data, it will be overriden if there is ngModel
+			var commitData = function() {
+			}
+			
+			var commitDataDiv = function() {
+			}
+
+			if (ngModel) {
+				commitData = function() {
+					ngModel.$setViewValue(elm.val());
+				}
+				
+				commitDataDiv = function() {
+					ngModel.$setViewValue(elm.text());
+				}
+			}
+		
+		
+		
+		
+		
+		
 			var wrapper;
 			var isDropdownVisible = false;
 			
@@ -27,25 +56,7 @@ angular.module('psui-datepicker', ['psui'])
 			} else {
 				// we are attribute
 			}
-			
-		//	var commitChange = function(val) {
-		//	};
-		//	
-		//	if (ctrls[1]) {
-		//		var ngModelCtrl = ctrls[1];
-		//		//ng-model controller is there
-		//		
-		//		var commitChange = function(date) {
-		//			scope.$apply(function() {
-		//				ngModelCtrl.$setViewValue(date);
-		//			});
-		//		};
-		//		
-		//		ngModelCtrl.$render = function() {
-		//			elm.val(ngModelCtrl.viewValue() || '')
-		//		}
-		//	}
-		//	
+
 			elm.addClass('psui-datepicker')
 			
 			var dropdown = angular.element('<div class="psui-dropdown psui-hidden"></div>');
@@ -236,10 +247,12 @@ angular.module('psui-datepicker', ['psui'])
 							
 							if (elm[0].nodeName == "DIV"){
 								elm.text(chosenDay + '.' + chosenMonth + '.' + chosenYear);
+								scope.$apply(commitDataDiv);
 							} else {
 								elm.val(chosenDay + '.' + chosenMonth + '.' + chosenYear);
+								scope.$apply(commitData);
 							}
-							//commitChange(element.data("datum"))
+							
 							dropdown.addClass('psui-hidden');
 						})
 						tr.append(td);

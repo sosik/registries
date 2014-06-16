@@ -40,6 +40,17 @@ angular.module('security', [])
 		    }
 		});
 	};
+	
+
+	service.getUserList = function() {
+
+		return $http({
+		    method : 'GET',
+		    url : '/user/list',
+		});
+
+	};
+
 
 	service.getLogout = function() {
 		return $http({
@@ -48,6 +59,37 @@ angular.module('security', [])
 		});
 	};
 
+	service.getSecurityPermissions = function() {
+
+		return $http({
+		    method : 'GET',
+		    url : '/security/permissions',
+
+		})
+
+	};
+
+	service.getUserPermissions = function(userId) {
+
+		return $http({
+		    method : 'GET',
+		    url : '/user/permissions/' + userId
+		})
+
+	};
+
+	service.updatePermissions = function(userId, permissions) {
+
+		return $http({
+		    method : 'POST',
+		    url : '/user/permissions/update',
+		    data : {
+		        userId : userId,
+		        permissions : permissions
+		    }
+		});
+	}
+	
 	/**
 	 * checks if current user has all required permissions
 	 */
@@ -113,6 +155,57 @@ angular.module('security', [])
 		})
 	}
 }])
+.controller('security.userListCtrl', [ '$scope', 'security.SecurityService', function($scope, userApiService) {
+
+	$scope.userList = [];
+
+	userApiService.getUserList().success(function(data) {
+		$scope.userList = data;
+	});
+
+} ])
+.controller('security.userEditCtrl',
+        [ '$scope',  'security.SecurityService', '$routeParams', function($scope,  securityService, $routeParams) {
+
+	        $scope.user = {};
+	        $scope.user.permissions = [];
+
+	        var remove = function(arr, item) {
+		        for (var i = arr.length; i--;) {
+			        if (arr[i] === item) {
+				        arr.splice(i, 1);
+			        }
+		        }
+	        }
+
+	        securityService.getSecurityPermissions().success(function(data) {
+		        $scope.permissions = data;
+		        securityService.getUserPermissions($routeParams.id).success(function(data) {
+			        $scope.user = data;
+
+			        for (var i = data.permissions.length; i--;) {
+				        remove($scope.permissions, data.permissions[i]);
+			        }
+
+		        });
+	        });
+
+	        $scope.addPermission = function(value) {
+		        $scope.user.permissions.push(value);
+		        remove($scope.permissions, value);
+
+	        };
+	        $scope.removePermission = function(value) {
+		        $scope.permissions.push(value);
+		        remove($scope.user.permissions, value);
+	        };
+
+	        $scope.updatePermissions = function() {
+	        	securityService.updatePermissions($routeParams.id, $scope.user.permissions);
+	        }
+
+        } ])
+
 .controller('security.personalChangePasswordCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
 	$scope.currentPassword = '';
 	$scope.newPassword = '';

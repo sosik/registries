@@ -6,7 +6,7 @@ var extend = require('extend');
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
-    userCollection : 'user',
+    userCollection : 'people',
     schemas : [ '/shared/schemas/groups.json', '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json' ]
 };
 
@@ -55,11 +55,11 @@ var SecurityController = function(mongoDriver, options) {
 				resp.send(500, err);
 			} else {
 				var userRes = {};
-				userRes.loginName = user.loginName;
+				userRes.loginName = user.systemCredentials.loginName;
 				var perrmissions = [];
 
-				for ( var per in user.permissions) {
-					if (user.permissions[per]) {
+				for ( var per in user.systemCredentials.permissions) {
+					if (user.systemCredentials.permissions[per]) {
 						perrmissions.push(per);
 					}
 				}
@@ -94,10 +94,15 @@ var SecurityController = function(mongoDriver, options) {
 
 				var result = [];
 
+				if (!user.systemCredentials){
+					user.systemCredentials={};
+				}
+				if (!user.systemCredentials.permissions){
+					user.systemCredentials.permissions={};
+				}
 				for ( var per in defaultObj) {
 					result.push(per);
-					user.permissions[per] = hasPermission(req.body.permissions, per);
-
+					user.systemCredentials.permissions[per] = hasPermission(req.body.permissions, per);
 				}
 				userDao.update(user, function(err) {
 					if (err) {

@@ -1,15 +1,14 @@
-<p>This is the partial for view 2.</p>
 
-<div>
+<div class="container">
 	<table>
 		<thead>
 			<tr>
-				<th colspan="4">Schemas to edit</th>
+				<th colspan="4">Users</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="user in userList">
-				<td>{{user.loginName}}</td>
+				<td>{{user.systemCredentials.login.loginName}} <br></td>
 				<td><a href="{{ '#/user/edit/'+user.id}}">edit </a></td>
 			</tr>
 		</tbody>

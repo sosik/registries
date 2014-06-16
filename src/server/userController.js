@@ -5,7 +5,7 @@ var extend = require('extend');
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
-	userCollection : 'user',
+	userCollection : 'people',
 };
 
 var UserController = function(mongoDriver, options) {

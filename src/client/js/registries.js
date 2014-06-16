@@ -6,6 +6,8 @@ angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page
 	$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/registry-new.html', controller: 'registry.newCtrl'});
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl'});
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
+	$routeProvider.when('/user/list', {templateUrl: 'partials/userList.html', controller: 'security.userListCtrl'});
+	$routeProvider.when('/user/edit/:id', {templateUrl: 'partials/userEdit.html', controller: 'security.userEditCtrl'});
 }])
 /**
  * Main function, initializes all required data and scopes. For configuration of $providers

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('psui-datepicker', ['psui'])
-.directive('psuiDatepicker', ['psui.dropdownFactory', function (dropdownFactory) {
+.directive('psuiDatepicker', [function () {
 	return {
 		restrict: 'AE',
 		scope: {
@@ -57,7 +57,7 @@ angular.module('psui-datepicker', ['psui'])
 				// we are attribute
 			}
 
-			elm.addClass('psui-datepicker')
+			elm.addClass('psui-datepicker');
 			
 			var dropdown = angular.element('<div class="psui-dropdown psui-hidden"></div>');
 			wrapper.append(dropdown);

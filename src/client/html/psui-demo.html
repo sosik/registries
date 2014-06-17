@@ -9,6 +9,7 @@
 	<script src="js/psui-contenteditable.js"></script>
 	<script src="js/psui-selectbox.js"></script>
 	<script src="js/psui-datepicker.js"></script>
+	<script src="js/psui-imageresizor.js"></script>
 	<script src="js/psui-demo.js"></script>
 	<script src="js/psui-uploadable-image.js"></script>
 	<script src="lib/rangy/rangy-core.js"></script>
@@ -24,10 +25,16 @@
 	<link rel="stylesheet" type="text/css" href="css/psui-contenteditable.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-selectbox.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-datepicker.css">
+	<link rel="stylesheet" type="text/css" href="css/psui-imageresizor.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-demo.css">
 	<link rel="stylesheet" type="text/css" href="css/psui-uploadable-image.css">
 </head>
 <body ng-app="psui-demo">
+<div id="demo0">
+	<h1>demo 0 - image resizor</h1>
+	<canvas psui-imageresizor></canvas>
+	<img id="img" src="img/img.jpg">
+</div>
 <div ng-controller="psui-autocomplete-demo-simple" id="demo1">
 	<h1>demo 1 - autocomplete</h1>
 	<input psui-autocomplete psui-options="autocompleteOptions1" ng-model="autocomplete1val"></input>

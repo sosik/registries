@@ -16,10 +16,19 @@ angular.module('generic-search', [])
 		    method : 'POST',
 		    url : '/search/def',
 		    data : {
-			    entity:entity
+			    entity : entity
 		    }
 		});
-	}
+	};
+
+	service.getCompiledSchema = function(schemaUri) {
+
+		return $http({
+		    method : 'GET',
+		    url : '/schema/compiled/' + encodeURIComponent(schemaUri)
+		});
+
+	};
 
 	service.getSearch = function(searchSchema, criteria) {
 
@@ -27,28 +36,113 @@ angular.module('generic-search', [])
 		    method : 'POST',
 		    url : '/search',
 		    data : {
-		        searchSchema : searchSchema ,
+		        searchSchema : searchSchema,
 		        criteria : criteria
 		    }
 		});
-	}
+	};
+
+	service.parseSearchDef = function(schema) {
+
+		var collectPropertyPaths = function(schemaFragment, path, properties) {
+
+			for ( var prop in schemaFragment) {
+				switch (prop) {
+				case '$schema':
+				case 'id':
+				case 'type':
+				case '$ref':
+					// skip schema keywords;
+					break;
+				default:
+					var propLocalPath = null;
+					var propUrl = null;
+
+					if (schema.def[prop].id) {
+						// id is defined, lets override canonical resolution
+						propUrl = URL.resolve(uri, schema.def[prop].id);
+						// make id argument absolute
+						schema.def[prop].id = propUrl;
+						propLocalPath = URL.parse(propUrl).hash;
+						propLocalPath = (propLocalPath && propLocalPath.length > 0 ? propLocalPath : "#");
+					} else {
+						propLocalPath = localPath + (localPath === "#" ? '' : '/') + prop;
+						propUrl = URL.resolve(uri, propLocalPath);
+					}
+
+					if ('object' === typeof schema.def[prop]) {
+						// dive only if it is object
+						that.registerSchema(propUrl, schema.def[prop], true);
+						parseInternal(propUrl, that.getSchema(propUrl), propLocalPath);
+					}
+				}
+			}
+		};
+
+		var retval = {};
+
+		function collectProperties(pathPrefix, objectDef, resultArr) {
+			for ( var pr in objectDef.properties) {
+				if (objectDef.properties[pr].type === 'object') {
+					collectProperties(pr + '.', objectDef.properties[pr], resultArr)
+				} else {
+					resultArr.push({
+					    path : pathPrefix + pr,
+					    type : objectDef.properties[pr].type,
+					    title : objectDef.properties[pr].title
+					});
+				}
+			}
+
+		}
+		;
+
+		retval.schema = schema.url;
+		retval.attributes = [];
+		retval.operators = [ {
+		    title : '=',
+		    value : 'eq'
+		}, {
+		    title : '>',
+		    value : 'gt'
+		}, {
+		    title : '<',
+		    value : 'lt'
+		}, {
+		    title : '!=',
+		    value : 'neq'
+		}, {
+		    title : 'starts',
+		    value : 'starts'
+		}, {
+		    title : 'exists',
+		    value : 'ex'
+		} ];
+
+		collectProperties('', schema, retval.attributes);
+
+		return retval;
+
+	};
 
 	return service;
-} ])
-.controller('SearchCtrl', [ '$scope', '$routeParams', 'GenericSearchService', '$location', function($scope, $routeParams, searchService, $location) {
+} ]).controller('SearchCtrl', [ '$scope', '$routeParams', 'GenericSearchService', '$location', function($scope, $routeParams, searchService, $location) {
 
-	var entity = $routeParams.entity;
+	var entityUri = decodeURIComponent($routeParams.entity);
 
-	$scope.entity=entity;
+	$scope.entityUri = entityUri;
+
 	$scope.searchDef = {};
 
 	$scope.alert = null;
 	$scope.searchCrit = [];
 
 	$scope.data = [];
-	searchService.getSearchDef(entity).success(function(data) {
 
-		$scope.searchDef = data;
+	searchService.getCompiledSchema(entityUri).success(function(data) {
+
+		$scope.searchDef = searchService.parseSearchDef(data);
+		$scope.entity = data.title;
 	}).error(function(err) {
 		$scope.alert = err;
 	});
@@ -104,14 +198,6 @@ angular.module('generic-search', [])
 		return retval;
 
 	}
-	
-
-
-	$scope.search = function() {
-		searchService.getSearch($scope.searchDef.schema, $scope.searchCrit).success(function(data) {
-			$scope.data = data;
-		});
-	};
 
 	var convertCriteria = function(crit) {
 
@@ -131,7 +217,7 @@ angular.module('generic-search', [])
 
 	$scope.search = function() {
 		$scope.alert = null;
-		searchService.getSearch($scope.searchDef.schema, convertCriteria($scope.searchCrit)).success(function(data) {
+		searchService.getSearch($scope.entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
 			$scope.data = data;
 		}).error(function(err) {
 			$scope.alert = err;
@@ -140,9 +226,9 @@ angular.module('generic-search', [])
 
 	$scope.goView = function(i) {
 		if ($scope.entity === 'company') {
-			$location.path('registry/view/companySchema/'+$scope.data[i].id);
+			$location.path('registry/view/companySchema/' + $scope.data[i].id);
 		} else {
-			$location.path('registry/view/peopleSchema/'+$scope.data[i].id);
+			$location.path('registry/view/peopleSchema/' + $scope.data[i].id);
 		}
 	}
 } ]);

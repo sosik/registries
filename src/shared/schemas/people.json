@@ -2,6 +2,7 @@
 	"$schema": "http://json-schema.org/schema#",
 	"id": "uri://registries/people#person",
 	"table": "people",
+	"title":"person",
 	"listFields": [
 		{"field":"id", "title": "ID"},
 		{"field":"baseData.name", "title":"Meno"},

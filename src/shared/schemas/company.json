@@ -2,6 +2,7 @@
 	"$schema": "http://json-schema.org/schema#",
 	"id": "uri://registries/company",
 	"table": "company",
+	"title": "company",
 	"listFields": [
 		{"field":"id", "title": "ID"},
 		{"field":"baseData.name", "title":"Meno"},

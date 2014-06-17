@@ -20,22 +20,23 @@ angular.module('psui-imageresizor', ['psui'])
 			
 			elm.addClass('psui-imageresizor');
 			
-			
 			var imgWidth = 60;
 			var imgHeight = 70;
-			
+			var resize = 1;
 			var width = imgWidth*3;
 			var height = imgHeight*3;
-			
-			
+			var state = 0;
+			var pomer;
 			var x,y;
+			var tmp;
 			var difX = 0;
 			var difY = 0;
-			
 			elm.attr('width',width);
 			elm.attr('height',height);
 			
 			var img = document.getElementById("img");
+			
+			var imgAng = angular.element(img);
 			
 			var canvasResult = angular.element('<canvas id="canvas-result" width="' + imgWidth + '" height="' + imgHeight + '"></canvas>');
 			wrapper.append(canvasResult);
@@ -45,163 +46,116 @@ angular.module('psui-imageresizor', ['psui'])
 			
 			var buttonShow = angular.element('<button><b>Show</b></button>');
 			buttonsHolder.append(buttonShow);
+			//buttonShow.addClass('psui-hidden');
+			
+			
+			//opravit chrome stale nechodi
+			//imgAng.on('load',function(evt){
+			//	buttonShow.removeClass('psui-hidden');
+			//})
+			
 			
 			var buttonRotate = angular.element('<button><b>Rotate</b></button>');
 			buttonsHolder.append(buttonRotate);
 			
+			var numberOfRot = 0;
+			var originImgWidth = img.clientWidth;
+			var originImgHeight = img.clientHeight;
+			
 			buttonRotate.on('click', function(evt){
+				numberOfRot = numberOfRot + 1;
+				numberOfRot = numberOfRot % 4;
+				tmp = originImgHeight;
+				originImgHeight = originImgWidth;
+				originImgWidth = tmp;
+				difX = 0;
+				difY = 0;
+				resize = 1;
 				
-				//img.rotate(90);
-				
+				draw(context,context2);
 			})
 			
-			var ctx = elm[0].getContext("2d");
-			var ctx2 = canvasResult[0].getContext("2d");
-			buttonShow.on('click',function(evt){
+			var context = elm[0].getContext("2d");
+			var context2 = canvasResult[0].getContext("2d");
+			context.translate(width/2,height/2);
 			
-				
-			
+			var draw=function(ctx,ctx2){
 				ctx.fillStyle = 'rgba(0,0,0,1)';
-				ctx.fillRect(0,0,width,height);	
-				//ctx.translate(width/2,height/2);
-				//ctx.rotate(Math.PI /2);
-				var pomer;
-				if((img.clientHeight / img.clientWidth) > (height / width)){
-					pomer = height / img.clientHeight;
-					if (height * resize <= imgHeight || img.clientWidth * pomer * resize <= imgWidth){
-						resize = imgWidth / (img.clientWidth * pomer);
-						
-					}
-					
-					if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2) < difX){
-						difX = ((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2);
-					}
-					
-					if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer)< (-1)*difX){
-						difX = -((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer);
-					}
-						
-					if(((height - imgHeight)/2 < difY)){
-						difY = (height - imgHeight)/2;
-					}
-					
-					if(((height - imgHeight)/2 + height * (resize - 1)< (-1)*difY)){
-						difY = -((height - imgHeight)/2 + height * (resize - 1));
-					}
-					
-					
-					ctx.drawImage(img,(width - img.clientWidth * pomer)/2 + difX,0 + difY,img.clientWidth * pomer * resize,height * resize);
+				ctx.fillRect(-width/2,-height/2,width,height);
+				ctx.rotate((Math.PI /2)* numberOfRot);
+				
+				if((originImgHeight / originImgWidth) > (height / width)){
+					pomer = height / originImgHeight;
 				} else {
-					pomer = width / img.clientWidth;
-					if (width * resize <= imgWidth || img.clientHeight * pomer * resize <= imgHeight){
-						resize = imgHeight / (img.clientHeight * pomer);
+					pomer = width / originImgWidth;
+				}
+					
+				if (originImgHeight * pomer * resize <= imgHeight || originImgWidth * pomer * resize <= imgWidth){
+					if((originImgHeight / originImgWidth) > (height / width)){
+						resize = imgWidth / (originImgWidth * pomer);
+					} else {
+						resize = imgHeight / (originImgHeight * pomer);
 					}
-					
-					if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2) < difY){
-						difY = ((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2);
-					}
-					
-					if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer) < (-1)*difY){
-						difY = -((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer);
-					}
-						
-					if(((width - imgWidth)/2 < difX)){
-						difX = (width - imgWidth)/2;
-					}
-					
-					if(((width - imgWidth)/2 + width * (resize - 1)< (-1)*difX)){
-						difX = -((width - imgWidth)/2 + width * (resize - 1));
-					}
-					
-					
-					
-					ctx.drawImage(img,0 + difX,(height - img.clientHeight * pomer)/2 + difY,width * resize,img.clientHeight * pomer * resize);
 				}
 				
+				if (numberOfRot % 2 == 1){
+					tmp = difX;
+					difX = difY;
+					difY = tmp;
+				}
+				
+				if (difX > (originImgWidth * resize * pomer - imgWidth)/2){
+					difX = (originImgWidth * resize * pomer - imgWidth)/2;
+				}
+					
+				if (-difX > (originImgWidth * resize * pomer - imgWidth)/2){
+					difX = -(originImgWidth * resize * pomer - imgWidth)/2;
+				}
+					
+				if (difY > (originImgHeight * resize * pomer - imgHeight)/2){
+					difY = (originImgHeight * resize * pomer - imgHeight)/2;
+				}
+				
+				if (-difY > (originImgHeight * resize * pomer - imgHeight)/2){
+					difY = -(originImgHeight * resize * pomer - imgHeight)/2;
+				}
+				
+				if (numberOfRot % 2 == 1){
+					tmp = difX;
+					difX = difY;
+					difY = tmp;
+				}
+				
+				ctx.drawImage(img,- (img.clientWidth * resize * pomer)/2 + difX,- (img.clientHeight * resize * pomer)/2 + difY,img.clientWidth * pomer * resize,img.clientHeight * pomer * resize);
+				
+				ctx.rotate(-(Math.PI/2)* numberOfRot);
 				ctx2.drawImage(elm[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,imgWidth,imgHeight);
 				ctx.fillStyle = 'rgba(0,0,0,0.5)';
-				ctx.fillRect(0,0,(width - imgWidth)/2,height);
-				ctx.fillRect((width - imgWidth)/2,0,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect((width - imgWidth)/2,(height - imgHeight)/2 + imgHeight,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect((width - imgWidth)/2 + imgWidth,0,(width - imgWidth)/2,height);
+				ctx.fillRect(- width/2,- height/2,(width - imgWidth)/2,height);
+				ctx.fillRect(- width/2 + (width - imgWidth)/2,- height/2,imgWidth,(height - imgHeight)/2);
+				ctx.fillRect(- width/2 + (width - imgWidth)/2,- height/2 + (height - imgHeight)/2 + imgHeight,imgWidth,(height - imgHeight)/2);
+				ctx.fillRect(- width/2 + (width - imgWidth)/2 + imgWidth,- height/2,(width - imgWidth)/2,height);
+				
+				
+			}
 			
 			
+			buttonShow.on('click',function(evt){
+				draw(context,context2);
 			})
 			
-			var resize = 1;
 			elm.on('mousewheel', function(evt){
 				evt.preventDefault();
 				if (evt.wheelDelta > 0){
 					resize = resize + 0.1;
 				} else {
-					resize = resize - 0.1;
-					
+					resize = resize - 0.1;	
 				}
+				draw(context,context2);
 				
-				ctx.fillStyle = 'rgba(0,0,0,1)';
-				ctx.fillRect(0,0,width,height);
 				
-				var img = document.getElementById("img");
-				var pomer;
-				if((img.clientHeight / img.clientWidth) > (height / width)){
-					pomer = height / img.clientHeight;
-					if (height * resize <= imgHeight || img.clientWidth * pomer * resize <= imgWidth){
-						resize = imgWidth / (img.clientWidth * pomer);
-						
-					}
-					
-					if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2) < difX){
-						difX = ((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2);
-					}
-					
-					if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer)< (-1)*difX){
-						difX = -((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer);
-					}
-						
-					if(((height - imgHeight)/2 < difY)){
-						difY = (height - imgHeight)/2;
-					}
-					
-					if(((height - imgHeight)/2 + height * (resize - 1)< (-1)*difY)){
-						difY = -((height - imgHeight)/2 + height * (resize - 1));
-					}
-					
-					
-					ctx.drawImage(img,(width - img.clientWidth * pomer)/2 + difX,0 + difY,img.clientWidth * pomer * resize,height * resize);
-					
-				} else {
-					pomer = width / img.clientWidth;
-					if (width * resize <= imgWidth || img.clientHeight * pomer * resize <= imgHeight){
-						resize = imgHeight / (img.clientHeight * pomer);
-					}
-					
-					if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2) < difY){
-						difY = ((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2);
-					}
-					
-					if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer) < (-1)*difY){
-						difY = -((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer);
-					}
-						
-					if(((width - imgWidth)/2 < difX)){
-						difX = (width - imgWidth)/2;
-					}
-					
-					if(((width - imgWidth)/2 + width * (resize - 1)< (-1)*difX)){
-						difX = -((width - imgWidth)/2 + width * (resize - 1));
-					}
-					
-					
-					ctx.drawImage(img,0 + difX,(height - img.clientHeight * pomer)/2 + difY,width * resize,img.clientHeight * pomer * resize);
-				}
 				
-				ctx2.drawImage(elm[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,imgWidth,imgHeight);
-				ctx.fillStyle = 'rgba(0,0,0,0.5)';
-				ctx.fillRect(0,0,(width - imgWidth)/2,height);
-				ctx.fillRect((width - imgWidth)/2,0,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect((width - imgWidth)/2,(height - imgHeight)/2 + imgHeight,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect((width - imgWidth)/2 + imgWidth,0,(width - imgWidth)/2,height);
-			});
+			})
 			
 			elm.on('DOMMouseScroll', function(evt){
 				evt.preventDefault();
@@ -210,78 +164,9 @@ angular.module('psui-imageresizor', ['psui'])
 				} else {
 					resize = resize - 0.1;
 				}
+				draw(context,context2);
 				
-				
-				ctx.fillStyle = 'rgba(0,0,0,1)';
-				ctx.fillRect(0,0,width,height);
-				
-				var img = document.getElementById("img");
-				var pomer;
-				if((img.clientHeight / img.clientWidth) > (height / width)){
-					pomer = height / img.clientHeight;
-					if (height * resize <= imgHeight || img.clientWidth * pomer * resize <= imgWidth){
-						resize = imgWidth / (img.clientWidth * pomer);
-						
-					}
-					
-					
-					if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2) < difX){
-						difX = ((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2);
-					}
-					
-					if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer)< (-1)*difX){
-						difX = -((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer);
-					}
-						
-					if(((height - imgHeight)/2 < difY)){
-						difY = (height - imgHeight)/2;
-					}
-					
-					if(((height - imgHeight)/2 + height * (resize - 1)< (-1)*difY)){
-						difY = -((height - imgHeight)/2 + height * (resize - 1));
-					}
-					
-					
-					
-					ctx.drawImage(img,(width - img.clientWidth * pomer)/2 + difX,0 + difY,img.clientWidth * pomer * resize,height * resize);
-					
-				} else {
-					pomer = width / img.clientWidth;
-					if (width * resize <= imgWidth || img.clientHeight * pomer * resize <= imgHeight){
-						resize = imgHeight / (img.clientHeight * pomer);
-					}
-					
-					if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2) < difY){
-						difY = ((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2);
-					}
-					
-					if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer) < (-1)*difY){
-						difY = -((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer);
-					}
-						
-					if(((width - imgWidth)/2 < difX)){
-						difX = (width - imgWidth)/2;
-					}
-					
-					if(((width - imgWidth)/2 + width * (resize - 1)< (-1)*difX)){
-						difX = -((width - imgWidth)/2 + width * (resize - 1));
-					}
-					
-					
-					ctx.drawImage(img,0 + difX,(height - img.clientHeight * pomer)/2 + difY,width * resize,img.clientHeight * pomer * resize);
-				}
-				
-				ctx2.drawImage(elm[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,imgWidth,imgHeight);
-				ctx.fillStyle = 'rgba(0,0,0,0.5)';
-				ctx.fillRect(0,0,(width - imgWidth)/2,height);
-				ctx.fillRect((width - imgWidth)/2,0,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect((width - imgWidth)/2,(height - imgHeight)/2 + imgHeight,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect((width - imgWidth)/2 + imgWidth,0,(width - imgWidth)/2,height);
 			})
-			
-			
-			
-			var state = 0;
 			
 			elm.on('mousedown',function(evt){
 				
@@ -295,83 +180,31 @@ angular.module('psui-imageresizor', ['psui'])
 			
 			})
 			
-			
 			elm.on('mousemove',function(evt){
-				
 				if (state == 1){
-				
-					difX = difX + evt.clientX - x;
-					difY = difY + evt.clientY - y;
-					
-					ctx.fillStyle = 'rgba(0,0,0,1)';
-					ctx.fillRect(0,0,width,height);
-					
-					
-					
-					var img = document.getElementById("img");
-					var pomer;
-					if((img.clientHeight / img.clientWidth) > (width / height)){
-						pomer = height / img.clientHeight;
-						
-						if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2) < difX){
-							difX = ((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2);
-						}
-					
-						if(((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer)< (-1)*difX){
-							difX = -((width - imgWidth)/2 - (width - img.clientWidth * pomer)/2 + img.clientWidth * pomer *resize - img.clientWidth * pomer);
-						}
-						
-						if(((height - imgHeight)/2 < difY)){
-							difY = (height - imgHeight)/2;
-						}
-					
-						if(((height - imgHeight)/2 + height * (resize - 1)< (-1)*difY)){
-							difY = -((height - imgHeight)/2 + height * (resize - 1));
-						}
-						
-						
-						ctx.drawImage(img,(width - img.clientWidth * pomer)/2 + difX,0 + difY,img.clientWidth * pomer * resize,height * resize);
-					} else {
-						pomer = width / img.clientWidth;
-						
-						if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2) < difY){
-							difY = ((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2);
-						}
-					
-						if(((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer) < (-1)*difY){
-							difY = -((height - imgHeight)/2 - (height - img.clientHeight * pomer)/2 + img.clientHeight * pomer * resize - img.clientHeight * pomer);
-						}
-						
-						if(((width - imgWidth)/2 < difX)){
-							difX = (width - imgWidth)/2;
-						}
-					
-						if(((width - imgWidth)/2 + width * (resize - 1)< (-1)*difX)){
-							difX = -((width - imgWidth)/2 + width * (resize - 1));
-						}
-						
-						
-						
-						
-						
-						
-						ctx.drawImage(img,0 + difX,(height - img.clientHeight * pomer)/2 + difY,width * resize,img.clientHeight * pomer * resize);
+					if (numberOfRot == 0){
+						difX = difX + evt.clientX - x;
+						difY = difY + evt.clientY - y;
+					} else if (numberOfRot == 1){
+						difX = difX + evt.clientY - y;
+						difY = difY - evt.clientX + x;
+					} else if (numberOfRot == 2){
+						difX = difX - evt.clientX + x;
+						difY = difY - evt.clientY + y;
+					} else if (numberOfRot == 3){
+						difX = difX - evt.clientY + y;
+						difY = difY + evt.clientX - x;
 					}
 					
-					ctx2.drawImage(elm[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,imgWidth,imgHeight);
-					ctx.fillStyle = 'rgba(0,0,0,0.5)';
-					ctx.fillRect(0,0,(width - imgWidth)/2,height);
-					ctx.fillRect((width - imgWidth)/2,0,imgWidth,(height - imgHeight)/2);
-					ctx.fillRect((width - imgWidth)/2,(height - imgHeight)/2 + imgHeight,imgWidth,(height - imgHeight)/2);
-					ctx.fillRect((width - imgWidth)/2 + imgWidth,0,(width - imgWidth)/2,height);
-					
-					
+					draw(context,context2);
 				}
 				x = evt.clientX;
 				y = evt.clientY;
-			
+				
 			})
 			
 		}
 	}
 }])
+			
+			

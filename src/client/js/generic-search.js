@@ -1,4 +1,4 @@
-angular.module('generic-search', [])
+angular.module('generic-search', ['schema-utils'])
 
 .config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/search/:entity', {
@@ -7,7 +7,7 @@ angular.module('generic-search', [])
 	});
 } ])
 
-.factory('GenericSearchService', [ '$http', '$rootScope', function($http, $rootScope) {
+.factory('generic-search.GenericSearchFactory', [ '$http', '$rootScope', function($http, $rootScope) {
 	var service = {};
 
 	service.getSearchDef = function(entity) {
@@ -21,14 +21,7 @@ angular.module('generic-search', [])
 		});
 	};
 
-	service.getCompiledSchema = function(schemaUri) {
-
-		return $http({
-		    method : 'GET',
-		    url : '/schema/compiled/' + encodeURIComponent(schemaUri)
-		});
-
-	};
+	
 
 	service.getSearch = function(searchSchema, criteria) {
 
@@ -126,7 +119,7 @@ angular.module('generic-search', [])
 	};
 
 	return service;
-} ]).controller('SearchCtrl', [ '$scope', '$routeParams', 'GenericSearchService', '$location', function($scope, $routeParams, searchService, $location) {
+} ]).controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' , function($scope, $routeParams,  $location, searchService,schemaService  ) {
 
 	var entityUri = decodeURIComponent($routeParams.entity);
 
@@ -139,7 +132,7 @@ angular.module('generic-search', [])
 
 	$scope.data = [];
 
-	searchService.getCompiledSchema(entityUri).success(function(data) {
+	schemaService.getCompiledSchema(entityUri).success(function(data) {
 
 		$scope.searchDef = searchService.parseSearchDef(data);
 		$scope.entity = data.title;

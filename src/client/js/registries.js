@@ -51,8 +51,4 @@ angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page
 	$rootScope.app = {
 		mainMenu: false
 	};
-}])
-.filter('uriescape', function() {
-  return  function(data){return encodeURIComponent(encodeURIComponent(data));};
-});
-;
+}]);

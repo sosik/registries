@@ -1,12 +1,12 @@
 'use strict';
 
-var log = require('./logging.js').getLogger('loginController.js');
+var log = require('./logging.js').getLogger('SchemaRegistry.js');
 var extend = require('extend');
 
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
-    schemas : [ '/shared/schemas/groups.json', '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json','/shared/schemas/people.json','/shared/schemas/company.json' ]
+    schemas : [  '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json','/shared/schemas/people.json','/shared/schemas/company.json','/shared/schemas/group.json' ]
 };
 
 var SchemaToolsModule = require('./SchemaTools.js');
@@ -28,8 +28,10 @@ var SchemaRegistry = function(options) {
 	var schemaTools = new SchemaToolsModule.SchemaTools();
 
 	cfg.schemas.map(function(item) {
-		var content = fs.readFileSync(process.cwd() + "/build" + item);
 
+		log.info('Registering schema',item);
+		var content = fs.readFileSync(process.cwd() + "/build" + item);
+		log.silly('Registering schema',content.toString());
 		schemaTools.registerSchema(null, content.toString());
 	})
 

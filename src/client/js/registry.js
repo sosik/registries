@@ -36,7 +36,7 @@ angular.module('registry', ['schema-utils'])
 	});
 	
 }])
-.controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+.controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
@@ -63,17 +63,25 @@ angular.module('registry', ['schema-utils'])
 			$location.path('/registry/view/' + $routeParams.schema + '/' + $scope.model.obj.id);
 		});
 	}
-	//$scope.peopleSchema = {};
-	//TODO read by schema services
-	$http({url: 'js/' + $routeParams.schema + '.js', responseType: 'text'})
-	.success(function(data, status, headers, config){
-			$scope.schemaFormOptions.schema = data;
-			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 
-			$http({url: '/udao/get/'+$scope.schemaFormOptions.schema.table+'/'+$routeParams.id})
-			.success(function(data, status, headers, config){
-				$scope.model.obj = data;
-			});
+	var schemaUri = decodeURIComponent( $routeParams.schema);
+
+	schemaUtilFactory.getCompiledSchema(schemaUri).success(function(data) {
+
+		$scope.schemaFormOptions.schema = data;
+		generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+		console.log('fff',$scope.schemaFormOptions.schema.table);
+		
+		$http({ method : 'GET',url: '/udao/get/'+$scope.schemaFormOptions.schema.table+'/'+$routeParams.id})
+		.success(function(data, status, headers, config){
+			$scope.model.obj = data;
+			console.log('mmm',data);
+		}).error(function(err) {
+			$scope.alert = err;
+		});
+		
+	}).error(function(err) {
+		$scope.alert = err;
 	});
 }])
 /**

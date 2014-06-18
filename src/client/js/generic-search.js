@@ -134,7 +134,7 @@ angular.module('generic-search', ['schema-utils'])
 
 	schemaUtilFactory.getCompiledSchema(entityUri).success(function(data) {
 
-		$scope.searchDef = searchService.parseSearchDef(data);
+		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
 	}).error(function(err) {
 		$scope.alert = err;
@@ -218,10 +218,6 @@ angular.module('generic-search', ['schema-utils'])
 	};
 
 	$scope.goView = function(i) {
-		if ($scope.entity === 'company') {
-			$location.path('registry/view/companySchema/' + $scope.data[i].id);
-		} else {
-			$location.path('registry/view/peopleSchema/' + $scope.data[i].id);
-		}
+			$location.path('registry/view/'+encodeURIComponent( $routeParams.entity)+'/' + $scope.data[i].id);
 	}
 } ]);

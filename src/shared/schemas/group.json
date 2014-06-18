@@ -1,0 +1,51 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "id": "uri://registries/security#group",
+    "title": "Bezpecnostna skupina",
+    "type": "object",
+    "table": "groups",
+    "title": "Security group",
+    "listFields": [
+        {
+            "field": "id",
+            "title": "ID"
+        },
+        {
+            "field": "name",
+            "title": "Nazov skupiny"
+        }
+    ],
+    "properties": {
+        "baseData": {
+            "title": "Základné údaje",
+            "type": "object",
+            "properties": {
+                "id": {
+                    "title": "Identifikátor",
+                    "type": "string",
+                    "required": true
+                },
+                "name": {
+                    "title": "Nazov skupiny",
+                    "type": "string",
+                    "required": true
+                },
+                "parent": {
+                    "$objectLink": {
+                        "$registry": "groups",
+                        "name": "name"
+                    }
+                }
+            }
+        },
+        "security": {
+            "title": "Security",
+            "type": "object",
+            "properties": {
+                "permissions": {
+                    "$ref": "uri://registries/security#permissions"
+                }
+            }
+        }
+    }
+}

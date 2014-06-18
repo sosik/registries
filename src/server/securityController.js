@@ -1,13 +1,13 @@
 'use strict';
 
-var log = require('./logging.js').getLogger('loginController.js');
+var log = require('./logging.js').getLogger('securityController.js');
 var extend = require('extend');
 
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
     userCollection : 'people',
-    schemas : [ '/shared/schemas/groups.json', '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json' ]
+    schemas : [  '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json' ]
 };
 
 var SchemaToolsModule = require('./SchemaTools.js');
@@ -71,6 +71,55 @@ var SecurityController = function(mongoDriver, options) {
 
 	};
 
+	this.getUserGroups = function(req, resp) {
+
+		var userId = req.url.substring(18, req.url.lenght);
+
+		userDao.get(userId, function(err, user) {
+
+			if (err) {
+				resp.send(500, err);
+			} else {
+				var userRes = {};
+				userRes.loginName = user.systemCredentials.loginName;
+				var groups = [];
+
+				for ( var gr in user.systemCredentials.groups) {
+					groups.push(gr);
+				}
+				userRes.groups = perrmissions;
+				resp.send(200, userRes);
+			}
+
+		});
+
+	};
+	
+	this.updateUserGroups = function(req, resp) {
+
+		var userId = req.url.substring(18, req.url.lenght);
+
+		userDao.get(userId, function(err, user) {
+
+			if (err) {
+				resp.send(500, err);
+			} else {
+				var userRes = {};
+				userRes.loginName = user.systemCredentials.loginName;
+				var groups = [];
+
+				for ( var gr in user.systemCredentials.groups) {
+					groups.push(gr);
+				}
+				userRes.groups = perrmissions;
+				resp.send(200, userRes);
+			}
+
+		});
+
+	};
+	
+
 	var hasPermission = function(coll, perm) {
 
 		for (var i = coll.length; i--;) {
@@ -94,11 +143,11 @@ var SecurityController = function(mongoDriver, options) {
 
 				var result = [];
 
-				if (!user.systemCredentials){
-					user.systemCredentials={};
+				if (!user.systemCredentials) {
+					user.systemCredentials = {};
 				}
-				if (!user.systemCredentials.permissions){
-					user.systemCredentials.permissions={};
+				if (!user.systemCredentials.permissions) {
+					user.systemCredentials.permissions = {};
 				}
 				for ( var per in defaultObj) {
 					result.push(per);

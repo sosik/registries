@@ -22,9 +22,7 @@
     "angular-loader": "1.2.x",
     "angular-mocks": "~1.2.x",
     "ngRangy": "*",
-    "angular-cookies": "~1.2.x"
-  },
-  "resolutions": {
-    "angular-ui-ace": "0.1.1"
+    "angular-cookies": "~1.2.x",
+    "angular-ui-ace": "~0.1.1"
   }
 }

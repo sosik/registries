@@ -1,5 +1,6 @@
 'use strict';
 
+var log = require('./logging.js').getLogger('fsController.js');
 var express = require('express');
 var extend = require('extend');
 var path = require('path');
@@ -16,7 +17,7 @@ app.cfg = function(options) {
 	var prop = extend(true, {}, DEFAULT_CFG, options);
 	app.prop = prop;
 	app.fsCtrl = new fsCtrlModule.FsCtrl(prop);
-}
+};
 
 app.get('/ls*', function(req, resp) {
 	var path = req.url.substring(3, req.url.lenght);
@@ -70,6 +71,20 @@ app.put('/put/*', function(req, resp) {
 			resp.send(err.code || 500, err);
 		}
 
+	});
+});
+
+app.put('/putgetpath/*', function(req, resp) {
+	console.log(app);
+	var path = req.url.substring('/putgetpath/'.length, req.url.lenght);
+
+	app.fsCtrl.putGetPath(path, req, req.get('Content-Type'), function(err, path) {
+		if (err) {
+			log.error('Failed to putGetPath');
+			resp.send(500, err);
+		}
+		log.info('Saved file %s', path);
+		resp.send(200, path);
 	});
 });
 

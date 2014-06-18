@@ -5,6 +5,7 @@ var extend = require('extend');
 var fs = require('fs');
 var async = require('async');
 var pathM = require('path');
+var uuid =  require('node-uuid');
 
 var DEFAULT_CFG = {
 		rootPath : '/tmp/'
@@ -27,7 +28,17 @@ var contentTypes = {
 		return 'application/octet-stream';
 	};
 
+	var getExtByContentType = function(contentType) {
+		if (contentType && contentType.length > 0) {
+			for (var i in contentTypes) {
+				if (contentTypes[i] === contentType) {
+					return i;
+				}
+			}
+		}
 
+		return '.bin'
+	}
 var FsCtrl = function(options) {
 	
 	this.cfg={};
@@ -200,9 +211,41 @@ var FsCtrl = function(options) {
 	};
 
 	/**
+	 * Puts content to file into target directory and returns path to file
+	 */
+	this.putGetPath = function(path, content, contentType, callback) {
+		var filename = uuid.v4() + getExtByContentType(contentType);
+		var p = this.calculateFsPath(pathM.join(path, filename));
+
+		if (!this.isPathSafe(p)) {
+			callback('Path is not safe: '+ path);
+		} else {
+			// path is safe
+			fs.exists(p, function(exists) {
+				if (exists) {
+					// statistics sometimes fail
+					that.putGetPath(path, content, contentType, callback);
+					
+				} else {
+					var ws = fs.createWriteStream(p);
+					ws.on('error', function(evt) {
+						callback(evt);
+					});
+					content.on('error', function(evt) {
+						callback(evt);
+					});
+					ws.on('finish', function(evt) {
+						callback(null, filename);
+					});
+					content.pipe(ws);
+				}
+			});
+		}
+	}
+
+	/**
 	 * moves file to non-existing index
 	 */
-
 	this.moveRotate = function(srcFile, dstProposal, next) {
 
 		var fileExists = true;

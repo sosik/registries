@@ -393,6 +393,69 @@ describe('FsService', function() {
 		});
 	});
 
+	it('should put file into dir and return path', function(done) {
+		fs.writeFileSync(path.join(testDataPath, 'fX3'), "xxxxiYYYY");
+
+		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
+
+		var reqMock = function(_path, _data) {
+			stream.Readable.call(this);
+			this.path = _path;
+			this.data = _data;
+		};
+		util.inherits(reqMock, stream.Readable);
+
+		reqMock.prototype._read = function(size) {
+			this.push(this.data);
+			this.push(null);
+		};
+
+		var resMock = function() {
+			require('stream').Writable.call(this);
+			this.statusCode = null;
+			this.data = '';
+			this.send = function(code, data) {
+				this.statusCode = code;
+				if (data) {
+					this.data += data;
+				}
+			};
+		};
+		util.inherits(resMock, require('stream').Writable);
+
+		resMock.prototype._write = function(chunk, encoding, callback) {
+			if (chunk) {
+				this.data += chunk.toString(encoding);
+			}
+
+			callback();
+		};
+
+		async.parallel([function(callback) {
+			// no content type
+			var req = new reqMock('.', 'abcd');
+			var res = new resMock();
+			fsCtrl.putGetPath('.', req, null, function(err, path) {
+				expect(err).to.not.exist;
+				expect(path).to.exist;
+				callback();
+			});
+		},
+		function(callback) {
+			var req = new reqMock('.', 'abcd');
+			var res = new resMock();
+			fsCtrl.putGetPath('.', req, 'image/jpeg', function(err, path) {
+				expect(err).to.not.exist;
+				expect(path).to.exist;
+				callback();
+			});
+
+		}],
+		function(err) {
+			done();
+		});
+	});
+
 	it('should put file', function(done) {
 		fs.writeFileSync(path.join(testDataPath, 'f1'), "xxxx");
 

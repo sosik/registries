@@ -119,7 +119,7 @@ angular.module('generic-search', ['schema-utils'])
 	};
 
 	return service;
-} ]).controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' , function($scope, $routeParams,  $location, searchService,schemaService  ) {
+} ]).controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' , function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory  ) {
 
 	var entityUri = decodeURIComponent($routeParams.entity);
 
@@ -132,7 +132,7 @@ angular.module('generic-search', ['schema-utils'])
 
 	$scope.data = [];
 
-	schemaService.getCompiledSchema(entityUri).success(function(data) {
+	schemaUtilFactory.getCompiledSchema(entityUri).success(function(data) {
 
 		$scope.searchDef = searchService.parseSearchDef(data);
 		$scope.entity = data.title;
@@ -210,7 +210,7 @@ angular.module('generic-search', ['schema-utils'])
 
 	$scope.search = function() {
 		$scope.alert = null;
-		searchService.getSearch($scope.entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
+		genericSearchFactory.getSearch($scope.entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
 			$scope.data = data;
 		}).error(function(err) {
 			$scope.alert = err;

@@ -1,5 +1,5 @@
-angular.module('registry', [])
-.controller('registry.newCtrl', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+angular.module('registry', ['schema-utils'])
+.controller('registry.newCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
@@ -26,13 +26,15 @@ angular.module('registry', [])
 			$location.path('/registry/view/' + $routeParams.schema + '/' + data.id);
 		});
 	}
-	//$scope.peopleSchema = {};
-	//TODO read by schema services
-	$http({url: 'js/' + $routeParams.schema + '.js', responseType: 'text'})
-	.success(function(data, status, headers, config){
-			$scope.schemaFormOptions.schema = data;
-			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+	var schemaUri = decodeURIComponent( $routeParams.schema);
+	schemaUtilFactory.getCompiledSchema(schemaUri).success(function(data) {
+
+		$scope.schemaFormOptions.schema = data;
+		generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+	}).error(function(err) {
+		$scope.alert = err;
 	});
+	
 }])
 .controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
 	var generateObjectFromSchema = function(schema, obj) {

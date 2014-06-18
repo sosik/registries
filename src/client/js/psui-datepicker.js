@@ -40,7 +40,7 @@ angular.module('psui-datepicker', ['psui'])
 		
 			var wrapper;
 			var isDropdownVisible = false;
-			
+			var state = 0;
 			// create base html elements
 			if (elm.parent().hasClass('psui-wrapper')) {
 				// element is wrapped, we are going to use this wrapper
@@ -69,6 +69,27 @@ angular.module('psui-datepicker', ['psui'])
 			
 			var buttonShowDropdown = angular.element('<button><b>v</b></button>');
 			buttonsHolder.append(buttonShowDropdown);
+			
+			elm.on('blur',function(evt){
+				dropdown.addClass('psui-hidden');
+				state=0;
+			})
+			
+			elm.on('focus',function(evt){
+				dropdown.addClass('psui-hidden');
+				state=1;
+			})
+			
+			elm.on('click',function(evt){
+				if (state =1){
+					dropdown.addClass('psui-hidden');
+				}
+			})
+			
+			buttonShowDropdown.on('blur',function(evt){
+				dropdown.addClass('psui-hidden');
+			})
+			
 			buttonShowDropdown.on('click', function(evt) {
 				if (dropdown.hasClass('psui-hidden')) {
 					dropdown.removeClass('psui-hidden');

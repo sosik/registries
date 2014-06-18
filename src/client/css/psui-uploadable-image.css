@@ -1,0 +1,18 @@
+.psui-uploadable-image {
+	text-align: center;
+	display: block;
+	display: inline-block;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	border: 1px solid rgb(176, 176, 176);
+}
+
+.psui-uploadable-image-img {
+	width: inherit;
+	height: inherit;
+}
+
+.psui-uploadable-image-fbutton {
+	display: none !important;
+}

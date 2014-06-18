@@ -34,9 +34,9 @@ angular.module('psui-imageresizor', ['psui'])
 			elm.attr('width',width);
 			elm.attr('height',height);
 			
-			var img = document.getElementById("img");
-			
-			var imgAng = angular.element(img);
+			var img;
+			var originImgWidth;
+			var originImgHeight;
 			
 			var canvasResult = angular.element('<canvas id="canvas-result" width="' + imgWidth + '" height="' + imgHeight + '"></canvas>');
 			wrapper.append(canvasResult);
@@ -46,21 +46,21 @@ angular.module('psui-imageresizor', ['psui'])
 			
 			var buttonShow = angular.element('<button><b>Show</b></button>');
 			buttonsHolder.append(buttonShow);
-			//buttonShow.addClass('psui-hidden');
-			
-			
-			//opravit chrome stale nechodi
-			//imgAng.on('load',function(evt){
-			//	buttonShow.removeClass('psui-hidden');
-			//})
-			
 			
 			var buttonRotate = angular.element('<button><b>Rotate</b></button>');
 			buttonsHolder.append(buttonRotate);
 			
+			var buttonLoad = angular.element('<button><b>Load</b></button>');
+			buttonsHolder.append(buttonLoad);
+			
+			buttonLoad.on('click', function(evt){
+				img = document.getElementById("img");
+				originImgWidth = img.clientWidth;
+				originImgHeight = img.clientHeight;
+				console.log(originImgHeight);
+			})
+			
 			var numberOfRot = 0;
-			var originImgWidth = img.clientWidth;
-			var originImgHeight = img.clientHeight;
 			
 			buttonRotate.on('click', function(evt){
 				numberOfRot = numberOfRot + 1;

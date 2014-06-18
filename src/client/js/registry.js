@@ -307,7 +307,7 @@ angular.module('registry', ['schema-utils'])
 
 			actionsHolder.append(validationMark);
 
-			errors = angular.element('<div class="psui-errors"><div>');
+			var errors = angular.element('<div class="psui-errors"><div>');
 			errors.addClass('psui-hidden');
 			validationMark.append(errors);
 			validationMark.on('mouseover', function(evt) {

@@ -1,11 +1,19 @@
-label {
-	font-weight: normal;
+// common form
+.form{
+	.input-group{
+		width: 100%;
+	}
 }
 
-@include media-tablet-up{
-	.control-label {
-		text-align: left;
-	}
+.psui-wrapper {
+	display: block;
+	position: relative;
+	box-sizing: border-box;
+	line-height: 1em;
+}
+
+.psui-hidden {
+	display: none !important;
 }
 
 .form-control {
@@ -22,189 +30,212 @@ label {
 	}
 }
 
-.has-warning{
-	.form-control{
-		&:focus,
-		&:hover,
-		&:active {
-			border-color: red;
-		}
-	}
-	.btn{
-		&.warning{
-			display: inline-block;
-		}
-	}
+// lable
+label {
+	font-weight: normal;
 }
 
-.require{
-	.control-label{
+fieldset{
+	> label{
+		text-transform: uppercase;
+		display: block;
+		padding: 10px 0px;
+		margin-bottom: 15px;
+		border-bottom: 1px solid #b0b0b0;
 		font-weight: bold;
 	}
 }
 
-.form {
-	fieldset{
-		> label{
-			text-transform: uppercase;
-			
-			display: block;
-			padding: 10px 0px;
-			margin-bottom: 15px;
-			border-bottom: 1px solid #b0b0b0;
-			span{
-				font-weight: bold;
-			}
-		}
-		.control-label {
-			text-align: right;
-		}
-	}
+.form-horizontal .control-label {
+	text-align: left;
 }
 
-// input-group
-.form{
-	.input-group{
-		width: 100%;
-	}
-}
-.input-group{
-	.form-control{
-		z-index: inherit;
-	}
-	
-	.input-group-button{
-		display: block;
-		position: absolute;
-		top: 1px;
-		right: 0px;
-		.btn{
-			border: 0px;
-			background: none;
-		}
-	}
-}
-
-.glyphicon-play.rotate{
-	@include rotate(90deg);
-}
-
-//view-group
-.view-group{
+//view mode
+.psui-inlineedit-view{
 	position: relative;
-	.view-block{
-		border-width: 1px;
-		border-color: white;
-		border-style: dashed;
-		padding: $padding-base-vertical $padding-base-horizontal*3 $padding-base-vertical $padding-base-horizontal;	
-	}
-	&:hover{
-		.view-block{
-			border-width: 1px;
-			border-color: $input-border-color;
-			border-style: dashed;
-		}
-		
-		.view-icon{
-			position: absolute;
-			display: block;
-			top: 1px;
-			right: 1px;
-			bottom: 1px;
-			background-color: $input-bg;
-			padding: 6px;
-		}
-	}
-	.view-icon{
-		display: none;
-	}
-}
-
-.view-block{
 	display: block;
-	width: 100%;
-/*	height: $input-height-base; // Make inputs at least the height of their button counterpart (base line-height + padding + border)*/
-	padding: $padding-base-vertical $padding-base-horizontal;
 	font-size: $font-size-base;
 	line-height: $line-height-base;
+	border-width: 1px;
+	border-color: #ffffff;
+	border-style: dashed;
+	padding: $padding-base-vertical $padding-base-horizontal*3 $padding-base-vertical $padding-base-horizontal;	
+	@include user-select(none); 
+	
+	&:before{
+		content: " ";
+		display: inline-block;
+		height: $font-size-base;
+	}
+	
+	&:after{
+		display: none;
+		font-family: 'Glyphicons Halflings';
+		content: "\270f";
+		position: absolute;
+		top: 1px;
+		right: 1px;
+		bottom: 1px;
+		background-color: $input-bg;
+		padding: 6px;
+	}
+	
+	&:hover{
+		border-width: 1px;
+		border-color: $input-border-color;
+		border-style: dashed;
+		cursor: pointer;
+		
+		&:after{
+			display: block;
+		}
+	}
 }
 
-// input-group-action
-.input-group-action{
+.psui-actions-holder{
+	
+}
+
+// action holder
+.psui-actions-holder{
 	display: block;
 	position: absolute;
 	right: 0px;
-	top: -30px;
+	bottom: 100%;
 	display: block;
-	padding: 4px;
-	background-color: $input-bg; 
-	border: 1px solid $input-border-color;
-	border-bottom: 0px;
-	@include box-shadow(0px -2px 10px 0px lighten($input-border-color, 20%));
-	
-	.btn{
+	z-index: 2;
+
+	.psui-btn{
 		border: 0px;
-		padding: 0px 3px;
-		i{
-			margin-right: 5px;
-			position: relative;
-			top: 1px;
-			&.glyphicon-remove{
-				top: 2px;
+		display: inline-block;
+		padding-right: $field-action-holder-space;
+/*		padding-top: $field-action-holder-space;
+		padding-bottom: $field-action-holder-space;*/
+		cursor: pointer;
+		color: lighten($font-color-base,20%);
+		background-color: $field-action-holder-bg;
+		line-height: 37px;
+		@include box-shadow(0px -2px 10px 0px $page-bg);
+		@include transition(all .3s);
+		
+		> span{
+			/*display: none;*/
+		}
+		
+		> i + span{
+			margin-left: $field-action-holder-space;
+		}
+
+		> :first-child{
+			border-left: 1px solid lighten($input-border-color, 10%);
+			padding-left: $field-action-holder-space;
+		}
+
+		&:first-child{
+			> :first-child{
+				border-left: 0px;
 			}
 		}
-		span{
+		
+		&.psui-hidden + .psui-btn,
+		&.ng-invalid.ng-pristine + .psui-btn{
+			> :first-child{
+				border-left: 0px;
+			}
+		}
+		
+		&.ng-invalid.ng-pristine{
 			display: none;
 		}
-		border-right: 1px solid lighten($input-border-color, 10%);
-		&:last-child{
-			border-right: 0px;
+		
+		> i{
+			display: inline-block;
+			font-family: 'Glyphicons Halflings';
+			font-style: normal;
+			font-weight: normal;
+			line-height: 1;
+			position: relative;
+			top: 2px;
+		}
+		
+		&:hover,
+		&:focus,
+		&:active,
+		&.active {
+			color: $font-color-base;
+			@include transition(all .3s);
+		}
+		
+		&.psui-validation-mark{
+			> i:before{
+				content: "\e107";
+			}
+			> *{
+				color: red;
+			}
+		}
+		
+		&.psui-commit-btn{
+			> i:before{
+				content: "\e014";
+			}
+		}
+		
+		&.psui-cancel-btn{
+			> i:before{
+				content: "\e013";
+			}
 		}
 	}
-	
 }
 
-// buttons
-.btn{	
-	border-radius: 0px;	 
-	line-height: $button-line-height;
-	/*@include gradient-vertical(lighten($input-bg, 10%), darken($input-bg, 10%));*/
-	background-color: $input-bg;
-	border-color: $input-border-color;
-	color: lighten($font-color-base,20%);
-	@include transition(all .3s);
+.psui-validation-mark{
+	position: relative;
 	
-	&:hover,
-    &:focus,
-    &:active,
-    &.active {
-		color: $font-color-base;
-		/*@include gradient-vertical(lighten($input-bg, 30%), $input-bg);*/	
-		@include transition(all .3s);
-    }
+	$color1: #ff0000;
+	$color2: #ffffff;
 	
-	&.warning{
-		color: red;
-		display: none;
-	}
-}
-
-button[type="submit"]{
-	background-color: $button-submit-bg;
-	border-color: $button-submit-border-color;
-	i {
-		margin-right: 10px;
-	}
-}
-
-.btn-group{
-	.btn + .btn{
-		margin-left: 10px;
-	}
-}
-// select-box
-.input-select-box{
-	input{
-		padding-right: 35px;
+	.psui-errors{
+		position: absolute;
+		white-space: nowrap;
+		right: 100%;
+		background: $color1;
+		top: 0px;
+		padding: 7px 12px;
+		margin: 0px;
+		border: 1px solid $color2;
+		border-radius: 6px;
+		@include box-shadow(0 5px 10px rgba(0,0,0,.3));
+		
+		div{
+			line-height: $line-height-base;
+			color: $color2;
+		}
+		
+		&:after,&:before {
+/*			bottom: 100%;
+			left: 20px;*/
+			top: 12px;
+			left: 100%;
+			border: solid transparent;
+			content: " ";
+			height: 0; 
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+		}
+		&:after {
+			border-color: rgba(250, 250, 250, 0);
+			border-left-color:  $color1;
+			border-width: 5px;
+			margin-top: 1px;
+		}
+		&:before {
+			border-color: rgba(208, 208, 208, 0);
+			border-left-color: $color2;
+			border-width: 6px;
+			/*margin-left: -11px;*/
+		}
+		
 	}
 }

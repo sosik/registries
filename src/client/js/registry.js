@@ -160,13 +160,13 @@ angular.module('registry', ['schema-utils'])
 				wrapper.append(actionsHolder);
 			}
 
-			var commitBtn = angular.element('<span class="psui-commit-btn"><i></i><span>save</span></span>');
-			var cancelBtn = angular.element('<span class="psui-cancel-btn"><i></i><span>cancel</span></span>');
-			var editBtn = angular.element('<span class="psui-edit-btn"><i></i><span>edit</span></span>');
+			var commitBtn = angular.element('<span class="psui-btn psui-commit-btn"><i></i><span>save</span></span>');
+			var cancelBtn = angular.element('<span class="psui-btn psui-cancel-btn"><i></i><span>cancel</span></span>');
+//			var editBtn = angular.element('<span class="psui-edit-btn"><i></i><span>edit</span></span>');
 
 			actionsHolder.append(commitBtn);
 			actionsHolder.append(cancelBtn);
-			actionsHolder.append(editBtn);
+//			actionsHolder.append(editBtn);
 
 			wrapper.prepend(viewElement);
 			//viewElement.text(elm.val());
@@ -176,21 +176,21 @@ angular.module('registry', ['schema-utils'])
 				mode = newMode;
 
 				if (mode === 'view') {
-					editBtn.removeClass('psui-hidden');
+//					editBtn.removeClass('psui-hidden');
 					commitBtn.addClass('psui-hidden');
 					cancelBtn.addClass('psui-hidden');
 					viewElement.text(elm.val());
 					viewElement.removeClass('psui-hidden');
 					elm.addClass('psui-hidden');
-					if (editBtnHideTimeout) {
-						$timeout.cancel(editBtnHideTimeout);
-						editBtnHideTimeout = null;
-					}
-					editBtnHideTimeout = $timeout(function() {
-						editBtn.addClass('psui-hidden');
-					}, 500);
+//					if (editBtnHideTimeout) {
+//						$timeout.cancel(editBtnHideTimeout);
+//						editBtnHideTimeout = null;
+//					}
+//					editBtnHideTimeout = $timeout(function() {
+//						editBtn.addClass('psui-hidden');
+//					}, 500);
 				} else if (mode === 'edit') {
-					editBtn.addClass('psui-hidden');
+//					editBtn.addClass('psui-hidden');
 					commitBtn.removeClass('psui-hidden');
 					cancelBtn.removeClass('psui-hidden');
 					viewElement.addClass('psui-hidden');
@@ -209,44 +209,44 @@ angular.module('registry', ['schema-utils'])
 				changeMode('view');
 			});
 
-			editBtn.on('click', function(evt) {
+//			editBtn.on('click', function(evt) {
+//				changeMode('edit');
+//			});
+
+			viewElement.on('dblclick', function(evt) {
 				changeMode('edit');
 			});
 
-			wrapper.on('dblclick', function(evt) {
-				changeMode('edit');
-			});
+//			var editBtnHideTimeout;
+//
+//			editBtn.on('mouseover', function(evt) {
+//				editBtn.removeClass('psui-hidden');
+//				if (editBtnHideTimeout) {
+//					$timeout.cancel(editBtnHideTimeout);
+//					editBtnHideTimeout = null;
+//				}
+//			});
 
-			var editBtnHideTimeout;
-
-			editBtn.on('mouseover', function(evt) {
-				editBtn.removeClass('psui-hidden');
-				if (editBtnHideTimeout) {
-					$timeout.cancel(editBtnHideTimeout);
-					editBtnHideTimeout = null;
-				}
-			});
-
-			wrapper.on('mouseover', function(evt) {
-				if (mode === 'view') {
-					editBtn.removeClass('psui-hidden');
-				if (editBtnHideTimeout) {
-					$timeout.cancel(editBtnHideTimeout);
-					editBtnHideTimeout = null;
-				}
-				}
-			});
-			wrapper.on('mouseleave', function(evt) {
-				if (mode === 'view') {
-					if (editBtnHideTimeout) {
-						$timeout.cancel(editBtnHideTimeout);
-						editBtnHideTimeout = null;
-					}
-					editBtnHideTimeout = $timeout(function() {
-						editBtn.addClass('psui-hidden');
-					}, 500);
-				}
-			});
+//			wrapper.on('mouseover', function(evt) {
+//				if (mode === 'view') {
+//					editBtn.removeClass('psui-hidden');
+//				if (editBtnHideTimeout) {
+//					$timeout.cancel(editBtnHideTimeout);
+//					editBtnHideTimeout = null;
+//				}
+//				}
+//			});
+//			wrapper.on('mouseleave', function(evt) {
+//				if (mode === 'view') {
+//					if (editBtnHideTimeout) {
+//						$timeout.cancel(editBtnHideTimeout);
+//						editBtnHideTimeout = null;
+//					}
+//					editBtnHideTimeout = $timeout(function() {
+//						editBtn.addClass('psui-hidden');
+//					}, 500);
+//				}
+//			});
 
 			elm.on('keypress keydown', function(evt) {
 				if (evt.which === 27) {
@@ -302,7 +302,7 @@ angular.module('registry', ['schema-utils'])
 				wrapper.append(actionsHolder);
 			}
 
-			var validationMark = angular.element('<span class="psui-validation-mark"><i></i><span>error</span></span>');
+			var validationMark = angular.element('<span class="psui-btn psui-validation-mark"><i></i><span>error</span></span>');
 			validationMark.addClass('psui-hidden');
 
 			actionsHolder.append(validationMark);

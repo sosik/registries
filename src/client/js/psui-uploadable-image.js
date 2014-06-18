@@ -78,7 +78,7 @@ angular.module('psui-uploadable-image', [])
 .directive('psuiUploadableImage', ['psFileUploadFactory', function(psFileUploadFactory) {
 	return {
 		restrict: 'E',
-		require: ['^ngModel'],
+		require: ['^?ngModel'],
 		link: function(scope, elm, attrs, ctrls) {
 			var fileButton = angular.element('<input type="file"></input>');
 			var imgLink = '';

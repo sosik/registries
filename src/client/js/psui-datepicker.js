@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('psui-datepicker', ['psui'])
-.directive('psuiDatepicker', [function () {
+.directive('psuiDatepicker', ['$timeout', function ($timeout) {
 	return {
 		restrict: 'AE',
 		scope: {
@@ -64,14 +64,33 @@ angular.module('psui-datepicker', ['psui'])
 			
 			dropdown.addClass('psui-datepicker-dropdown');
 			
+			dropdown.attr('tabindex',0);
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
 			
 			var buttonShowDropdown = angular.element('<button><b>v</b></button>');
 			buttonsHolder.append(buttonShowDropdown);
 			
-			elm.on('blur',function(evt){
+			var dropdownHide = function() {
 				dropdown.addClass('psui-hidden');
+			};
+			
+			var hideDropdown;
+			
+			dropdown.on('focus',function(evt){
+				console.log('abc');
+				$timeout.cancel(hideDropdown);
+				hideDropdown = null;
+				dropdown.removeClass('psui-hidden');
+			})
+			
+			dropdown.on('blur',function(evt){
+				dropdown.addClass('psui-hidden');
+			})
+			
+			elm.on('blur',function(evt){
+				hideDropdown = $timeout(dropdownHide, 3, false);
+				
 				state=0;
 			})
 			
@@ -87,7 +106,7 @@ angular.module('psui-datepicker', ['psui'])
 			})
 			
 			buttonShowDropdown.on('blur',function(evt){
-				dropdown.addClass('psui-hidden');
+				hideDropdown = $timeout(dropdownHide, 3, false);
 			})
 			
 			buttonShowDropdown.on('click', function(evt) {

@@ -51,6 +51,16 @@ angular.module('security', [])
 
 	};
 
+	service.getSecurityGroups = function() {
+
+		return $http({
+		    method : 'GET',
+		    url : '/udao/list/groups',
+		});
+
+	};
+
+	
 
 	service.getLogout = function() {
 		return $http({
@@ -155,6 +165,49 @@ angular.module('security', [])
 		})
 	}
 }])
+.controller('security.securityGroupEditCtrl', [ '$scope', 'security.SecurityService', function($scope, SecurityService) {
+
+	$scope.groups = [];
+	$scope.selectedGroup=null;
+
+	 var remove = function(arr, item) {
+	        for (var i = arr.length; i--;) {
+		        if (arr[i] === item) {
+			        arr.splice(i, 1);
+		        }
+	        }
+     }
+	
+	SecurityService.getSecurityGroups().success(function(data) {
+		$scope.groups = data;
+	});
+	
+	SecurityService.getSecurityPermissions().success(function(data) {
+	        $scope.permissions = data;
+	        console.log(data);
+		      
+     });
+	
+	 $scope.addPermission = function(value) {
+	        $scope.user.permissions.push(value);
+	        remove($scope.permissions, value);
+
+     };
+     $scope.removePermission = function(value) {
+	        $scope.permissions.push(value);
+	        remove($scope.user.permissions, value);
+     };
+
+     $scope.updatePermissions = function() {
+     	securityService.updatePermissions($routeParams.id, $scope.user.permissions);
+     };
+
+     $scope.selectGroup=function (group){
+    	 console.log('selected group', group);
+    	 $scope.selectedGroup=group;
+     } ;	
+
+} ])
 .controller('security.userListCtrl', [ '$scope', 'security.SecurityService', function($scope, userApiService) {
 
 	$scope.userList = [];
@@ -167,6 +220,14 @@ angular.module('security', [])
 .controller('security.userEditCtrl',
         [ '$scope',  'security.SecurityService', '$routeParams', function($scope,  securityService, $routeParams) {
 
+        	
+        	$scope.userList = [];
+        	$scope.selectedUser=null;
+
+        	securityService.getUserList().success(function(data) {
+        		$scope.userList = data;
+        	});
+        	
 	        $scope.user = {};
 	        $scope.user.permissions = [];
 
@@ -178,18 +239,7 @@ angular.module('security', [])
 		        }
 	        }
 
-	        securityService.getSecurityPermissions().success(function(data) {
-		        $scope.permissions = data;
-		        securityService.getUserPermissions($routeParams.id).success(function(data) {
-			        $scope.user = data;
-
-			        for (var i = data.permissions.length; i--;) {
-				        remove($scope.permissions, data.permissions[i]);
-			        }
-
-		        });
-	        });
-
+	        
 	        $scope.addPermission = function(value) {
 		        $scope.user.permissions.push(value);
 		        remove($scope.permissions, value);
@@ -200,8 +250,26 @@ angular.module('security', [])
 		        remove($scope.user.permissions, value);
 	        };
 
+	        $scope.selectUser = function(user) {
+		        $scope.selectedUser=user;
+		        securityService.getSecurityPermissions().success(function(data) {
+			        $scope.permissions = data;
+			        securityService.getUserPermissions($scope.selectedUser.id).success(function(data) {
+				        $scope.user = data;
+
+				        for (var i = data.permissions.length; i--;) {
+					        remove($scope.permissions, data.permissions[i]);
+				        }
+
+			        });
+		        });
+
+	        };
+	        
 	        $scope.updatePermissions = function() {
-	        	securityService.updatePermissions($routeParams.id, $scope.user.permissions);
+	        	securityService.updatePermissions($scope.selectedUser.id, $scope.user.permissions).success(function(data){
+	        		$scope.selectedUser=null;
+	        	});
 	        }
 
         } ])

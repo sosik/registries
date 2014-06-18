@@ -58,6 +58,57 @@
 				}
 			}
 		},
+		"photoInfo": {
+			"title": "Fotografie",
+			"type": "object",
+			"properties": {
+				"photo": {
+					"title": "Fotografia",
+					"type": "string",
+					"required": true,
+					"render": {
+						"component": "psui-uploadable-image",
+						"height": 244,
+						"width": 205
+					}
+				},
+				"houseNumber": {
+					"title": "Číslo domu",
+					"type": "string",
+					"required": true
+				},
+				"city": {
+					"title": "Obec",
+					"type": "string",
+					"required": true
+				},
+				"zipCode": {
+					"title": "PSČ",
+					"type": "string",
+					"required": true
+				},
+				"country": {
+					"title": "Štát",
+					"type": "string",
+					"required": true
+				},
+				"phoneNumber": {
+					"title": "Telefón",
+					"type": "string",
+					"required": false
+				},
+				"mobileNumber": {
+					"title": "Mobil",
+					"type": "string",
+					"required": false
+				},
+				"email": {
+					"title": "E-mail",
+					"type": "string",
+					"required": false
+				}
+			}
+		},
 		"contactInfo": {
 			"title": "Kontaktné údaje",
 			"type": "object",

@@ -1,4 +1,4 @@
-angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page','schema-editor','generic-search', 'registry','ui.ace'])
+angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page','schema-editor','generic-search', 'registry','ui.ace', 'psui-uploadable-image'])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});
 	$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});

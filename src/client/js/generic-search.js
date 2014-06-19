@@ -7,29 +7,15 @@ angular.module('generic-search', ['schema-utils'])
 	});
 } ])
 
-.factory('generic-search.GenericSearchFactory', [ '$http', '$rootScope', function($http, $rootScope) {
+.factory('generic-search.GenericSearchFactory', [ '$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
 	var service = {};
 
-	service.getSearchDef = function(entity) {
-
-		return $http({
-		    method : 'POST',
-		    url : '/search/def',
-		    data : {
-			    entity : entity
-		    }
-		});
-	};
-
-	
-
 	service.getSearch = function(searchSchema, criteria) {
-
+		console.log(searchSchema, schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')), schemaUtilFactory.concatUri(searchSchema,'search'));
 		return $http({
 		    method : 'POST',
-		    url : '/search',
+		    url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
 		    data : {
-		        searchSchema : searchSchema,
 		        criteria : criteria
 		    }
 		});
@@ -121,7 +107,7 @@ angular.module('generic-search', ['schema-utils'])
 	return service;
 } ]).controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' , function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory  ) {
 
-	var entityUri = decodeURIComponent($routeParams.entity);
+	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 	$scope.entityUri = entityUri;
 
@@ -132,7 +118,7 @@ angular.module('generic-search', ['schema-utils'])
 
 	$scope.data = [];
 
-	schemaUtilFactory.getCompiledSchema(entityUri).success(function(data) {
+	schemaUtilFactory.getCompiledSchema(entityUri, 'search').success(function(data) {
 
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;

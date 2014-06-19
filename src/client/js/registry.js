@@ -10,7 +10,9 @@ angular.module('registry', ['schema-utils'])
 				_obj[key] = '';
 			}
 		});
-	}
+	};
+
+	$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
 
 	$scope.model = {};
 	$scope.model.obj = {};
@@ -23,18 +25,16 @@ angular.module('registry', ['schema-utils'])
 	$scope.save = function() {
 		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
-			$location.path('/registry/view/' + $routeParams.schema + '/' + data.id);
+			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
 		});
-	}
-	var schemaUri = decodeURIComponent( $routeParams.schema);
-	schemaUtilFactory.getCompiledSchema(schemaUri).success(function(data) {
+	};
 
+	schemaUtilFactory.getCompiledSchema($scope.currentSchemaUri, 'new').success(function(data) {
 		$scope.schemaFormOptions.schema = data;
 		generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 	}).error(function(err) {
 		$scope.alert = err;
 	});
-	
 }])
 .controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
@@ -47,7 +47,10 @@ angular.module('registry', ['schema-utils'])
 				_obj[key] = '';
 			}
 		});
-	}
+	};
+
+	$scope.currentSchema = $routeParams.schema;
+	$scope.currentId = $routeParams.id;
 
 	$scope.model = {};
 	$scope.model.obj = {};
@@ -60,27 +63,26 @@ angular.module('registry', ['schema-utils'])
 	$scope.save = function() {
 		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
-			$location.path('/registry/view/' + $routeParams.schema + '/' + $scope.model.obj.id);
+			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($cope.currentSchema) + '/' + $scope.model.obj.id);
 		});
 	}
 
 	var schemaUri = decodeURIComponent( $routeParams.schema);
 
-	schemaUtilFactory.getCompiledSchema(schemaUri).success(function(data) {
-
+	schemaUtilFactory.getCompiledSchema(schemaUri, 'view')
+	.success(function(data) {
 		$scope.schemaFormOptions.schema = data;
-		generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
-		console.log('fff',$scope.schemaFormOptions.schema.table);
 		
-		$http({ method : 'GET',url: '/udao/get/'+$scope.schemaFormOptions.schema.table+'/'+$routeParams.id})
+		$http({ method : 'GET',url: '/udao/get/'+$scope.schemaFormOptions.schema.table+'/'+ $scope.currentId})
 		.success(function(data, status, headers, config){
+			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 			$scope.model.obj = data;
-			console.log('mmm',data);
 		}).error(function(err) {
 			$scope.alert = err;
 		});
 		
-	}).error(function(err) {
+	})
+	.error(function(err) {
 		$scope.alert = err;
 	});
 }])

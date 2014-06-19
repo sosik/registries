@@ -65,7 +65,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
     app.post('/user/permissions/update', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res)});
     
     app.post('/search/def', bodyParser(),function(req,res){searchCtrl.getSearchDef(req,res)});
-    app.post('/search', bodyParser(),function(req,res){searchCtrl.search(req,res)});
+    app.post('/search/:schema', bodyParser(),function(req,res){searchCtrl.search(req,res)});
     
     
 	// Static data

@@ -6,7 +6,7 @@ var extend = require('extend');
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
-    schemas : [  '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json','/shared/schemas/people.json','/shared/schemas/company.json','/shared/schemas/group.json' ]
+    schemas : [  '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json','/shared/schemas/people.json','/shared/schemas/company.json','/shared/schemas/group.json', '/shared/schemas/member.json' ]
 };
 
 var SchemaToolsModule = require('./SchemaTools.js');

@@ -7,12 +7,6 @@ var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
 		
-		entityToNs: { 
-			"user": "uri://registries/people#person",
-			"person": "uri://registries/people#person",
-			"company": "uri://registries/company"
-		}
-		
 };
 
 var schemaRegistryModule = require('./schemaRegistry.js');
@@ -114,10 +108,9 @@ var SearchController = function(mongoDriver, options) {
 
 	this.search = function(req, resp) {
 
-		var schema = schemaRegistryCtrl.getSchema(req.body.searchSchema);
-
+		var schema = schemaRegistryCtrl.getSchema(decodeURIComponent(req.params.schema));
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
-			collectionName : schema.def.table
+			collectionName : schema.compiled.table
 		});
 
 		dao.list({

@@ -167,6 +167,65 @@ var SecurityController = function(mongoDriver, options) {
 		});
 
 	};
+	
+	
+	
+	this.updateUserSecurity = function(req, resp) {
+
+		var userId = req.body.userId;
+		userDao.get(userId, function(err, user) {
+
+			if (err) {
+				resp.send(500, err);
+			} else {
+
+				var defaultObj = schemaTools.createDefaultObject('uri://registries/security#permissions');
+
+				log.silly(req.body);
+
+				if (!user.systemCredentials) {
+					user.systemCredentials = {};
+				}
+				if (!user.systemCredentials.permissions) {
+					user.systemCredentials.permissions = {};
+				}
+				
+				delete user.systemCredentials.groups;
+				
+				if (!user.systemCredentials.groups) {
+					user.systemCredentials.groups = [];
+				}
+				
+				for ( var per in defaultObj) {
+					user.systemCredentials.permissions[per] = hasPermission(req.body.permissions, per);
+				}
+				
+				req.body.groups.map(function(group){
+					console.log('pushing group',group);
+					user.systemCredentials.groups.push({id:group.id});
+				
+				});
+				
+				if (user.systemCredentials.groups.length===0){
+					user.systemCredentials.groups=null;
+				}
+				log.info('updating users security of', user.systemCredentials.login.loginName);
+				log.silly(user.systemCredentials);
+				userDao.update(user, function(err) {
+					if (err) {
+						resp.send(500, err);
+					} else {
+						resp.send(200);
+					}
+
+				});
+
+			}
+
+		});
+
+	};
+	
 
 };
 

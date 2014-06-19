@@ -63,7 +63,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
     app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
     app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res)});
     app.post('/user/permissions/update', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res)});
-    
+    app.post('/user/security/update', bodyParser(),function(req,res){securityCtrl.updateUserSecurity(req,res)});
     app.post('/search/def', bodyParser(),function(req,res){searchCtrl.getSearchDef(req,res)});
     app.post('/search/:schema', bodyParser(),function(req,res){searchCtrl.search(req,res)});
     

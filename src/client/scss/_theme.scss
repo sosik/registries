@@ -1,0 +1,17 @@
+a {
+	color: $button-submit-bg;
+}
+
+a:hover, a:focus {
+	color: $button-submit-hover-bg;
+}
+
+.btn-primary {
+	background-color: $button-submit-bg;
+	border-color: $button-submit-border-color;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active {
+	background-color: $button-submit-hover-bg;
+	border-color: $button-submit-hover-border-color;
+}

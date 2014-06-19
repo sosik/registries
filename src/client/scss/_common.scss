@@ -36,7 +36,7 @@ h2{
 
 // Content
 #content-wrapper{
-  margin-top: $header-height;
+  margin-top: $header-height+15px;
   /*margin-left: 2 * $sidebar-close-width;*/
   color: $font-color-base;
 }

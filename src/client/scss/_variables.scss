@@ -80,6 +80,8 @@ $button-line-height: 1.43 !default;
 $input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2) !default;
 $button-submit-bg: $main-color;
 $button-submit-border-color: darken($button-submit-bg, 20%);
+$button-submit-hover-bg: darken($main-color, 10%);
+$button-submit-hover-border-color: darken($button-submit-hover-bg, 20%);
 
 // field action holder
 $field-action-holder-space: 10px !default;

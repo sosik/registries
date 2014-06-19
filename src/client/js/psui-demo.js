@@ -55,3 +55,46 @@ angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-s
 		selected: 'xxx'
 	}
 }])
+.controller('psui-notification-demo-simple',['$scope','psui.notificationFactory',function($scope, notificationFactory) {
+	
+	var tmp = {};
+	$scope.putInfo = function (){
+		tmp = {text:'info'};
+		notificationFactory.info(tmp);
+	}
+	
+	$scope.putError = function (){
+		tmp = {text:'error'};
+		notificationFactory.error(tmp);
+	}
+	
+	$scope.putInfoDel = function (){
+		tmp = {text:'info',deletable :true};
+		notificationFactory.info(tmp);
+	}
+	
+	$scope.putErrorDel = function (){
+		tmp = {text:'error',deletable: true};
+		notificationFactory.error(tmp);
+	}
+	
+	$scope.putInfoTime = function (){
+		tmp = {text:'info',time :2000};
+		notificationFactory.info(tmp);
+	}
+	
+	$scope.putErrorTime = function (){
+		tmp = {text:'error',time: 2000};
+		notificationFactory.error(tmp);
+	}
+	
+	$scope.putInfoTimeDel = function (){
+		tmp = {text:'info',time :2000, deletable: true};
+		notificationFactory.info(tmp);
+	}
+	
+	$scope.putErrorTimeDel = function (){
+		tmp = {text:'error',time: 2000, deletable: true};
+		notificationFactory.error(tmp);
+	}
+}])

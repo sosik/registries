@@ -10,6 +10,7 @@
 	<script src="js/psui-selectbox.js"></script>
 	<script src="js/psui-datepicker.js"></script>
 	<script src="js/psui-imageresizor.js"></script>
+	<script src="js/psui-notification.js"></script>
 	<script src="js/psui-demo.js"></script>
 	<script src="js/psui-uploadable-image.js"></script>
 	<script src="lib/rangy/rangy-core.js"></script>
@@ -30,6 +31,18 @@
 	<link rel="stylesheet" type="text/css" href="css/psui-uploadable-image.css">
 </head>
 <body ng-app="psui-demo">
+<div ng-controller="psui-notification-demo-simple" id="demo-1">
+	<h1>demo -1 - notification</h1>
+	<div psui-notification></div>
+	<button ng-click="putInfo()">Info</button>
+	<button ng-click="putError()">Error</button>
+	<button ng-click="putInfoDel()">Deletable Info</button>
+	<button ng-click="putErrorDel()">Deletable Error</button>
+	<button ng-click="putInfoTime()">Time Info</button>
+	<button ng-click="putErrorTime()">Time Error</button>
+	<button ng-click="putInfoTimeDel()">Time Deletable Info</button>
+	<button ng-click="putErrorTimeDel()">Time Deletable Error</button>
+</div>
 <div id="demo0">
 	<h1>demo 0 - image resizor</h1>
 	<canvas psui-imageresizor></canvas>

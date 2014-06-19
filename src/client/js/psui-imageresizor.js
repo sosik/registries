@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('psui-imageresizor', ['psui'])
+angular.module('psui-imageresizor', [])
 .directive('psuiImageresizor', [function () {
 	return {
 		restrict: 'A',
+		require: ['?psuiUploadableImage'],
 		link: function(scope, elm, attrs, ctrls) {
-		
 			var wrapper;
 			
 			// create base html elements
@@ -20,8 +20,10 @@ angular.module('psui-imageresizor', ['psui'])
 			
 			elm.addClass('psui-imageresizor');
 			
-			var imgWidth = 60;
-			var imgHeight = 70;
+			var imgCtrl = ctrls[0];
+
+			var imgWidth = attrs.psuiImageresizorWidth || 0;
+			var imgHeight = attrs.psuiImageresizorHeight || 0;
 			var resize = 1;
 			var width = imgWidth*3;
 			var height = imgHeight*3;
@@ -31,35 +33,29 @@ angular.module('psui-imageresizor', ['psui'])
 			var tmp;
 			var difX = 0;
 			var difY = 0;
-			elm.attr('width',width);
-			elm.attr('height',height);
-			
-			var img;
 			var originImgWidth;
 			var originImgHeight;
 			
-			var canvasResult = angular.element('<canvas id="canvas-result" width="' + imgWidth + '" height="' + imgHeight + '"></canvas>');
+			var resizorCanvas = angular.element('<canvas class="psui-imageresizor-resizor" ></canvas>');
+			resizorCanvas.attr('width',width);
+			resizorCanvas.attr('height',height);
+			resizorCanvas.addClass('psui-hidden');
+			wrapper.append(resizorCanvas);
+			
+			var canvasResult = angular.element('<canvas class="psui-imageresizor-result" width="' + imgWidth + '" height="' + imgHeight + '"></canvas>');
+			canvasResult.addClass('psui-hidden');
 			wrapper.append(canvasResult);
 			
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
+			buttonsHolder.addClass('psui-hidden');
 			wrapper.append(buttonsHolder);
-			
-			var buttonShow = angular.element('<button><b>Show</b></button>');
-			buttonsHolder.append(buttonShow);
 			
 			var buttonRotate = angular.element('<button><b>Rotate</b></button>');
 			buttonsHolder.append(buttonRotate);
 			
-			var buttonLoad = angular.element('<button><b>Load</b></button>');
-			buttonsHolder.append(buttonLoad);
-			
-			buttonLoad.on('click', function(evt){
-				img = document.getElementById("img");
-				originImgWidth = img.clientWidth;
-				originImgHeight = img.clientHeight;
-				console.log(originImgHeight);
-			})
-			
+			var buttonOk = angular.element('<button><b>OK</b></button>');
+			buttonsHolder.append(buttonOk);
+
 			var numberOfRot = 0;
 			
 			buttonRotate.on('click', function(evt){
@@ -75,10 +71,13 @@ angular.module('psui-imageresizor', ['psui'])
 				draw(context,context2);
 			})
 			
-			var context = elm[0].getContext("2d");
+			var context = resizorCanvas[0].getContext("2d");
 			var context2 = canvasResult[0].getContext("2d");
+			// this moves 0,0 coordinates into center of canvas
 			context.translate(width/2,height/2);
 			
+			var img = new Image();
+
 			var draw=function(ctx,ctx2){
 				ctx.fillStyle = 'rgba(0,0,0,1)';
 				ctx.fillRect(-width/2,-height/2,width,height);
@@ -98,7 +97,7 @@ angular.module('psui-imageresizor', ['psui'])
 					}
 				}
 				
-				if (numberOfRot % 2 == 1){
+				if (numberOfRot % 2 === 1){
 					tmp = difX;
 					difX = difY;
 					difY = tmp;
@@ -120,31 +119,57 @@ angular.module('psui-imageresizor', ['psui'])
 					difY = -(originImgHeight * resize * pomer - imgHeight)/2;
 				}
 				
-				if (numberOfRot % 2 == 1){
+				if (numberOfRot % 2 === 1){
 					tmp = difX;
 					difX = difY;
 					difY = tmp;
 				}
 				
-				ctx.drawImage(img,- (img.clientWidth * resize * pomer)/2 + difX,- (img.clientHeight * resize * pomer)/2 + difY,img.clientWidth * pomer * resize,img.clientHeight * pomer * resize);
+				ctx.drawImage(img,
+					-(img.width * resize * pomer)/2 + difX,
+					-(img.height * resize * pomer)/2 + difY,
+					img.width * pomer * resize,
+					img.height * pomer * resize
+				);
 				
 				ctx.rotate(-(Math.PI/2)* numberOfRot);
-				ctx2.drawImage(elm[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,imgWidth,imgHeight);
-				ctx.fillStyle = 'rgba(0,0,0,0.5)';
+				ctx2.drawImage(resizorCanvas[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,imgWidth,imgHeight);
+				ctx.fillStyle = 'rgba(1,1,1,0.7)';
+				// left bar
 				ctx.fillRect(- width/2,- height/2,(width - imgWidth)/2,height);
+				// top bar
 				ctx.fillRect(- width/2 + (width - imgWidth)/2,- height/2,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect(- width/2 + (width - imgWidth)/2,- height/2 + (height - imgHeight)/2 + imgHeight,imgWidth,(height - imgHeight)/2);
-				ctx.fillRect(- width/2 + (width - imgWidth)/2 + imgWidth,- height/2,(width - imgWidth)/2,height);
-				
-				
+				// right bar
+				ctx.fillRect(imgWidth/2,-height/2,(width-imgWidth)/2,height);
+				// bottom bar
+				ctx.fillRect(- width/2 + (width - imgWidth)/2, imgHeight/2,imgWidth,(height - imgHeight)/2);
+				//ctx.fillRect(- width/2 + (width - imgWidth)/2,- height/2 + (height - imgHeight)/2 + imgHeight,imgWidth,(height - imgHeight)/2);
+				//ctx.fillRect(- width/2 + (width - imgWidth)/2 + imgWidth,- height/2,(width - imgWidth)/2,height);
 			}
 			
 			
-			buttonShow.on('click',function(evt){
+			img.onload =  function() {
+				console.log('loaded');
+				originImgWidth = img.width;
+				originImgHeight = img.height;
+				canvasResult.removeClass('psui-hidden');
+				resizorCanvas.removeClass('psui-hidden');
+				buttonsHolder.removeClass('psui-hidden');
 				draw(context,context2);
-			})
-			
-			elm.on('mousewheel', function(evt){
+			};
+
+			if (imgCtrl) {
+				imgCtrl.srcElm = img;
+			}
+
+			buttonOk.on('click', function() {
+				canvasResult[0].toBlob(imgCtrl.imageProcessed, 'image/jpeg');
+				canvasResult.addClass('psui-hidden');
+				resizorCanvas.addClass('psui-hidden');
+				buttonsHolder.addClass('psui-hidden');
+			});
+				
+			resizorCanvas.on('mousewheel', function(evt){
 				evt.preventDefault();
 				if (evt.wheelDelta > 0){
 					resize = resize + 0.1;
@@ -157,7 +182,7 @@ angular.module('psui-imageresizor', ['psui'])
 				
 			})
 			
-			elm.on('DOMMouseScroll', function(evt){
+			resizorCanvas.on('DOMMouseScroll', function(evt){
 				evt.preventDefault();
 				if (evt.detail < 0){
 					resize = resize + 0.1;
@@ -168,19 +193,19 @@ angular.module('psui-imageresizor', ['psui'])
 				
 			})
 			
-			elm.on('mousedown',function(evt){
+			resizorCanvas.on('mousedown',function(evt){
 				
 				state = 1;
 				
 			})
 			
-			elm.on('mouseup mouseleave',function(evt){
+			resizorCanvas.on('mouseup mouseleave',function(evt){
 			
 				state = 0;
 			
 			})
 			
-			elm.on('mousemove',function(evt){
+			resizorCanvas.on('mousemove',function(evt){
 				if (state == 1){
 					if (numberOfRot == 0){
 						difX = difX + evt.clientX - x;

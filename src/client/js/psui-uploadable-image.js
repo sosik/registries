@@ -78,7 +78,14 @@ angular.module('psui-uploadable-image', [])
 .directive('psuiUploadableImage', ['psFileUploadFactory', function(psFileUploadFactory) {
 	return {
 		restrict: 'E',
-		require: ['^?ngModel'],
+		require: ['?ngModel', 'psuiUploadableImage'],
+		scope: true,
+		controller: function() {
+			return {
+				srcElm: null,
+				imageProcessed: function(blob) {}
+			}
+		},
 		link: function(scope, elm, attrs, ctrls) {
 			var fileButton = angular.element('<input type="file"></input>');
 			var imgLink = '';
@@ -94,6 +101,7 @@ angular.module('psui-uploadable-image', [])
 			var commit = function() {
 			};
 
+			var imgCtrl = ctrls[1];
 			fileButton.on('change', function(evt) {
 				var file = fileButton[0].files[0];
 
@@ -102,15 +110,30 @@ angular.module('psui-uploadable-image', [])
 						//TODO do something clever
 						alert('unsupported image type');
 					} else {
-						var uploader = new psFileUploadFactory.FileUploader(scope, file, file.type, '/schema/putgetpath//');
-						uploader.upload(function(err, path) {
-							if (err) {
-								alert(err);
-							}
+						if (imgCtrl && imgCtrl.srcElm) {
+							imgCtrl.srcElm.src = URL.createObjectURL(file);
+							imgCtrl.imageProcessed = function(blob) {
+								var uploader = new psFileUploadFactory.FileUploader(scope, blob, 'image/jpeg', '/schema/putgetpath/');
+								uploader.upload(function(err, path) {
+									if (err) {
+										alert(err);
+									}
 
-							elm.css('background-image', 'url(/schema/get/' + path+')');
-							commit('/schema/get/' + path);
-						});
+									elm.css('background-image', 'url(/schema/get/' + path+')');
+									commit('/schema/get/' + path);
+								});
+							}
+						} else {
+							var uploader = new psFileUploadFactory.FileUploader(scope, file, file.type, '/schema/putgetpath/');
+							uploader.upload(function(err, path) {
+								if (err) {
+									alert(err);
+								}
+
+								elm.css('background-image', 'url(/schema/get/' + path+')');
+								commit('/schema/get/' + path);
+							});
+						}
 					}
 				}
 			});

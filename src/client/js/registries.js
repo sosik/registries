@@ -4,14 +4,10 @@ angular.module('registries', ['ngRoute', 'ngCookies', 'security', 'personal-page
 	$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 	$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
 	$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/security-group-edit.html', controller: 'security.securityGroupEditCtrl', permissions:['System User']});
+	$routeProvider.when('/security/user/edit', {templateUrl: 'partials/security-user-edit.html', controller: 'security.userEditCtrl'});
 	$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/registry-new.html', controller: 'registry.newCtrl'});
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl'});
-	
-	
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
-	
-	$routeProvider.when('/user/list', {templateUrl: 'partials/userList.html', controller: 'security.userListCtrl'});
-	$routeProvider.when('/user/edit', {templateUrl: 'partials/userEdit.html', controller: 'security.userEditCtrl'});
 }])
 /**
  * Main function, initializes all required data and scopes. For configuration of $providers

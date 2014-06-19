@@ -11,15 +11,35 @@ angular.module('psui-notification', [])
 		factory.info = function (message){
 			var finalMessage = {};
 			angular.copy(defaultMessage,finalMessage);
-			angular.extend(finalMessage,message);
+			if (typeof message == 'string'){
+				finalMessage.text = message;
+			} else {
+				angular.extend(finalMessage,message);
+			}
 			finalMessage.type = 'info';
+			$rootScope.psuiNotification.message.push(finalMessage);
+		}
+		
+		factory.warn = function (message){
+			var finalMessage = {};
+			angular.copy(defaultMessage,finalMessage);
+			if (typeof message == 'string'){
+				finalMessage.text = message;
+			} else {
+				angular.extend(finalMessage,message);
+			}
+			finalMessage.type = 'warn';
 			$rootScope.psuiNotification.message.push(finalMessage);
 		}
 		
 		factory.error = function (message){
 			var finalMessage = {};
 			angular.copy(defaultMessage,finalMessage);
-			angular.extend(finalMessage,message);
+			if (typeof message == 'string'){
+				finalMessage.text = message;
+			} else {
+				angular.extend(finalMessage,message);
+			}
 			finalMessage.type = 'error';
 			$rootScope.psuiNotification.message.push(finalMessage);
 		}
@@ -30,6 +50,7 @@ angular.module('psui-notification', [])
 	return {
 		restrict: 'AE',
 		link: function(scope, elm, attrs, ctrls) {
+			elm.addClass('psui-notification');
 			$rootScope.psuiNotification = ( $rootScope.psuiNotification || {} );
 			$rootScope.psuiNotification.message = ( $rootScope.psuiNotification.message || [] );
 			scope.$watchCollection('psuiNotification.message', function(newNames,oldNames){

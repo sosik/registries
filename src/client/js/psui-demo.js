@@ -60,7 +60,7 @@ angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-s
 	var tmp = {};
 	$scope.putInfo = function (){
 		tmp = {text:'info'};
-		notificationFactory.info(tmp);
+		notificationFactory.info('BLaaaaaaaaaaaaaaa');
 	}
 	
 	$scope.putError = function (){
@@ -76,6 +76,11 @@ angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-s
 	$scope.putErrorDel = function (){
 		tmp = {text:'error',deletable: true};
 		notificationFactory.error(tmp);
+	}
+	
+	$scope.putWarnDel = function (){
+		tmp = {text:'warning',deletable: true};
+		notificationFactory.warn(tmp);
 	}
 	
 	$scope.putInfoTime = function (){

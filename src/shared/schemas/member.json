@@ -1,0 +1,27 @@
+{
+	"$schema" : "http://json-schema.org/schema#",
+	"id" : "uri://registries/member#",
+	"new" : {
+		"table" : "people",
+		"properties" : {
+			"baseData" : {
+				"$ref": "uri://registries/people#person/properties/baseData"
+			},
+			"contactInfo": {
+				"$ref": "uri://registries/people#person/properties/contactInfo"
+			},
+			"bankInfo": {
+				"$ref": "uri://registries/people#person/properties/bankInfo"
+			},
+			"otherInfo": {
+				"$ref": "uri://registries/people#person/properties/otherInfo"
+			}
+		}
+	},
+	"view" : {
+		"$ref" : "uri://registries/member#new"
+	},
+	"search" : {
+		"$ref" : "uri://registries/member#new"
+	}
+}

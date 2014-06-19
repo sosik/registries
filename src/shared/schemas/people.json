@@ -64,6 +64,22 @@
 				}
 			}
 		},
+		"photoInfo": {
+			"title": "Fotografie",
+			"type": "object",
+			"properties": {
+				"photo": {
+					"title": "Fotografia",
+					"type": "string",
+					"required": true,
+					"render": {
+						"component": "psui-uploadable-image",
+						"height": 244,
+						"width": 205
+					}
+				}
+			}
+		},
 		"contactInfo": {
 			"title": "Kontaktné údaje",
 			"type": "object",

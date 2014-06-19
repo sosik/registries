@@ -7,6 +7,9 @@
 			"baseData" : {
 				"$ref": "uri://registries/people#person/properties/baseData"
 			},
+			"photoInfo": {
+				"$ref": "uri://registries/people#person/properties/photoInfo"
+			},
 			"contactInfo": {
 				"$ref": "uri://registries/people#person/properties/contactInfo"
 			},

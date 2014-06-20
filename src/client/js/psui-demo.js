@@ -102,4 +102,8 @@ angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-s
 		tmp = {text:'error',time: 2000, deletable: true};
 		notificationFactory.error(tmp);
 	}
+	
+	$scope.clearNotif = function(){
+		notificationFactory.clear();
+	}
 }])

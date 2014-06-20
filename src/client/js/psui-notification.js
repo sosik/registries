@@ -56,6 +56,13 @@ angular.module('psui-notification', [])
 			$rootScope.psuiNotification.message.push(finalMessage);
 		}
 		
+		factory.clear = function (){
+			for (var i = 0; i < $rootScope.psuiNotification.message.length; i++ ){
+				$rootScope.psuiNotification.message[i].element.remove();
+			}
+			$rootScope.psuiNotification.message = [];
+		}
+		
 		return factory;
 }])
 .directive('psuiNotification', ["$rootScope","$timeout",function ($rootScope,$timeout) {

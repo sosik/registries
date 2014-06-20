@@ -1,0 +1,18 @@
+{
+	"$schema" : "http://json-schema.org/schema#",
+	"id" : "uri://registries/security#groupmaster",
+	"new" : {
+		"table" : "groups",
+		"properties" : {
+			"baseData" : {
+				"$ref": "uri://registries/security#group/properties/baseData"
+			}
+		}
+	},
+	"view" : {
+		"$ref" : "uri://registries/security#groupmaster/new"
+	},
+	"search" : {
+		"$ref" : "uri://registries/security#groupmaster/new"
+	}
+}

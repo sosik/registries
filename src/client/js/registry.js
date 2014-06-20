@@ -215,7 +215,7 @@ angular.module('registry', ['schema-utils'])
 //				changeMode('edit');
 //			});
 
-			viewElement.on('dblclick', function(evt) {
+			viewElement.on('click', function(evt) {
 				changeMode('edit');
 			});
 

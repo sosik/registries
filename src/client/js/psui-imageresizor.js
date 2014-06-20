@@ -163,7 +163,26 @@ angular.module('psui-imageresizor', [])
 			}
 
 			buttonOk.on('click', function() {
-				canvasResult[0].toBlob(imgCtrl.imageProcessed, 'image/jpeg');
+				if (canvasResult[0].toBlob) {
+					canvasResult[0].toBlob(imgCtrl.imageProcessed, 'image/jpeg');
+				} else {
+					// dirty workarround for chrome
+					//take apart data URL
+					var parts = canvasResult[0].toDataURL().match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/);
+
+					//assume base64 encoding
+					var binStr = atob(parts[3]);
+
+					//convert to binary in ArrayBuffer
+					var buf = new ArrayBuffer(binStr.length);
+					var view = new Uint8Array(buf);
+					for(var i = 0; i < view.length; i++)
+					  view[i] = binStr.charCodeAt(i);
+
+					var blob = new Blob([view], {'type': parts[1]});
+					imgCtrl.imageProcessed(blob);
+				}
+
 				canvasResult.addClass('psui-hidden');
 				resizorCanvas.addClass('psui-hidden');
 				buttonsHolder.addClass('psui-hidden');

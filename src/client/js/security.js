@@ -146,6 +146,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 
 	                return service;
                 } ])
+//
 .controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', 'psui.notificationFactory', function($scope, SecurityService, $rootScope, $location, notificationFactory) {
 	// FIXME remove this in production
 	$scope.user = 'johndoe';
@@ -168,32 +169,8 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		SecurityService.getResetPassword($scope.user);
 	};
 } ])
-//
-.controller('security.loginCtrl',
-        [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
-	        // FIXME remove this in production
-	        $scope.user = 'johndoe';
-	        $scope.password = 'johndoe';
-	        $scope.alert = null;
 
-	        /**
-			 * Login button click
-			 */
-	        $scope.login = function() {
-		        SecurityService.getLogin($scope.user, $scope.password).success(function(data, status, headers, config) {
-			        $rootScope.security.currentUser = data;
-			        $scope.alert = null;
-			        $location.path('/personal-page');
-		        }).error(function(data, status, headers, config) {
-			        delete $rootScope.security.currentUser;
-			        $scope.alert = data;
-		        });
-	        };
-
-	        $scope.resetPassword = function() {
-		        SecurityService.getResetPassword($scope.user);
-	        };
-        } ])
+} ])
 //
 .controller( 'security.logoutCtrl',  [ "$scope", "security.SecurityService", "$location", '$cookieStore', '$rootScope',function($scope, SecurityService, $location, $cookieStore, $rootScope) {
 	                $scope.logout = function() {
@@ -275,7 +252,6 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 .controller('security.userEditCtrl',
         [ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory','psui.notificationFactory',
                 function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
-                function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory) {
 
 	                var entityUri = 'uri://registries/member';
 

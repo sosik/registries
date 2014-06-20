@@ -281,7 +281,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 
 	                var entityUri = 'uri://registries/member';
 
-	                $scope.searchCrit = [ {} ];
+	                $scope.searchCrit = [];
 
 	                $scope.userList = [];
 	                $scope.selectedUser = null;
@@ -289,9 +289,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                $scope.user = {};
 	                $scope.user.permissions = [];
 	                $scope.user.groups = [];
-	                $scope.addCrit = function() {
-		                $scope.searchCrit.push({});
-	                }
+	              
 
 	                $scope.removeCrit = function(index) {
 		                $scope.searchCrit.splice(index, 1);
@@ -303,9 +301,14 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		                $scope.critTempVal = $scope.searchCrit[index].value;
 	                };
 
+	                $scope.addCrit = function() {
+	                	$scope.searchCrit.push({});
+	                }
+	                
 	                schemaUtilFactory.getCompiledSchema(entityUri,'search').success(function(data) {
 		                $scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		                $scope.entity = data.title;
+		                $scope.addCrit({}); 
 	                }).error(function(err) {
 						notificationFactory.error(err);
 		                

@@ -1,8 +1,7 @@
 angular.module('schema-editor', [])
 
 .config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.when('/schema/list', {templateUrl: 'partials/schemaList.html', controller: 'schemaListCtrl'});
-	  $routeProvider.when('/schema/edit/:id', {templateUrl: 'partials/schemaEditor.html', controller: 'schemaEditorCtrl'});
+	  $routeProvider.when('/schema/edit', {templateUrl: 'partials/schema-editor.html', controller: 'schemaEditCtrl'});
 	}])
 
 
@@ -40,34 +39,7 @@ angular.module('schema-editor', [])
 
 	return service;
 } ])
-.controller('schemaEditorCtrl', [ '$scope', '$routeParams', 'schema-editor.SchemaEditorService', function($scope, $routeParams, schemaService) {
-
-	// The modes
-
-	$scope.modes = [ 'JSON', 'Scheme', 'XML', 'Javascript' ];
-	$scope.mode = $scope.modes[0];
-	$scope.path = $routeParams.id;
-
-	$scope.aceLoaded = function(_editor) {
-		// Options
-		_editor.setReadOnly(false);
-		_editor.getSession().setMode('ace/mode/json');
-		ace.config.set("basePath", "/libs/ace-builds/src");
-	};
-
-	schemaService.getFileContent($scope.path).success(function(data) {
-		$scope.aceModel = JSON.stringify(data, null, 4);
-		;
-	});
-
-	$scope.postData = function(data) {
-		schemaService.getPostContent($scope.path, data).success(function(data) {
-			console.log('upload done', $scope.path, data);
-		});
-	}
-
-} ])
-.controller('schemaListCtrl', [ '$scope', 'schema-editor.SchemaEditorService', function($scope, schemaService) {
+.controller('schemaEditCtrl', [ '$scope', 'schema-editor.SchemaEditorService', function($scope, schemaService) {
 
 	$scope.schemaList = [];
 
@@ -76,16 +48,15 @@ angular.module('schema-editor', [])
 	});
 
 	$scope.selectSchema=function(schema){
-		$scope.selectSchema=schema;
-
-		schemaService.getFileContent($scope.path).success(function(data) {
+		$scope.selectedSchema=schema;
+		schemaService.getFileContent(schema.name).success(function(data) {
+			console.log(data);
 			$scope.aceModel = JSON.stringify(data, null, 4);
-		});
+		}).error(function(err){$scope.alert=err;});
 	}
 
 	$scope.modes = [ 'JSON', 'Scheme', 'XML', 'Javascript' ];
 	$scope.mode = $scope.modes[0];
-	$scope.path = $scope.selectSchema.name;
 
 	$scope.aceLoaded = function(_editor) {
 		// Options
@@ -97,9 +68,10 @@ angular.module('schema-editor', [])
 	
 
 	$scope.postData = function(data) {
-		schemaService.getPostContent($scope.path, data).success(function(data) {
+		schemaService.getPostContent($scope.selectedSchema.name, data).success(function(data) {
 			console.log('upload done', $scope.path, data);
-		});
+			$scope.selectedSchema=null;
+		}).error(function(err){$scope.alert=err;});
 	}
 
 

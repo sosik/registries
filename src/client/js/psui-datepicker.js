@@ -126,6 +126,11 @@ angular.module('psui-datepicker', [])
 			})
 			
 			buttonShowDropdown.on('click', function(evt) {
+				if(hideDropdown){
+					$timeout.cancel(hideDropdown);
+					hideDropdown = null;
+					dropdown.removeClass('psui-hidden');
+				}
 				if (dropdown.hasClass('psui-hidden')) {
 					dropdown.removeClass('psui-hidden');
 					if (elm.val()){

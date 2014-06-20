@@ -1,0 +1,10 @@
+table.schemaedit {
+	width: 100%;
+	td {
+		padding: 2px 4px;
+	}
+
+	tr.selected td {
+		background: #ddd;
+	}
+}

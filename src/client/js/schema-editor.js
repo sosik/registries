@@ -67,12 +67,40 @@ angular.module('schema-editor', [])
 	}
 
 } ])
-.controller('schemaListCtrl', [ '$scope', 'schema-editor.SchemaEditorService', function($scope, schemaApiService) {
+.controller('schemaListCtrl', [ '$scope', 'schema-editor.SchemaEditorService', function($scope, schemaService) {
 
 	$scope.schemaList = [];
 
-	schemaApiService.getSchemaList().success(function(data) {
+	schemaService.getSchemaList().success(function(data) {
 		$scope.schemaList = data;
 	});
+
+	$scope.selectSchema=function(schema){
+		$scope.selectSchema=schema;
+
+		schemaService.getFileContent($scope.path).success(function(data) {
+			$scope.aceModel = JSON.stringify(data, null, 4);
+		});
+	}
+
+	$scope.modes = [ 'JSON', 'Scheme', 'XML', 'Javascript' ];
+	$scope.mode = $scope.modes[0];
+	$scope.path = $scope.selectSchema.name;
+
+	$scope.aceLoaded = function(_editor) {
+		// Options
+		_editor.setReadOnly(false);
+		_editor.getSession().setMode('ace/mode/json');
+		ace.config.set("basePath", "/libs/ace-builds/src");
+	};
+
+	
+
+	$scope.postData = function(data) {
+		schemaService.getPostContent($scope.path, data).success(function(data) {
+			console.log('upload done', $scope.path, data);
+		});
+	}
+
 
 } ]);

@@ -9,7 +9,7 @@
 		color: $header-color-base;
 		width: 100%;
 		overflow: hidden;
-		z-index: 4;
+		z-index: 10;
 		@include box-shadow(0px 0px 4px 2px  $header-box-shadow);
 		
 		a{

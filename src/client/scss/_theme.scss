@@ -15,3 +15,8 @@ a:hover, a:focus {
 	background-color: $button-submit-hover-bg;
 	border-color: $button-submit-hover-border-color;
 }
+
+table.schemaedit tr.selected td {
+	background-color: $main-color;
+	color: white;
+}

@@ -39,9 +39,11 @@ var contentTypes = {
 
 		return '.bin'
 	}
+
 var escapeRegExp = function(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 }
+
 var FsCtrl = function(options) {
 	
 	this.cfg={};

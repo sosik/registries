@@ -221,7 +221,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
         [ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory',
                 function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory) {
 
-	                var entityUri = 'uri://registries/people#person';
+	                var entityUri = 'uri://registries/member#';
 
 	                $scope.searchCrit = [ {} ];
 

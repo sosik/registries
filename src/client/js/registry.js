@@ -367,7 +367,11 @@ angular.module('registry', ['schema-utils'])
 						fieldSet.wrap('<div class="col-md-6"></div>');
 						fieldSet.append('<label>'+value.title+'</label>');
 						angular.forEach(value.properties, function(value2, key2) {
-							if (value2.render && value2.render.component === 'psui-uploadable-image') {
+							if (value2.render && value2.render.component === 'psui-datepicker') {
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+value2.title+'</label>'
+								+'<div class="col-sm-8"><div class="input-group">'
+								+'<input psui-validity-mark psui-datepicker required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
+							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+value2.title+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<psui-uploadable-image psui-imageresizor psui-imageresizor-width="' +value2.render.width
@@ -414,7 +418,11 @@ angular.module('registry', ['schema-utils'])
 						fieldSet.wrap('<div class="col-md-6"></div>');
 						fieldSet.append('<label>'+value.title+'</label>');
 						angular.forEach(value.properties, function(value2, key2) {
-							if (value2.render && value2.render.component === 'psui-uploadable-image') {
+							if (value2.render && value2.render.component === 'psui-datepicker') {
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+value2.title+'</label>'
+								+'<div class="col-sm-8"><div class="input-group">'
+								+'<input psui-validity-mark psui-datepicker psui-inlineedit="view" required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
+							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+value2.title+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<psui-uploadable-image ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image></div></div>');

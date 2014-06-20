@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('psui-datepicker', ['psui'])
+angular.module('psui-datepicker', [])
 .directive('psuiDatepicker', ['$timeout', function ($timeout) {
 	return {
 		restrict: 'AE',
@@ -25,6 +25,7 @@ angular.module('psui-datepicker', ['psui'])
 
 			if (ngModel) {
 				commitData = function() {
+					console.log('dddd'+elm.val())
 					ngModel.$setViewValue(elm.val());
 				}
 				
@@ -44,7 +45,7 @@ angular.module('psui-datepicker', ['psui'])
 			// create base html elements
 			if (elm.parent().hasClass('psui-wrapper')) {
 				// element is wrapped, we are going to use this wrapper
-				wrapper = elm.parent;
+				wrapper = elm.parent();
 			} else {
 				// there is no wrapper, we have to create one
 				wrapper = angular.element('<div class="psui-wrapper"></div>');
@@ -285,7 +286,7 @@ angular.module('psui-datepicker', ['psui'])
 							var chosenMonth = element.data("datum").getMonth() + 1;
 							var chosenYear = element.data("datum").getFullYear();
 							
-							if (elm[0].nodeName == "DIV"){
+							if (elm[0].nodeName === "DIV"){
 								elm.text(chosenDay + '.' + chosenMonth + '.' + chosenYear);
 								scope.$apply(commitDataDiv);
 							} else {

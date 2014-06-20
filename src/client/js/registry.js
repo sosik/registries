@@ -82,8 +82,6 @@ angular.module('registry', ['schema-utils'])
 		});
 		
 	})
-		notificationFactory.error(err);
-	});
 }])
 /**
  * places validation mark to element

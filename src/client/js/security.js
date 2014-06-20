@@ -130,7 +130,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 	                }
 
 	                return service;
-                } ]).controller('security.loginCtrl',
+                } ])
 .controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', 'psui.notificationFactory', function($scope, SecurityService, $rootScope, $location, notificationFactory) {
 	        // FIXME remove this in production
 	        $scope.user = 'johndoe';
@@ -406,19 +406,19 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
                 } ])
 
 .controller('security.personalChangePasswordCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location, notificationFactory) {
-        [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
 	        $scope.currentPassword = '';
 	        $scope.newPassword = '';
 	        $scope.newPasswordCheck = '';
 
 	        $scope.changePassword = function() {
 		        if ($scope.newPassword !== $scope.newPasswordCheck) {
-			notificationFactory.warn("Nové a kontrolné heslo sa nerovnajú!!!");
-		        }
-		        SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data, status, headers, config) {
-			notificationFactory.info("Heslo zmene");
-		        }).error(function(data, status, headers, config) {
-			notificationFactory.error('Heslo sa nepodarilo zmeniť '+ data);
-		        });
+					notificationFactory.warn("Nové a kontrolné heslo sa nerovnajú!!!");
+		        } else {
+					SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data, status, headers, config) {
+						notificationFactory.info("Heslo zmene");
+					}).error(function(data, status, headers, config) {
+						notificationFactory.error('Heslo sa nepodarilo zmeniť '+ data);
+					});
+				}
 	        };
         } ]);

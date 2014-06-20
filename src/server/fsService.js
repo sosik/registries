@@ -39,6 +39,9 @@ var contentTypes = {
 
 		return '.bin'
 	}
+var escapeRegExp = function(str) {
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
 var FsCtrl = function(options) {
 	
 	this.cfg={};
@@ -49,7 +52,7 @@ var FsCtrl = function(options) {
 	var realPathCache = {};
 
 	this.cfg.rootPath = pathM.resolve(this.cfg.rootPath);
-	var safePathPrefixRegexp = new RegExp("^" + this.cfg.rootPath);
+	var safePathPrefixRegexp = new RegExp("^" + escapeRegExp(this.cfg.rootPath));
 	
 	var realPathCache = {};
 

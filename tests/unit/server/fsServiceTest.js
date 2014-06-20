@@ -5,6 +5,7 @@ var async = require('async');
 var util = require('util');
 var stream = require('stream');
 var fsCtrlModule = require(process.cwd() + '/build/server/fsService.js');
+var log = require(process.cwd() + '/build/server/logging.js').getLogger('fsServiceTest.js');
 
 var testDataPath = path.join(process.cwd(), 'testData');
 
@@ -36,9 +37,8 @@ describe('FsService', function() {
 
 	
 	
-	it('should identify save/unsafe paths', function(done) {
+	it('should identify safe/unsafe paths', function(done) {
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
-
 		expect(fsCtrl.isPathSafe(path.join(testDataPath, '../data/'))).to.be.false;
 		expect(fsCtrl.isPathSafe(path.join(testDataPath, '/data/'))).to.be.true;
 		done();

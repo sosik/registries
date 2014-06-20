@@ -216,8 +216,8 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 
 } ]).controller(
         'security.userEditCtrl',
-        [ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory',
-                function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory) {
+        [ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory','psui.notificationFactory',
+                function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
 
 	                var entityUri = 'uri://registries/member#';
 
@@ -276,7 +276,8 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 		                $scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		                $scope.entity = data.title;
 	                }).error(function(err) {
-		                $scope.alert = err;
+						notificationFactory.error(err);
+		                
 	                });
 
 	                function convertCriteria(crit) {
@@ -302,12 +303,11 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 	                }
 
 	                $scope.search = function() {
-		                $scope.alert = null;
 		                console.log('serarchwqsdsad');
 		                genericSearchFactory.getSearch(entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
 			                $scope.userList = data;
 		                }).error(function(err) {
-			                $scope.alert = err;
+							notificationFactory.error(err);
 		                });
 	                };
 

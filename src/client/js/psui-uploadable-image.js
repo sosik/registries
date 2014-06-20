@@ -127,7 +127,7 @@ angular.module('psui-uploadable-image', [])
 							var uploader = new psFileUploadFactory.FileUploader(scope, file, file.type, '/schema/putgetpath/');
 							uploader.upload(function(err, path) {
 								if (err) {
-									alert(err);
+									notificationFactory.error(err);
 								}
 
 								elm.css('background-image', 'url(/schema/get/' + path+')');

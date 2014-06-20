@@ -1,12 +1,12 @@
 angular.module('generic-search', ['schema-utils'])
-
+//
 .config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/search/:entity', {
 	    templateUrl : 'partials/searchPage.html',
 	    controller : 'SearchCtrl'
 	});
 } ])
-
+//
 .factory('generic-search.GenericSearchFactory', [ '$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
 	var service = {};
 
@@ -22,7 +22,7 @@ angular.module('generic-search', ['schema-utils'])
 	};
 
 	service.parseSearchDef = function(schema) {
-
+		
 		var collectPropertyPaths = function(schemaFragment, path, properties) {
 
 			for ( var prop in schemaFragment) {
@@ -105,8 +105,9 @@ angular.module('generic-search', ['schema-utils'])
 	};
 
 	return service;
-} ]).controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory ) {
-
+} ])
+//
+.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory ) {
 	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 	$scope.entityUri = entityUri;

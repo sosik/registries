@@ -1,4 +1,6 @@
-angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
+angular.module('security', [ 'generic-search', 'schema-utils' ])
+//
+.factory(
         'security.SecurityService',
         [
                 '$http',
@@ -132,30 +134,29 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 	                return service;
                 } ])
 .controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', 'psui.notificationFactory', function($scope, SecurityService, $rootScope, $location, notificationFactory) {
-	        // FIXME remove this in production
-	        $scope.user = 'johndoe';
-	        $scope.password = 'johndoe';
+	// FIXME remove this in production
+	$scope.user = 'johndoe';
+	$scope.password = 'johndoe';
 
-	        /**
-			 * Login button click
-			 */
-	        $scope.login = function() {
-		        SecurityService.getLogin($scope.user, $scope.password).success(function(data, status, headers, config) {
-			        $rootScope.security.currentUser = data;
-			        $location.path('/personal-page');
-		        }).error(function(data, status, headers, config) {
-			        delete $rootScope.security.currentUser;
+	/**
+	 * Login button click
+	 */
+	$scope.login = function() {
+		SecurityService.getLogin($scope.user, $scope.password).success(function(data, status, headers, config) {
+			$rootScope.security.currentUser = data;
+			$location.path('/personal-page');
+		}).error(function(data, status, headers, config) {
+			delete $rootScope.security.currentUser;
 			notificationFactory.error(data);
-		        });
-	        };
+		});
+	};
 
-	        $scope.resetPassword = function() {
-		        SecurityService.getResetPassword($scope.user);
-	        };
-        } ]).controller(
-        'security.logoutCtrl',
-        [ "$scope", "security.SecurityService", "$location", '$cookieStore', '$rootScope',
-                function($scope, SecurityService, $location, $cookieStore, $rootScope) {
+	$scope.resetPassword = function() {
+		SecurityService.getResetPassword($scope.user);
+	};
+} ])
+//
+.controller( 'security.logoutCtrl',  [ "$scope", "security.SecurityService", "$location", '$cookieStore', '$rootScope',function($scope, SecurityService, $location, $cookieStore, $rootScope) {
 	                $scope.logout = function() {
 		                SecurityService.getLogout().then(function(data, status, headers, config) {
 			                $scope.security.currentUser = undefined;
@@ -206,20 +207,14 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 		$scope.selectedGroup = group;
 	};
 
-} ]).controller('security.userListCtrl', [ '$scope', 'security.SecurityService', function($scope, userApiService) {
+} ])
 
-	$scope.userList = [];
-
-	userApiService.getUserList().success(function(data) {
-		$scope.userList = data;
-	});
-
-} ]).controller(
-        'security.userEditCtrl',
+//
+.controller('security.userEditCtrl',
         [ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory','psui.notificationFactory',
                 function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
 
-	                var entityUri = 'uri://registries/member#';
+	                var entityUri = 'uri://registries/member';
 
 	                $scope.searchCrit = [ {} ];
 
@@ -230,33 +225,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 	                $scope.user.permissions = [];
 	                $scope.user.groups = [];
 
-	                // $scope.addCrit = function() {
-	                // $scope.alert = null;
-	                //
-	                // if (!$scope.critTempAtt) {
-	                // $scope.alert = "Attribute must be specified";
-	                // return;
-	                // }
-	                //
-	                // if (!$scope.critTempOper) {
-	                // $scope.alert = "Operator must be specified";
-	                // return;
-	                // }
-	                //
-	                // if (!$scope.critTempVal) {
-	                // $scope.alert = "Value must be specified";
-	                // return;
-	                // }
-	                //
-	                // $scope.searchCrit.push({
-	                // attribute : $scope.critTempAtt,
-	                // oper : $scope.critTempOper,
-	                // value : $scope.critTempVal
-	                // });
-	                // $scope.critTempAtt = null;
-	                // $scope.critTempOper = null;
-	                // $scope.critTempVal = null;
-	                // };
+	    
 	                $scope.addCrit = function() {
 		                $scope.searchCrit.push({});
 	                }
@@ -271,8 +240,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 		                $scope.critTempVal = $scope.searchCrit[index].value;
 	                };
 
-	                schemaUtilFactory.getCompiledSchema(entityUri).success(function(data) {
-
+	                schemaUtilFactory.getCompiledSchema(entityUri,'search').success(function(data) {
 		                $scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		                $scope.entity = data.title;
 	                }).error(function(err) {
@@ -283,27 +251,26 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 	                function convertCriteria(crit) {
 		                console.log(crit);
 		                var retval = [];
-		                
-		                crit.map(function(c){
-		                	
-		                	if (c.attribute && c.attribute.path && c.operator.value) {
-		                		if (!c.value){
-		                			c.value='';
-		                		}
-		                		retval.push({
-		                			f : c.attribute.path,
-		                			v : c.value,
-		                			op : c.operator.value
-		                		});
-		                	}
+
+		                crit.map(function(c) {
+
+			                if (c.attribute && c.attribute.path && c.operator.value) {
+				                if (!c.value) {
+					                c.value = '';
+				                }
+				                retval.push({
+				                    f : c.attribute.path,
+				                    v : c.value,
+				                    op : c.operator.value
+				                });
+			                }
 		                });
-		                
+
 		                return retval;
 
 	                }
 
 	                $scope.search = function() {
-		                console.log('serarchwqsdsad');
 		                genericSearchFactory.getSearch(entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
 			                $scope.userList = data;
 		                }).error(function(err) {
@@ -404,7 +371,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 	                };
 
                 } ])
-
+//
 .controller('security.personalChangePasswordCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location, notificationFactory) {
 	        $scope.currentPassword = '';
 	        $scope.newPassword = '';

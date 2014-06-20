@@ -36,7 +36,10 @@
 				"bornName": {
 					"title": "Rodné priezvisko",
 					"type": "string",
-					"required": false
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
 				},
 				"title": {
 					"title": "Titul",

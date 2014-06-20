@@ -1,0 +1,19 @@
+.login-page{
+	#main-menu{
+		display: none !important;
+	}
+	
+	header{
+		nav{
+			display: none;
+		}
+		
+		.toogle-menu{
+			display: none !important;
+		}
+	}
+	
+	#content-wrapper{
+		margin-left: 0px;
+	}
+}

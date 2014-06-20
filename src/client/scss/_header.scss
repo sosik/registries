@@ -46,6 +46,7 @@
 					padding: 0px 15px;
 					display: block;
 					height:100%;
+					
 					i{
 						+ span{
 							margin-left: 10px;
@@ -78,6 +79,10 @@
 						color: $font-color-dark;
 					}
 					span{
+						@include media-mobile{
+							display:none;
+						}
+						
 						text-transform: uppercase;
 						position: relative;
 						top: -1px;
@@ -99,12 +104,18 @@
 					i{
 						+ span{
 							margin-left: 10px;
+							@include media-mobile{
+								margin-left: 0px;
+							}
 						}
 					}
 					
 					span{
 						+ i{
 							margin-left: 10px;
+							@include media-mobile{
+								margin-left: 0px;
+							}
 						}
 					}
 				}    

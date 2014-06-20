@@ -177,13 +177,13 @@ fieldset{
 		
 		&.psui-commit-btn{
 			> i:before{
-				content: "\e014";
+				content: "\e013";
 			}
 		}
 		
 		&.psui-cancel-btn{
 			> i:before{
-				content: "\e013";
+				content: "\e014";
 			}
 		}
 	}
@@ -213,8 +213,6 @@ fieldset{
 		}
 		
 		&:after,&:before {
-/*			bottom: 100%;
-			left: 20px;*/
 			top: 12px;
 			left: 100%;
 			border: solid transparent;
@@ -234,8 +232,15 @@ fieldset{
 			border-color: rgba(208, 208, 208, 0);
 			border-left-color: $color2;
 			border-width: 6px;
-			/*margin-left: -11px;*/
 		}
-		
+	}
+}
+
+// btn
+.btn {
+    border-radius: 0;
+	margin-right: 12px;
+	i {
+		margin-right: 12px;
 	}
 }

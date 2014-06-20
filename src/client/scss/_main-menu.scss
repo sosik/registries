@@ -3,6 +3,19 @@
 	top: $header-height;
 	bottom: 0px;
 	z-index: 4;
+	
+	&.ng-hide{
+		display: block !important;
+		
+		@include media-mobile{
+			left: -300px;
+			@include transition(left .5s);
+		}
+	}
+	
+	left: 0px;
+	@include transition(left .5s);
+	
 	.sidebar{
 		position: absolute;
 		top: 0px;
@@ -11,13 +24,16 @@
 		background-color: $sidebar-first-level-color-bg;
 		/*overflow: hidden;*/
 		/*width: $sidebar-width;*/
-		left: -300px;
-		@include transition(left .9s);
+		
+		left: 0px;
+		
+/*		left: -300px;
+		@include transition(left .5s);
 		
 		&.active{
 			left: 0px;
 			@include transition(left .5s);
-		}
+		}*/
 		
 		li{
 			white-space: nowrap;
@@ -30,12 +46,12 @@
 		
 		a{
 			display: block;
-			/*height: $sidebar-size;*/
 			line-height: $sidebar-size;
 			color: $sidebar-color-base;
 			padding-right: 2 * $sidebar-menu-item-padding;
 			border-bottom: 1px solid $sidebar-secound-level-color-bg;
-
+			width: $sideber-width;
+			
 			i{
 				font-size: $sidebar-icon-size;
 				padding: 0px $sidebar-menu-item-padding;
@@ -46,18 +62,12 @@
 			&.active{
 				color: $sidebar-color-hover;
 			}
-			/*&.separator{
-				border-top: 4px solid $sidebar-separator-bg;
-			}*/
+
 			span{
 				position: relative;
 				top: -4px;
 			}
-/*			&.active{
-				background-color: $sidebar-dark-bg;
-				color: $sidebar-color-light;
-			}*/
-			
+
 		}
 		
 		ul ul{
@@ -83,11 +93,16 @@
 #main-wrapper{
 	> header{
 		.toogle-menu{
+			
 			display: block;
 			padding: 0px $sidebar-menu-item-padding;
 			width: $sidebar-size;
 			background-color: $sidebar-first-level-color-bg;
 			color: $sidebar-color-base;
+			@include media-tablet-up{
+				display: none;
+			}
+			
 			i{
 				font-size: $sidebar-icon-size;
 				line-height:  $header-height;
@@ -99,4 +114,16 @@
 	}
 }
 
-
+#content-wrapper{
+	@include transition(margin-left .5s);
+	
+	&.main-menu-active{
+		margin-left: $sideber-width;
+		@include transition(margin-left .5s);
+	}
+	
+	@include media-tablet-up{
+		margin-left: $sideber-width;
+		@include transition(margin-left .5s);
+	}
+}

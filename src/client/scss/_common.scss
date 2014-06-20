@@ -39,6 +39,10 @@ h2{
   margin-top: $header-height+15px;
   /*margin-left: 2 * $sidebar-close-width;*/
   color: $font-color-base;
+  h1{
+    margin-left: 30px;
+    margin-top: 0;
+  }
 }
 
 #content{

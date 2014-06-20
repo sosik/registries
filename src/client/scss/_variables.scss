@@ -51,17 +51,9 @@ $sidebar-color-base: $font-color-light !default;
 $sidebar-first-level-color-bg: #212121 !default;
 $sidebar-secound-level-color-bg: lighten($sidebar-first-level-color-bg, 10%) !default;
 $sidebar-menu-item-padding: 16px;
-/*$sidebar-close-width: 55px !default;*/
-/*$sidebar-border-color-dark: #000000 !default;
-$sidebar-border-color-light: #393a3c !default;
-$sidebar-dark-bg: #212121 !default;
-$sidebar-light-bg: #2f2f2f !default;
-$sidebar-separator-bg: #252525 !default;
-$sidebar-color-base: $font-color-light !default;
-$sidebar-color-light: $font-color-light !default;
-$sidebar-color-dark: $sidebar-border-color-dark !default;*/
 $sidebar-icon-size: 23px !default;
 $sidebar-color-hover: $main-color;
+$sideber-width: 250px !default;
 
 // components
 $padding-base-vertical:     6px !default;
@@ -86,4 +78,3 @@ $button-submit-hover-border-color: darken($button-submit-hover-bg, 20%);
 // field action holder
 $field-action-holder-space: 10px !default;
 $field-action-holder-bg: $font-color-light !default;
-

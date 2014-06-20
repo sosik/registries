@@ -371,9 +371,7 @@ angular.module('registry', ['schema-utils'])
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
-								+'<psui-uploadable-image psui-imageresizor psui-imageresizor-width="' +value2.render.width
-								+ '" psui-imageresizor-height="'+value2.render.height
-								+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image></div></div>');
+								+'<psui-uploadable-image ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image></div></div>');
 							} else {
 								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'

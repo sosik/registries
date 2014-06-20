@@ -131,11 +131,10 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 
 	                return service;
                 } ]).controller('security.loginCtrl',
-        [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
+.controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', 'psui.notificationFactory', function($scope, SecurityService, $rootScope, $location, notificationFactory) {
 	        // FIXME remove this in production
 	        $scope.user = 'johndoe';
 	        $scope.password = 'johndoe';
-	        $scope.alert = null;
 
 	        /**
 			 * Login button click
@@ -143,11 +142,10 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 	        $scope.login = function() {
 		        SecurityService.getLogin($scope.user, $scope.password).success(function(data, status, headers, config) {
 			        $rootScope.security.currentUser = data;
-			        $scope.alert = null;
 			        $location.path('/personal-page');
 		        }).error(function(data, status, headers, config) {
 			        delete $rootScope.security.currentUser;
-			        $scope.alert = data;
+			notificationFactory.error(data);
 		        });
 	        };
 
@@ -407,21 +405,20 @@ angular.module('security', [ 'generic-search', 'schema-utils' ]).factory(
 
                 } ])
 
-.controller('security.personalChangePasswordCtrl',
+.controller('security.personalChangePasswordCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location, notificationFactory) {
         [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
 	        $scope.currentPassword = '';
 	        $scope.newPassword = '';
 	        $scope.newPasswordCheck = '';
-	        $scope.alert = null;
 
 	        $scope.changePassword = function() {
 		        if ($scope.newPassword !== $scope.newPasswordCheck) {
-			        $scope.alert = "Nové a kontrolné heslo sa nerovnajú!!!";
+			notificationFactory.warn("Nové a kontrolné heslo sa nerovnajú!!!");
 		        }
 		        SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data, status, headers, config) {
-			        $scope.alert = 'Heslo zmenene';
+			notificationFactory.info("Heslo zmene");
 		        }).error(function(data, status, headers, config) {
-			        $scope.alert = 'Heslo sa nepodarilo zmeniť ' + data;
+			notificationFactory.error('Heslo sa nepodarilo zmeniť '+ data);
 		        });
 	        };
         } ]);

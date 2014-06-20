@@ -75,7 +75,7 @@ angular.module('psui-uploadable-image', [])
 
 	return exports;
 }])
-.directive('psuiUploadableImage', ['psFileUploadFactory', function(psFileUploadFactory) {
+.directive('psuiUploadableImage', ['psFileUploadFactory','psui.notificationFactory', function(psFileUploadFactory,notificationFactory) {
 	return {
 		restrict: 'E',
 		require: ['?ngModel', 'psuiUploadableImage'],
@@ -108,7 +108,7 @@ angular.module('psui-uploadable-image', [])
 				if (file) {
 					if (file.type !== 'image/jpeg') {
 						//TODO do something clever
-						alert('unsupported image type');
+						notificationFactory.error('unsupported image type');///////////
 					} else {
 						if (imgCtrl && imgCtrl.srcElm) {
 							imgCtrl.srcElm.src = URL.createObjectURL(file);
@@ -116,7 +116,7 @@ angular.module('psui-uploadable-image', [])
 								var uploader = new psFileUploadFactory.FileUploader(scope, blob, 'image/jpeg', '/schema/putgetpath/');
 								uploader.upload(function(err, path) {
 									if (err) {
-										alert(err);
+								notificationFactory.error(err);
 									}
 
 									elm.css('background-image', 'url(/schema/get/' + path+')');

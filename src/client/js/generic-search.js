@@ -105,7 +105,7 @@ angular.module('generic-search', ['schema-utils'])
 	};
 
 	return service;
-} ]).controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' , function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory  ) {
+} ]).controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory ) {
 
 	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
@@ -113,7 +113,6 @@ angular.module('generic-search', ['schema-utils'])
 
 	$scope.searchDef = {};
 
-	$scope.alert = null;
 	$scope.searchCrit = [];
 
 	$scope.data = [];
@@ -123,24 +122,23 @@ angular.module('generic-search', ['schema-utils'])
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
 	}).error(function(err) {
-		$scope.alert = err;
+		notificationFactory.error(err);
 	});
 
 	$scope.addCrit = function() {
-		$scope.alert = null;
 
 		if (!$scope.critTempAtt) {
-			$scope.alert = "Attribute must be specified";
+			notificationFactory.error("Attribute must be specified");
 			return;
 		}
 
 		if (!$scope.critTempOper) {
-			$scope.alert = "Operator must be specified";
+			notificationFactory.error("Operator must be specified");
 			return;
 		}
 
 		if (!$scope.critTempVal) {
-			$scope.alert = "Value must be specified";
+			notificationFactory.error("Value must be specified");
 			return;
 		}
 
@@ -195,11 +193,10 @@ angular.module('generic-search', ['schema-utils'])
 	};
 
 	$scope.search = function() {
-		$scope.alert = null;
 		genericSearchFactory.getSearch($scope.entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
 			$scope.data = data;
 		}).error(function(err) {
-			$scope.alert = err;
+			notificationFactory.error(err);
 		});
 	};
 

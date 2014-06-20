@@ -1,5 +1,5 @@
 angular.module('registry', ['schema-utils'])
-.controller('registry.newCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory) {
+.controller('registry.newCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory','psui.notificationFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
@@ -33,10 +33,10 @@ angular.module('registry', ['schema-utils'])
 		$scope.schemaFormOptions.schema = data;
 		generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 	}).error(function(err) {
-		$scope.alert = err;
+		notificationFactory.error(err);
 	});
 }])
-.controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory) {
+.controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory','psui.notificationFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
@@ -78,12 +78,11 @@ angular.module('registry', ['schema-utils'])
 			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 			$scope.model.obj = data;
 		}).error(function(err) {
-			$scope.alert = err;
+			notificationFactory.error(err);
 		});
 		
 	})
-	.error(function(err) {
-		$scope.alert = err;
+		notificationFactory.error(err);
 	});
 }])
 /**

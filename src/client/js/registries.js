@@ -9,7 +9,8 @@ angular.module('registries', [
 		'ui.ace',
 		'psui-uploadable-image',
 		'psui-imageresizor',
-		'psui-datepicker'
+		'psui-datepicker',
+		'psui-notification'
 ])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});

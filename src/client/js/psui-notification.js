@@ -5,7 +5,7 @@ angular.module('psui-notification', [])
 		$rootScope.psuiNotification = ( $rootScope.psuiNotification || {} );
 		$rootScope.psuiNotification.message = ( $rootScope.psuiNotification.message || [] );
 		
-		var defaultMessage = {type:'info',text:'Blabla',deletable : false, time:-1, timeout: null};
+		var defaultMessage = {type:'info',text:'Blabla',deletable : true, time:-1, timeout: null};
 		var factory = {};
 		
 		factory.info = function (message){
@@ -14,7 +14,11 @@ angular.module('psui-notification', [])
 			if (typeof message == 'string'){
 				finalMessage.text = message;
 			} else {
-				angular.extend(finalMessage,message);
+				if(message.text){
+					angular.extend(finalMessage,message);
+				} else {
+					finalMessage.text = "!Nestrukturovana sprava!" + JSON.stringify(message);
+				}
 			}
 			finalMessage.type = 'info';
 			$rootScope.psuiNotification.message.push(finalMessage);
@@ -26,7 +30,11 @@ angular.module('psui-notification', [])
 			if (typeof message == 'string'){
 				finalMessage.text = message;
 			} else {
-				angular.extend(finalMessage,message);
+				if(message.text){
+					angular.extend(finalMessage,message);
+				} else {
+					finalMessage.text = "!Nestrukturovana sprava!" + JSON.stringify(message);
+				}
 			}
 			finalMessage.type = 'warn';
 			$rootScope.psuiNotification.message.push(finalMessage);
@@ -38,7 +46,11 @@ angular.module('psui-notification', [])
 			if (typeof message == 'string'){
 				finalMessage.text = message;
 			} else {
-				angular.extend(finalMessage,message);
+				if(message.text){
+					angular.extend(finalMessage,message);
+				} else {
+					finalMessage.text = "!Nestrukturovana sprava!" + JSON.stringify(message);
+				}
 			}
 			finalMessage.type = 'error';
 			$rootScope.psuiNotification.message.push(finalMessage);

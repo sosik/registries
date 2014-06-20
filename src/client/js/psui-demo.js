@@ -1,4 +1,4 @@
-angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-selectbox','ui.ace', 'psui-uploadable-image', 'psui-datepicker', 'psui-imageresizor'])
+angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-selectbox','ui.ace', 'psui-uploadable-image', 'psui-datepicker', 'psui-imageresizor','psui-notification'])
 .controller('psui-autocomplete-demo-simple', ['$scope', function($scope) {
 	$scope.autocompleteOptions1 = {
 		data: ['Fero', 'Jozo', 'Peter', 'Palo', 'Frantisek', 'Ernest', 'Gregor', 'Marek', 'Milan', 'Albert', 'Tamara', 'Urban', 'Stanislav', 'Hurban', 'Eva'],
@@ -59,8 +59,8 @@ angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-s
 	
 	var tmp = {};
 	$scope.putInfo = function (){
-		tmp = {text:'info'};
-		notificationFactory.info('BLaaaaaaaaaaaaaaa');
+		tmp = {text2:'info'};
+		notificationFactory.info(tmp);
 	}
 	
 	$scope.putError = function (){

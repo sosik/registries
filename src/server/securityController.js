@@ -7,6 +7,7 @@ var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
     userCollection : 'people',
+    groupCollection : 'groups',
     schemas : [  '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json' ]
 };
 
@@ -33,6 +34,11 @@ var SecurityController = function(mongoDriver, options) {
 		collectionName : cfg.userCollection
 	});
 
+	
+	var groupDao = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : cfg.groupCollection
+	});
+	
 	this.getPermissions = function(req, resp) {
 		var defaultObj = schemaTools.createDefaultObject('uri://registries/security#permissions');
 
@@ -212,6 +218,51 @@ var SecurityController = function(mongoDriver, options) {
 				log.info('updating users security of', user.systemCredentials.login.loginName);
 				log.silly(user.systemCredentials);
 				userDao.update(user, function(err) {
+					if (err) {
+						resp.send(500, err);
+					} else {
+						resp.send(200);
+					}
+
+				});
+
+			}
+
+		});
+
+	};
+	
+	
+	this.updateGroupSecurity = function(req, resp) {
+
+		var groupId = req.body.oid;
+		groupDao.get(groupId, function(err, group) {
+
+			if (err) {
+				resp.send(500, err);
+			} else {
+
+				var defaultObj = schemaTools.createDefaultObject('uri://registries/security#permissions');
+
+				log.silly(req.body);
+
+				if (!group.security) {
+					group.security = {};
+				}
+				if (!group.security.permissions) {
+					group.security.permissions = {};
+				}
+				
+				log.silly(req.body);
+				for ( var per in defaultObj) {
+					group.security.permissions[per] = hasPermission(req.body.permissions, per);
+					console.log(per,group.security.permissions[per]);
+				}
+				
+				group.baseData.name=req.body.groupName;
+				group.baseData.id=req.body.groupId;
+				log.info('updating groups security of', group);
+				groupDao.update(group, function(err) {
 					if (err) {
 						resp.send(500, err);
 					} else {

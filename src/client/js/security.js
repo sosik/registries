@@ -1,11 +1,6 @@
 angular.module('security', [ 'generic-search', 'schema-utils' ])
 //
-.factory(
-        'security.SecurityService',
-        [
-                '$http',
-                '$rootScope',
-                function($http, $rootScope) {
+.factory('security.SecurityService',['$http','$rootScope',function($http, $rootScope) {
 	                var service = {};
 
 	                service.getLogin = function(user, password) {
@@ -65,6 +60,8 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 
 	                };
 
+	                
+	                
 	                service.getLogout = function() {
 		                return $http({
 		                    method : 'GET',
@@ -102,8 +99,24 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		                        groups : groups
 		                    }
 		                });
-	                }
+	                };
 
+	                service.updateSecurityGroup = function(oid,groupName,groupId,permissions){
+	                	
+
+		                return $http({
+		                    method : 'POST',
+		                    url : '/group/security/update',
+		                    data : {
+		                    	oid : oid,
+		                        permissions : permissions,
+		                        groupName:groupName,
+		                        groupId:groupId
+		                    }
+		                });
+	                	
+	                };
+	                
 	                /**
 					 * checks if current user has all required permissions
 					 */
@@ -156,6 +169,32 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	};
 } ])
 //
+.controller('security.loginCtrl',
+        [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
+	        // FIXME remove this in production
+	        $scope.user = 'johndoe';
+	        $scope.password = 'johndoe';
+	        $scope.alert = null;
+
+	        /**
+			 * Login button click
+			 */
+	        $scope.login = function() {
+		        SecurityService.getLogin($scope.user, $scope.password).success(function(data, status, headers, config) {
+			        $rootScope.security.currentUser = data;
+			        $scope.alert = null;
+			        $location.path('/personal-page');
+		        }).error(function(data, status, headers, config) {
+			        delete $rootScope.security.currentUser;
+			        $scope.alert = data;
+		        });
+	        };
+
+	        $scope.resetPassword = function() {
+		        SecurityService.getResetPassword($scope.user);
+	        };
+        } ])
+//
 .controller( 'security.logoutCtrl',  [ "$scope", "security.SecurityService", "$location", '$cookieStore', '$rootScope',function($scope, SecurityService, $location, $cookieStore, $rootScope) {
 	                $scope.logout = function() {
 		                SecurityService.getLogout().then(function(data, status, headers, config) {
@@ -165,10 +204,14 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 			                $location.path('/login');
 		                })
 	                }
-                } ]).controller('security.securityGroupEditCtrl', [ '$scope', 'security.SecurityService', function($scope, SecurityService) {
+                } ])
+//                
+.controller('security.groupEditCtrl', [ '$scope', 'security.SecurityService', function($scope, SecurityService) {
 
 	$scope.groups = [];
 	$scope.selectedGroup = null;
+	$scope.group = {};
+    $scope.group.permissions = [];
 
 	var remove = function(arr, item) {
 		for (var i = arr.length; i--;) {
@@ -177,9 +220,23 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 			}
 		}
 	}
+	
+	function fillGroupPerm(group, perms) {
+        var retval = [];
+        var groupper=group.security.permissions;
+        
+        for (var p in groupper){
+        	if (groupper[p]) {
+        		retval.push(p);
+        		 remove(perms, p);
+        	}	
+        }
+        return retval;
+    }
 
 	SecurityService.getSecurityGroups().success(function(data) {
 		$scope.groups = data;
+		console.log(data);
 	});
 
 	SecurityService.getSecurityPermissions().success(function(data) {
@@ -189,22 +246,27 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	});
 
 	$scope.addPermission = function(value) {
-		$scope.user.permissions.push(value);
+		$scope.group.permissions.push(value);
 		remove($scope.permissions, value);
 
 	};
 	$scope.removePermission = function(value) {
 		$scope.permissions.push(value);
-		remove($scope.user.permissions, value);
+		remove($scope.group.permissions, value);
 	};
 
-	$scope.updatePermissions = function() {
-		SecurityService.updatePermissions($routeParams.id, $scope.user.permissions);
+	$scope.updateGroupPermissions = function() {
+		SecurityService.updateSecurityGroup($scope.selectedGroup.id,$scope.selectedGroup.baseData.name,$scope.selectedGroup.baseData.id	, $scope.group.permissions);
+		$scope.selectedGroup=null;
 	};
 
 	$scope.selectGroup = function(group) {
 		console.log('selected group', group);
 		$scope.selectedGroup = group;
+		SecurityService.getSecurityPermissions().success(function(data) {
+             $scope.permissions = data;
+             $scope.group.permissions = fillGroupPerm($scope.selectedGroup, data);
+         }).error(function(err){if (err){$scope.alert=err; console.log(err);} });
 	};
 
 } ])
@@ -213,6 +275,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 .controller('security.userEditCtrl',
         [ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory','psui.notificationFactory',
                 function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
+                function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory) {
 
 	                var entityUri = 'uri://registries/member';
 
@@ -224,8 +287,6 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                $scope.user = {};
 	                $scope.user.permissions = [];
 	                $scope.user.groups = [];
-
-	    
 	                $scope.addCrit = function() {
 		                $scope.searchCrit.push({});
 	                }

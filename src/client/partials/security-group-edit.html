@@ -3,7 +3,7 @@
 <div class="container">
 		<div class="row">
 			<fieldset>
-				<legend>Zoznam skupin na editáciu</legend>
+				<legend>Zoznam bezpecnostnych skupin</legend>
 			</fieldset>
 
 			<div class="col-md-6">
@@ -19,20 +19,19 @@
 						<tr ng-repeat="group in groups">
 							<td>{{$index + 1}}</td>
 							<td>{{group.baseData.name}}</td>
-							<td class="btn-group btn-group-xs"><a href="" ng-click="selectGroup(group)" class="btn btn-default">edit</a></td>
+							<td class="btn-group btn-group-xs"><a href="" ng-click="selectGroup(group)" class="btn btn-primary">edit</a></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
 
-
-
+<br/>
+<br/>
 		<div ng-show="selectedGroup">
 			<div class="row">
 				<fieldset>
-					<legend>Modifikacia bezpecnostnej skupiny
-						{{user.loginName}}</legend>
+					<legend>Modifikacia bezpecnostnej skupiny - {{selectedGroup.baseData.name}}</legend>
 				</fieldset>
 
 
@@ -60,14 +59,13 @@
 			</div>
 			<div class="row">
 				<fieldset>
-					<legend>Prava pridelene bezpecnostnej skupine
-						{{selectedGroup.baseData.name}}</legend>
+					<legend>Opravnenia - {{selectedGroup.baseData.name}}</legend>
 				</fieldset>
 				<div class="col-md-6 permissions">
 					<p>Pridelené práva</p>
 					<table border="1">
 						<tbody>
-							<tr ng-repeat="perm in user.permissions">
+							<tr ng-repeat="perm in group.permissions">
 								<td><a href="" ng-click="removePermission(perm)"><i
 										class="glyphicon glyphicon-minus"></i></a>&nbsp;</a></td>
 								<td ng-click="removePermission(perm)">{{perm}}</td>
@@ -92,7 +90,7 @@
 			</div>
 
 			<div class="row">
-				<button ng-click="updatePermissions()" class="btn btn-primary">Uložiť</button>
+				<button ng-click="updateGroupPermissions()" class="btn btn-primary">Uložiť</button>
 			</div>
 		</div>
 	</div>

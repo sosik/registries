@@ -74,7 +74,7 @@ angular.module('generic-search', ['schema-utils'])
 			}
 
 		}
-		;
+		
 
 		retval.schema = schema.url;
 		retval.attributes = [];
@@ -117,11 +117,16 @@ angular.module('generic-search', ['schema-utils'])
 	$scope.searchCrit = [];
 
 	$scope.data = [];
+	
+    $scope.addCrit = function() {
+    	$scope.searchCrit.push({});
+    };
 
 	schemaUtilFactory.getCompiledSchema(entityUri, 'search').success(function(data) {
 
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
+		$scope.addCrit(); 
 	}).error(function(err) {
 		notificationFactory.error(err);
 	});

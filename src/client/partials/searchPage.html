@@ -5,82 +5,59 @@
 	<form novalidate class="ng-pristine ng-valid form form-horizontal">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-6 col-md-offset-3">
+
+				<div class="col-md-7 col-md-offset-0">
 
 					<div ng-show="alert" class="alert alert-danger alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert"
 							aria-hidden="true">&times;</button>
-						<strong>Validation Failure</strong> {{alert}}
+						<strong>Validácia zlyhala</strong> {{alert}}
 					</div>
 
 					<fieldset>
-						<legend>Search Page ({{entity}})</legend>
-
-						<div class="form-group">
-							<label for="name" class="col-sm-3 control-label">Attribute</label>
-							<div class="col-sm-7">
-
-								<select ng-model="critTempAtt"
-									ng-options="att.title for att in searchDef.attributes">
-								</select>
-
-
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="name" class="col-sm-3 control-label">Operator</label>
-							<div class="col-sm-7">
-								<select ng-model="critTempOper"
-									ng-options="op.title for op in searchDef.operators">
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="name" class="col-sm-3 control-label">Value</label>
-							<div class="col-sm-7">
-								<input type="text" id="name" name="name" ng-model="critTempVal"
-									placeholder="value" class="ng-pristine ng-valid form-control"
-									autocomplete="off">
-							</div>
-
-						</div>
-						<div class="form-group">
-							<div class="col-sm-3">&nbsp;</div>
-							<div class="col-sm-7">
-								<button ng-click="addCrit()" class="btn btn-primary">Add</button>
-								<button ng-click="search()" class="btn btn-primary">Search</button>
-
-							</div>
-						</div>
-
-
-
-					</fieldset>
-					<fieldset>
-						<legend>Applied Criteria</legend>
-
-
-						<table>
-							<thead>
-								<tr>
-									<th colspan="4">Applied Criteria</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="crit in searchCrit" ng-click="editCrit($index)">
-									
-									<td><a href="" ng-click="removeCrit($index)"><i class="glyphicon glyphicon-minus"></i></a>&nbsp;</td>
-									<td>{{crit.attribute.title}}</td>
-									<td>{{crit.oper.title}}</td>
-									<td>{{crit.value}}</td>
-								</tr>
-							</tbody>
-						</table>
+						<legend>Vyhľadávanie ({{entity}})</legend>
 					</fieldset>
 
-					<fieldset>
-						<legend>Results</legend>
+					<div class="row" ng-repeat="crit in searchCrit">
 
+						<div class="form-group col-sm-5">
+							<label for="name" class="control-label">Atribút</label><br>
+							<select ng-model="crit.attribute.path"
+								ng-options="att.title for att in searchDef.attributes"></select>
+						</div>
+						<div class="form-group col-sm-2">
+							<label for="name" class="control-label">Operátor</label><br>
+							<select ng-model="crit.operator"
+								ng-Init="crit.operator=searchDef.operators[0]"
+								ng-options="op.title for op in searchDef.operators"></select>
+						</div>
+						<div class="form-group col-sm-2">
+							<label for="name" class="control-label">Hodnota</label><br>
+							<input type="text" id="name" name="name" ng-model="crit.value"
+								placeholder="value" class="ng-pristine ng-valid form-control"
+								autocomplete="off">
+
+						</div>
+						<div class="form-group col-sm-2">
+							<br>
+							<button ng-click="removeCrit($index)" class="btn btn-secundary">Zrušiť</button>
+						</div>
+					</div>
+					<div class="form-group col-sm-2">
+						<button ng-click="addCrit()" class="btn btn-secondary">Pridať</button>
+
+
+					</div>
+					<div class="form-group col-sm-2">
+						<button ng-click="search()" class="btn btn-primary">Hľadať</button>
+					</div>
+
+				</div>
+
+				<div ng-show="data" class="col-md-7 col-md-offset-0">
+
+					<fieldset>
+						<legend>Výsledok vyhladávania</legend>
 
 						<table>
 							<thead>
@@ -92,7 +69,7 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="d in data" ng-click="goView($index)">
-									
+
 									<td>{{d.id}}</td>
 									<td>{{d.baseData.id}}</td>
 									<td>{{d.baseData.name}}</td>
@@ -100,9 +77,10 @@
 							</tbody>
 						</table>
 					</fieldset>
-
 				</div>
+
 			</div>
+		</div>
 		</div>
 	</form>
 </section>

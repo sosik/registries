@@ -130,7 +130,7 @@ angular.module('generic-search', ['schema-utils'])
 	}).error(function(err) {
 		notificationFactory.error(err);
 	});
-
+/*
 	$scope.addCrit = function() {
 
 		if (!$scope.critTempAtt) {
@@ -157,41 +157,23 @@ angular.module('generic-search', ['schema-utils'])
 		$scope.critTempOper = null;
 		$scope.critTempVal = null;
 	};
-
+*/
 	$scope.removeCrit = function(index) {
 		$scope.searchCrit.splice(index, 1);
 	};
-
-	$scope.editCrit = function(index) {
-		$scope.critTempAtt = $scope.searchCrit[index].attribute;
-		$scope.critTempOper = $scope.searchCrit[index].oper;
-		$scope.critTempVal = $scope.searchCrit[index].value;
-	};
-
-	function convertCriteria(crit) {
-
-		var retval = [];
-		for ( var c in crit) {
-			retval.push({
-			    f : c.attribute.path,
-			    v : c.value,
-			    op : c.oper.value
-			});
-		}
-		return retval;
-
-	}
 
 	var convertCriteria = function(crit) {
 
 		var retval = [];
 
 		crit.map(function(c) {
-			retval.push({
-			    f : c.attribute.path,
-			    v : c.value,
-			    op : c.oper.value
-			});
+			if (c && c.attribute && c.attribute.path) {
+				retval.push({
+					f : c.attribute.path,
+					v : c.value,
+					op : c.operator.value
+				});
+			}
 		})
 
 		return retval;

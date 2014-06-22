@@ -169,8 +169,6 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		SecurityService.getResetPassword($scope.user);
 	};
 } ])
-
-} ])
 //
 .controller('security.loginCtrl',
         [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {

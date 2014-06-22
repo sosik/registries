@@ -16,25 +16,30 @@
 		},
 		"baseData": {
 			"title": "Základné údaje",
+			"transCode": "schema.people.baseData",
 			"type": "object",
 			"properties": {
 				"id": {
 					"title": "Identifikátor",
+					"transCode": "schema.people.baseData.identifier",
 					"type": "string",
 					"required": true
 				},
 				"name": {
 					"title": "Meno",
+					"transCode": "schema.people.baseData.name",
 					"type": "string",
 					"required": true
 				},
 				"surName": {
 					"title": "Priezvisko",
+					"transCode": "schema.people.baseData.surName",
 					"type": "string",
 					"required": true
 				},
 				"bornName": {
 					"title": "Rodné priezvisko",
+					"transCode": "schema.people.baseData.bornName",
 					"type": "string",
 					"required": false,
 					"render" : {

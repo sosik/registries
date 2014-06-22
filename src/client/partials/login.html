@@ -1,13 +1,14 @@
 <form novalidate class="form form-horizontal">
 	<div class="container">
 		<div class="row">
+			<div class="col-md-6 col-md-offset-3" ng-controller="langSelectCtrl"><a href="#" ng-click="setLang('sk')">SK</a> | <a href="#" ng-click="setLang('cz')">CZ</a></div>
 			<div class="col-md-6 col-md-offset-3">
 
 				<fieldset>
-					<legend>Login User</legend>
+					<legend>{{'login.title'|translate}}</legend>
 
 					<div class="form-group">
-						<label for="name" class="col-sm-3 control-label">Login</label>
+						<label for="name" class="col-sm-3 control-label">{{'login.loginName' | translate}}</label>
 						<div class="col-sm-7">
 							<input type="text" ng-model="user"
 								placeholder="Login" class="form-control"
@@ -16,7 +17,7 @@
 					</div>
 
 					<div class="form-group">
-						<label for="password" class="col-sm-3 control-label">Password</label>
+						<label for="password" class="col-sm-3 control-label">{{'login.password' | translate}}</label>
 						<div class="col-sm-7">
 							<input type="password" ng-model="password"
 								placeholder="Password"
@@ -27,9 +28,8 @@
 					<div class="form-group">
 						<div class="col-sm-3">&nbsp;</div>
 						<div class="col-sm-7">
-							<button ng-click="login()" class="btn btn-primary">Prihlásenie</button>
-							<br> <br> <a href="#" ng-click="resetPassword()">Zabudnuté
-								heslo</a> | <a href="#">Registrácia</a>
+							<button ng-click="login()" class="btn btn-primary">{{'login.title' | translate}}</button>
+							<br> <br> <a href="#" ng-click="resetPassword()">{{'login.forgottenPassword' | translate}}</a>
 						</div>
 					</div>
 				</fieldset>

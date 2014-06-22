@@ -23,6 +23,7 @@
     "angular-mocks": "~1.2.x",
     "ngRangy": "*",
     "angular-cookies": "~1.2.x",
-    "angular-ui-ace": "~0.1.1"
+    "angular-ui-ace": "~0.1.1",
+    "angular-translate": "~2.2.0"
   }
 }

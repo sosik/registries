@@ -4,12 +4,12 @@ var log = require('./logging.js').getLogger('loginController.js');
 var extend = require('extend');
 
 var universalDaoModule = require('./UniversalDao.js');
+var schemaRegistryModule = require('./schemaRegistry.js');
 
 var DEFAULT_CFG = {
 		
 };
 
-var schemaRegistryModule = require('./schemaRegistry.js');
 
 var SearchController = function(mongoDriver, options) {
 

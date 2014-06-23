@@ -59,6 +59,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
     app.get('/security/permissions',function(req,res){securityCtrl.getPermissions(req,res)});
     
     app.get('/schema/compiled/*',bodyParser(),function(req,res){schemaCtrl.getCompiledSchema(req,res)});
+    app.get('/schema/ls*',bodyParser(),function(req,res){schemaCtrl.schemaList(req,res)});
+    app.get('/schema/get/*',bodyParser(),function(req,res){schemaCtrl.schemaRead(req,res)});
+    app.put('/schema/replace/*',bodyParser(),function(req,res){schemaCtrl.schemaReplace(req,res)});
     
     app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
     app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res)});
@@ -85,8 +88,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		}
 		return false;
 	};
-	schemaRepoApp.cfg({rootPath: process.cwd() + '/build/shared/schemas' ,fileFilter: lsfilter});
-	app.use('/schema',schemaRepoApp);
+//	schemaRepoApp.cfg({rootPath: process.cwd() + '/build/shared/schemas' ,fileFilter: lsfilter});
+//	app.use('/schema',schemaRepoApp);
 	    
 	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
 		log.info("Http server listening at %j", server.address(), {});

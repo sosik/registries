@@ -119,8 +119,8 @@ angular.module('psui-uploadable-image', [])
 										notificationFactory.error(err);
 									}
 
-									elm.css('background-image', 'url(/schema/get/' + path+')');
-									commit('/schema/get/' + path);
+									elm.css('background-image', 'url(/photos/get/' + path+')');
+									commit('/photos/get/' + path);
 								});
 							}
 						} else {

@@ -413,7 +413,9 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 							if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								input = angular.element('<psui-uploadable-image psui-validity-mark ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								input = angular.element('<psui-uploadable-image '
+								+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
+									+ '" psui-imageresizor-height="'+value2.render.height + '" psui-validity-mark ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
 							} else {
 								input = angular.element('<input psui-validity-mark type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							}
@@ -478,7 +480,9 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 							if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								input = angular.element('<psui-uploadable-image ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								input = angular.element('<psui-uploadable-image '
+									+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
+									+ '" psui-imageresizor-height="'+value2.render.height + '" ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
 							} else {
 								input = angular.element('<input psui-validity-mark psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							}

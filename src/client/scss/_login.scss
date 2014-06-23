@@ -17,3 +17,33 @@
 		margin-left: 0px;
 	}
 }
+
+#main-wrapper{
+    &.login-page{
+        height:100%;
+        #content-wrapper{
+            position: relative;
+            height:100%;
+        }
+    }
+}
+
+#login-form{
+    position: absolute;
+    top: 20%;
+    left: 0px;
+    right: 0px;
+    @include media-mobile{
+        top: 20px;
+    }
+        
+    fieldset{
+        position: relative;
+    }
+    
+    .lang{
+        position: absolute;
+        right: 0px;
+        top: 4px;
+    }
+}

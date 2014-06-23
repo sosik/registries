@@ -6,6 +6,10 @@ body {
   background: $page-bg;
 }
 
+body, html{
+    height: 100%;
+}
+
 [class^="glyphicon-"], [class*="glyphicon-"] {
   position: relative;
   top: 1px;

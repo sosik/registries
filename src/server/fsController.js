@@ -75,7 +75,6 @@ app.put('/put/*', function(req, resp) {
 });
 
 app.put('/putgetpath/*', function(req, resp) {
-	console.log(app);
 	var path = req.url.substring('/putgetpath/'.length, req.url.lenght);
 
 	app.fsCtrl.putGetPath(path, req, req.get('Content-Type'), function(err, path) {

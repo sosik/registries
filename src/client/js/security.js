@@ -237,13 +237,10 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 
 	SecurityService.getSecurityGroups().success(function(data) {
 		$scope.groups = data;
-		console.log(data);
 	});
 
 	SecurityService.getSecurityPermissions().success(function(data) {
 		$scope.permissions = data;
-		console.log(data);
-
 	});
 
 	$scope.addPermission = function(value) {
@@ -262,7 +259,6 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	};
 
 	$scope.selectGroup = function(group) {
-		console.log('selected group', group);
 		$scope.selectedGroup = group;
 		SecurityService.getSecurityPermissions().success(function(data) {
              $scope.permissions = data;
@@ -316,7 +312,6 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                });
 
 	                function convertCriteria(crit) {
-		                console.log(crit);
 		                var retval = [];
 
 		                crit.map(function(c) {
@@ -394,15 +389,12 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 			                user.systemCredentials.groups = [];
 		                }
 
-		                console.log(groups);
 
 		                for ( var ug in user.systemCredentials.groups) {
 			                var usergroup = user.systemCredentials.groups[ug];
 			                groups.map(function(item) {
-				                console.log(user.systemCredentials.groups);
 
 				                if (usergroup.id === item.id) {
-					                console.log('match');
 					                retval.push(item);
 					                remove(groups, item);
 				                }
@@ -419,8 +411,6 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		                securityService.getSecurityPermissions().success(function(data) {
 			                $scope.permissions = data;
 			                $scope.user.permissions = fillUserPerm($scope.selectedUser, data);
-			                console.log($scope.user.permissions);
-
 		                });
 
 		                securityService.getSecurityGroups().success(function(data) {

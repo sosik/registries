@@ -67,7 +67,6 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 
 	this.schemaList = function(req, resp) {
 		var path = req.url.substring(10, req.url.lenght);
-		console.log(path);
 
 		fsCtrl.ls(path, resp, function(err) {
 			if (err != null) {

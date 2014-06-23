@@ -50,7 +50,6 @@ angular.module('schema-editor', [])
 	$scope.selectSchema=function(schema){
 		$scope.selectedSchema=schema;
 		schemaService.getFileContent(schema.name).success(function(data) {
-			console.log(data);
 			$scope.aceModel = JSON.stringify(data, null, 4);
 		}).error(function(err){$scope.alert=err;});
 	}
@@ -69,7 +68,6 @@ angular.module('schema-editor', [])
 
 	$scope.postData = function(data) {
 		schemaService.getPostContent($scope.selectedSchema.name, data).success(function(data) {
-			console.log('upload done', $scope.path, data);
 			$scope.selectedSchema=null;
 		}).error(function(err){$scope.alert=err;});
 	}

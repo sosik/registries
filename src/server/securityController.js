@@ -8,7 +8,6 @@ var universalDaoModule = require('./UniversalDao.js');
 var DEFAULT_CFG = {
     userCollection : 'people',
     groupCollection : 'groups',
-    schemas : [  '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json' ]
 };
 
 var SchemaToolsModule = require('./SchemaTools.js');
@@ -197,7 +196,6 @@ var SecurityController = function(mongoDriver,schemaRegistry, options) {
 				}
 				
 				req.body.groups.map(function(group){
-					console.log('pushing group',group);
 					user.systemCredentials.groups.push({id:group.id});
 				
 				});
@@ -243,10 +241,8 @@ var SecurityController = function(mongoDriver,schemaRegistry, options) {
 					group.security.permissions = {};
 				}
 				
-				log.silly(req.body);
 				for ( var per in defaultObj) {
 					group.security.permissions[per] = hasPermission(req.body.permissions, per);
-					console.log(per,group.security.permissions[per]);
 				}
 				
 				group.baseData.name=req.body.groupName;

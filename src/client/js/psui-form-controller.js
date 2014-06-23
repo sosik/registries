@@ -3,6 +3,21 @@ angular.module('psui.form-ctrl', [])
 	return {
 		restrict: 'A',
 		require: ['^form'],
+		controller: function() {
+			var activeControl = {};
+
+			var Ctrl = {
+				getActiveControl: function() {
+					return activeControl;
+				},
+				setActiveControl: function(elm) {
+					activeControl = elm;
+				}
+			};
+
+			return Ctrl;
+			
+		},
 		link: function(scope, elm, attrs, ctrls) {
 			var formController = ctrls[0];
 

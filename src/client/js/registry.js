@@ -144,23 +144,21 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 				}
 
 				cancel = function() {
-					scope.$apply(function() {
-						elm.val(oldValue);
-						ngModel.$setViewValue(elm.val());
-					});
+					elm.val(oldValue);
+					ngModel.$setViewValue(elm.val());
 					changeMode('view');
 				}
 			}
 
+			var psuiFormCtrl;
 			if (controller[1]) {
 				var psuiFormCtrl = controller[1];
-				alert('here');
+
 				scope.$watch(
-					function() {return psuiFormCtrl.psui.submitPrepare},
+					psuiFormCtrl.getActiveControl,
 					function(newVal, oldVal) {
-						if (newVal === true) {
-							alert('ff');
-							commit();
+						if (newVal !== elm && oldVal === elm && mode === 'edit') {
+							cancel();
 						}
 					}
 				);
@@ -228,6 +226,10 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 					viewElement.addClass('psui-hidden');
 					elm.removeClass('psui-hidden');
 					oldValue = elm.val();
+					// monitor who has focus
+					scope.$apply(function() {
+						psuiFormCtrl.setActiveControl(elm);
+					});
 				}
 			}
 

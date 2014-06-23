@@ -34,7 +34,9 @@
 				</div>
 				<div class="form-group col-sm-2">
 					<label class="control-label">&nbsp;</label><br>
-					<button ng-click="removeCrit($index)" class="btn btn-secundary">Zrušiť</button>
+					<button ng-click="removeCrit($index)" class="btn btn-secundary">
+						<i class="glyphicon-remove"></i>Zrušiť
+					</button>
 				</div>
 			</div>
 
@@ -42,19 +44,24 @@
 
 			<div class="row">
 				<div class="col-sm-12">
-					<button ng-click="addCrit()" class="btn btn-secondary">Pridať</button>
-					<button ng-click="search()" class="btn btn-primary">Hľadať</button>
+					<button ng-click="addCrit()" class="btn btn-secondary">
+						<i class="glyphicon-plus"></i>Pridať
+					</button>
+					<button ng-click="search()" class="btn btn-primary">
+						<i class="glyphicon-search"></i>Hľadať
+					</button>
 				</div>
 			</div>
 
 		</div>
 		<div ng-show='userList' class="col-md-6">
+			<br> <br>
 			<fieldset>
 				<legend>Výsledok ({{entity}})</legend>
 			</fieldset>
 			<table class="bootstrap">
 				<thead>
-					<tr >
+					<tr>
 						<th ng-repeat="header in headers">{{header.title}}</th>
 						<th>Akcie</th>
 					</tr>
@@ -66,82 +73,103 @@
 							header.field)}} {{$eval("obj."+header.field)}}</td>
 
 						<td class="btn-group btn-group-xs"><a href=""
-							ng-click='selectUser(user)' class="btn btn-primary"> Upraviť
-						</a></td>
+							ng-click='selectUser(user)' class="btn btn-primary"><i
+								class="glyphicon-pencil"></i>Upraviť</a></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 
-		<div ng-show="selectedUser" class="col-md-5 permissions">
+		<div ng-show="selectedUser" class="col-md-5">
 			<fieldset class="row">
 				<div class="col-md-12">
 					<legend>Skupiny pre používateľa -
 						{{selectedUser.systemCredentials.login.loginName}}</legend>
 				</div>
 
-				<div class="col-md-6 permissions">
-					<p>Pridelené práva</p>
-					<table border="1">
-						<tbody>
-							<tr ng-repeat="group in user.groups">
-								<td><a href="" ng-click="removeGroup(group)"><i
-										class="glyphicon glyphicon-minus"></i>&nbsp;</a></td>
-								<td ng-click="removeGroup(group)">{{group.baseData.name}}</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="col-md-6">
+					<div class="permissions">
+						<table>
+							<thead>
+								<tr>
+									<th>Pridelené skupiny</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="group in user.groups">
+									<td><a href="" ng-click="removeGroup(group)"><i
+											class="glyphicon glyphicon-minus"></i>&nbsp;{{group.baseData.name}}</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
-
-				<div class="col-md-6 permissions">
-					<p>Dostupné práva</p>
-					<table border="1">
-						<tbody>
-							<tr ng-repeat="group in groups">
-								<td><a href="" ng-click="addGroup(group)"><i
-										class="glyphicon glyphicon-plus"></i></a>&nbsp;</td>
-								<td ng-click="addGroup(group)">{{group.baseData.name}}</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="col-md-6">
+					<div class="permissions">
+						<table>
+							<thead>
+								<tr>
+									<th>Dostupné skupiny</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="group in groups">
+									<td><a href="" ng-click="addGroup(group)"><i
+											class="glyphicon glyphicon-plus"></i>&nbsp;{{group.baseData.name}}</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</fieldset>
+
+			<br>
+
 			<fieldset class="row">
 				<div class="col-md-12">
 					<legend>Práva pre používateľa -
 						{{selectedUser.systemCredentials.login.loginName}}</legend>
 				</div>
-
-				<div class="col-md-6 permissions">
-					<p>Pridelené práva</p>
-					<table border="1">
-						<tbody>
-							<tr ng-repeat="perm in user.permissions">
-								<td><a href="" ng-click="removePermission(perm)"><i
-										class="glyphicon glyphicon-minus"></i>&nbsp;</a></td>
-								<td ng-click="removePermission(perm)">{{perm}}</td>
-							</tr>
-						</tbody>
-
-					</table>
+				<div class="col-md-6">
+					<div class="permissions">
+						<table border="1">
+							<thead>
+								<tr>
+									<th>Pridelené práva</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="perm in user.permissions">
+									<td><a href="" ng-click="removePermission(perm)"><i
+											class="glyphicon glyphicon-minus"></i>&nbsp;{{perm}}</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 
-				<div class="col-md-6 permissions">
-					<p>Dostupné práva</p>
-					<table border="1">
-						<tbody>
-							<tr ng-repeat="perm in permissions">
-								<td><a href="" ng-click="addPermission(perm)"><i
-										class="glyphicon glyphicon-plus"></i></a>&nbsp;</td>
-								<td ng-click="addPermission(perm)">{{perm}}</td>
-							</tr>
-						</tbody>
-					</table>
+				<div class="col-md-6">
+					<div class="permissions">
+						<table border="1">
+							<thead>
+								<tr>
+									<th>Dostupné práva</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="perm in permissions">
+									<td><a href="" ng-click="addPermission(perm)"><i
+											class="glyphicon glyphicon-plus"></i>&nbsp;{{perm}}</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</fieldset>
-		
-			<div class="col-md-10 col-md-offset-2"></div>
-			<button ng-click="updateUserSecurity()" class="btn btn-primary">Uložiť</button>
+			<br>
+			<button ng-click="updateUserSecurity()" class="btn btn-primary">
+				<i class="glyphicon-ok"></i>Uložiť
+			</button>
 		</div>
 	</div>
 

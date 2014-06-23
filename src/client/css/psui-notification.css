@@ -1,9 +1,9 @@
 .psui-notification{
 	position:fixed;
-	top:47px;
-	left:0;
-	width:74%;
-	margin-left:13%;
+	top:57px;
+	left:0px;
+	right:10px;
+	margin-left:260px;
 	text-align:center;
 	z-index:1900;
 }
@@ -46,9 +46,9 @@
 	margin:0 auto;
 	text-align:center;
 	z-index:2000;
-	border:1px solid #be2800;
-	background-color: #ff9173;
-	color: #8a1d00;
+	border:1px solid #ebccd1;
+	background-color: #f2dede;
+	color: #a94442;
 	border-radius:3px;
 	padding-top:14px;
 	padding-bottom:14px;

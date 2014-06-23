@@ -1,3 +1,11 @@
 div.permissions {
+	border: 1px solid #ddd;
+	padding: 10px;
 	min-height: 200px;
+	a {
+		color: black;
+	}
+	i {
+		color: $button-submit-hover-bg;
+	}
 }

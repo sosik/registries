@@ -396,16 +396,17 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 						fieldSet.wrap('<div class="col-md-6"></div>');
 						fieldSet.append('<label>'+value.title+'</label>');
 						angular.forEach(value.properties, function(value2, key2) {
+							var isRequired = (value2.required ? ' psui-required': '');
 							if (value2.render && value2.render.component === 'psui-datepicker') {
-								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<input psui-validity-mark psui-datepicker required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<psui-uploadable-image psui-validity-mark required ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image></div></div>');
 							} else {
-								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<input psui-validity-mark required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
 							}
@@ -445,16 +446,17 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 						fieldSet.wrap('<div class="col-md-6"></div>');
 						fieldSet.append('<label>'+value.title+'</label>');
 						angular.forEach(value.properties, function(value2, key2) {
+							var isRequired = (value2.required ? ' psui-required': '');
 							if (value2.render && value2.render.component === 'psui-datepicker') {
-								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<input psui-validity-mark psui-datepicker psui-inlineedit="view" required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<psui-uploadable-image ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image></div></div>');
 							} else {
-								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
+								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
 								+'<input psui-validity-mark psui-inlineedit="view" required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/></div></div></div>');
 							}

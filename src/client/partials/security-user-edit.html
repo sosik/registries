@@ -53,10 +53,11 @@
 				<legend>Výsledok ({{entity}})</legend>
 			</fieldset>
 			<table class="bootstrap">
-			<thead>
-				<tr class="list-header">
-					<td ng-repeat="header in headers">{{header.title}}</td>
-				</tr>
+				<thead>
+					<tr >
+						<th ng-repeat="header in headers">{{header.title}}</th>
+						<th>Akcie</th>
+					</tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="obj in userList" ng-click="goView($index)"

@@ -1,6 +1,3 @@
-
-
-
 <section id="SearchPage" ng-app="doc.ui-ace" class="ng-scope">
 	<form novalidate class="ng-pristine ng-valid form form-horizontal">
 		<div class="container-fluid">
@@ -59,14 +56,18 @@
 					<fieldset>
 						<legend>Výsledok vyhľadávania</legend>
 						<table>
-							<tr class="list-header">
-								<td ng-repeat="header in headers">{{header.title}}</td>
-							</tr>
-							<tr ng-repeat="obj in data" ng-click="goView($index)"
-								class="list-row">
-								<td ng-repeat="header in headers">{{getVal("obj." +
-									header.field)}} {{$eval("obj."+header.field)}}</td>
-							</tr>
+							<thead>
+								<tr class="list-header">
+									<th ng-repeat="header in headers">{{header.title}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="obj in data" ng-click="goView($index)"
+									class="list-row">
+									<td ng-repeat="header in headers">{{getVal("obj." +
+										header.field)}} {{$eval("obj."+header.field)}}</td>
+								</tr>
+							</tbody>
 						</table>
 					</fieldset>
 				</div>

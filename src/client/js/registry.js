@@ -411,11 +411,16 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 							var input;
 
 							if (value2.render && value2.render.component === 'psui-datepicker') {
-								input = angular.element('<input psui-validity-mark psui-datepicker required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								input = angular.element('<input psui-validity-mark psui-datepicker type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								input = angular.element('<psui-uploadable-image psui-validity-mark required ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								input = angular.element('<psui-uploadable-image psui-validity-mark ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
 							} else {
-								input = angular.element('<input psui-validity-mark required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								input = angular.element('<input psui-validity-mark type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+							}
+
+							// validations
+							if (value2.required) {
+								input.attr('required', true);
 							}
 
 							fieldHolderInner.append(input);
@@ -471,11 +476,16 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 							var input;
 							var isRequired = (value2.required ? ' psui-required': '');
 							if (value2.render && value2.render.component === 'psui-datepicker') {
-								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								input = angular.element('<psui-uploadable-image ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
 							} else {
-								input = angular.element('<input psui-validity-mark psui-inlineedit="view" required type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								input = angular.element('<input psui-validity-mark psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+							}
+
+							// validations
+							if (value2.required) {
+								input.attr('required', true);
 							}
 	
 							fieldHolderInner.append(input);

@@ -20,33 +20,35 @@
 
 					<div class="row" ng-repeat="crit in searchCrit">
 
-						<div class="form-group col-sm-5">
+						<div class="col-sm-4">
 							<label for="name" class="control-label">Atribút</label><br>
-							<select ng-model="crit.attribute.path"
+							<select class="form-control"
+								ng-model="crit.attribute.path"
 								ng-options="att.title for att in searchDef.attributes"></select>
 						</div>
-						<div class="form-group col-sm-2">
+						<div class="col-sm-2">
 							<label for="name" class="control-label">Operátor</label><br>
-							<select ng-model="crit.operator"
+							<select class="form-control"
+								ng-model="crit.operator"
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="form-group col-sm-2">
+						<div class="col-sm-4">
 							<label for="name" class="control-label">Hodnota</label><br>
 							<input type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid form-control"
 								autocomplete="off">
-
 						</div>
-						<div class="form-group col-sm-2">
-							<br>
+						<div class="col-sm-2">
+							<label class="control-label">&nbsp;</label><br>
 							<button ng-click="removeCrit($index)" class="btn btn-secundary">Zrušiť</button>
 						</div>
 					</div>
+
+					<br />
+
 					<div class="form-group col-sm-2">
 						<button ng-click="addCrit()" class="btn btn-secondary">Pridať</button>
-
-
 					</div>
 					<div class="form-group col-sm-2">
 						<button ng-click="search()" class="btn btn-primary">Hľadať</button>

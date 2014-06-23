@@ -15,20 +15,18 @@
 			<div class="row" ng-repeat="crit in searchCrit">
 
 				<div class="col-sm-5">
-					<label for="name" class="control-label">Atribút</label><br>
-					<select class="form-control"
-						ng-model="crit.attribute.path"
+					<label for="name" class="control-label">Atribút</label><br> <select
+						class="form-control" ng-model="crit.attribute.path"
 						ng-options="att.title for att in searchDef.attributes"></select>
 				</div>
 				<div class="col-sm-2">
-					<label for="name" class="control-label">Operátor</label><br>
-					<select class="form-control"
-						ng-model="crit.operator" ng-Init="crit.operator=searchDef.operators[0]"
+					<label for="name" class="control-label">Operátor</label><br> <select
+						class="form-control" ng-model="crit.operator"
+						ng-Init="crit.operator=searchDef.operators[0]"
 						ng-options="op.title for op in searchDef.operators"></select>
 				</div>
 				<div class="col-sm-2">
-					<label for="name" class="control-label">Hodnota</label><br>
-					<input
+					<label for="name" class="control-label">Hodnota</label><br> <input
 						type="text" id="name" name="name" ng-model="crit.value"
 						placeholder="value" class="ng-pristine ng-valid form-control"
 						autocomplete="off">
@@ -50,16 +48,22 @@
 			</div>
 
 		</div>
-		<div  ng-show='userList' class="col-md-6">
+		<div ng-show='userList' class="col-md-6">
 			<fieldset>
 				<legend>Výsledok ({{entity}})</legend>
 			</fieldset>
 			<table class="bootstrap">
-
+			<thead>
+				<tr class="list-header">
+					<td ng-repeat="header in headers">{{header.title}}</td>
+				</tr>
+				</thead>
 				<tbody>
-					<tr ng-repeat="user in userList">
-						<td>{{$index + 1}}</td>
-						<td>{{user.systemCredentials.login.loginName}}</td>
+					<tr ng-repeat="obj in userList" ng-click="goView($index)"
+						class="list-row">
+						<td ng-repeat="header in headers">{{getVal("obj." +
+							header.field)}} {{$eval("obj."+header.field)}}</td>
+
 						<td class="btn-group btn-group-xs"><a href=""
 							ng-click='selectUser(user)' class="btn btn-primary"> Upraviť
 						</a></td>
@@ -69,6 +73,38 @@
 		</div>
 
 		<div ng-show="selectedUser" class="col-md-5 permissions">
+			<fieldset class="row">
+				<div class="col-md-12">
+					<legend>Skupiny pre používateľa -
+						{{selectedUser.systemCredentials.login.loginName}}</legend>
+				</div>
+
+				<div class="col-md-6 permissions">
+					<p>Pridelené práva</p>
+					<table border="1">
+						<tbody>
+							<tr ng-repeat="group in user.groups">
+								<td><a href="" ng-click="removeGroup(group)"><i
+										class="glyphicon glyphicon-minus"></i>&nbsp;</a></td>
+								<td ng-click="removeGroup(group)">{{group.baseData.name}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-md-6 permissions">
+					<p>Dostupné práva</p>
+					<table border="1">
+						<tbody>
+							<tr ng-repeat="group in groups">
+								<td><a href="" ng-click="addGroup(group)"><i
+										class="glyphicon glyphicon-plus"></i></a>&nbsp;</td>
+								<td ng-click="addGroup(group)">{{group.baseData.name}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
 			<fieldset class="row">
 				<div class="col-md-12">
 					<legend>Práva pre používateľa -
@@ -102,38 +138,7 @@
 					</table>
 				</div>
 			</fieldset>
-			<fieldset class="row">
-				<div class="col-md-12">
-					<legend>Skupiny pre používateľa -
-						{{selectedUser.systemCredentials.login.loginName}}</legend>
-				</div>
-
-				<div class="col-md-6 permissions">
-					<p>Pridelené práva</p>
-					<table border="1">
-						<tbody>
-							<tr ng-repeat="group in user.groups">
-								<td><a href="" ng-click="removeGroup(group)"><i
-										class="glyphicon glyphicon-minus"></i>&nbsp;</a></td>
-								<td ng-click="removeGroup(group)">{{group.baseData.name}}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-
-				<div class="col-md-6 permissions">
-					<p>Dostupné práva</p>
-					<table border="1">
-						<tbody>
-							<tr ng-repeat="group in groups">
-								<td><a href="" ng-click="addGroup(group)"><i
-										class="glyphicon glyphicon-plus"></i></a>&nbsp;</td>
-								<td ng-click="addGroup(group)">{{group.baseData.name}}</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</fieldset>
+		
 			<div class="col-md-10 col-md-offset-2"></div>
 			<button ng-click="updateUserSecurity()" class="btn btn-primary">Uložiť</button>
 		</div>

@@ -286,6 +286,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                $scope.user = {};
 	                $scope.user.permissions = [];
 	                $scope.user.groups = [];
+	                $scope.headers = {};
 	              
 
 	                $scope.removeCrit = function(index) {
@@ -308,6 +309,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		                $scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		                $scope.entity = data.title;
 		                $scope.addCrit({}); 
+		                $scope.headers = data.listFields;
 	                }).error(function(err) {
 						notificationFactory.error(err);
 		                

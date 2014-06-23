@@ -9,7 +9,7 @@ $font-color-dark: #636363 !default;
 $font-color-light: #ffffff !default;
 $page-bg: #ffffff !default;
 $main-color: #fdb730 !default;
-
+$error-color: #ff0000 !default;
 
 // Typography
 $font-family-base: "Open Sans",helvetica,arial,sans-serif !default;
@@ -78,3 +78,7 @@ $button-submit-hover-border-color: darken($button-submit-hover-bg, 20%);
 // field action holder
 $field-action-holder-space: 10px !default;
 $field-action-holder-bg: $font-color-light !default;
+
+// errors message
+$errors-bg: $error-color !default;
+$errors-color: $page-bg !default;

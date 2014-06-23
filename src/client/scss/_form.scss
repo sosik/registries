@@ -33,7 +33,12 @@
 // lable
 label {
 	font-weight: normal;
-    cursor: auto;
+    cursor: default;
+    &.psui-required:after {
+        content: '*';
+        color: $error-color;
+        margin-left: 5px;
+    }
 }
 
 fieldset{
@@ -172,7 +177,7 @@ fieldset{
 				content: "\e107";
 			}
 			> *{
-				color: red;
+				color: $error-color;
 			}
             
             > span{
@@ -197,24 +202,21 @@ fieldset{
 .psui-validation-mark{
 	position: relative;
 	
-	$color1: #ff0000;
-	$color2: #ffffff;
-	
 	.psui-errors{
 		position: absolute;
 		white-space: nowrap;
 		right: 100%;
-		background: $color1;
+		background: $errors-bg;
 		top: 0px;
 		padding: 7px 12px;
 		margin: 0px;
-		border: 1px solid $color2;
+		border: 1px solid $errors-color;
 		border-radius: 6px;
 		@include box-shadow(0 5px 10px rgba(0,0,0,.3));
 		
 		div{
 			line-height: $line-height-base;
-			color: $color2;
+			color: $errors-color;
 		}
 		
 		&:after,&:before {
@@ -229,13 +231,13 @@ fieldset{
 		}
 		&:after {
 			border-color: rgba(250, 250, 250, 0);
-			border-left-color:  $color1;
+			border-left-color:  $errors-bg;
 			border-width: 5px;
 			margin-top: 1px;
 		}
 		&:before {
 			border-color: rgba(208, 208, 208, 0);
-			border-left-color: $color2;
+			border-left-color: $errors-color;
 			border-width: 6px;
 		}
 	}

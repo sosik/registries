@@ -2,7 +2,7 @@
 	position: fixed;
 	top: $header-height;
 	bottom: 0px;
-	z-index: 4;
+	z-index: 11;
 	
 	&.ng-hide{
 		display: block !important;
@@ -45,7 +45,8 @@
 			}
 		}
 		
-		a{
+		a,div{
+            cursor: pointer;
 			display: block;
 			line-height: $sidebar-size;
 			color: $sidebar-color-base;

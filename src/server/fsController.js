@@ -80,7 +80,7 @@ app.put('/putgetpath/*', function(req, resp) {
 
 	app.fsCtrl.putGetPath(path, req, req.get('Content-Type'), function(err, path) {
 		if (err) {
-			log.error('Failed to putGetPath');
+			log.error('Failed to putGetPath', err);
 			resp.send(500, err);
 		}
 		log.info('Saved file %s', path);

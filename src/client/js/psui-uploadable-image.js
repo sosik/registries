@@ -108,15 +108,15 @@ angular.module('psui-uploadable-image', [])
 				if (file) {
 					if (file.type !== 'image/jpeg') {
 						//TODO do something clever
-						notificationFactory.error('unsupported image type');///////////
+						notificationFactory.error('unsupported image type');
 					} else {
 						if (imgCtrl && imgCtrl.srcElm) {
 							imgCtrl.srcElm.src = URL.createObjectURL(file);
 							imgCtrl.imageProcessed = function(blob) {
-								var uploader = new psFileUploadFactory.FileUploader(scope, blob, 'image/jpeg', '/schema/putgetpath/');
+								var uploader = new psFileUploadFactory.FileUploader(scope, blob, 'image/jpeg', '/photos/putgetpath/');
 								uploader.upload(function(err, path) {
 									if (err) {
-								notificationFactory.error(err);
+										notificationFactory.error(err);
 									}
 
 									elm.css('background-image', 'url(/schema/get/' + path+')');
@@ -124,14 +124,14 @@ angular.module('psui-uploadable-image', [])
 								});
 							}
 						} else {
-							var uploader = new psFileUploadFactory.FileUploader(scope, file, file.type, '/schema/putgetpath/');
+							var uploader = new psFileUploadFactory.FileUploader(scope, file, file.type, '/photos/putgetpath/');
 							uploader.upload(function(err, path) {
 								if (err) {
 									notificationFactory.error(err);
 								}
 
-								elm.css('background-image', 'url(/schema/get/' + path+')');
-								commit('/schema/get/' + path);
+								elm.css('background-image', 'url(/photos/get/' + path+')');
+								commit('/photos/get/' + path);
 							});
 						}
 					}

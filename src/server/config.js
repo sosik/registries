@@ -7,9 +7,9 @@ module.exports = {
 			) + '/registry',
 	mongoDbURI_test: 'mongodb://localhost:27017/integration_test_' + new Date().getTime(),
 	paths : {
-			photos: process.env.REGISTRIES_PATHS_PHOTO || process.cwd() + '/build/client/img',
-			schemas: process.env.REGISTRIES_PATHS_PHOTO || process.cwd() + '/build/shared/schemas',
-			},
+		photos: process.env.REGISTRIES_PATHS_PHOTO || process.cwd() + '/build/client/img',
+		schemas: process.env.REGISTRIES_PATHS_PHOTO || process.cwd() + '/build/shared/schemas',
+	},
 	schemaRegistry:{
 		schemas : [ 'permissions.json', 'login.json', 'systemCredentials.json', 'people.json',
 			        'company.json', 'group.json', 'groupMaster.json', 'member.json' ]

@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var errorhandler = require('errorhandler')
 var path = require('path');
-var schemaRepoApp=require('./fsController.js');
+var photosRepoApp=require('./fsController.js');
 
 var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js'));
 var config = require(path.join(process.cwd(), '/build/server/config.js'));
@@ -84,15 +84,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(express.static(__dirname + '/public'));
 	app.use(errorhandler({ dumpExceptions: true, showStack: true }));
 	
-	// Map schema editor services
-	var lsfilter= function( item){
-		if ( /.*[0-9]*\.json$/.test(item.name)) {
-			return true;
-		}
-		return false;
-	};
-//	schemaRepoApp.cfg({rootPath: process.cwd() + '/build/shared/schemas' ,fileFilter: lsfilter});
-//	app.use('/schema',schemaRepoApp);
+	photosRepoApp.cfg({rootPath: config.paths.photos ,fileFilter: null});
+	app.use('/photos',photosRepoApp);
 	    
 	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
 		log.info("Http server listening at %j", server.address(), {});

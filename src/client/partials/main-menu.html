@@ -1,35 +1,34 @@
 <div class="sidebar active">
 		<ul>
-			<li><a href="#"><i class="glyphicon-list"></i><span>People</span></a>
+			<li psui-accordion-element title="People" icon-class="glyphicon-list">
 				<ul>
 					<li><a href="#/registry/new/{{'uri://registries/member#'|uriescape}}"><span>New</span></a></li>
 					<li><a href="#/search/{{'uri://registries/member#'|uriescape}}"><span>Search</span></a></li>
-					
 				</ul>
 			</li>
-			<li><a href="#"><i class="glyphicon-list"></i><span>Company</span></a>
+			<li psui-accordion-element title="Company" icon-class="glyphicon-list">
 				<ul>
 					<li><a href="#/registry/new/{{'uri://registries/company'|uriescape}}"><span>New</span></a></li>
 					<li><a href="#/search/{{'uri://registries/company'|uriescape}}"><span>Search</span></a></li>
 				</ul>
 			</li>
-			
-			<li><a href="#"><i class="glyphicon-user"></i><span>My profile</span></a>
+			<li psui-accordion-element title="My profile" icon-class="glyphicon-user">
 				<ul>
 					<li><a href="#/personal-page"><span>Profil</span></a></li>
 					<li><a href="#/personal-change-password"><span>Zmena hesla</span></a></li>
 				</ul>
 			</li>
-			
-			<li><a href="#"><i class="glyphicon-group"></i><span>Oprávnenia</span></a>
+			<li psui-accordion-element title="Oprávnenia" icon-class="glyphicon-user">
 				<ul>
 					<li><a href="#/registry/new/{{'uri://registries/security#groupmaster'|uriescape}}" class="active"><span>Nová skupina</span></a></li>
 					<li><a href="#/security/group/edit/"><span>Skupiny oprávnení</span></a></li>
 					<li><a href="#/security/user/edit"><span>Oprávnenia používateľov</span></a></li>
 				</ul>
 			</li>
-			
-			<li><a href="#/schema/edit"><i class="glyphicon-info-sign"></i><span>Schema List</span></a></li>
-			<li><a href="#"><i class="glyphicon-info-sign"></i><span>Contact</span></a></li>
+			<li psui-accordion-element title="Schémy" icon-class="glyphicon-info-sign">
+				<ul>
+					<li><a href="#/schema/edit"><span>Schema List</span></a></li>
+				</ul>
+			</li>
 		</ul>
 </div>

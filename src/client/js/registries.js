@@ -7,6 +7,7 @@ angular.module('registries', [
 		'generic-search',
 		'registry',
 		'ui.ace',
+		'psui',
 		'psui-uploadable-image',
 		'psui-imageresizor',
 		'psui-datepicker',

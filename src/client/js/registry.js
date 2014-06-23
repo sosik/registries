@@ -81,10 +81,16 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 	$scope.save = function() {
 		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
-			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($cope.currentSchema) + '/' + $scope.model.obj.id);
+			notificationFactory.info({text:'Úspešne uložené', time:3000});
+		})
+		.error(function(data, status, headers, config) {
+			notificationFactory.error({text:'Nepodarilo sa uložiť dáta!', time:3000});
 		});
 	}
 
+	$scope.$on('psui:model_changed', function() {
+		$scope.save();
+	});
 	var schemaUri = decodeURIComponent( $routeParams.schema);
 
 	schemaUtilFactory.getCompiledSchema(schemaUri, 'view')
@@ -141,6 +147,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 						ngModel.$setViewValue(elm.val());
 					});
 					changeMode('view');
+					scope.$emit('psui:model_changed');
 				}
 
 				cancel = function() {

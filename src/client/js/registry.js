@@ -1,4 +1,4 @@
-angular.module('registry', ['schema-utils'])
+angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 .controller('registry.newCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory','psui.notificationFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
@@ -23,8 +23,15 @@ angular.module('registry', ['schema-utils'])
 	};
 
 	$scope.save = function() {
+		$scope.newForm.psui.prepareForSubmit();
+
+		if ($scope.newForm.$invalid) {
+			notificationFactory.error({text: 'Formulár nie je správne vyplnený', time: 5000});
+			return;
+		}
 		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
+			notificationFactory.clear();
 			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
 		});
 	};
@@ -89,7 +96,7 @@ angular.module('registry', ['schema-utils'])
 .directive('psuiInlineedit', ['$timeout', function($timeout) {
 	return {
 		restrict: 'A',
-		require: ['^ngModel'],
+		require: ['^ngModel', '^?psuiFormCtrl'],
 		link: function(scope, elm, attrs, controller) {
 			var mode = attrs.psuiInlineedit;
 			var wrapper;
@@ -133,6 +140,21 @@ angular.module('registry', ['schema-utils'])
 					changeMode('view');
 				}
 			}
+
+			if (controller[1]) {
+				var psuiFormCtrl = controller[1];
+				alert('here');
+				scope.$watch(
+					function() {return psuiFormCtrl.psui.submitPrepare},
+					function(newVal, oldVal) {
+						if (newVal === true) {
+							alert('ff');
+							commit();
+						}
+					}
+				);
+			}
+
 			elm.addClass('psui-inlineedit-edit');
 			// create base html elements
 			if (elm.parent().hasClass('psui-wrapper')) {
@@ -267,7 +289,7 @@ angular.module('registry', ['schema-utils'])
 .directive('psuiValidityMark', [function() {
 	return {
 		restrict: 'A',
-		require: ['^ngModel'],
+		require: ['^ngModel', '^form'],
 		link: function(scope, elm, attrs, controller) {
 			var wrapper;
 
@@ -344,6 +366,16 @@ angular.module('registry', ['schema-utils'])
 					}
 				});
 			}
+
+			if (controller[1]) {
+				var form = controller[1];
+
+				scope.$watch(function() {return form.psui.submitPrepare}, function(newVal) {
+					if (newVal === true) {
+						ngModel.$setViewValue(ngModel.$modelValue);
+					}
+				});
+			}
 		}
 	}
 }])
@@ -371,7 +403,7 @@ angular.module('registry', ['schema-utils'])
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'
-								+'<psui-uploadable-image ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image></div></div>');
+								+'<psui-uploadable-image psui-validity-mark required ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image></div></div>');
 							} else {
 								fieldSet.append('<div class="form-group"><label class="col-sm-4 control-label">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>'
 								+'<div class="col-sm-8"><div class="input-group">'

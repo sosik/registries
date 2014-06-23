@@ -1,11 +1,10 @@
 <section id="RegistryNew">
 	<h1>New</h1>
-<form novalidate class="form form-horizontal">
+<form novalidate name="newForm" psui-form-ctrl class="form form-horizontal">
 	<div class="container-fluid">
 		<div psui-schema-form="schemaFormOptions"></div>
 		<div class="btn-group pull-right">
-			<button class="btn btn-primary btn-cancel"><i class="glyphicon-remove"></i>Zrušiť</button>
-			<button class="btn btn-primary btn-ok" ng-click="save();"><i class="glyphicon-ok"></i>Odoslať</button>
+			<button class="btn btn-primary btn-ok" ng-click="save()" ng-disabled="newForm.$pristine"><i class="glyphicon-ok"></i>Odoslať</button>
 		</div>
 	</div>
 </form>

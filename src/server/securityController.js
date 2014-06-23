@@ -135,7 +135,7 @@ var SecurityController = function(mongoDriver,schemaRegistry, options) {
 				resp.send(500, err);
 			} else {
 
-				var defaultObj = schemaTools.createDefaultObject('uri://registries/security#permissions');
+				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
 
 				var result = [];
 
@@ -175,7 +175,7 @@ var SecurityController = function(mongoDriver,schemaRegistry, options) {
 				resp.send(500, err);
 			} else {
 
-				var defaultObj = schemaTools.createDefaultObject('uri://registries/security#permissions');
+				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
 
 				log.silly(req.body);
 

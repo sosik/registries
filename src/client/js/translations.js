@@ -12,6 +12,7 @@ angular.module('registries')
 		"schema.people.baseData.name": "Meno",
 		"schema.people.baseData.surName": "Priezvisko",
 		"schema.people.baseData.bornName": "Rodné priezvysko",
+		"menu.member.title": "Člen",
 
 
 	});
@@ -26,6 +27,7 @@ angular.module('registries')
 		"schema.people.baseData.name": "Jméno",
 		"schema.people.baseData.surName": "Příjmení",
 		"schema.people.baseData.bornName": "Rodné příjmení",
+		"menu.member.title": "Člen_cz",
 	});
 }])
 .controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {

@@ -1,12 +1,16 @@
 angular.module('psui', [])
 .directive('psuiAccordionElement', [function() {
+
 	return {
 		restrict: 'A',
 		scope: true,
 		compile: function(elm, attrs) {
 			var titleHolder = angular.element('<a href="#" ng-click="titleClick()"></a>');
+
+			var titleElm = angular.element('<span></span>');
+
 			if (attrs.title) {
-				titleHolder.prepend('<span>' + attrs.title + '</span>');
+				titleHolder.prepend(titleElm);
 			}
 
 			if (attrs.iconClass) {
@@ -15,9 +19,16 @@ angular.module('psui', [])
 
 			elm.prepend(titleHolder);
 
-			return function(scope, elm) {
+			return function(scope, elm, attrs) {
 				scope.accordion = {};
 				scope.accordion.active = false;
+
+				if (attrs.title) {
+					titleElm.text(attrs.title);
+					attrs.$observe('title', function(newVal) {
+						titleElm.text(newVal);
+					});
+				}
 
 				var toggleActivity = function() {
 					if (scope.accordion.active) {

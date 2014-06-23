@@ -6,8 +6,7 @@ var extend = require('extend');
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
-	schemas : [ '/shared/schemas/permissions.json', '/shared/schemas/login.json', '/shared/schemas/systemCredentials.json', '/shared/schemas/people.json',
-	        '/shared/schemas/company.json', '/shared/schemas/group.json', '/shared/schemas/groupMaster.json', '/shared/schemas/member.json' ]
+	
 };
 
 var SchemaToolsModule = require('./SchemaTools.js');
@@ -19,7 +18,6 @@ var fs = require('fs');
  * <p>
  * Does: initial schema load delegates to SchemaTool
  * <P>
- * TODO: schema reload
  */
 var SchemaRegistry = function(options) {
 
@@ -30,9 +28,9 @@ var SchemaRegistry = function(options) {
 	this.load = function() {
 		var schemaToolsTmp = new SchemaToolsModule.SchemaTools();
 
-		cfg.schemas.map(function(item) {
+		cfg.schemaRegistry.schemas.map(function(item) {
 			log.info('Registering schema', item);
-			var content = fs.readFileSync(process.cwd() + "/build" + item);
+			var content = fs.readFileSync(cfg.paths.schemas+'/'+item);
 			log.silly('Registering schema', content.toString());
 			schemaToolsTmp.registerSchema(null, content.toString());
 			

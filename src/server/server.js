@@ -15,8 +15,9 @@ var universalDaoControllerModule = require(process.cwd() + '/build/server/Univer
 var loginControllerModule = require('./loginController.js');
 
 var securityControllerModule = require('./securityController.js');
-var userControllerModule = require('./userController.js');
+//var userControllerModule = require('./userController.js');
 
+var schemaRegistryModule = require('./schemaRegistry.js');
 
 var searchControllerModule = require('./searchController.js');
 var schemaControllerModule = require('./schemaController.js');
@@ -32,15 +33,17 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		throw err;
 	}
 	
+	var schemaRegistry = new schemaRegistryModule.SchemaRegistry(config);
+	
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver);
 	var loginCtrl= new loginControllerModule.LoginController(mongoDriver);
 	
-	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,{});
-	var userCtrl = new  userControllerModule.UserController(mongoDriver,{});
+	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,{});
+//	var userCtrl = new  userControllerModule.UserController(mongoDriver,{});
 	
 	
-	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,{});
-	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,{});
+	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,schemaRegistry,{});
+	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{});
 	
 	app.use(cookieParser());
 	app.use(loginCtrl.authFilter );
@@ -63,7 +66,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
     app.get('/schema/get/*',bodyParser(),function(req,res){schemaCtrl.schemaRead(req,res)});
     app.put('/schema/replace/*',bodyParser(),function(req,res){schemaCtrl.schemaReplace(req,res)});
     
-    app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
+//    app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
     app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res)});
     app.post('/user/permissions/update', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res)});
     app.post('/user/security/update', bodyParser(),function(req,res){securityCtrl.updateUserSecurity(req,res)});

@@ -15,20 +15,10 @@ var SchemaToolsModule = require('./SchemaTools.js');
 
 var fs = require('fs');
 
-var SecurityController = function(mongoDriver, options) {
+var SecurityController = function(mongoDriver,schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
-	var schemaTools = new SchemaToolsModule.SchemaTools();
-
-	cfg.schemas.map(function(item) {
-		var content = fs.readFileSync(process.cwd() + "/build" + item);
-
-		schemaTools.registerSchema(null, content.toString());
-	})
-
-	schemaTools.parse();
-	schemaTools.compile();
 
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.userCollection
@@ -40,7 +30,7 @@ var SecurityController = function(mongoDriver, options) {
 	});
 	
 	this.getPermissions = function(req, resp) {
-		var defaultObj = schemaTools.createDefaultObject('uri://registries/security#permissions');
+		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
 
 		var result = [];
 

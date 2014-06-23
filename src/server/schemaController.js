@@ -21,13 +21,10 @@ var DEFAULT_CFG = {
 
 };
 
-var schemaRegistryModule = require('./schemaRegistry.js');
 
-var SchemaController = function(mongoDriver, options) {
+var SchemaController = function(mongoDriver,schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
-
-	var schemaRegistry = new schemaRegistryModule.SchemaRegistry();
 
 	var fsCtrl = new fsCtrlModule.FsCtrl(cfg);
 

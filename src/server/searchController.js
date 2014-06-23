@@ -4,18 +4,15 @@ var log = require('./logging.js').getLogger('loginController.js');
 var extend = require('extend');
 
 var universalDaoModule = require('./UniversalDao.js');
-var schemaRegistryModule = require('./schemaRegistry.js');
-
 var DEFAULT_CFG = {
 		
 };
 
 
-var SearchController = function(mongoDriver, options) {
+var SearchController = function(mongoDriver,schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
-	var schemaRegistryCtrl = new schemaRegistryModule.SchemaRegistry();
 
 	var collectPropertyPaths = function(schemaFragment, path, properties) {
 
@@ -60,7 +57,7 @@ var SearchController = function(mongoDriver, options) {
 		var schemaUri=DEFAULT_CFG.entityToNs[entity];
 		
 		console.log(entity,schemaUri);
-		var schema = schemaRegistryCtrl.getSchema(schemaUri);
+		var schema = schemaRegistry.getSchema(schemaUri);
 		var retval = {};
 
 		function collectProperties(pathPrefix, objectDef, resultArr) {
@@ -108,7 +105,7 @@ var SearchController = function(mongoDriver, options) {
 
 	this.search = function(req, resp) {
 
-		var schema = schemaRegistryCtrl.getSchema(decodeURIComponent(req.params.schema));
+		var schema = schemaRegistry.getSchema(decodeURIComponent(req.params.schema));
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName : schema.compiled.table
 		});

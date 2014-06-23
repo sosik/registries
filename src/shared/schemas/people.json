@@ -4,11 +4,9 @@
 	"table": "people",
 	"title":"person",
 	"listFields": [
-		{"field":"id", "title": "ID"},
 		{"field":"baseData.name", "title":"Meno"},
 		{"field":"baseData.surName", "title":"Priezvisko"},
-		{"field":"baseData.birthDate", "title":"Dátum narodenia"},
-		{"field":"contactInfo.city", "title":"Mesto"}
+		{"field":"baseData.id", "title": "Registračné číslo"}
 	],
 	"properties": {
 		"systemCredentials": {

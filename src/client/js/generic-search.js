@@ -118,15 +118,45 @@ angular.module('generic-search', ['schema-utils'])
 
 	$scope.data = [];
 	
+	$scope.headers = {};
+	
     $scope.addCrit = function() {
     	$scope.searchCrit.push({});
     };
+    
+    
+    var generateTableHeaders = function(schema, obj) {
+		var _obj = obj;
+		angular.forEach(schema.properties, function(value, key){
+			if (value.type === 'object') {
+				_obj[key] = {};
+				generateObjectFromSchema(value, _obj[key]);
+			} else {
+				_obj[key] = '';
+			}
+		});
+	};
+	var generateObjectFromSchema = function(schema, obj) {
+		var _obj = obj;
+		angular.forEach(schema.properties, function(value, key){
+			if (value.type === 'object') {
+				_obj[key] = {};
+				generateObjectFromSchema(value, _obj[key]);
+			} else {
+				_obj[key] = '';
+			}
+		});
+	};
+
 
 	schemaUtilFactory.getCompiledSchema(entityUri, 'search').success(function(data) {
 
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
 		$scope.addCrit(); 
+		console.log(entityUri,data);
+		$scope.headers = data.listFields;
+		
 	}).error(function(err) {
 		notificationFactory.error(err);
 	});

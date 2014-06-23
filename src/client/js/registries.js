@@ -12,6 +12,7 @@ angular.module('registries', [
 		'psui-imageresizor',
 		'psui-datepicker',
 		'psui-notification',
+		'psui-validity-mark',
 		'pascalprecht.translate'
 ])
 .config(['$routeProvider', function($routeProvider) {

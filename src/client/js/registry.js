@@ -148,6 +148,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 					ngModel.$setViewValue(elm.val());
 					changeMode('view');
 				}
+
 			}
 
 			var psuiFormCtrl;
@@ -193,6 +194,22 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 			var commitBtn = angular.element('<span class="psui-btn psui-commit-btn"><i></i><span>save</span></span>');
 			var cancelBtn = angular.element('<span class="psui-btn psui-cancel-btn"><i></i><span>cancel</span></span>');
 //			var editBtn = angular.element('<span class="psui-edit-btn"><i></i><span>edit</span></span>');
+
+			if (ngModel) {
+				// disable commitbutton if invalid
+				scope.$watch(
+					function(scope) {return ngModel.$invalid;},
+					function(nv, ov) {
+						if (ngModel.$invalid) {
+							commitBtn.addClass('psui-hidden');
+						} else {
+							if (mode === 'edit') {
+								commitBtn.removeClass('psui-hidden');
+							}
+						}
+					}
+				);
+			}
 
 			actionsHolder.append(commitBtn);
 			actionsHolder.append(cancelBtn);

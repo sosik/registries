@@ -13,6 +13,8 @@ angular.module('registries')
 		"schema.people.baseData.surName": "Priezvisko",
 		"schema.people.baseData.bornName": "Rodné priezvisko",
 		"menu.member.title": "Člen",
+		
+		"errors.validation.required": "Povinné pole",
 
 
 	});
@@ -27,7 +29,10 @@ angular.module('registries')
 		"schema.people.baseData.name": "Jméno",
 		"schema.people.baseData.surName": "Příjmení",
 		"schema.people.baseData.bornName": "Rodné příjmení",
+		//TODO
 		"menu.member.title": "Člen_cz",
+
+		"errors.validation.required": "Povinné pole",
 	});
 }])
 .controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {

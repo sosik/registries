@@ -1,5 +1,5 @@
 angular.module('psui-validity-mark', [])
-.directive('psuiValidityMark', [function() {
+.directive('psuiValidityMark', ['$compile', function($compile) {
 	return {
 		restrict: 'A',
 		require: ['^ngModel', '^form'],
@@ -74,9 +74,11 @@ angular.module('psui-validity-mark', [])
 					errors.empty();
 					for (e in nv) {
 						if (nv[e]) {
-							errors.append('<div class="psui-error">'+e+'</div>');
+							errors.append('<div class="psui-error">{{\'errors.validation.'+e+'\'|translate}}</div>');
 						}
 					}
+
+					$compile(errors)(scope);
 				});
 			}
 

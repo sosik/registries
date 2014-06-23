@@ -4,10 +4,10 @@
 	<div class="container-fluid">
 		<div psui-schema-form="schemaFormOptions"></div>
 		<div class="btn-group pull-right">
+			<button class="btn btn-primary btn-cancel" ng-click="cancel()" ><i class="glyphicon-remove"></i>Zrušiť</button>
 			<button class="btn btn-primary btn-ok" ng-click="save()" ng-disabled="newForm.$pristine"><i class="glyphicon-ok"></i>Odoslať</button>
 		</div>
 	</div>
 </form>
-					{{model.obj}}
 </section>
 

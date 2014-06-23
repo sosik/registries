@@ -1,5 +1,12 @@
 angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
-.controller('registry.newCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory','psui.notificationFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
+.controller('registry.newCtrl', ['$route',
+		'$scope',
+		'$routeParams',
+		'$http',
+		'$location',
+		'schema-utils.SchemaUtilFactory',
+		'psui.notificationFactory',
+		function($route, $scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
@@ -34,6 +41,10 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 			notificationFactory.clear();
 			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
 		});
+	};
+
+	$scope.cancel = function() {
+		$route.reload();
 	};
 
 	schemaUtilFactory.getCompiledSchema($scope.currentSchemaUri, 'new').success(function(data) {

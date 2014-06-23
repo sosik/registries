@@ -20,22 +20,23 @@
 		position: absolute;
 		top: 0px;
 		bottom: 0px;
-		/*height: 100%;*/
 		background-color: $sidebar-first-level-color-bg;
-		/*overflow: hidden;*/
-		/*width: $sidebar-width;*/
-		
+        overflow-y: auto; 
 		left: 0px;
-		
-/*		left: -300px;
-		@include transition(left .5s);
-		
-		&.active{
-			left: 0px;
-			@include transition(left .5s);
-		}*/
-		
+
+        ul{
+            display: block;
+            overflow: hidden;
+        }
+        
+        .psui-accordion-active{
+            > ul{
+                height: auto;
+            }
+        }
+        
 		li{
+            display: block;
 			white-space: nowrap;
 			&:last-child{
 				a{
@@ -71,6 +72,7 @@
 		}
 		
 		ul ul{
+            height: 0px;
 			a{
 				background-color: $sidebar-secound-level-color-bg;
 				padding-left: $sidebar-size;

@@ -11,7 +11,7 @@ angular.module('registries')
 		"schema.people.baseData.identifier": "Identifikátor",
 		"schema.people.baseData.name": "Meno",
 		"schema.people.baseData.surName": "Priezvisko",
-		"schema.people.baseData.bornName": "Rodné priezvysko",
+		"schema.people.baseData.bornName": "Rodné priezvisko",
 		"menu.member.title": "Člen",
 
 

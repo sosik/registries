@@ -5,7 +5,7 @@ angular.module('psui', [])
 		restrict: 'A',
 		scope: true,
 		compile: function(elm, attrs) {
-			var titleHolder = angular.element('<a href="#" ng-click="titleClick()"></a>');
+			var titleHolder = angular.element('<div href="#" ng-click="titleClick()"></div>');
 
 			var titleElm = angular.element('<span></span>');
 
@@ -44,9 +44,8 @@ angular.module('psui', [])
 						elm.addClass('psui-accordion-active');
 				}
 
-				scope.titleClick = function(evt) {
+				scope.titleClick = function() {
 					toggleActivity();
-					evt.preventDefault();
 				};
 			};
 		},

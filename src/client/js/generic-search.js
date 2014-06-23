@@ -2,7 +2,7 @@ angular.module('generic-search', ['schema-utils'])
 //
 .config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/search/:entity', {
-	    templateUrl : 'partials/searchPage.html',
+	    templateUrl : 'partials/generic-search.html',
 	    controller : 'SearchCtrl'
 	});
 } ])
@@ -154,7 +154,6 @@ angular.module('generic-search', ['schema-utils'])
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
 		$scope.addCrit(); 
-		console.log(entityUri,data);
 		$scope.headers = data.listFields;
 		
 	}).error(function(err) {

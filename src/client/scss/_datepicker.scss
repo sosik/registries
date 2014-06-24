@@ -11,6 +11,12 @@
         z-index: 5;
         top: 34px;
     }
+    
+     ~ .psui-buttons-holder{
+        .psui-icon-chevron-down:before{
+            top: 3px;
+        }
+     }
 }
 
 .psui-datepicker-dropdown{
@@ -21,6 +27,14 @@
     padding: 6px;
     outline: 0px;
     color: lighten($font-color-base,20%);
+    
+    &:not([class*="psui-hidden"]){
+        ~ .psui-buttons-holder {
+            .psui-icon-chevron-down{
+                @include rotate(180deg);
+            }
+        }
+    }
     
     table{
         width: 259px;

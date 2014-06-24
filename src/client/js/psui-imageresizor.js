@@ -50,10 +50,10 @@ angular.module('psui-imageresizor', [])
 			buttonsHolder.addClass('psui-hidden');
 			wrapper.append(buttonsHolder);
 			
-			var buttonRotate = angular.element('<button class="btn"><b>Rotate</b></button>');
+			var buttonRotate = angular.element('<button class="btn psui-icon-rotate"><span>rotate</span></button>');
 			buttonsHolder.append(buttonRotate);
 			
-			var buttonOk = angular.element('<button class="btn"><b>OK</b></button>');
+			var buttonOk = angular.element('<button class="btn psui-icon-ok"><span>ok</span></button>');
 			buttonsHolder.append(buttonOk);
 
 			var numberOfRot = 0;

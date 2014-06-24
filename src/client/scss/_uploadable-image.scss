@@ -1,0 +1,25 @@
+.psui-uploadable-image{
+    cursor: pointer;
+    
+    ~ .psui-buttons-holder{
+        z-index: 11;
+        right: 100%;
+        .btn{
+            color: $font-color-light;
+        }
+    }
+}
+
+.psui-imageresizor-resizor {
+	position:absolute;
+	right:100%;
+	top: 0;
+	z-index:10;
+}
+
+.psui-imageresizor-result {
+	position:absolute;
+	left: 0;
+	top: 0;
+	z-index:10;
+}

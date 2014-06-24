@@ -125,6 +125,13 @@ fieldset{
         i{
             margin-right: 0px;
         }
+        
+        &[class*="psui-icon-"]{
+            span{
+                margin-left: 5px;
+            }
+        }
+        
     }
 }
 

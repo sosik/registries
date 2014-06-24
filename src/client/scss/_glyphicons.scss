@@ -1,5 +1,5 @@
 // Catchall baseclass
-[class^="psui-icon-"], [class*=" psui-icon-"] {
+[class^="psui-icon-"]:before, [class*=" psui-icon-"]:before{
   position: relative;
   top: 1px;
   display: inline-block;
@@ -13,3 +13,5 @@
 
 // Individual icons
 .psui-icon-chevron-down{ &:before { content: "\e114"; } }
+.psui-icon-rotate{ &:before { content: "\e030"; } }
+.psui-icon-ok{ &:before { content: "\e013"; } }

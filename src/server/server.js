@@ -2,6 +2,9 @@
 
 var log = require('./logging.js').getLogger('server.js');
 var express = require('express');
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var errorhandler = require('errorhandler')
@@ -89,7 +92,26 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	photosRepoApp.cfg({rootPath: config.paths.photos ,fileFilter: null});
 	app.use('/photos',photosRepoApp);
 	    
-	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
-		log.info("Http server listening at %j", server.address(), {});
+//	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
+//		log.info("Http server listening at %j", server.address(), {});
+//	});
+	
+	var sslKey =fs.readFileSync(process.cwd()+'/build/server/ssl/server.key');
+	var sslCert =fs.readFileSync(process.cwd()+'/build/server/ssl/server.crt');
+	var ssl = {
+			key: sslKey.toString(),
+			cert: sslCert.toString(),
+			passphrase: 'changeit'
+	};
+
+
+	// Create an HTTP service.
+	http.createServer(app).listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
+		log.info("Http server listening at %j",config.webserverPort || 3000, {});
+		});
+	// Create an HTTPS service identical to the HTTP service.
+	https.createServer(ssl, app).listen(config.webSecureserverPort || 3443, config.webserverHost || "0.0.0.0", function(){
+		log.info("Http server listening at %j", config.webserverSecurePort || 3443, {});
 	});
+	
 });

@@ -1,5 +1,6 @@
 module.exports = {
 	webserverPort: process.env.OPENSHIFT_NODEJS_PORT || 3000,
+	webserverSecurePort: process.env.OPENSHIFT_NODEJS_PORT || 3443,
 	webserverHost: process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
 	mongoDbURI: (
 				process.env.OPENSHIFT_MONGODB_DB_URL

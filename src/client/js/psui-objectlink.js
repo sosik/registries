@@ -114,7 +114,7 @@ angular.module('psui-objectlink', [])
 							e.addClass('action-current-day');
 
 							e.on('click', function(evt) {
-								ngModel.$setViewValue(e.data('data'));
+								ngModel.$setViewValue(angular.element(evt.target).data('data'));
 								ngModel.$render();
 								scope.$emit('psui:model_changed');
 								dropdownHolder.addClass('psui-hidden');

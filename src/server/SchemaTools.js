@@ -166,7 +166,14 @@ var SchemaTools = function() {
 			if (('object' === typeof obj[prop]) && ("$ref" in obj[prop])) {
 				//TODO text if it is only property (check RFC)
 				//TODO support for local references
-				var compiled = that.getSchema(obj[prop].$ref).compiled;
+				var refSchema = that.getSchema(obj[prop].$ref);
+				
+				if (!refSchema) {
+					log.error('Failed to get referenced schema prop: %s, ref: ', prop, obj[prop].$ref);
+					throw new Error('Failed to get referenced schema');
+				}
+
+				var compiled = refSchema.compiled;
 				if (compiled) {
 					obj[prop] = compiled;
 				} else {

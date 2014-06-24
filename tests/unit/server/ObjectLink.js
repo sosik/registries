@@ -45,16 +45,16 @@ describe('ObjectLink', function() {
 		var obj = {
 			firstName: "Fero",
 			club: {
-				$registry: "clubs",
-				$oid: "112233"
+				registry: "clubs",
+				oid: "112233"
 			},
 			employer: {
-				$registry: "emploers",
-				$oid: "1324654"
+				registry: "emploers",
+				oid: "1324654"
 			},
 			school: {
-				$registry: "school",
-				$oid: "1111"
+				registry: "school",
+				oid: "1111"
 			}
 		}
 
@@ -67,13 +67,13 @@ describe('ObjectLink', function() {
 		}
 
 		objectTools.resolveObjectLinks(schema.compiled, obj, iterator, function(err, data) {
-			expect(data).to.have.deep.property('club.$registry');
-			expect(data).to.have.deep.property('club.$oid');
-			expect(data).to.have.deep.property('club.$refData.name', 'name-RESOLVED');
-			expect(data).to.have.deep.property('employer.$registry');
-			expect(data).to.have.deep.property('employer.$oid');
-			expect(data).to.have.deep.property('employer.$refData.name', 'employer.name-RESOLVED');
-			expect(data).to.have.deep.property('employer.$refData.type', 'employer.type-RESOLVED');
+			expect(data).to.have.deep.property('club.registry');
+			expect(data).to.have.deep.property('club.oid');
+			expect(data).to.have.deep.property('club.refData.name', 'name-RESOLVED');
+			expect(data).to.have.deep.property('employer.registry');
+			expect(data).to.have.deep.property('employer.oid');
+			expect(data).to.have.deep.property('employer.refData.name', 'employer.name-RESOLVED');
+			expect(data).to.have.deep.property('employer.refData.type', 'employer.type-RESOLVED');
 			done();
 		});
 	});

@@ -24,7 +24,7 @@
 		},
 		"school": {
 			"$objectLink": {
-				"$registry": "schools",
+				"registry": "schools",
 				"name": "organization.name"
 			}
 		}

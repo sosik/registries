@@ -13,24 +13,30 @@ var util = require('util');
 var SchemaTools = function() {
 
 	// object representation of $objectLink
+	// TODO why hardcoded?
 	var objectLinkSchema = {
-	$schema: "http://json-schema.org/schema#",
-	id: "uri://registries/objectLink#",
-	type: 'object',
-		properties: {
-			registry: {
-				type: 'string'
+		"$schema": "http://json-schema.org/schema#",
+		"id": "uri://registries/objectLink#",
+		"description": "Defines template for relations linking in between registries. This schema definition is only for documentary purposes as it is not directly referenced. Referencing is hard coded directly in source code of SchemaTools.js",
+		"type": "object",
+		"properties": {
+			"registry": {
+				"description": "Defines table where to look for referred object",
+				"type": "string"
 			},
-			oid: {
-				type: 'string'
+			"oid": {
+				"desription": "Reffered object indentifier",
+				"type": "string"
 			}
 		},
-		additionalProperties: {
-			refData: {
-				type: 'object'
+		"additionalProperties": {
+			"refData": {
+				"description": "Is used as placeholder for hepler information gathered from referred object used for ref render",
+				"type": "object"
 			}
-		}
+		},
 	}
+
 	// hashTable storing registered caches
 	var schemasCache = {};
 

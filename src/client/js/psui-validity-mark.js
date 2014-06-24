@@ -14,7 +14,7 @@ angular.module('psui-validity-mark', [])
 			// create base html elements
 			if (elm.parent().hasClass('psui-wrapper')) {
 				// element is wrapped, we are going to use this wrapper
-				wrapper = elm.parent;
+				wrapper = elm.parent();
 			} else {
 				// there is no wrapper, we have to create one
 				wrapper = angular.element('<span class="psui-wrapper"></span>');

@@ -1,3 +1,4 @@
+var log = require('./logging.js').getLogger('UniversalDao.js');
 var extend = require('extend');
 var mongoDriver = require('./mongoDriver');
 

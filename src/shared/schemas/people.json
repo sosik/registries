@@ -177,6 +177,14 @@
 					"type": "string",
 					"required": false,
 					"large": true
+				},
+				"employer": {
+					"title": "Zamestnávateľ",
+					"required": false,
+					"$objectLink": {
+						"registry": "organizations",
+						"name": "baseData.name"
+					}
 				}
 			}
 		}

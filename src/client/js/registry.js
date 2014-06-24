@@ -1,4 +1,4 @@
-angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
+angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink'])
 .controller('registry.newCtrl', ['$route',
 		'$scope',
 		'$routeParams',
@@ -31,11 +31,11 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 
 	$scope.save = function() {
 		$scope.newForm.psui.prepareForSubmit();
-
 		if ($scope.newForm.$invalid) {
 			notificationFactory.error({text: 'Formulár nie je správne vyplnený', time: 5000});
 			return;
 		}
+
 		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
 			notificationFactory.clear();
@@ -97,7 +97,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 	.success(function(data) {
 		$scope.schemaFormOptions.schema = data;
 		
-		$http({ method : 'GET',url: '/udao/get/'+$scope.schemaFormOptions.schema.table+'/'+ $scope.currentId})
+		$http({ method : 'GET',url: '/udao/getBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(schemaUri, 'view'))+'/'+ $scope.currentId})
 		.success(function(data, status, headers, config){
 			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 			$scope.model.obj = data;
@@ -354,7 +354,9 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 
 							var input;
 
-							if (value2.render && value2.render.component === 'psui-datepicker') {
+							if (value2.$objectLink) {
+								input = angular.element('<psui-objectlink schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
+							} else 	if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								input = angular.element('<psui-uploadable-image '
@@ -421,7 +423,9 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl'])
 
 							var input;
 							var isRequired = (value2.required ? ' psui-required': '');
-							if (value2.render && value2.render.component === 'psui-datepicker') {
+							if (value2.$objectLink) {
+								input = angular.element('<psui-objectlink schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
+							} else if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								input = angular.element('<psui-uploadable-image '

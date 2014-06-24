@@ -159,7 +159,7 @@ var ObjectTools = function() {
 			var schemaFragment = that.evalPath(schemaObj, item);
 			var fields = [];
 			for (var prop in schemaFragment.$objectLink) {
-				if (prop !== "$registry") {
+				if (prop !== "registry") {
 					fields.push(schemaFragment.$objectLink[prop]);
 				}
 			}
@@ -170,16 +170,16 @@ var ObjectTools = function() {
 
 			var objectFragment = that.evalPath(object, that.schemaPathToObjectPath(item));
 
-			if (objectFragment && objectFragment.$registry && objectFragment.$oid && fields) {
-				iterator(objectFragment.$registry, objectFragment.$oid, fields, function(err, data) {
+			if (objectFragment && objectFragment.registry && objectFragment.oid && fields) {
+				iterator(objectFragment.registry, objectFragment.oid, fields, function(err, data) {
 					if (err) {
 						callback(err);
 					}
 
-					objectFragment.$refData = objectFragment.$refData || {};
+					objectFragment.refData = objectFragment.refData || {};
 					for (var prop in schemaFragment.$objectLink) {
-						if (prop !== "$registry") {
-							objectFragment.$refData[prop] = data[schemaFragment.$objectLink[prop]];
+						if (prop !== "registry") {
+							objectFragment.refData[prop] = data[schemaFragment.$objectLink[prop]];
 						}
 					}
 				

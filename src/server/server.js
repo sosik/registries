@@ -35,7 +35,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	var schemaRegistry = new schemaRegistryModule.SchemaRegistry(config);
 	
-	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver);
+	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
 	var loginCtrl= new loginControllerModule.LoginController(mongoDriver);
 	
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,{});
@@ -50,7 +50,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	app.put('/udao/save/:table', bodyParser(), function(req, res){udc.save(req, res);});
 	app.get('/udao/get/:table/:id', bodyParser(), function(req, res){udc.get(req, res);});
+	app.get('/udao/getBySchema/:schema/:id', bodyParser(), function(req, res){udc.getBySchema(req, res);});
 	app.get('/udao/list/:table', bodyParser(), function(req, res){udc.list(req, res);});
+	app.post('/udao/search/:table', bodyParser(), function(req, res){udc.search(req, res);});
 
 	app.post('/login', bodyParser(), function(req, res){loginCtrl.login(req, res);});
 	app.get('/logout', bodyParser(), function(req, res){loginCtrl.logout(req, res);});

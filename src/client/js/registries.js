@@ -13,7 +13,8 @@ angular.module('registries', [
 		'psui-datepicker',
 		'psui-notification',
 		'psui-validity-mark',
-		'pascalprecht.translate'
+		'pascalprecht.translate',
+		'psui-objectlink'
 ])
 .config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});

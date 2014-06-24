@@ -119,7 +119,7 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					} else if (c.op === QueryFilter.operation.LESS_EQUAL) {
 						query = {'$lte': c.v};
 					} else if (c.op === QueryFilter.operation.STARTS_WITH) {
-						query = {'$regex': c.v+'.*' , $options: 'i'};
+						query = {'$regex': '^'+c.v+'.*' , $options: 'i'};
 					} else if (c.op === QueryFilter.operation.EXISTS) {
 						query = {'$exists' : true};
 					} else {

@@ -1,0 +1,31 @@
+{
+	"$schema": "http://json-schema.org/schema#",
+	"id": "uri://registries/organization#",
+	"table": "organizations",
+	"title": "Organizacie",
+	"listFields": [
+		{"field":"id", "title": "ID"},
+		{"field":"baseData.name", "title":"Meno"}
+	],
+	"properties": {
+		"baseData": {
+			"title": "Základné údaje",
+			"type": "object",
+			"properties": {
+				"id": {
+					"title": "Identifikátor",
+					"type": "string",
+					"required": true
+				},
+				"name": {
+					"title": "Názov organizacie",
+					"type": "string",
+					"required": true
+				}
+				
+				
+				
+			}
+		}
+	}
+}

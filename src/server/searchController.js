@@ -105,11 +105,13 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 
 	this.search = function(req, resp) {
 
+		
 		var schema = schemaRegistry.getSchema(decodeURIComponent(req.params.schema));
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName : schema.compiled.table
 		});
 
+		log.verbose('search using criteria',schema.compiled.table, req.body.criteria );
 		dao.list({
 			crits : req.body.criteria
 		}, function(err, data) {

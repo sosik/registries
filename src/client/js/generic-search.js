@@ -159,34 +159,7 @@ angular.module('generic-search', ['schema-utils'])
 	}).error(function(err) {
 		notificationFactory.error(err);
 	});
-/*
-	$scope.addCrit = function() {
 
-		if (!$scope.critTempAtt) {
-			notificationFactory.error("Attribute must be specified");
-			return;
-		}
-
-		if (!$scope.critTempOper) {
-			notificationFactory.error("Operator must be specified");
-			return;
-		}
-
-		if (!$scope.critTempVal) {
-			notificationFactory.error("Value must be specified");
-			return;
-		}
-
-		$scope.searchCrit.push({
-		    attribute : $scope.critTempAtt,
-		    oper : $scope.critTempOper,
-		    value : $scope.critTempVal
-		});
-		$scope.critTempAtt = null;
-		$scope.critTempOper = null;
-		$scope.critTempVal = null;
-	};
-*/
 	$scope.removeCrit = function(index) {
 		$scope.searchCrit.splice(index, 1);
 	};
@@ -197,6 +170,7 @@ angular.module('generic-search', ['schema-utils'])
 
 		crit.map(function(c) {
 			if (c && c.attribute && c.attribute.path) {
+				
 				retval.push({
 					f : c.attribute.path,
 					v : c.value,
@@ -205,6 +179,7 @@ angular.module('generic-search', ['schema-utils'])
 			}
 		})
 
+		console.log('search criteria', retval);	
 		return retval;
 
 	};

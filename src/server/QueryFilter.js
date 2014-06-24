@@ -4,7 +4,7 @@ var operation = {
 	GREATER: 'gt',
 	GREATER_EQUAL: 'gte',
 	LESS: 'lt',
-	LESS_EQUEAL: 'lte',
+	LESS_EQUAL: 'lte',
 	NOT_EQUAL: 'neq', // field value is not equal
 	STARTS_WITH: 'starts' // field value starts with
 };

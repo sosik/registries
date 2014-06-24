@@ -112,7 +112,7 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 						query = {'$ne': c.v};
 					} else if (c.op === QueryFilter.operation.GREATER) {
 						query = {'$gt': c.v};
-					} else if (c.op === QueryFilter.operation.GREATER_EAQUAL) {
+					} else if (c.op === QueryFilter.operation.GREATER_EQUAL) {
 						query = {'$gte': c.v};
 					} else if (c.op === QueryFilter.operation.LESS) {
 						query = {'$lt': c.v};

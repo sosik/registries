@@ -56,7 +56,7 @@ $sidebar-color-hover: $main-color;
 $sideber-width: 250px !default;
 
 // components
-$padding-base-vertical:     6px !default;
+$padding-base-vertical:     4px !default;
 $padding-base-horizontal:   12px !default;
 
 $padding-large-vertical:    10px !default;
@@ -78,6 +78,7 @@ $button-submit-hover-border-color: darken($button-submit-hover-bg, 20%);
 // field action holder
 $field-action-holder-space: 10px !default;
 $field-action-holder-bg: $font-color-light !default;
+$field-padding-vertical: $padding-base-vertical !default;
 
 // errors message
 $errors-bg: $error-color !default;

@@ -31,8 +31,8 @@ $font-size-h6:            ceil(($font-size-base * 0.85)) !default; // ~12px
 // Iconography
 /*$icon-font-path: "../fonts/" !default;
 $icon-font-name: "font" !default;
-$icon-font-svg-id: "font" !default;
-$icon-font-family: "font" !default;*/
+$icon-font-svg-id: "font" !default;*/
+$icon-font-family: "Glyphicons Halflings" !default;
 
 // Header
 $header-height: 46px !default;
@@ -82,3 +82,9 @@ $field-action-holder-bg: $font-color-light !default;
 // errors message
 $errors-bg: $error-color !default;
 $errors-color: $page-bg !default;
+
+// datepicker
+$datepicker-border-color: $input-border-color !default;
+$datepicker-active-color: darken($font-color-base,20%);
+$datepicker-color: lighten($font-color-base,10%);
+$datepicker-other-days-color: lighten($font-color-base,50%);

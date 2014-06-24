@@ -1,0 +1,99 @@
+.psui-datepicker{
+    padding-right: $padding-base-horizontal + 19;
+    &.psui-hidden{
+        ~ .psui-buttons-holder{
+            display: none;
+        }
+    }
+    
+    ~ .psui-dropdown{
+        right: 0px;
+        z-index: 5;
+        top: 34px;
+    }
+}
+
+.psui-datepicker-dropdown{
+    background: white;
+    @include box-shadow(0 5px 10px rgba(0,0,0,.3));
+    border: 1px solid $errors-color;
+    border-radius: 6px;
+    padding: 6px;
+    outline: 0px;
+    color: lighten($font-color-base,20%);
+    
+    table{
+        width: 259px;
+    }
+    
+    .action-previous
+    ,.action-next{
+        position: relative;
+        top: 1px;
+        font-family: $icon-font-family;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        cursor: pointer;
+        text-align: left;
+    }
+    
+    .action-next{
+        text-align: right;
+    }
+    
+    [class*="action-"]
+    ,.days td:not([class*="other"])
+    ,.months td
+    ,.years td
+    {
+        color: $datepicker-color;
+        cursor: pointer;
+        /*@include transition(all 0.2s);*/
+        &:hover{
+            font-weight: bold;
+            color: $datepicker-active-color;
+        }
+    }
+    
+    .months td{
+        width: 25%;
+    }
+    
+    .action-previous{
+         &:before { 
+             content: "\e079"; 
+         }
+    }
+    .action-next{
+        &:before { 
+             content: "\e080"; 
+         }
+    }
+    
+    td{
+        text-align: center ;
+        padding: 4px 10px;
+    }
+    
+    tr:nth-child(2) td{
+        padding-bottom: $font-size-base;
+    }
+    
+    .labels{
+        td{
+            border-bottom: 1px solid $datepicker-border-color;
+        }
+    }
+    
+    .days{
+        td{
+            text-align: right;
+            &.other{
+                color: $datepicker-other-days-color;
+                cursor: default;
+            }
+        }
+    }
+    
+}

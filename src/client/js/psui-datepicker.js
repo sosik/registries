@@ -84,9 +84,9 @@ angular.module('psui-datepicker', [])
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
 			
-			var buttonShowDropdown = angular.element('<button><b>v</b></button>');
+			var buttonShowDropdown = angular.element('<button class="btn psui-icon-chevron-down"></button>');
 			buttonsHolder.append(buttonShowDropdown);
-			
+    
 			var dropdownHide = function() {
 				dropdown.addClass('psui-hidden');
 			};
@@ -202,9 +202,9 @@ angular.module('psui-datepicker', [])
 			var makeDateTable = function(date){
 				var tr,td;
 				
-				tr = angular.element('<tr class="month"></tr>');
+				tr = angular.element('<tr></tr>');
 			
-				td = angular.element('<td>&laquo;</td>'); 
+				td = angular.element('<td class="action-previous"></td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click', function(evt){
 					
@@ -215,7 +215,7 @@ angular.module('psui-datepicker', [])
 					makeDateTable(prevMonth);
 				})
 				tr.append(td);
-				td = angular.element('<td colspan="5">' + whichMonth(date.getMonth()) + ' ' + date.getFullYear() + '</td>'); 
+				td = angular.element('<td colspan="5" class="action-date">' + whichMonth(date.getMonth()) + ' ' + date.getFullYear() + '</td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click',function(evt){
 					var element = angular.element(evt.target);
@@ -224,7 +224,7 @@ angular.module('psui-datepicker', [])
 					makeMonthTable(thisMonth);
 				})
 				tr.append(td);
-				td = angular.element('<td>&raquo;</td>'); 
+				td = angular.element('<td  class="action-next"></td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click', function(evt){
 					
@@ -237,8 +237,8 @@ angular.module('psui-datepicker', [])
 				tr.append(td);
 				dateTbody.append(tr);
 				
-				tr = angular.element('<tr class="month"></tr>');
-				td = angular.element('<td colspan="7">Current Day</td>');
+				tr = angular.element('<tr></tr>');
+				td = angular.element('<td colspan="7" class="action-current-day">Current Day</td>');
 				td.data("datum", new Date() );
 				td.on('click', function(evt){
 				
@@ -251,7 +251,7 @@ angular.module('psui-datepicker', [])
 				tr.append(td);
 				dateTbody.append(tr);
 				
-				tr = angular.element('<tr class="days"></tr>');
+				tr = angular.element('<tr class="labels"></tr>');
 				
 				td = angular.element('<td>Po</td>'); 
 				tr.append(td);
@@ -291,7 +291,7 @@ angular.module('psui-datepicker', [])
 				
 				
 				for (var i = 0; i<6; i++){
-					tr = angular.element('<tr></tr>');
+					tr = angular.element('<tr class="days"></tr>');
 					for (var j = 0; j<7; j++){
 						if (month == date.getMonth()){
 							td = angular.element('<td>' + date.getDate() + '</td>');
@@ -328,9 +328,9 @@ angular.module('psui-datepicker', [])
 			var makeMonthTable = function(date){
 				var tr,td;
 				
-				tr = angular.element('<tr class="month"></tr>');
+				tr = angular.element('<tr></tr>');
 			
-				td = angular.element('<td>&laquo;</td>'); 
+				td = angular.element('<td  class="action-previous"></td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click', function(evt){
 					
@@ -341,7 +341,7 @@ angular.module('psui-datepicker', [])
 					makeMonthTable(prevYear);
 				})
 				tr.append(td);
-				td = angular.element('<td colspan="2">' + date.getFullYear() + '</td>'); 
+				td = angular.element('<td colspan="2" class="action-date">' + date.getFullYear() + '</td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click',function(evt){
 					var element = angular.element(evt.target);
@@ -350,7 +350,7 @@ angular.module('psui-datepicker', [])
 					makeYearTable(thisYear);
 				})
 				tr.append(td);
-				td = angular.element('<td>&raquo;</td>'); 
+				td = angular.element('<td class="action-next"></td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click', function(evt){
 					
@@ -363,8 +363,8 @@ angular.module('psui-datepicker', [])
 				tr.append(td);
 				dateTbody.append(tr);
 				
-				tr = angular.element('<tr class="month"></tr>');
-				td = angular.element('<td colspan="7">Current Day</td>');
+				tr = angular.element('<tr></tr>');
+				td = angular.element('<td colspan="7"  class="action-current-day">Current Day</td>');
 				td.data("datum", new Date() );
 				td.on('click', function(evt){
 				
@@ -380,7 +380,7 @@ angular.module('psui-datepicker', [])
 				var month = 0;
 				var dateMonthTable = new Date (date.getTime());
 				for (var i = 0; i<3; i++){
-					tr = angular.element('<tr></tr>');
+					tr = angular.element('<tr class="months"></tr>');
 					for (var j = 0; j<4; j++){
 						td = angular.element('<td>' + whichMonth(month) + '</td>');
 						dateMonthTable.setMonth(month);
@@ -403,9 +403,9 @@ angular.module('psui-datepicker', [])
 			var makeYearTable = function(date){
 				var tr,td;
 				
-				tr = angular.element('<tr class="month"></tr>');
+				tr = angular.element('<tr></tr>');
 			
-				td = angular.element('<td>&laquo;</td>'); 
+				td = angular.element('<td class="action-previous"></td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click', function(evt){
 					
@@ -418,7 +418,7 @@ angular.module('psui-datepicker', [])
 				tr.append(td);
 				td = angular.element('<td></td>'); 
 				tr.append(td);
-				td = angular.element('<td>&raquo;</td>'); 
+				td = angular.element('<td class="action-next"></td>'); 
 				td.data("datum",new Date(date.getTime()));
 				td.on('click', function(evt){
 					
@@ -431,8 +431,8 @@ angular.module('psui-datepicker', [])
 				tr.append(td);
 				dateTbody.append(tr);
 				
-				tr = angular.element('<tr class="month"></tr>');
-				td = angular.element('<td colspan="7">Current Day</td>');
+				tr = angular.element('<tr></tr>');
+				td = angular.element('<td colspan="7" class="action-current-day">Current Day</td>');
 				td.data("datum", new Date() );
 				td.on('click', function(evt){
 				
@@ -449,7 +449,7 @@ angular.module('psui-datepicker', [])
 				var dateYearTable = new Date (date.getTime());
 				
 				for (var i = 0; i<3; i++){
-					tr = angular.element('<tr></tr>');
+					tr = angular.element('<tr class="years"></tr>');
 					for (var j = 0; j<3; j++){
 						td = angular.element('<td>' + year + '</td>');
 						dateYearTable.setFullYear(year);

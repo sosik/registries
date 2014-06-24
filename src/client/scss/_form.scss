@@ -98,8 +98,25 @@ fieldset{
 	}
 }
 
-.psui-actions-holder{
+.psui-buttons-holder{
+    display: table-cell;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 0;
+    white-space: nowrap;
+    vertical-align: middle;
+    z-index: 2;
 	
+    .btn{
+        margin-right: 0px;
+        font-size: $font-size-base;
+        line-height: $line-height-base;
+        border: 0px;
+        background: none;
+        padding: 0px 7px;
+        padding: $padding-base-vertical $padding-base-horizontal/2;
+    }
 }
 
 // action holder

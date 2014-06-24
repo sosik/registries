@@ -1,6 +1,10 @@
 var operation = {
 	EXISTS: 'ex', // field exists in structure
 	EQUAL: 'eq', // field value is equal
+	GREATER: 'gt',
+	GREATER_EQUAL: 'gte',
+	LESS: 'lt',
+	LESS_EQUEAL: 'lte',
 	NOT_EQUAL: 'neq', // field value is not equal
 	STARTS_WITH: 'starts' // field value starts with
 };

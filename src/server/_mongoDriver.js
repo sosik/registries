@@ -1,3 +1,5 @@
+var log = require('./logging.js').getLogger('_mongoDriver.js');
+
 module.exports = function(MongoClient, ObjectID, QueryFilter) {
 	var _database = null;
 
@@ -108,6 +110,16 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 						query = c.v;
 					} else if (c.op === QueryFilter.operation.NOT_EQUAL) {
 						query = {'$ne': c.v};
+					} else if (c.op === QueryFilter.operation.GREATER) {
+						query = {'$gt': c.v};
+					} else if (c.op === QueryFilter.operation.GREATER_EAQUAL) {
+						query = {'$gte': c.v};
+					} else if (c.op === QueryFilter.operation.LESS) {
+						query = {'$lt': c.v};
+					} else if (c.op === QueryFilter.operation.LESS_EQUAL) {
+						query = {'$lte': c.v};
+					} else if (c.op === QueryFilter.operation.STARTS_WITH) {
+						query = {'$regex': c.v+'.*' , $options: 'i'};
 					} else if (c.op === QueryFilter.operation.EXISTS) {
 						query = {'$exists' : true};
 					} else {
@@ -115,9 +127,11 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					}
 
 					searchCriteria[c.f] = query;
+					log.verbose('constructed query',c.f);
 				}
 			}
-
+			log.verbose('constructed query',searchCriteria);
+			
 			var fields = {};
 			if (queryFilter.fields) {
 				for (var i = 0; i < queryFilter.fields.length; i++) {

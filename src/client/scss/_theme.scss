@@ -20,3 +20,8 @@ table.schemaedit tr.selected td {
 	background-color: $main-color;
 	color: white;
 }
+
+// Buttons
+.btn-primary {
+  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}

@@ -89,3 +89,8 @@ $datepicker-border-color: $input-border-color !default;
 $datepicker-active-color: darken($font-color-base,20%);
 $datepicker-color: lighten($font-color-base,10%);
 $datepicker-other-days-color: lighten($font-color-base,50%);
+
+// Buttons
+$btn-primary-color:              #fff !default;
+$btn-primary-bg:                 $main-color !default;
+$btn-primary-border:             darken($btn-primary-bg, 5%) !default;

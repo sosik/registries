@@ -25,7 +25,6 @@ angular.module('psui-datepicker', [])
 
 			if (ngModel) {
 				commitData = function() {
-					console.log('dddd'+elm.val())
 					ngModel.$setViewValue(elm.val());
 				}
 				
@@ -59,21 +58,6 @@ angular.module('psui-datepicker', [])
 			}
 
 			elm.addClass('psui-datepicker');
-		//	if (ctrls[1]) {
-		//		var ngModelCtrl = ctrls[1];
-		//		//ng-model controller is there
-		//		
-		//		var commitChange = function(date) {
-		//			scope.$apply(function() {
-		//				ngModelCtrl.$setViewValue(date);
-		//			});
-		//		};
-		//		
-		//		ngModelCtrl.$render = function() {
-		//			elm.val(ngModelCtrl.viewValue() || '')
-		//		}
-		//	}
-		//	
 			var dropdown = angular.element('<div class="psui-dropdown psui-hidden"></div>');
 			wrapper.append(dropdown);
 			
@@ -93,14 +77,14 @@ angular.module('psui-datepicker', [])
 			var hideDropdown;
 			
 			dropdown.on('focus',function(evt){
-				console.log('abc');
 				$timeout.cancel(hideDropdown);
 				hideDropdown = null;
 				dropdown.removeClass('psui-hidden');
 			})
 			
 			dropdown.on('blur',function(evt){
-				dropdown.addClass('psui-hidden');
+				//dropdown.addClass('psui-hidden');
+				hideDropdown = $timeout(dropdownHide, 3, false);
 			})
 			
 			elm.on('blur',function(evt){
@@ -124,25 +108,31 @@ angular.module('psui-datepicker', [])
 				hideDropdown = $timeout(dropdownHide, 3, false);
 			})
 			
+			var selDate;
+			
 			buttonShowDropdown.on('click', function(evt) {
 				if(hideDropdown){
 					$timeout.cancel(hideDropdown);
 					hideDropdown = null;
 					dropdown.removeClass('psui-hidden');
 				}
+				console.log('a');
 				if (dropdown.hasClass('psui-hidden')) {
 					dropdown.removeClass('psui-hidden');
 					if (elm.val()){
 						var arr = elm.val().split(".");
-						if((arr[0] && arr[1] && arr[2]) && arr[2]<2200 && arr[2]>1800 && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
+						if((arr[0] && arr[1] && arr[2]) && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
 							arr[1]= arr[1]-1;
 							var datum = new Date(arr[2], arr[1], arr[0]);
+							selDate = new Date(datum.getTime());
 							dateTbody.empty();
 							makeDateTable(datum);
 						}
 					}
+					console.log('b');
 				} else {
 					dropdown.addClass('psui-hidden');
+					console.log('c');
 				}
 			});
 			
@@ -150,11 +140,13 @@ angular.module('psui-datepicker', [])
 				if (dropdown.hasClass('psui-hidden')) {
 					if(elm.val()){
 						var arr = elm.val().split(".");
-						if((arr[0] && arr[1] && arr[2]) && arr[2]<2200 && arr[2]>1800 && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
+						if((arr[0] && arr[1] && arr[2]) && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
 							arr[1]= arr[1]-1;
 							var datum = new Date(arr[2], arr[1], arr[0]);
+							selDate = new Date(datum.getTime());
 							dateTbody.empty();
 							makeDateTable(datum);
+							
 						}
 					}
 					dropdown.removeClass('psui-hidden');
@@ -200,7 +192,6 @@ angular.module('psui-datepicker', [])
 			
 			var makeDateTable = function(date){
 				var tr,td;
-				
 				tr = angular.element('<tr class="header"></tr>');
 			
 				td = angular.element('<td class="action-previous"></td>'); 
@@ -269,8 +260,9 @@ angular.module('psui-datepicker', [])
 				
 				dateTbody.append(tr);
 				
-				var month = date.getMonth();
+				var currentDate = new Date;
 				
+				var month = date.getMonth();
 				var dayNumber = date.getDate();
 				date.setDate(date.getDate()-dayNumber +1);
 				
@@ -279,21 +271,31 @@ angular.module('psui-datepicker', [])
 					whichDay = 6;
 				}
 				
-				
-				
+				var curClass = "";
+				var selClass = "";
 				if (whichDay == 0){
 				date.setDate(date.getDate()-7);
 				}else {
 				date.setDate(date.getDate()- whichDay);
 				}
 				
-				
+				console.log(selDate);
 				
 				for (var i = 0; i<6; i++){
 					tr = angular.element('<tr class="days"></tr>');
 					for (var j = 0; j<7; j++){
 						if (month == date.getMonth()){
-							td = angular.element('<td>' + date.getDate() + '</td>');
+							if (date.getDate() == currentDate.getDate() && currentDate.getMonth() == date.getMonth() && currentDate.getFullYear() == date.getFullYear()){
+								curClass="current"
+							} else {
+								curClass="";
+							}
+							if (selDate && date.getDate() == selDate.getDate() && selDate.getMonth() == date.getMonth() && selDate.getFullYear() == date.getFullYear()){
+								selClass="selected";
+							} else {
+								selClass="";
+							}
+							td = angular.element('<td class="'+ curClass + ' ' + selClass +'">' + date.getDate() + '</td>');
 						} else{
 							td = angular.element('<td class="other">' + date.getDate() + '</td>');
 						}

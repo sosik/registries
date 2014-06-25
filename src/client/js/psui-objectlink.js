@@ -2,12 +2,12 @@ angular.module('psui-objectlink', [])
 .directive('psuiObjectlink', ['$compile', '$parse', '$http', function($compile, $parse, $http) {
 	return {
 		restrict: 'E',
-		require: ['^ngModel', '^form'],
+		require: ['^ngModel'],
 		link: function(scope, elm, attrs, ctrls) {
 			var schemaFragment = null;
 
 			if (attrs.schemaFragment) {
-				schemaFragment = ($parse(attrs.schemaFragment))(scope);
+				schemaFragment = $parse(attrs.schemaFragment);
 			}
 			var ngModel = ctrls[0];
 
@@ -22,6 +22,8 @@ angular.module('psui-objectlink', [])
 						}
 
 						elm.text(displayText);
+					} else {
+						elm.text('');
 					}
 				} else {
 					elm.text('');
@@ -69,31 +71,31 @@ angular.module('psui-objectlink', [])
 			});
 
 			var doSearch = function() {
-				if (schemaFragment) {
+				if (schemaFragment(scope)) {
 					var qfName = null;
-					for (var f in schemaFragment.$objectLink){
+					for (var f in schemaFragment(scope).$objectLink){
 						if (f === 'registry') {
 							continue;
 						} else {
-							qfName = schemaFragment.$objectLink[f];
+							qfName = schemaFragment(scope).$objectLink[f];
 							break;
 						}
 					}
-					$http({ method : 'POST',url: '/udao/search/'+schemaFragment.$objectLink.registry, data: {criteria:[{op:'starts', v: queryField.val(), f: qfName}]} })
+					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria:[{op:'starts', v: queryField.val(), f: qfName}]} })
 					.success(function(data, status, headers, config){
 						console.log(data);
 						dropdown.empty();
 						for (var i = 0; i < data.length; ++i) {
 							var rData = {
-								registry: schemaFragment.$objectLink.registry,
+								registry: schemaFragment(scope).$objectLink.registry,
 								oid: data[i].id,
 								refData: {}
 							};
 
 							var e = angular.element('<div></div>');
-							for (var field in schemaFragment.$objectLink) {
+							for (var field in schemaFragment(scope).$objectLink) {
 								if (field != 'registry') {
-									var dataField = schemaFragment.$objectLink[field];
+									var dataField = schemaFragment(scope).$objectLink[field];
 
 									var getter = $parse(dataField);
 									var setter = $parse(field);

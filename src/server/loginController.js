@@ -182,7 +182,8 @@ var LoginController = function(mongoDriver, options) {
 	this.setCookies = function(resp, token, loginName) {
 
 		resp.cookie(cfg.securityTokenCookie, token, {
-			httpOnly : true
+			httpOnly : true,
+			secure: true
 		});
 		resp.cookie(cfg.loginNameCookie, loginName, {
 			httpOnly : false

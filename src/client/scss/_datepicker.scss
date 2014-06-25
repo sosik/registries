@@ -20,11 +20,11 @@
 }
 
 .psui-datepicker-dropdown{
-    background: white;
+    background: $page-bg;
     @include box-shadow(0 5px 10px rgba(0,0,0,.3));
-    border: 1px solid $errors-color;
-    border-radius: 6px;
-    padding: 6px;
+    /*border: 1px solid $errors-color;*/
+    border-radius: 0px 0px 6px 6px;
+    /*padding: 6px;*/
     outline: 0px;
     color: lighten($font-color-base,20%);
     
@@ -43,7 +43,7 @@
     .action-previous
     ,.action-next{
         position: relative;
-        top: 1px;
+        /*top: 1px;*/
         font-family: $icon-font-family;
         font-style: normal;
         font-weight: normal;
@@ -61,12 +61,31 @@
     ,.months td
     ,.years td
     {
-        color: $datepicker-color;
         cursor: pointer;
-        /*@include transition(all 0.2s);*/
         &:hover{
-            font-weight: bold;
-            color: $datepicker-active-color;
+            background-color: $input-border-color;
+            color: $font-color-light;
+        }
+    }
+    
+    .days td:not([class*="other"])
+    ,.months td
+    ,.years td{
+         color: $datepicker-color;
+    }
+    
+    tr.header,
+    tr.labels{
+        [class*="action-"]{
+            &:hover{
+                background-color: $font-color-light;
+                color: $font-color-base;
+            }
+        }
+        td{
+            background-color: $input-border-color;
+            color: $font-color-light;
+            border: 1px solid $input-border-color;
         }
     }
     
@@ -90,9 +109,9 @@
         padding: 4px 10px;
     }
     
-    tr:nth-child(2) td{
+/*   tr:nth-child(2) td{
         padding-bottom: $font-size-base;
-    }
+    }*/
     
     .labels{
         td{

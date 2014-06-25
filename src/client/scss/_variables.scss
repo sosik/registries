@@ -7,9 +7,10 @@ $device-desktop-width: 1200px !default;
 $font-color-base: #333333 !default;
 $font-color-dark: #636363 !default;
 $font-color-light: #ffffff !default;
-$page-bg: #ffffff !default;
 $main-color: #fdb730 !default;
 $error-color: #ff0000 !default;
+
+$page-bg: $font-color-light !default;
 
 // Typography
 $font-family-base: "Open Sans",helvetica,arial,sans-serif !default;

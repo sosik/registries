@@ -10,6 +10,17 @@
 	position: relative;
 	box-sizing: border-box;
 	line-height: 1em;
+    
+    .psui-validation-mark{
+        position: absolute;
+        left: 100%;
+        top: 0px;
+        background-color: inherit;
+        z-index: 10;
+        > :first-child{
+            padding-left: $field-action-holder-space/2;
+        }
+    }
 }
 
 .form-group{
@@ -33,6 +44,12 @@
 		@include box-shadow(none !important);
 		border: 1px solid $input-border-color;
 	}
+    
+     &.ng-invalid{
+        &:not([class*="ng-pristine"]){
+            border-color: $error-color;
+        }
+    }
 }
 
 // lable
@@ -145,85 +162,90 @@ fieldset{
 	z-index: 2;
 
 	.psui-btn{
-		border: 0px;
-		display: inline-block;
-		padding-right: $field-action-holder-space;
-		cursor: pointer;
-		color: lighten($font-color-base,20%);
-		background-color: $field-action-holder-bg;
-		line-height: 37px;
-		@include box-shadow(0px -2px 10px 0px $page-bg);
-		@include transition(all .3s);
-		
-		> i + span{
-			margin-left: $field-action-holder-space;
-		}
-
 		> :first-child{
-			border-left: 1px solid lighten($input-border-color, 10%);
-			padding-left: $field-action-holder-space;
-		}
+            border-left: 1px solid lighten($input-border-color, 10%);
+        }
 
-		&:first-child{
-			> :first-child{
-				border-left: 0px;
-			}
-		}
-		
-		&.psui-hidden + .psui-btn,
-		&.ng-invalid.ng-pristine + .psui-btn{
-			> :first-child{
-				border-left: 0px;
-			}
-		}
-		
-		&.ng-invalid.ng-pristine{
-			display: none;
-		}
-		
-		> i{
-			display: inline-block;
-			font-family: 'Glyphicons Halflings';
-			font-style: normal;
-			font-weight: normal;
-			line-height: 1;
-			position: relative;
-			top: 2px;
-		}
-		
-		&:hover,
-		&:focus,
-		&:active,
-		&.active {
-			color: $font-color-base;
-			@include transition(all .3s);
-		}
-		
-		&.psui-validation-mark{
-			> i:before{
-				content: "\e107";
-			}
-			> *{
-				color: $error-color;
-			}
-            
-            > span{
-                display: none;
+        &:first-child{
+            > :first-child{
+                border-left: 0px;
             }
-		}
-		
-		&.psui-commit-btn{
-			> i:before{
-				content: "\e013";
-			}
-		}
-		
-		&.psui-cancel-btn{
-			> i:before{
-				content: "\e014";
-			}
-		}
+        }
 	}
+}
+
+.psui-btn{
+    border: 0px;
+    display: inline-block;
+    padding-right: $field-action-holder-space;
+    cursor: pointer;
+    color: lighten($font-color-base,20%);
+    background-color: $field-action-holder-bg;
+    line-height: 37px;
+    @include box-shadow(0px -2px 10px 0px $page-bg);
+    @include transition(all .3s);
+
+    > i + span{
+        margin-left: $field-action-holder-space;
+    }
+    
+    > :first-child{
+        padding-left: $field-action-holder-space;
+    }
+
+    &.psui-hidden + .psui-btn,
+    &.ng-invalid.ng-pristine + .psui-btn{
+        > :first-child{
+            border-left: 0px;
+        }
+    }
+
+    &.ng-invalid.ng-pristine{
+        display: none;
+    }
+
+    > i{
+        display: inline-block;
+        font-family: 'Glyphicons Halflings';
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        position: relative;
+        top: 2px;
+    }
+
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+        color: $font-color-base;
+        @include transition(all .3s);
+    }
+
+    &.psui-validation-mark{
+        > i:before{
+            content: "\e107";
+        }
+        > *{
+            color: $error-color;
+        }
+
+        > span{
+            display: none;
+        }
+    }
+
+    &.psui-commit-btn{
+        > i:before{
+            content: "\e013";
+        }
+    }
+
+    &.psui-cancel-btn{
+        > i:before{
+            content: "\e014";
+        }
+    }
 }
 
 .psui-validation-mark{

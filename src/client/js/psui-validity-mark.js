@@ -39,7 +39,7 @@ angular.module('psui-validity-mark', [])
 			var validationMark = angular.element('<span class="psui-btn psui-validation-mark"><i></i><span>error</span></span>');
 			validationMark.addClass('psui-hidden');
 
-			actionsHolder.append(validationMark);
+			wrapper.prepend(validationMark);
 
 			var errors = angular.element('<div class="psui-errors"><div>');
 			errors.addClass('psui-hidden');

@@ -44,27 +44,29 @@ angular.module('psui-objectlink', [])
 
 			elm.addClass('psui-datepicker');
 			elm.addClass('form-control');
-			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
+
+			var dropdownHolder = angular.element('<div class="psui-objectlink-dropdown" style="width:100%;"></div>');
+			wrapper.append(dropdownHolder);
+			dropdownHolder.addClass('psui-dropdown');
+
+            var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
 			var buttonShowDropdown = angular.element('<button class="btn psui-icon-chevron-down"></button>');
 			buttonShowDropdown.attr('tabindex', '-1');
 			buttonsHolder.append(buttonShowDropdown);
 
-
-			var dropdownHolder = angular.element('<div class="psui-objectlink-dropdown" style="width:100%;"></div>');
-			wrapper.append(dropdownHolder);
-			dropdownHolder.addClass('psui-dropdown');
-			dropdownHolder.addClass('psui-datepicker-dropdown');
-
-			var queryField = angular.element('<input style="width:100%;"></input>');
+			var queryField = angular.element('<input class="form-control"></input>');
 			dropdownHolder.append(queryField);
+            
+            queryField.wrap( "<header></header>" );
 
 			var searchResultHolder = angular.element('<div></div>');
 
 			dropdownHolder.addClass('psui-hidden');
 
-			var dropdown = angular.element('<div></div>');
+			var dropdown = angular.element('<section></section>');
 			dropdownHolder.append(dropdown);
+//            dropdown.addClass('psui-objectlink-list');
 
 			buttonShowDropdown.on('click', function() {
 				dropdownHolder.toggleClass('psui-hidden');
@@ -113,7 +115,6 @@ angular.module('psui-objectlink', [])
 
 							e.text(displayText);
 							e.data('data', rData);
-							e.addClass('action-current-day');
 
 							e.on('click', function(evt) {
 								ngModel.$setViewValue(angular.element(evt.target).data('data'));

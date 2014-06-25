@@ -81,7 +81,7 @@ fieldset{
 	
 	&:after{
 		display: none;
-		font-family: 'Glyphicons Halflings';
+		font-family: $icon-font-family;
 		content: "\270f";
 		position: absolute;
 		top: 1px;

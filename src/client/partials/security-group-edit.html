@@ -36,28 +36,43 @@
 						</fieldset>
 					</div>
 				</div>
-
-				<div class="row">
-					<div class="form-group">
-						<label for="name" class="col-sm-4 control-label">Identifikátor skupiny</label>
-						<div class="col-sm-8">
-							<input type="text" id="name" name="name"
-								ng-model="selectedGroup.baseData.id" placeholder=""
-								class="ng-pristine ng-valid form-control" autocomplete="off">
+				
+					<div class="row">
+						<div class="form-group">
+							<label for="name" class="col-sm-4 control-label">Identifikátor
+								skupiny</label>
+							<div class="col-sm-8">
+								<input type="text" id="name" name="name"
+									ng-model="selectedGroup.baseData.id" placeholder=""
+									class="ng-pristine ng-valid form-control" autocomplete="off">
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="row">
-					<div class="form-group">
-						<label for="name" class="col-sm-4 control-label">Názov skupiny</label>
-						<div class="col-sm-8">
-							<input type="text" id="name" name="name"
-								ng-model="selectedGroup.baseData.name" placeholder=""
-								class="ng-pristine ng-valid form-control" autocomplete="off">
+					<div class="row">
+						<div class="form-group">
+							<label for="name" class="col-sm-4 control-label">Názov
+								skupiny</label>
+							<div class="col-sm-8">
+								<input type="text" id="name" name="name"
+									ng-model="selectedGroup.baseData.name" placeholder=""
+									class="ng-pristine ng-valid form-control" autocomplete="off">
+							</div>
 						</div>
 					</div>
-				</div>
+
+
+					<div class="row">
+						<div class="form-group">
+							<label for="name" class="col-sm-4 control-label">Parent
+								group</label>
+							<div class="col-sm-8">
+								<psui-objectlink schema-fragment="schemaFormOptions.schema.properties.baseData.properties.parent" ng-model="selectedGroup.baseData.parent" />
+							</div>
+						</div>
+					</div>
+				
+
 
 				<div class="row">
 					<div class="col-sm-12">

@@ -230,7 +230,7 @@ var SecurityController = function(mongoDriver,schemaRegistry, options) {
 				resp.send(500, err);
 			} else {
 
-				var defaultObj = schemaTools.createDefaultObject('uri://registries/security#permissions');
+				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
 
 				log.silly(req.body);
 
@@ -245,8 +245,16 @@ var SecurityController = function(mongoDriver,schemaRegistry, options) {
 					group.security.permissions[per] = hasPermission(req.body.permissions, per);
 				}
 				
+				
 				group.baseData.name=req.body.groupName;
 				group.baseData.id=req.body.groupId;
+				if (req.body.parent){
+					group.baseData.parent=req.body.parent;
+				}
+				else {
+					group.baseData.parent=null;
+				}
+				
 				log.info('updating groups security of', group);
 				groupDao.update(group, function(err) {
 					if (err) {

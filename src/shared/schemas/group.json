@@ -1,10 +1,9 @@
 {
     "$schema": "http://json-schema.org/schema#",
     "id": "uri://registries/security#group",
-    "title": "Bezpecnostna skupina",
+    "title": "Security group",
     "type": "object",
     "table": "groups",
-    "title": "Security group",
     "listFields": [
         {
             "field": "id",
@@ -31,9 +30,11 @@
                     "required": true
                 },
                 "parent": {
+                    "title": "Parent group",
+                    "required": false,
                     "$objectLink": {
-                        "$registry": "groups",
-                        "name": "name"
+                        "registry": "groups",
+                        "name": "baseData.name"
                     }
                 }
             }

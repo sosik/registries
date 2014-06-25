@@ -101,8 +101,8 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		                });
 	                };
 
-	                service.updateSecurityGroup = function(oid,groupName,groupId,permissions){
-	                	
+	                service.updateSecurityGroup = function(oid,groupName,groupId,permissions,parent){
+	                	console.log(oid,groupName,groupId,permissions,parent);
 
 		                return $http({
 		                    method : 'POST',
@@ -111,7 +111,8 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 		                    	oid : oid,
 		                        permissions : permissions,
 		                        groupName:groupName,
-		                        groupId:groupId
+		                        groupId:groupId,
+		                        parent: parent
 		                    }
 		                });
 	                	
@@ -207,13 +208,24 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                }
                 } ])
 //                
-.controller('security.groupEditCtrl', [ '$scope', 'security.SecurityService', function($scope, SecurityService) {
+.controller('security.groupEditCtrl', [ '$scope', 'security.SecurityService','schema-utils.SchemaUtilFactory','psui.notificationFactory', function($scope, SecurityService,schemaUtilFactory,notificationFactory) {
 
 	$scope.groups = [];
 	$scope.selectedGroup = null;
 	$scope.group = {};
     $scope.group.permissions = [];
+    
+    $scope.schemaFormOptions = {
+    		modelPath: 'selectedSchema',
+    		schema: {}
+    	};
 
+    schemaUtilFactory.getCompiledSchema('uri://registries/security#groupmaster','new').success(function(data) {
+		$scope.schemaFormOptions.schema = data;
+	}).error(function(err) {
+		notificationFactory.error(err);
+	});
+    
 	var remove = function(arr, item) {
 		for (var i = arr.length; i--;) {
 			if (arr[i] === item) {
@@ -224,6 +236,10 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	
 	function fillGroupPerm(group, perms) {
         var retval = [];
+        if (!group.security){
+			group.security={permissions:{}};
+		}
+        
         var groupper=group.security.permissions;
         
         for (var p in groupper){
@@ -254,7 +270,7 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	};
 
 	$scope.updateGroupPermissions = function() {
-		SecurityService.updateSecurityGroup($scope.selectedGroup.id,$scope.selectedGroup.baseData.name,$scope.selectedGroup.baseData.id	, $scope.group.permissions);
+		SecurityService.updateSecurityGroup($scope.selectedGroup.id,$scope.selectedGroup.baseData.name,$scope.selectedGroup.baseData.id	, $scope.group.permissions,$scope.selectedGroup.baseData.parent);
 		$scope.selectedGroup=null;
 	};
 

@@ -24,7 +24,7 @@ body, html{
 
 a{
   &:hover{
-    text-decoration: none;
+    /*text-decoration: none;*/
   }
 }
 
@@ -41,7 +41,6 @@ h2{
 // Content
 #content-wrapper{
   margin-top: $header-height+15px;
-  /*margin-left: 2 * $sidebar-close-width;*/
   color: $font-color-base;
   h1{
     margin-left: 30px;

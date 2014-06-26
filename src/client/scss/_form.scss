@@ -64,13 +64,14 @@ label {
 }
 
 fieldset{
-	> label{
+	> legend{
 		text-transform: uppercase;
 		display: block;
 		padding: 10px 0px;
 		margin-bottom: 15px;
-		border-bottom: 1px solid #b0b0b0;
+		border-bottom: 1px solid $input-border-color; 
 		font-weight: bold;
+        font-size: $font-size-base;
 	}
 }
 

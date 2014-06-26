@@ -338,7 +338,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 						var fieldSet = angular.element('<fieldset></fieldset');
 						element.append(fieldSet);
 						fieldSet.wrap('<div class="col-md-6"></div>');
-						fieldSet.append('<label>'+value.title+'</label>');
+						fieldSet.append('<legend>'+value.title+'</legend>');
 						angular.forEach(value.properties, function(value2, key2) {
 							var isRequired = (value2.required ? ' psui-required': '');
 
@@ -407,7 +407,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 						var fieldSet = angular.element('<fieldset></fieldset');
 						element.append(fieldSet);
 						fieldSet.wrap('<div class="col-md-6"></div>');
-						fieldSet.append('<label>'+value.title+'</label>');
+						fieldSet.append('<legend>'+value.title+'</legend>');
 						angular.forEach(value.properties, function(value2, key2) {
 							var isRequired = (value2.required ? ' psui-required': '');
 

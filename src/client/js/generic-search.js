@@ -62,6 +62,10 @@ angular.module('generic-search', ['schema-utils'])
 
 		function collectProperties(pathPrefix, objectDef, resultArr) {
 			for ( var pr in objectDef.properties) {
+				if (objectDef.properties[pr].$objectLink) {
+					// do not allow search by object link for now
+					continue;
+				}
 				if (objectDef.properties[pr].type === 'object') {
 					collectProperties(pr + '.', objectDef.properties[pr], resultArr)
 				} else {

@@ -1,7 +1,7 @@
 // Devices
-$device-mobile-tablet-width: 768px !default;
-/*$device-tablet-width: 1024px !default;*/
-$device-desktop-width: 1200px !default;
+$device-mobile-width: 750px !default;
+$device-tablet-width: 970px !default;
+$device-desktop-width: 1170px !default;
 
 // Colors
 $font-color-base: #333333 !default;
@@ -14,18 +14,18 @@ $page-bg: $font-color-light !default;
 
 // Typography
 $font-family-base: "Open Sans",helvetica,arial,sans-serif !default;
-$font-size-base:          14px !default;
-$line-height-base:        1.428571429 !default; // 20/14
-$line-height-computed:    floor(($font-size-base * $line-height-base)) !default; // ~20px
+$font-size-base: 14px !default;
+$line-height-base: 1.428571429 !default; // 20/14
+$line-height-computed: floor(($font-size-base * $line-height-base)) !default; // ~20px
 
-$font-size-large:         ceil(($font-size-base * 1.25)) !default; // ~18px
-$font-size-small:         ceil(($font-size-base * 0.85)) !default; // ~12px
-$font-size-mini:		  ceil(($font-size-base * 0.56)) !default; // ~12px
+$font-size-large: ceil(($font-size-base * 1.25)) !default; // ~18px
+$font-size-small: ceil(($font-size-base * 0.85)) !default; // ~12px
+$font-size-mini: ceil(($font-size-base * 0.56)) !default; // ~12px
 
-$font-size-h1:            20px !default;
-$font-size-h2:            18px !default;
-$font-size-h3:            16px !default; 
-$font-size-h4:            $font-size-base !default;
+$font-size-h1: 20px !default;
+$font-size-h2: 18px !default;
+$font-size-h3: 16px !default; 
+$font-size-h4: $font-size-base !default;
 
 
 // Iconography
@@ -56,14 +56,14 @@ $sidebar-color-hover: $main-color;
 $sideber-width: 250px !default;
 
 // components
-$padding-base-vertical:     4px !default;
-$padding-base-horizontal:   12px !default;
+$padding-base-vertical: 4px !default;
+$padding-base-horizontal: 12px !default;
 
-$padding-large-vertical:    10px !default;
+$padding-large-vertical: 10px !default;
 $padding-large-horizontal:  16px !default;
 
-$padding-small-vertical:    5px !default;
-$padding-small-horizontal:  10px !default;
+$padding-small-vertical: 5px !default;
+$padding-small-horizontal: 10px !default;
 
 // from
 $input-bg: #fafafa !default;
@@ -86,11 +86,23 @@ $errors-color: $page-bg !default;
 
 // datepicker
 $datepicker-border-color: $input-border-color !default;
-$datepicker-active-color: darken($font-color-base,20%);
+$datepicker-active-color: $main-color;
 $datepicker-color: lighten($font-color-base,10%);
 $datepicker-other-days-color: lighten($font-color-base,50%);
 
 // Buttons
-$btn-primary-color:              #fff !default;
-$btn-primary-bg:                 $main-color !default;
-$btn-primary-border:             darken($btn-primary-bg, 5%) !default;
+$btn-primary-color: #fff !default;
+$btn-primary-bg: $main-color !default;
+$btn-primary-border: darken($btn-primary-bg, 5%) !default;
+
+// tables
+$table-cell-padding-vertical: 4px;
+$table-cell-padding-horizontal: 12px;
+$table-th-bg: $input-border-color;
+$table-th-color: $font-color-light;
+$table-td-border-color: lighten($table-th-bg,20%);
+$table-tr-selected-bg: $main-color;
+$table-tr-even-bg: $input-bg;
+
+// object link
+$objectlink-active-color: $main-color;

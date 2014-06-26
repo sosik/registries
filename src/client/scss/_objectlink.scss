@@ -57,8 +57,7 @@
             &:hover,
             &:focus,
             &.active{
-                color: $font-color-light;
-                background-color: $input-border-color;	
+                background-color: $objectlink-active-color;	
             }
         }
     }

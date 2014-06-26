@@ -1,0 +1,15 @@
+.psui-search{
+	margin-bottom: 10px;
+}
+
+.psui-search-condition{
+	.btn{
+		background: inherit;
+	}
+
+	div[class*="col-sm"]{
+		@include media-tablet-max{ 
+			margin-bottom: 4px;
+		}
+	}
+}

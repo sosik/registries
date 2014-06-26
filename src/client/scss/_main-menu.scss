@@ -7,7 +7,7 @@
 	&.ng-hide{
 		display: block !important;
 		
-		@include media-mobile{
+		@include media-tablet-max{
 			left: -300px;
 			@include transition(left .5s);
 		}
@@ -21,22 +21,22 @@
 		top: 0px;
 		bottom: 0px;
 		background-color: $sidebar-first-level-color-bg;
-        overflow-y: auto; 
+		overflow-y: auto; 
 		left: 0px;
 
-        ul{
-            display: block;
-            overflow: hidden;
-        }
-        
-        .psui-accordion-active{
-            > ul{
-                height: auto;
-            }
-        }
-        
+		ul{
+			display: block;
+			overflow: hidden;
+		}
+
+		.psui-accordion-active{
+			> ul{
+				height: auto;
+			}
+		}
+
 		li{
-            display: block;
+			display: block;
 			white-space: nowrap;
 			&:last-child{
 				a{
@@ -46,7 +46,7 @@
 		}
 		
 		a,div{
-            cursor: pointer;
+			cursor: pointer;
 			display: block;
 			line-height: $sidebar-size;
 			color: $sidebar-color-base;
@@ -63,6 +63,7 @@
 			&:hover,
 			&.active{
 				color: $sidebar-color-hover;
+				text-decoration: none;
 			}
 
 			span{
@@ -73,7 +74,7 @@
 		}
 		
 		ul ul{
-            height: 0px;
+			height: 0px;
 			a{
 				background-color: $sidebar-secound-level-color-bg;
 				padding-left: $sidebar-size;
@@ -102,7 +103,7 @@
 			width: $sidebar-size;
 			background-color: $sidebar-first-level-color-bg;
 			color: $sidebar-color-base;
-			@include media-tablet-up{
+			@include media-tablet-min{
 				display: none;
 			}
 			
@@ -123,9 +124,12 @@
 	&.main-menu-active{
 		margin-left: $sideber-width;
 		@include transition(margin-left .5s);
+		@include media-tablet-max{
+			margin-left: 0px;
+		}
 	}
 	
-	@include media-tablet-up{
+	@include media-tablet-min{
 		margin-left: $sideber-width;
 		@include transition(margin-left .5s);
 	}

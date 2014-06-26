@@ -3,7 +3,7 @@
 		<div class="container-fluid">
 			<div class="row">
 
-				<div class="col-md-7 col-md-offset-0">
+				<div class="col-md-10 col-lg-8 col-md-offset-0 psui-search">
 
 					<div ng-show="alert" class="alert alert-danger alert-dismissable">
 						<button type="button" class="close" data-dismiss="alert"
@@ -15,60 +15,74 @@
 						<legend>Vyhľadávanie ({{entity}})</legend>
 					</fieldset>
 
-					<div class="row" ng-repeat="crit in searchCrit">
+					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
 						<div class="col-sm-4">
-							<label for="name" class="control-label">Atribút</label><br>
+							<!--<label for="name" class="control-label">Atribút</label><br>-->
 							<select class="form-control"
 								ng-model="crit.attribute"
 								ng-options="att.title for att in searchDef.attributes"></select>
 						</div>
 						<div class="col-sm-2">
-							<label for="name" class="control-label">Operátor</label><br>
+							<!--<label for="name" class="control-label">Operátor</label><br>-->
 							<select class="form-control"
 								ng-model="crit.operator"
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
 						<div class="col-sm-4">
-							<label for="name" class="control-label">Hodnota</label><br>
+							<!--<label for="name" class="control-label">Hodnota</label><br>-->
 							<input type="text" id="name" name="name" ng-model="crit.value"
-								placeholder="value" class="ng-pristine ng-valid form-control"
+								placeholder="Hodnota" class="ng-pristine ng-valid form-control"
 								autocomplete="off">
 						</div>
 						<div class="col-sm-2">
-							<label class="control-label">&nbsp;</label><br>
-							<button ng-click="removeCrit($index)" class="btn btn-secundary"><i class="glyphicon-remove"></i>Zrušiť</button>
+							<!--<label class="control-label">&nbsp;</label><br>-->
+							<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right"><i class="glyphicon-remove"></i>Zrušiť</button>
 						</div>
 					</div>
 
-					<br />
-
-					<div class="form-group col-sm-12">
-						<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>Pridať</button>
-						<button ng-click="search()" class="btn btn-primary"><i class="glyphicon-search"></i>Hľadať</button>
+					<div class="row form-group">
+						<div class="col-xs-9">
+							<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>Pridať</button>
+						</div>
+						<div class="col-xs-3">
+							<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>Hľadať</button>
+						</div>
 					</div>
 
-				</div>
+<!--					<div class="form-group col-sm-12">
+						<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>Pridať</button>
+						<button ng-click="search()" class="btn btn-primary"><i class="glyphicon-search"></i>Hľadať</button>
+					</div>-->
 
-				<div ng-show="data" class="col-md-7 col-md-offset-0">
+				</div>
+			</div>
+			<div class="row">
+				<div ng-show="data" class="col-md-10 col-lg-8 col-md-offset-0">
 
 					<fieldset>
 						<legend>Výsledok vyhľadávania</legend>
-						<table>
-							<thead>
-								<tr class="list-header">
-									<th ng-repeat="header in headers">{{header.title}}</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="obj in data" ng-click="goView($index)"
-									class="list-row">
-									<td ng-repeat="header in headers">{{getVal("obj." +
-										header.field)}} {{$eval("obj."+header.field)}}</td>
-								</tr>
-							</tbody>
-						</table>
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr class="list-header">
+										<th ng-repeat="header in headers">{{header.title}}</th>
+										<th> </th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="obj in data" ng-click="goView($index)"
+										class="list-row">
+										<td ng-repeat="header in headers">{{getVal("obj." +
+											header.field)}} {{$eval("obj."+header.field)}}</td>
+										<td class="psui-table-actions">
+											<a href="#" class="btn" ng-click="goView($index)"><i class="glyphicon-eye-open"></i><span>View</span></a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</fieldset>
 				</div>
 			</div>

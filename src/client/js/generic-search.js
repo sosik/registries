@@ -123,6 +123,7 @@ angular.module('generic-search', ['schema-utils'])
 	$scope.data = [];
 	
 	$scope.headers = {};
+	$scope.forcedCriterias = [];
 	
     $scope.addCrit = function() {
     	$scope.searchCrit.push({});
@@ -159,6 +160,7 @@ angular.module('generic-search', ['schema-utils'])
 		$scope.entity = data.title;
 		$scope.addCrit(); 
 		$scope.headers = data.listFields;
+		$scope.forcedCriterias = data.forcedCriterias || [];
 		
 	}).error(function(err) {
 		notificationFactory.error(err);
@@ -189,7 +191,13 @@ angular.module('generic-search', ['schema-utils'])
 	};
 
 	$scope.search = function() {
-		genericSearchFactory.getSearch($scope.entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
+		var c = convertCriteria($scope.searchCrit);
+		// add forced criteria
+		for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
+			c.push($scope.forcedCriterias[idx]);
+		}
+
+		genericSearchFactory.getSearch($scope.entityUri, c).success(function(data) {
 			$scope.data = data;
 		}).error(function(err) {
 			notificationFactory.error(err);

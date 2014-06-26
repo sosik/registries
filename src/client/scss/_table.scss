@@ -23,9 +23,6 @@
 			}
 		}
 		
-		&:hover{
-			background-color: $table-tr-selected-bg;
-		}
 	}
 	td{
 		border-bottom: 1px solid $table-td-border-color;
@@ -50,9 +47,14 @@
 	}
 	
 	tbody{
+		
 		tr{
 			&:nth-child(2n){
 				background-color: $table-tr-even-bg;
+			}
+			
+			&:hover{
+				background-color: $table-tr-selected-bg;
 			}
 		}
 	}

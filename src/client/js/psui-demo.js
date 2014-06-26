@@ -64,7 +64,7 @@ angular.module('psui-demo',['psui-autocomplete', 'psui-contenteditable', 'psui-s
 	}
 	
 	$scope.putError = function (){
-		tmp = {text:'error'};
+		tmp = {translationCode:'schema.editor.list.of.schemas.for.editation'};
 		notificationFactory.error(tmp);
 	}
 	

@@ -5,55 +5,49 @@
 
 				<div class="col-md-10 col-lg-8 col-md-offset-0 psui-search">
 
-					<div ng-show="alert" class="alert alert-danger alert-dismissable">
-						<button type="button" class="close" data-dismiss="alert"
-							aria-hidden="true">&times;</button>
-						<strong>Validácia zlyhala</strong> {{alert}}
-					</div>
-
 					<fieldset>
-						<legend>Vyhľadávanie ({{entity}})</legend>
+						<legend>{{'generic.search.searching' | translate}} ({{entity}})</legend>
 					</fieldset>
 
 					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
 						<div class="col-sm-4">
-							<!--<label for="name" class="control-label">Atribút</label><br>-->
+							<!--<label for="name" class="control-label">{{'generic.search.atribute' | translate}}</label><br>-->
 							<select class="form-control"
 								ng-model="crit.attribute"
 								ng-options="att.title for att in searchDef.attributes"></select>
 						</div>
 						<div class="col-sm-2">
-							<!--<label for="name" class="control-label">Operátor</label><br>-->
+							<!--<label for="name" class="control-label">{{'generic.search.operator' | translate}}</label><br>-->
 							<select class="form-control"
 								ng-model="crit.operator"
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
 						<div class="col-sm-4">
-							<!--<label for="name" class="control-label">Hodnota</label><br>-->
+							<!--<label for="name" class="control-label">{{'generic.search.value' | translate}}</label><br>-->
 							<input type="text" id="name" name="name" ng-model="crit.value"
-								placeholder="Hodnota" class="ng-pristine ng-valid form-control"
+								placeholder="" class="ng-pristine ng-valid form-control"
 								autocomplete="off">
 						</div>
 						<div class="col-sm-2">
 							<!--<label class="control-label">&nbsp;</label><br>-->
-							<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right"><i class="glyphicon-remove"></i>Zrušiť</button>
+							<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right"><i class="glyphicon-remove"></i>{{'generic.search.remove' | translate}}</button>
 						</div>
 					</div>
 
 					<div class="row form-group">
 						<div class="col-xs-9">
-							<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>Pridať</button>
+							<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>{{'generic.search.add' | translate}}</button>
 						</div>
 						<div class="col-xs-3">
-							<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>Hľadať</button>
+							<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
 						</div>
 					</div>
 
 <!--					<div class="form-group col-sm-12">
-						<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>Pridať</button>
-						<button ng-click="search()" class="btn btn-primary"><i class="glyphicon-search"></i>Hľadať</button>
+						<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>{{'generic.search.add' | translate}}</button>
+						<button ng-click="search()" class="btn btn-primary"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
 					</div>-->
 
 				</div>
@@ -62,7 +56,7 @@
 				<div ng-show="data" class="col-md-10 col-lg-8 col-md-offset-0">
 
 					<fieldset>
-						<legend>Výsledok vyhľadávania</legend>
+						<legend>{{'generic.search.result.of.searching' | translate}}</legend>
 						<div class="table-responsive">
 							<table class="table">
 								<thead>
@@ -78,7 +72,7 @@
 											header.field)}} {{$eval("obj."+header.field)}}</td>
 										<td class="psui-actions-holder">
 											<span class="psui-btn psui-view-btn">
-												<i></i><span>view</span>
+												<i></i><span>{{'generic.search.view' | translate}}</span>
 											</span>
 										</td>
 									</tr>

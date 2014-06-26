@@ -22,9 +22,269 @@
 					"type": "string",
 					"required": true
 				}
-				
-				
-				
+			}
+		},
+		"additionalData":{
+			"title": "Dodatočné informácie",
+			"type": "object",
+			"properties": {
+				"typeOfFutbal": {
+					"title": "Typ futbalu",
+					"type": "string",
+					"required": true
+				},
+				"association": {
+					"title": "Zväz",
+					"type": "string",
+					"required": false
+				},
+				"birthDate": {
+					"title": "Dátum založenia",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"Stadium": {
+					"title": "Štadión",
+					"required": false,
+					"$objectLink": {
+						"registry": "stadium",
+						"name": "baseData.name"
+					}
+				},
+				"stateOfClub": {
+					"title": "Stav klubu",
+					"type": "string",
+					"required": true
+				},
+				"notPaying": {
+					"title": "Neplatič",
+					"type": "string",
+					"enum": [
+						"Áno",
+						"Nie"
+					],
+					"required": true
+				},
+				"issfActive": {
+					"title": "ISSF aktívny",
+					"type": "string",
+					"enum": [
+						"Áno",
+						"Nie"
+					],
+					"required": true
+				},
+				"dateOfRegistration": {
+					"title": "Dátum registrácie",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"canBeFacturatedOnClub": {
+					"title": "Môže sa faktúrovať na klub",
+					"type": "string",
+					"enum": [
+						"Áno",
+						"Nie"
+					],
+					"required": true
+				}
+			}
+		},
+		"logoInfo": {
+			"title": "Logo",
+			"type": "object",
+			"properties": {
+				"photo": {
+					"title": "Logo",
+					"type": "string",
+					"required": true,
+					"render": {
+						"component": "psui-uploadable-image",
+						"height": 244,
+						"width": 205
+					}
+				}
+			}
+		},
+		"contactInfo": {
+			"title": "Kontaktné údaje",
+			"type": "object",
+			"properties": {
+				"street": {
+					"title": "Ulica",
+					"type": "string",
+					"required": true
+				},
+				"houseNumber": {
+					"title": "Číslo domu",
+					"type": "string",
+					"required": true
+				},
+				"city": {
+					"title": "Obec",
+					"type": "string",
+					"required": true
+				},
+				"zipCode": {
+					"title": "PSČ",
+					"type": "string",
+					"required": true
+				},
+				"country": {
+					"title": "Štát",
+					"type": "string",
+					"required": true
+				},
+				"phoneNumber": {
+					"title": "Telefón",
+					"type": "string",
+					"required": false
+				},
+				"mobileNumber": {
+					"title": "Mobil",
+					"type": "string",
+					"required": false
+				},
+				"email": {
+					"title": "E-mail",
+					"type": "string",
+					"required": true
+				}
+			}
+		},
+		"bankInfo": {
+			"title": "Fakturačné údaje",
+			"type": "object",
+			"properties": {
+				"name": {
+					"title": "Obchodný názov spoločnosti",
+					"type": "string",
+					"required": false
+				},
+				"statutarOrganOfClub": {
+					"title": "Štatutárny orgán klubu",
+					"type": "string",
+					"required": false
+				},
+				"ico": {
+					"title": "IČO",
+					"type": "string",
+					"required": false
+				},
+				"dic": {
+					"title": "DIČ",
+					"type": "string",
+					"required": false
+				},
+				"icDPH": {
+					"title": "IČ DPH",
+					"type": "string",
+					"required": false
+				},
+				"bankAccount": {
+					"title": "Číslo účtu",
+					"type": "string",
+					"required": false
+				},
+				"bankCode": {
+					"title": "Kód banky",
+					"type": "string",
+					"required": false
+				},
+				"iban": {
+					"title": "IBAN",
+					"type": "string",
+					"required": false
+				},
+				"swift": {
+					"title": "SWIFT",
+					"type": "string",
+					"required": false
+				},
+				"street": {
+					"title": "Ulica",
+					"type": "string",
+					"required": false
+				},
+				"houseNumber": {
+					"title": "Číslo domu",
+					"type": "string",
+					"required": false
+				},
+				"city": {
+					"title": "Obec",
+					"type": "string",
+					"required": false
+				},
+				"zipCode": {
+					"title": "PSČ",
+					"type": "string",
+					"required": false
+				},
+				"country": {
+					"title": "Štát",
+					"type": "string",
+					"required": false
+				}
+			}
+		},
+		"curier": {
+			"title": "Kuriér - Dodacia adresa",
+			"type": "object",
+			"properties": {
+				"contactPerson": {
+					"title": "Kontaktná osoba",
+					"type": "string",
+					"required": false
+				},
+				"mobileNumberOfContactPerson": {
+					"title": "Telefónne číslo kontaktnej osoby",
+					"type": "string",
+					"required": false
+				},
+				"street": {
+					"title": "Ulica",
+					"type": "string",
+					"required": false
+				},
+				"houseNumber": {
+					"title": "Číslo domu",
+					"type": "string",
+					"required": false
+				},
+				"city": {
+					"title": "Obec",
+					"type": "string",
+					"required": false
+				},
+				"zipCode": {
+					"title": "PSČ",
+					"type": "string",
+					"required": false
+				},
+				"country": {
+					"title": "Štát",
+					"type": "string",
+					"required": false
+				}
+			}
+		},
+		"otherInfo": {
+			"title": "Ostatné informácie",
+			"type": "object",
+			"properties": {
+				"note": {
+					"title": "Poznámka",
+					"type": "string",
+					"required": false,
+					"large": true
+				}
 			}
 		}
 	}

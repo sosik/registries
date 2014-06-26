@@ -1,0 +1,154 @@
+{
+	"$schema": "http://json-schema.org/schema#",
+	"id": "uri://registries/stadium#",
+	"new": {
+		"table" : "stadium",
+		"listFields": [
+			{"field":"baseData.name", "title":"Názov štadióna"},
+			{"field":"additionalData.overallCapacity", "title":"Celková kapacita"}
+		],
+		"properties":{
+			"baseData":{
+				"title": "Základné údaje o štadióne",
+				"type": "object",
+				"properties": {
+					"name": {
+						"title": "Názov štadióna",
+						"type": "string",
+						"required": true
+					},
+					"street": {
+						"title": "Ulica",
+						"type": "string",
+						"required": true
+					},
+					"houseNumber": {
+						"title": "Číslo domu",
+						"type": "number",
+						"required": true
+					},
+					"town": {
+						"title": "obec",
+						"type": "string",
+						"required": true
+					},
+					"postcode": {
+						"title": "PSČ",
+						"type": "string",
+						"required": true
+					},
+					"state": {
+						"title": "Štát",
+						"type": "string",
+						"required": true
+					}
+				}
+			},
+			"additionalData":{
+				"title": "Základné údaje o štadióne",
+				"type": "object",
+				"properties": {
+					"overallCapacity": {
+						"title": "Celková kapacita",
+						"type": "number",
+						"required": false
+					},
+					"numberOfSeats": {
+						"title": "Kapacita na sedenie",
+						"type": "number",
+						"required": false
+					},
+					"capacityOfHostSector": {
+						"title": "Kapacita sektoru hostí",
+						"type": "number",
+						"required": false
+					},
+					"sizeAndSuface": {
+						"title": "Rozmery a povrch ihriska",
+						"type": "string",
+						"required": false
+					},
+					"VIPSeats": {
+						"title": "VIP sedadlá",
+						"type": "number",
+						"required": false
+					},
+					"Illumination": {
+						"title": "Osvetlenie (lux)",
+						"type": "string",
+						"enum": [
+							"Áno",
+							"Nie"
+						],
+						"required": false
+					},
+					"runningFrom": {
+						"title": "V prevádzke od",
+						"type": "string",
+						"required": false,
+						"render" : {
+							"component" : "psui-datepicker"
+						}
+					},
+					"dateOfLastIlluminationRevision": {
+						"title": "Dátum poslednej revízie osvetlenia",
+						"type": "string",
+						"required": false,
+						"render" : {
+							"component" : "psui-datepicker"
+						}
+					},
+					"dateOfLastElectricDeviceRevision": {
+						"title": "Dátum poslednej revízie elektrických zariadení",
+						"type": "string",
+						"required": false,
+						"render" : {
+							"component" : "psui-datepicker"
+						}
+					},
+					"dateOfSecurityCertificatePublication": {
+						"title": "Dátum vydania bezpčnostného certifikátu",
+						"type": "string",
+						"required": false,
+						"render" : {
+							"component" : "psui-datepicker"
+						}
+					},
+					"owner": {
+						"title": "Vlastník",
+						"type": "string",
+						"required": false
+					},
+					"manager": {
+						"title": "Manažér",
+						"type": "string",
+						"required": false
+					},
+					"managersContact": {
+						"title": "Kontakt na Manažéra",
+						"type": "string",
+						"required": false
+					}
+				}
+			}
+		}
+	},
+	"view" : {
+		"$ref" : "uri://registries/stadium#new"
+	},
+	"search" : {
+		"table": "stadium",
+    	"title": "štadión",
+        "listFields": {
+            "$ref": "uri://registries/stadium#new/listFields"
+        },
+        "properties": {
+            "baseData": {
+                "$ref": "uri://registries/stadium#new/properties/baseData"
+            },
+            "additionalData": {
+                "$ref": "uri://registries/stadium#new/properties/additionalData"
+            }
+        }
+	}
+}

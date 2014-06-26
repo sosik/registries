@@ -14,7 +14,8 @@ module.exports = {
 	},
 	schemaRegistry:{
 		schemas : [ 'permissions.json', 'login.json', 'systemCredentials.json', 'people.json',
-			        'company.json', 'group.json', 'groupMaster.json', 'member.json', 'organization.json' ]
+			        'group.json', 'groupMaster.json', 'member.json', 'organization.json', 
+					'club.json', 'coach.json', 'player.json', 'referee.json', 'stadium.json', 'person.json']
 	},
 	logging: (function() {
 			switch (process.env.NODE_ENV) {

@@ -2,9 +2,9 @@
 	<ul>
 		<li><a href="#"><i class="glyphicon glyphicon-envelope"></i><span class="label">10</span></a></li>
 		<li><a href="#"><i class="glyphicon glyphicon-question-sign"></i></a></li>
-		<li><a href="#"><span>Settings</span><i class="glyphicon glyphicon-cog"></i></a></li>
+		<li><a href="#"><span>{{'header.settings' | translate}}</span><i class="glyphicon glyphicon-cog"></i></a></li>
 		<li ng-show="security.currentUser.systemCredentials.login.loginName" class="user-profile"><span class="text-block"><span>{{security.currentUser.systemCredentials.login.loginName}}</span><i class="glyphicon-user"></i></span></li>
-		<li ng-show="security.currentUser.systemCredentials.login.loginName" ng-controller="security.logoutCtrl"><a href="#" ng-click="logout();"><span>Log out</span><i class="glyphicon-log-out"></i></a></li>
+		<li ng-show="security.currentUser.systemCredentials.login.loginName" ng-controller="security.logoutCtrl"><a href="#" ng-click="logout();"><span>{{'header.log.out' | translate}}</span><i class="glyphicon-log-out"></i></a></li>
 	</ul>
 </nav>
 

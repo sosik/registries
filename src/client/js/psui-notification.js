@@ -5,7 +5,7 @@ angular.module('psui-notification', [])
 		$rootScope.psuiNotification = ( $rootScope.psuiNotification || {} );
 		$rootScope.psuiNotification.message = ( $rootScope.psuiNotification.message || [] );
 		
-		var defaultMessage = {type:'info',text:'Blabla',deletable : true, time:-1, timeout: null};
+		var defaultMessage = {type:'info',text:'error',deletable : true, time:-1, timeout: null};
 		var factory = {};
 		
 		factory.info = function (message){
@@ -14,7 +14,7 @@ angular.module('psui-notification', [])
 			if (typeof message == 'string'){
 				finalMessage.text = message;
 			} else {
-				if(message.text){
+				if(message.text || message.translationCode){
 					angular.extend(finalMessage,message);
 				} else {
 					finalMessage.text = "!Nestrukturovana sprava!" + JSON.stringify(message);
@@ -30,7 +30,7 @@ angular.module('psui-notification', [])
 			if (typeof message == 'string'){
 				finalMessage.text = message;
 			} else {
-				if(message.text){
+				if(message.text || message.translationCode){
 					angular.extend(finalMessage,message);
 				} else {
 					finalMessage.text = "!Nestrukturovana sprava!" + JSON.stringify(message);
@@ -46,7 +46,7 @@ angular.module('psui-notification', [])
 			if (typeof message == 'string'){
 				finalMessage.text = message;
 			} else {
-				if(message.text){
+				if(message.text || message.translationCode){
 					angular.extend(finalMessage,message);
 				} else {
 					finalMessage.text = "!Nestrukturovana sprava!" + JSON.stringify(message);
@@ -75,7 +75,11 @@ angular.module('psui-notification', [])
 			scope.$watchCollection('psuiNotification.message', function(newNames,oldNames){
 				for (var i = 0; i < $rootScope.psuiNotification.message.length; i++ ){					
 					if (!($rootScope.psuiNotification.message[i].element)){
-						$rootScope.psuiNotification.message[i].element = angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">'+ $rootScope.psuiNotification.message[i].text +'</div>');
+						if($rootScope.psuiNotification.message[i].translationCode){
+							$rootScope.psuiNotification.message[i].element = angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">{{\''+ $rootScope.psuiNotification.message[i].translationCode +'\'</div>');
+						} else {
+							$rootScope.psuiNotification.message[i].element = angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">'+ $rootScope.psuiNotification.message[i].text +'</div>');
+						}
 						elm.append($rootScope.psuiNotification.message[i].element);
 						if ($rootScope.psuiNotification.message[i].deletable){
 							var buttonDelete = angular.element('<button>x</button>');

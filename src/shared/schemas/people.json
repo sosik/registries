@@ -4,9 +4,11 @@
 	"table": "people",
 	"title":"person",
 	"listFields": [
+		{"field":"id", "title": "ID"},
 		{"field":"baseData.name", "title":"Meno"},
 		{"field":"baseData.surName", "title":"Priezvisko"},
-		{"field":"baseData.id", "title": "Registračné číslo"}
+		{"field":"baseData.birthDate", "title":"Dátum narodenia"},
+		{"field":"contactInfo.city", "title":"Mesto"}
 	],
 	"properties": {
 		"systemCredentials": {
@@ -14,35 +16,27 @@
 		},
 		"baseData": {
 			"title": "Základné údaje",
-			"transCode": "schema.people.baseData",
 			"type": "object",
 			"properties": {
 				"id": {
 					"title": "Identifikátor",
-					"transCode": "schema.people.baseData.identifier",
 					"type": "string",
 					"required": true
 				},
 				"name": {
 					"title": "Meno",
-					"transCode": "schema.people.baseData.name",
 					"type": "string",
 					"required": true
 				},
 				"surName": {
 					"title": "Priezvisko",
-					"transCode": "schema.people.baseData.surName",
 					"type": "string",
 					"required": true
 				},
 				"bornName": {
 					"title": "Rodné priezvisko",
-					"transCode": "schema.people.baseData.bornName",
 					"type": "string",
-					"required": false,
-					"render" : {
-						"component" : "psui-datepicker"
-					}
+					"required": false
 				},
 				"title": {
 					"title": "Titul",
@@ -51,8 +45,11 @@
 				},
 				"birthDate": {
 					"title": "Dátum narodenia",
-					"type": "date",
-					"required": true
+					"type": "string",
+					"required": true,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
 				},
 				"gender": {
 					"title": "Pohlavie",
@@ -67,6 +64,220 @@
 					"title": "Štatna prislusnosť",
 					"type": "string",
 					"required": true
+				}
+			}
+		},
+		"additionalDataReferee":{
+			"title": "Dodatočné informácie rozhodcu",
+			"type": "object",
+			"properties": {
+				"firstAssociation": {
+					"title": "Prvotný zväz",
+					"type": "string",
+					"required": false
+				},
+				"association": {
+					"title": "Aktuálny zväz",
+					"required": false,
+					"$objectLink": {
+						"registry": "organizations",
+						"name": "baseData.name"
+					}
+				},
+				"firstYear": {
+					"title": "Rok začiatku kariéry",
+					"type": "string",
+					"required": false
+				},
+				"proffesionalCompetence": {
+					"title": "Odborná spôsobilosť od (rok)",
+					"type": "string",
+					"required": false
+				},
+				"dateOfRegistration": {
+					"title": "Dátum registrácie",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"refereeLicence": {
+					"title": "Rozhodcovská licencia",
+					"type": "string",
+					"required": true
+				}
+			}
+		},
+		"additionalDataCoach":{
+			"title": "Dodatočné informácie trénera",
+			"type": "object",
+			"properties": {
+				"firstAssociation": {
+					"title": "Prvotný zväz",
+					"type": "string",
+					"required": false
+				},
+				"association": {
+					"title": "Aktuálny zväz",
+					"required": false,
+					"$objectLink": {
+						"registry": "organizations",
+						"name": "baseData.name"
+					}
+				},
+				"firstYear": {
+					"title": "Rok začiatku kariéry",
+					"type": "string",
+					"required": false
+				},
+				"proffesionalCompetence": {
+					"title": "Odborná spôsobilosť od (rok)",
+					"type": "string",
+					"required": false
+				},
+				"dateOfRegistration": {
+					"title": "Dátum registrácie",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"coachLicence": {
+					"title": "Trénerská licencia",
+					"type": "string",
+					"required": true
+				}
+			}
+		},
+		"additionalDataAgent":{
+			"title": "Dodatočné informácie",
+			"type": "object",
+			"properties": {
+				"firstAssociation": {
+					"title": "Prvotný zväz",
+					"type": "string",
+					"required": false
+				},
+				"state": {
+					"title": "Stav",
+					"type": "string",
+					"required": false
+				},
+				"association": {
+					"title": "Zväzová príslušnosť",
+					"required": false,
+					"$objectLink": {
+						"registry": "organizations",
+						"name": "baseData.name"
+					}
+				},
+				"expirationOfLicense": {
+					"title": "Platnosť licencie",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"expirationOfInsurance": {
+					"title": "Platnosť poistenia",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				}
+			}
+		},
+		"additionalDataPlayer":{
+			"title": "Dodatočné informácie hráča",
+			"type": "object",
+			"properties": {
+				"typeOfFootball": {
+					"title": "Typ futbalu",
+					"type": "string",
+					"required": true
+				},
+				"clubOfFirstRegistration": {
+					"title": "Klub prvotnej registrácie",
+					"type": "string",
+					"required": false
+				},
+				"firstClub": {
+					"title": "Materský klub",
+					"type": "string",
+					"required": false
+				},
+				"hostClub": {
+					"title": "Hosťujúci klub (do)",
+					"type": "string",
+					"required": false
+				},
+				"stateOfPlayer": {
+					"title": "Stav hráča",
+					"type": "string",
+					"required": false
+				},
+				"expirationOfProffesionalContract": {
+					"title": "Platnosť profesionálnej zmluvy",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"expirationOfAgentContract": {
+					"title": "Platnosť zmluvy s agentom",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"expiration": {
+					"title": "Platnosť do",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"dateOfRegistration": {
+					"title": "Dátum registrácie",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"playerLicence": {
+					"title": "Hráčska licencia",
+					"type": "string",
+					"required": true
+				}
+			}
+		},
+		"additionalDataUserIssf":{
+			"title": "Dodatočné informácie",
+			"type": "object",
+			"properties": {
+				"Club": {
+					"title": "Klub",
+					"required": false,
+					"$objectLink": {
+						"registry": "organizations",
+						"name": "baseData.name"
+					}
+				},
+				"association": {
+					"title": "Zväz",
+					"required": false,
+					"$objectLink": {
+						"registry": "organizations",
+						"name": "baseData.name"
+					}
 				}
 			}
 		},
@@ -128,7 +339,7 @@
 				"email": {
 					"title": "E-mail",
 					"type": "string",
-					"required": false
+					"required": true
 				}
 			}
 		},
@@ -164,7 +375,11 @@
 			"properties": {
 				"isPhotoPublic": {
 					"title": "Je fotka verejná",
-					"type": "boolean",
+					"type": "string",
+					"enum": [
+						"Áno",
+						"Nie"
+					],
 					"required": false
 				},
 				"idCardNumber": {
@@ -178,12 +393,97 @@
 					"required": false,
 					"large": true
 				},
-				"employer": {
-					"title": "Zamestnávateľ",
+				"language": {
+					"title": "Jazykové znalosti",
+					"type": "string",
+					"required": false
+				}
+			}
+		},
+		"loginInfo": {
+			"title": "Prihlasovacie informácie",
+			"type": "object",
+			"properties": {
+				"isUserBlocked": {
+					"title": "Zabokovanie užívatela",
+					"type": "string",
+					"enum": [
+						"Áno",
+						"Nie"
+					],
+					"required": false
+				},
+				"hasToChangePassword": {
+					"title": "Musí si zmeniť heslo",
+					"type": "string",
+					"enum": [
+						"Áno",
+						"Nie"
+					],
+					"required": false
+				},
+				"dateOfLastLogin": {
+					"title": "Dátum posledného prihlásenia",
+					"type": "string",
 					"required": false,
-					"$objectLink": {
-						"registry": "organizations",
-						"name": "baseData.name"
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"dateOfLastUnsuccesfullLogin": {
+					"title": "Dátum posledného NEÚSPEŠNÉHO prihlásenia",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				}
+			}
+		},
+		"licence":{
+			"title": "Licencie",
+			"type": "object",
+			"properties": {
+				"a": {
+					"title": "A - Pre amatérske súťaže",
+					"type": "string",
+					"required": false
+				},
+				"fifa": {
+					"title": "FIFA",
+					"type": "string",
+					"required": false
+				},
+				"p": {
+					"title": "P - Pre profesionálne súťaže",
+					"type": "string",
+					"required": false
+				}
+			}
+		},
+		"idInfo": {
+			"title": "Registračný preukaz",
+			"type": "object",
+			"properties": {
+				"currnetId": {
+					"title": "Aktuálny preukaz",
+					"type": "string",
+					"required": false
+				},
+				"dateOfExpiration": {
+					"title": "Dátum platnosti preukazu",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
+					}
+				},
+				"dateOfApplicationForId": {
+					"title": "Dátum žiadosti o preukaz",
+					"type": "string",
+					"required": false,
+					"render" : {
+						"component" : "psui-datepicker"
 					}
 				}
 			}

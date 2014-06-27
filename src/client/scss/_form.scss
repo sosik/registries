@@ -154,14 +154,23 @@ fieldset{
 }
 
 // action holder
-.psui-actions-holder{
-	display: block;
-	position: absolute;
-	right: 0px;
-	bottom: 100%;
-	display: block;
-	z-index: 2;
+.psui-wrapper{
+	.psui-actions-holder{
+		display: block;
+		position: absolute;
+		right: 0px;
+		bottom: 100%;
+		display: block;
+		z-index: 2;
+		
+		.psui-btn{
+			@include box-shadow(0px -2px 10px 0px $page-bg);
+			@include transition(all .3s);
+		}
+	}
+}
 
+.psui-actions-holder{
 	.psui-btn{
 		> :first-child{
             border-left: 1px solid lighten($input-border-color, 10%);
@@ -169,7 +178,7 @@ fieldset{
 
         &:first-child{
             > :first-child{
-                border-left: 0px;
+                border-left: 0px !important;
             }
         }
 	}
@@ -183,8 +192,6 @@ fieldset{
     color: lighten($font-color-base,20%);
     background-color: $field-action-holder-bg;
     line-height: 37px;
-    @include box-shadow(0px -2px 10px 0px $page-bg);
-    @include transition(all .3s);
 
     > i + span{
         margin-left: $field-action-holder-space;
@@ -242,6 +249,12 @@ fieldset{
         }
     }
 
+	&.psui-view-btn{
+        > i:before{
+            content: "\e105";
+        }
+    }
+	
     &.psui-cancel-btn{
         > i:before{
             content: "\e014";

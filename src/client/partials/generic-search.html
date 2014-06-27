@@ -76,8 +76,10 @@
 										class="list-row">
 										<td ng-repeat="header in headers">{{getVal("obj." +
 											header.field)}} {{$eval("obj."+header.field)}}</td>
-										<td class="psui-table-actions">
-											<a href="#" class="btn" ng-click="goView($index)"><i class="glyphicon-eye-open"></i><span>View</span></a>
+										<td class="psui-actions-holder">
+											<span class="psui-btn psui-view-btn">
+												<i></i><span>view</span>
+											</span>
 										</td>
 									</tr>
 								</tbody>

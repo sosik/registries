@@ -10,6 +10,7 @@
 		background-color: $table-th-bg;
 		color: $table-th-color;
 		font-weight: normal;
+		border-bottom: 0px !important;
 	}
 
 	tr{
@@ -26,20 +27,6 @@
 	}
 	td{
 		border-bottom: 1px solid $table-td-border-color;
-		.btn{
-			padding: 0px 4px 0px 0px;
-			
-			color:$font-color-base;
-			*{
-				color: $font-color-base;
-			}
-			&:hover{
-				text-decoration: underline;
-			}
-			&:last-child{
-				padding-right: 0px;
-			}
-		}
 	}
 
 	tr.selected td {
@@ -55,12 +42,24 @@
 			
 			&:hover{
 				background-color: $table-tr-selected-bg;
+				
+				.psui-actions-holder{
+					.psui-btn{
+						> :first-child{
+							border-color: $input-border-color;
+						}
+					}
+				}
+
 			}
 		}
 	}
 	
-	.psui-table-actions{
+	.psui-actions-holder{
 		text-align: right;
+		.psui-btn{
+			line-height: inherit;
+			background-color: inherit;
+		}
 	}
-
 }

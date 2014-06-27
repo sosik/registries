@@ -301,3 +301,14 @@ fieldset{
 		margin-right: 12px;
 	}
 }
+
+.btn-group {
+	.btn{
+		&:first-child{
+			margin-left: 0px;
+		}
+		+ .btn{
+			margin-left: 12px;
+		}
+	}
+}

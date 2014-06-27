@@ -250,7 +250,9 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                }
 
 	                function fillGroupPerm(group, perms) {
-		                var retval = [];
+		              
+	                	console.log(group, perms);
+	                	var retval = [];
 		                if (!group.security) {
 			                group.security = {
 				                permissions : {}
@@ -413,11 +415,13 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                };
 
 	                function fillUserPerm(user, perms) {
+	                	
+	                	console.log('fillUserPerm',user,perms);
 		                var retval = [];
 
 		                perms.map(function(item) {
-
-			                if (user.systemCredentials.permissions[item]) {
+		                	
+			                if (user.systemCredentials.permissions && item in user.systemCredentials.permissions && user.systemCredentials.permissions[item]) {
 				                retval.push(item);
 				                remove(perms, item);
 			                }
@@ -427,7 +431,8 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                }
 
 	                function fillUserGroups(user, groups) {
-		                var retval = [];
+		                console.log('fillUserGroups',user, groups);
+	                	var retval = [];
 
 		                if (!user.systemCredentials.groups == null) {
 			                user.systemCredentials.groups = [];
@@ -449,17 +454,18 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 	                }
 
 	                $scope.selectUser = function(user) {
+	                	console.log('selectUser',user);
 		                $scope.selectedUser = user;
 
 		                securityService.getSecurityPermissions().success(function(data) {
 			                $scope.permissions = data;
 			                $scope.user.permissions = fillUserPerm($scope.selectedUser, data);
-		                });
+		                }).error(function(err){console.log(err);});
 
 		                securityService.getSecurityGroups().success(function(data) {
 			                $scope.groups = data;
 			                $scope.user.groups = fillUserGroups($scope.selectedUser, $scope.groups);
-		                });
+		                }).error(function(err){console.log(err);});;
 
 	                };
 

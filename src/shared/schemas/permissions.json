@@ -1,22 +1,27 @@
 {
-	"$schema": "http://json-schema.org/schema#",
-	"id": "uri://registries/security#permissions",
-	"type": "object",
-      "properties": {
+    "$schema": "http://json-schema.org/schema#",
+    "id": "uri://registries/security#permissions",
+    "type": "object",
+    "properties": {
         "System User": {
-          "title": "Systémový používateľ",
-          "type": "boolean", 
-          "default": true
+            "title": "Systémový používateľ",
+            "type": "boolean",
+            "default": true
+        },
+        "System Admin": {
+            "title": "Systémový administrátor",
+            "type": "boolean",
+            "default": true
         },
         "Registry - read": {
-          "title": "Zobrazenie dát registrov",
-          "type": "boolean",
-          "default": true
+            "title": "Zobrazenie dát registrov",
+            "type": "boolean",
+            "default": true
         },
         "Registry - write": {
-          "title": "Modifikácia dát registrov",
-          "type": "boolean" ,
-          "default" : true
+            "title": "Modifikácia dát registrov",
+            "type": "boolean",
+            "default": true
         }
-	 }
+    }
 }

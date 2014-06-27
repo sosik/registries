@@ -105,29 +105,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	};
 
-	this.updateUserGroups = function(req, resp) {
-
-		var userId = req.url.substring(18, req.url.lenght);
-
-		userDao.get(userId, function(err, user) {
-
-			if (err) {
-				resp.send(500, err);
-			} else {
-				var userRes = {};
-				userRes.loginName = user.systemCredentials.loginName;
-				var groups = [];
-
-				for ( var gr in user.systemCredentials.groups) {
-					groups.push(gr);
-				}
-				userRes.groups = perrmissions;
-				resp.send(200, userRes);
-			}
-
-		});
-
-	};
 
 	var hasPermission = function(coll, perm) {
 
@@ -139,43 +116,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		return false;
 	}
 
-	this.updateUserPermissions = function(req, resp) {
-
-		var userId = req.body.userId;
-		userDao.get(userId, function(err, user) {
-
-			if (err) {
-				resp.send(500, err);
-			} else {
-
-				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
-
-				var result = [];
-
-				if (!user.systemCredentials) {
-					user.systemCredentials = {};
-				}
-				if (!user.systemCredentials.permissions) {
-					user.systemCredentials.permissions = {};
-				}
-				for ( var per in defaultObj) {
-					result.push(per);
-					user.systemCredentials.permissions[per] = hasPermission(req.body.permissions, per);
-				}
-				userDao.update(user, function(err) {
-					if (err) {
-						resp.send(500, err);
-					} else {
-						resp.send(200, result);
-					}
-
-				});
-
-			}
-
-		});
-
-	};
+	
 
 	this.updateUserSecurity = function(req, resp) {
 
@@ -204,7 +145,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 
 				for ( var per in defaultObj) {
-					user.systemCredentials.permissions[per] = hasPermission(req.body.permissions, per);
+					user.systemCredentials.permissions[per] = (hasPermission(req.body.permissions, per)?true:null);
 				}
 
 				req.body.groups.map(function(group) {

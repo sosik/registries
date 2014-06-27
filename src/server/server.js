@@ -15,7 +15,6 @@ var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js
 var config = require(path.join(process.cwd(), '/build/server/config.js'));
 
 var universalDaoControllerModule = require(process.cwd() + '/build/server/UniversalDaoController.js');
-var loginControllerModule = require('./loginController.js');
 
 var securityControllerModule = require('./securityController.js');
 //var userControllerModule = require('./userController.js');
@@ -39,7 +38,6 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var schemaRegistry = new schemaRegistryModule.SchemaRegistry(config);
 	
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
-	var loginCtrl= new loginControllerModule.LoginController(mongoDriver);
 	
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,{});
 //	var userCtrl = new  userControllerModule.UserController(mongoDriver,{});
@@ -49,7 +47,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{});
 	
 	app.use(cookieParser());
-	app.use(loginCtrl.authFilter );
+	app.use(securityCtrl.authFilter );
 	
 	app.put('/udao/save/:table', bodyParser(), function(req, res){udc.save(req, res);});
 	app.get('/udao/get/:table/:id', bodyParser(), function(req, res){udc.get(req, res);});
@@ -57,12 +55,12 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/udao/list/:table', bodyParser(), function(req, res){udc.list(req, res);});
 	app.post('/udao/search/:table', bodyParser(), function(req, res){udc.search(req, res);});
 
-	app.post('/login', bodyParser(), function(req, res){loginCtrl.login(req, res);});
-	app.get('/logout', bodyParser(), function(req, res){loginCtrl.logout(req, res);});
-	app.get('/user/current', bodyParser(), function(req, res){loginCtrl.getCurrentUser(req, res);});
+	app.post('/login', bodyParser(), function(req, res){securityCtrl.login(req, res);});
+	app.get('/logout', bodyParser(), function(req, res){securityCtrl.logout(req, res);});
+	app.get('/user/current', bodyParser(), function(req, res){securityCtrl.getCurrentUser(req, res);});
 	
-	app.post('/resetPassword', bodyParser(), function(req, res){loginCtrl.resetPassword(req, res);});
-    app.post('/changePassword', bodyParser(), function(req, res){loginCtrl.changePassword(req, res);});
+	app.post('/resetPassword', bodyParser(), function(req, res){securityCtrl.resetPassword(req, res);});
+    app.post('/changePassword', bodyParser(), function(req, res){securityCtrl.changePassword(req, res);});
 
     app.get('/security/permissions',function(req,res){securityCtrl.getPermissions(req,res)});
     

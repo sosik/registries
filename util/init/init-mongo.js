@@ -36,10 +36,12 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 					"loginName" : "johndoe",
 					"passwordHash" : "mcHWq0FyMluy3U3nGQJeYuR6ffSDxgtG1SaejicXJvdxyM/1NUP7X5Kx3LpvsAQ+XOq8Hs+maYLiEXDQYr3OCh2o+gtTxvhEz9Z4Bem0J09v7GyxdkD2S2zED7Obr6XzPzpaxaYfmFBHRR5iy2JDRx/lAcBM1L0qFfBnoXoGYm6jcUn6Klht9xoPnYGvDVdxtjWG9GqBrLfIJb1Aot3WCPOAG0BzlidfjdG0exJhkC0eOTwgFG4D8vP/AOblI2N+skZ3ztDb6NIxRIyd70bDooUhB7HcRnJgsrqBGg68UfBReHXYFnQYYa7Fv4/mR+4y+N+SpFXokYcKUI0e6sCPcQ==",
 					"email": "root@localhost",
-					"salt" : "johndoe" ,
-					"groups" : { } ,
-					 "permissions" : { "Registry - read" : true ,  "System User" : true , "Registry - write" : true }
-				 }
+					"salt" : "johndoe" 
+					 
+				 },
+				 
+				 "permissions" : { "Registry - read" : true ,  "System User" : true , "Registry - write" : true },
+				 "groups" : { }
 			}
 		};
 		

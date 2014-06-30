@@ -32,7 +32,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 	$scope.save = function() {
 		$scope.newForm.psui.prepareForSubmit();
 		if ($scope.newForm.$invalid) {
-			notificationFactory.error({text: 'Formulár nie je správne vyplnený', time: 5000});
+			notificationFactory.error({translationCode: 'registry.form.not.filled.correctly', time: 5000});
 			return;
 		}
 
@@ -81,10 +81,10 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 	$scope.save = function() {
 		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
-			notificationFactory.info({text:'Úspešne uložené', time:3000});
+			notificationFactory.info({translationCode:'registry.succesfully.saved', time:3000});
 		})
 		.error(function(data, status, headers, config) {
-			notificationFactory.error({text:'Nepodarilo sa uložiť dáta!', time:3000});
+			notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
 		});
 	}
 

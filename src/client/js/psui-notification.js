@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('psui-notification', [])
+angular.module('psui-notification', ['pascalprecht.translate'])
 .factory('psui.notificationFactory', ["$rootScope",function($rootScope){
 		$rootScope.psuiNotification = ( $rootScope.psuiNotification || {} );
 		$rootScope.psuiNotification.message = ( $rootScope.psuiNotification.message || [] );
@@ -65,7 +65,7 @@ angular.module('psui-notification', [])
 		
 		return factory;
 }])
-.directive('psuiNotification', ["$rootScope","$timeout",function ($rootScope,$timeout) {
+.directive('psuiNotification', ['$rootScope','$timeout', '$compile'/*, '$transate'*/,function ($rootScope, $timeout, $compile/*, $translate*/) {
 	return {
 		restrict: 'AE',
 		link: function(scope, elm, attrs, ctrls) {
@@ -76,7 +76,10 @@ angular.module('psui-notification', [])
 				for (var i = 0; i < $rootScope.psuiNotification.message.length; i++ ){					
 					if (!($rootScope.psuiNotification.message[i].element)){
 						if($rootScope.psuiNotification.message[i].translationCode){
-							$rootScope.psuiNotification.message[i].element = angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">{{\''+ $rootScope.psuiNotification.message[i].translationCode +'\'</div>');
+						//	$translate($rootScope.psuiNotification.message[i].translationCode).then(function(notif){
+							$rootScope.psuiNotification.message[i].element = $compile(angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">{{\''+ $rootScope.psuiNotification.message[i].translationCode +'\' | translate:\'{data:"'+ $rootScope.psuiNotification.message[i].translationData +'"}\'}}</div>'))(scope);
+						//	});
+							
 						} else {
 							$rootScope.psuiNotification.message[i].element = angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">'+ $rootScope.psuiNotification.message[i].text +'</div>');
 						}

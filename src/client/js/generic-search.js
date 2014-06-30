@@ -11,7 +11,7 @@ angular.module('generic-search', ['schema-utils'])
 	var service = {};
 
 	service.getSearch = function(searchSchema, criteria,sortBy) {
-		console.log(searchSchema, schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')), schemaUtilFactory.concatUri(searchSchema,'search'));
+		
 		return $http({
 		    method : 'POST',
 		    url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
@@ -185,8 +185,7 @@ angular.module('generic-search', ['schema-utils'])
 				});
 			}
 		})
-
-		console.log('search criteria', retval);	
+	
 		return retval;
 
 	};

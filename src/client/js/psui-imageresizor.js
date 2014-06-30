@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('psui-imageresizor', [])
-.directive('psuiImageresizor', [function () {
+angular.module('psui-imageresizor', ['pascalprecht.translate'])
+.directive('psuiImageresizor', ['$compile', function ($compile) {
 	return {
 		restrict: 'A',
 		require: ['?psuiUploadableImage'],
@@ -50,10 +50,10 @@ angular.module('psui-imageresizor', [])
 			buttonsHolder.addClass('psui-hidden');
 			wrapper.append(buttonsHolder);
 			
-			var buttonRotate = angular.element('<button class="btn psui-icon-rotate"><span>rotate</span></button>');
+			var buttonRotate = $compile(angular.element('<button class="btn psui-icon-rotate"><span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
 			buttonsHolder.append(buttonRotate);
 			
-			var buttonOk = angular.element('<button class="btn psui-icon-ok"><span>ok</span></button>');
+			var buttonOk = $compile(angular.element('<button class="btn psui-icon-ok"><span>{{\'psui.imageresizor.ok\' | translate}}</span></button>'))(scope);
 			buttonsHolder.append(buttonOk);
 
 			var numberOfRot = 0;

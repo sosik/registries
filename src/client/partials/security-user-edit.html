@@ -1,15 +1,9 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="psui-search col-md-12 col-lg-8 ">
-
-			<div ng-show="alert" class="alert alert-danger alert-dismissable">
-				<button type="button" class="close" data-dismiss="alert"
-					aria-hidden="true">&times;</button>
-				<strong>Validácia zlyhala</strong> {{alert}}
-			</div>
 			<form class="form form-horizontal">
 				<fieldset>
-					<legend>Vyhľadávanie ({{entity}})</legend>
+				<legend>{{'security.user.edit.searching' |translate}} ({{entity}})</legend>
 				
 					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
@@ -32,17 +26,17 @@
 						</div>
 						<div class="col-sm-2">
 							<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right">
-								<i class="glyphicon-remove"></i>Zrušiť
+						<i class="glyphicon-remove"></i>{{'security.user.edit.cancel' |translate}}
 							</button>
 						</div>
 					</div>
 
 					<div class="row form-group">
 						<div class="col-xs-9">
-							<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>Pridať</button>
+							<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>{{'security.user.edit.add' |translate}}</button>
 						</div>
 						<div class="col-xs-3">
-							<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>Hľadať</button>
+							<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'security.user.edit.search' |translate}}</button>
 						</div>
 					</div>
 				</fieldset>
@@ -50,13 +44,13 @@
 			
 			<div ng-show='userList'>
 				<fieldset>
-					<legend>Výsledok ({{entity}})</legend>
+				<legend>{{'security.user.edit.result' |translate}} ({{entity}})</legend>
 					<div class="table-responsive">
 						<table class="table">
 							<thead>
 								<tr>
 									<th ng-repeat="header in headers">{{header.title}}</th>
-									<th>Akcie</th>
+						<th>{{'security.user.edit.actions' |translate}}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -67,7 +61,7 @@
 
 									<td class="psui-actions-holder">
 										<span class="psui-btn psui-edit-btn" ng-click='selectUser(obj)'>
-											<i></i><span>upraviť</span>
+											<i></i><span>{{'security.user.edit.edit' |translate}}</span>
 										</span>
 									</td>
 								</tr>
@@ -83,7 +77,7 @@
 			<div  class="form form-horizontal" >
 				<fieldset>
 					<legend>
-						Skupiny pre používateľa -
+						{{'security.user.edit.groups.for.users' |translate}} -
 							{{selectedUser.systemCredentials.login.loginName}}
 					</legend>
 					
@@ -115,7 +109,7 @@
 			<div  class="form form-horizontal" >
 				<fieldset class="row">
 					<legend>
-						Práva pre používateľa -
+						{{'security.user.edit.permissions.for.user' |translate}} -
 							{{selectedUser.systemCredentials.login.loginName}}
 					</legend>
 					
@@ -146,7 +140,7 @@
 				<div class="form-group">
 					<div class="col-md-12">
 						<button ng-click="updateUserSecurity()" class="btn btn-primary pull-right">
-							<i class="glyphicon-ok"></i>Uložiť
+							<i class="glyphicon-ok"></i>{{'security.user.edit.save' |translate}}
 						</button>
 					</div>
 				</div>

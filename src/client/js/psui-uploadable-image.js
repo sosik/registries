@@ -108,7 +108,7 @@ angular.module('psui-uploadable-image', [])
 				if (file) {
 					if (file.type !== 'image/jpeg') {
 						//TODO do something clever
-						notificationFactory.error('unsupported image type');
+						notificationFactory.error({translationCode:'psui.uploadable.image.unsupported.image.type'});
 					} else {
 						if (imgCtrl && imgCtrl.srcElm) {
 							imgCtrl.srcElm.src = URL.createObjectURL(file);

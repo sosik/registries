@@ -1,4 +1,4 @@
-angular.module('security', [ 'generic-search', 'schema-utils' ])
+angular.module('security', [ 'generic-search', 'schema-utils'])
 //
 .factory(
         'security.SecurityService',
@@ -489,12 +489,15 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 
 	                $scope.changePassword = function() {
 		                if ($scope.newPassword !== $scope.newPasswordCheck) {
-			                notificationFactory.warn("Nové a kontrolné heslo sa nerovnajú!!!");
+					var mes = {translationCode:'personal.change.password.passwords.not.equal'};
+					notificationFactory.warn(mes);
 		                } else {
 			                SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data, status, headers, config) {
-				                notificationFactory.info("Heslo zmene");
+						var mes = {translationCode:'personal.change.password.password.changed'};
+						notificationFactory.info(mes);
 			                }).error(function(data, status, headers, config) {
-				                notificationFactory.error('Heslo sa nepodarilo zmeniť ' + data);
+						var mes = {translationCode:'personal.change.password.password.not.changed',translationData:data};
+						notificationFactory.error(mes);
 			                });
 		                }
 	                };

@@ -192,6 +192,7 @@ fieldset{
     color: lighten($font-color-base,20%);
     background-color: $field-action-holder-bg;
     line-height: 37px;
+	white-space: nowrap;
 
     > i + span{
         margin-left: $field-action-holder-space;
@@ -258,6 +259,12 @@ fieldset{
     &.psui-cancel-btn{
         > i:before{
             content: "\e014";
+        }
+    }
+	
+    &.psui-edit-btn{
+        > i:before{
+            content: "\270f";
         }
     }
 }

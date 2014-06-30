@@ -1,47 +1,69 @@
-<div class="container">
+<div class="container-fluid">
 	<div class="row">
-		<fieldset>
-			<legend>Zoznam schém na editáciu</legend>
-		</fieldset>
-
-		<div class="col-md-4">
-			<table class="schemaedit">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Názov</th>
-						<th>Veľkosť</th>
-						<th>Akcie</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="schema in schemaList">
-						<td>{{$index + 1}}</td>
-						<td>{{schema.name}}</td>
-						<td>{{schema.size}}</td>
-						<!-- <td class="btn-group btn-group-xs"><a href="{{ '#/schema/edit/'+schema.name}}" class="btn btn-default">edit</a></td> -->
-						<td class="btn-group btn-group-xs"><a href="" ng-click="selectSchema(schema)" class="btn btn-primary"><i class="glyphicon-pencil"></i>Upraviť</a></td>
-					</tr>
-				</tbody>
-			</table>
+		<div class="col-md-12 col-lg-5">
+			<fieldset>
+				<legend>Zoznam schém na editáciu</legend>
+				
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>ID</th>
+								<th>Názov</th>
+								<th>Veľkosť</th>
+								<th> </th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="schema in schemaList">
+								<td>{{$index + 1}}</td>
+								<td>{{schema.name}}</td>
+								<td>{{schema.size}}</td>
+								<!-- <td class="btn-group btn-group-xs"><a href="{{ '#/schema/edit/'+schema.name}}" class="btn btn-default">edit</a></td> -->
+								<td class="psui-actions-holder">
+									<span class="psui-btn psui-edit-btn" ng-click="selectSchema(schema)">
+										<i></i><span>upraviť</span>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
 		</div>
 
-		<section ng-show="selectedSchema" id="editor"  ng-cloak >
-			<div class="col-md-8">
-				<div style="height: 400px;"
-				ui-ace="{
-					useWrapMode : true,
-					showGutter: true,
-					theme: 'twilight',
-					mode: 'json',
-					onLoad: aceLoaded
-				}"
-				ng-model="aceModel">
-					Ace here
+		<div class="col-md-12 col-lg-7">
+			<div class="form form-horizontal" >
+				<fieldset>
+					<legend>Editácia schémy</legend>
+					
+					<div class="form-group">
+						<section class="col-md-12" ng-show="selectedSchema" id="editor"  ng-cloak >
+							<div>
+								<div style="height: 400px;"
+								ui-ace="{
+									useWrapMode : true,
+									showGutter: true,
+									theme: 'twilight',
+									mode: 'json',
+									onLoad: aceLoaded
+								}"
+								ng-model="aceModel">
+									Ace here
+								</div>
+							</div>
+						</section>
+					</div>
+				</fieldset>
+				<div class="form-group">
+					<div class="col-md-12">
+						<button ng-click="postData(aceModel)" class="btn btn-primary pull-right">
+							<i class="glyphicon-ok"></i>Uložiť
+						</button>
+					</div>
 				</div>
-				<br>
-				<button title="Send" class="btn btn-primary" ng-click="postData(aceModel)"><i class="glyphicon-ok"></i>Uložiť</button>
 			</div>
-		</section>
+		</div>
+		
 	</div>
 </div>

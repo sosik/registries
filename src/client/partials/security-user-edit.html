@@ -1,177 +1,159 @@
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-md-7 col-md-offset-0">
+		<div class="psui-search col-md-12 col-lg-8 ">
 
 			<div ng-show="alert" class="alert alert-danger alert-dismissable">
 				<button type="button" class="close" data-dismiss="alert"
 					aria-hidden="true">&times;</button>
 				<strong>Validácia zlyhala</strong> {{alert}}
 			</div>
+			<form class="form form-horizontal">
+				<fieldset>
+					<legend>Vyhľadávanie ({{entity}})</legend>
+				
+					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
-			<fieldset>
-				<legend>Vyhľadávanie ({{entity}})</legend>
-			</fieldset>
+						<div class="col-sm-5">
+							<select class="form-control" ng-model="crit.attribute.path"
+								ng-options="att.title for att in searchDef.attributes"></select>
+						</div>
+						<div class="col-sm-2">
+							<select
+								class="form-control" ng-model="crit.operator"
+								ng-Init="crit.operator=searchDef.operators[0]"
+								ng-options="op.title for op in searchDef.operators"></select>
+						</div>
+						<div class="col-sm-3">
+							<input
+								type="text" id="name" name="name" ng-model="crit.value"
+								placeholder="value" class="ng-pristine ng-valid form-control"
+								autocomplete="off">
 
-			<div class="row" ng-repeat="crit in searchCrit">
+						</div>
+						<div class="col-sm-2">
+							<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right">
+								<i class="glyphicon-remove"></i>Zrušiť
+							</button>
+						</div>
+					</div>
 
-				<div class="col-sm-5">
-					<label for="name" class="control-label">Atribút</label><br> <select
-						class="form-control" ng-model="crit.attribute"
-						ng-options="att.title for att in searchDef.attributes"></select>
-				</div>
-				<div class="col-sm-2">
-					<label for="name" class="control-label">Operátor</label><br> <select
-						class="form-control" ng-model="crit.operator"
-						ng-Init="crit.operator=searchDef.operators[0]"
-						ng-options="op.title for op in searchDef.operators"></select>
-				</div>
-				<div class="col-sm-2">
-					<label for="name" class="control-label">Hodnota</label><br> <input
-						type="text" id="name" name="name" ng-model="crit.value"
-						placeholder="value" class="ng-pristine ng-valid form-control"
-						autocomplete="off">
+					<div class="row form-group">
+						<div class="col-xs-9">
+							<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>Pridať</button>
+						</div>
+						<div class="col-xs-3">
+							<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>Hľadať</button>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+			
+			<div ng-show='userList'>
+				<fieldset>
+					<legend>Výsledok ({{entity}})</legend>
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th ng-repeat="header in headers">{{header.title}}</th>
+									<th>Akcie</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="obj in userList" ng-click="goView($index)"
+									class="list-row">
+									<td ng-repeat="header in headers">{{getVal("obj." +
+										header.field)}} {{$eval("obj."+header.field)}}</td>
 
-				</div>
-				<div class="form-group col-sm-2">
-					<label class="control-label">&nbsp;</label><br>
-					<button ng-click="removeCrit($index)" class="btn btn-secundary">
-						<i class="glyphicon-remove"></i>Zrušiť
-					</button>
+									<td class="psui-actions-holder">
+										<span class="psui-btn psui-edit-btn" ng-click='selectUser(obj)'>
+											<i></i><span>upraviť</span>
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</fieldset>
+			</div>
+			
+		</div>
+
+		<div ng-show="selectedUser" class="col-md-12 col-lg-4">
+			<div  class="form form-horizontal" >
+				<fieldset>
+					<legend>
+						Skupiny pre používateľa -
+							{{selectedUser.systemCredentials.login.loginName}}
+					</legend>
+					
+					<div class="form-group">
+						<div class="col-md-12">
+							<div class="row psui-multiselect-box">
+								<div class="col-sm-6 permissions psui-box">
+									<header>Pridelené skupiny</header>
+									<section class="psui-list" >
+										<div ng-repeat="group in user.groups" class="psui-list-item" ng-click="removeGroup(group)">
+											<i class="glyphicon-minus"></i><span>{{group.baseData.name}}</span>
+										</div>
+									</section>
+								</div>
+								<div class="col-sm-6 permissions psui-box">
+									<header>Dostupné skupiny</header>
+									<section class="psui-list">
+										<div ng-repeat="group in groups" class="psui-list-item" ng-click="addGroup(group)">
+											<i class="glyphicon-plus"></i><span>{{group.baseData.name}}</span>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			
+			<div  class="form form-horizontal" >
+				<fieldset class="row">
+					<legend>
+						Práva pre používateľa -
+							{{selectedUser.systemCredentials.login.loginName}}
+					</legend>
+					
+					<div class="form-group">
+						<div class="col-md-12">
+							<div class="row psui-multiselect-box">
+								<div class="col-sm-6 permissions psui-box">
+									<header>Pridelené práva</header>
+									<section class="psui-list" >
+										<div ng-repeat="perm in user.permissions" class="psui-list-item" ng-click="removePermission(perm)">
+											<i class="glyphicon-minus"></i><span>{{perm}}</span>
+										</div>
+									</section>
+								</div>
+								<div class="col-sm-6 permissions psui-box">
+									<header>Dostupné práva</header>
+									<section class="psui-list">
+										<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
+											<i class="glyphicon-plus"></i><span>{{perm}}</span>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				
+				<div class="form-group">
+					<div class="col-md-12">
+						<button ng-click="updateUserSecurity()" class="btn btn-primary pull-right">
+							<i class="glyphicon-ok"></i>Uložiť
+						</button>
+					</div>
 				</div>
 			</div>
-
-			<br>
-
-			<div class="row">
-				<div class="col-sm-12">
-					<button ng-click="addCrit()" class="btn btn-secondary">
-						<i class="glyphicon-plus"></i>Pridať
-					</button>
-					<button ng-click="search()" class="btn btn-primary">
-						<i class="glyphicon-search"></i>Hľadať
-					</button>
-				</div>
-			</div>
-
-		</div>
-		<div ng-show='userList' class="col-md-6">
-			<br> <br>
-			<fieldset>
-				<legend>Výsledok ({{entity}})</legend>
-			</fieldset>
-			<table class="bootstrap">
-				<thead>
-					<tr>
-						<th ng-repeat="header in headers">{{header.title}}</th>
-						<th>Akcie</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="obj in userList" ng-click="goView($index)"
-						class="list-row">
-						<td ng-repeat="header in headers">{{getVal("obj." +
-							header.field)}} {{$eval("obj."+header.field)}}</td>
-
-						<td class="btn-group btn-group-xs"><a href=""
-							ng-click='selectUser(obj)' class="btn btn-primary"><i
-								class="glyphicon-pencil"></i>Upraviť</a></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<div ng-show="selectedUser" class="col-md-5">
-			<fieldset class="row">
-				<div class="col-md-12">
-					<legend>Skupiny pre používateľa -
-						{{selectedUser.systemCredentials.login.loginName}}</legend>
-				</div>
-
-				<div class="col-md-6">
-					<div class="permissions">
-						<table>
-							<thead>
-								<tr>
-									<th>Pridelené skupiny</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="group in user.groups">
-									<td><a href="" ng-click="removeGroup(group)"><i
-											class="glyphicon glyphicon-minus"></i>&nbsp;{{group.baseData.name}}</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="permissions">
-						<table>
-							<thead>
-								<tr>
-									<th>Dostupné skupiny</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="group in groups">
-									<td><a href="" ng-click="addGroup(group)"><i
-											class="glyphicon glyphicon-plus"></i>&nbsp;{{group.baseData.name}}</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</fieldset>
-
-			<br>
-
-			<fieldset class="row">
-				<div class="col-md-12">
-					<legend>Práva pre používateľa -
-						{{selectedUser.systemCredentials.login.loginName}}</legend>
-				</div>
-				<div class="col-md-6">
-					<div class="permissions">
-						<table border="1">
-							<thead>
-								<tr>
-									<th>Pridelené práva</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="perm in user.permissions">
-									<td><a href="" ng-click="removePermission(perm)"><i
-											class="glyphicon glyphicon-minus"></i>&nbsp;{{perm}}</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div class="col-md-6">
-					<div class="permissions">
-						<table border="1">
-							<thead>
-								<tr>
-									<th>Dostupné práva</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr ng-repeat="perm in permissions">
-									<td><a href="" ng-click="addPermission(perm)"><i
-											class="glyphicon glyphicon-plus"></i>&nbsp;{{perm}}</a></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</fieldset>
-			<br>
-			<button ng-click="updateUserSecurity()" class="btn btn-primary">
-				<i class="glyphicon-ok"></i>Uložiť
-			</button>
 		</div>
 	</div>
 
 
 </div>
+

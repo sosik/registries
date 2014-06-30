@@ -21,8 +21,12 @@
 		top: 0px;
 		bottom: 0px;
 		background-color: $sidebar-first-level-color-bg;
-		overflow-y: auto; 
+		overflow: hidden;
 		left: 0px;
+		
+		&:hover{
+			overflow-y: auto;
+		}
 
 		ul{
 			display: block;

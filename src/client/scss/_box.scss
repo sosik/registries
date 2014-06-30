@@ -1,0 +1,48 @@
+.psui-box{
+	padding: 0px;
+	border: 1px solid $input-border-color;
+	
+	> header{
+        position: relative;
+        background-color: $input-border-color;	
+    	padding: $field-padding-vertical $padding-base-horizontal;	
+		color: $font-color-light;
+    }
+	
+	> section{
+		overflow: auto;
+	}
+}
+
+.psui-multiselect-box{
+	.psui-box{
+		padding: 0px;
+		margin: 0px;
+		section{
+			height:150px;
+		}
+	}
+}
+
+.psui-list{
+	.psui-list-item{
+		display: block;
+		padding: $field-padding-vertical $padding-base-horizontal $field-padding-vertical $padding-base-horizontal;	
+		border-bottom: 1px dotted $page-bg;
+		cursor: pointer;
+		color: lighten($font-color-base,20%);
+		line-height: $line-height-base;
+		
+		i {
+			+ span{
+				margin-left: 5px;
+			}
+		}
+			
+		&:hover,
+		&:focus,
+		&.active{
+			background-color: $objectlink-active-color;	
+		}
+	}
+}

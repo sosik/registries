@@ -4,117 +4,93 @@
 			<fieldset>
 				<legend>Zoznam bezpečnostných skupín</legend>
 			</fieldset>
-
-			<table class="bootstrap">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Názov</th>
-						<th>Akcie</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="group in groups">
-						<td>{{$index + 1}}</td>
-						<td>{{group.baseData.name}}</td>
-						<td class="btn-group btn-group-xs"><a href="" ng-click="selectGroup(group)" class="btn btn-primary">edit</a></td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="table-responsive">
+				<table class="table">
+				<!--<table class="bootstrap">-->
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Názov</th>
+							<th>Akcie</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="group in groups">
+							<td>{{$index + 1}}</td>
+							<td>{{group.baseData.name}}</td>
+							<td class="psui-actions-holder">
+								<span class="psui-btn psui-edit-btn" ng-click="selectGroup(group)">
+									<i></i><span>view</span>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 
 		<div class="col-md-7">
 			<div ng-show="selectedGroup">
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="visible-sm visible-xs">
-							<br>
-							<br>
-						</div>
-						<fieldset>
-							<legend>Modifikácia bezpečnostnej skupiny - {{selectedGroup.baseData.name}}</legend>
-						</fieldset>
-					</div>
-				</div>
-				
-					<div class="row">
+				<div  class="form form-horizontal" >
+					<fieldset>
+						<legend>Modifikácia bezpečnostnej skupiny - {{selectedGroup.baseData.name}}</legend>
 						<div class="form-group">
-							<label for="name" class="col-sm-4 control-label">Identifikátor
-								skupiny</label>
+							<label for="name" class="col-sm-4 control-label">Identifikátor skupiny</label>
 							<div class="col-sm-8">
 								<input type="text" id="name" name="name"
 									ng-model="selectedGroup.baseData.id" placeholder=""
 									class="ng-pristine ng-valid form-control" autocomplete="off">
 							</div>
 						</div>
-					</div>
-
-					<div class="row">
 						<div class="form-group">
-							<label for="name" class="col-sm-4 control-label">Názov
-								skupiny</label>
+							<label for="name" class="col-sm-4 control-label">Názov skupiny</label>
 							<div class="col-sm-8">
 								<input type="text" id="name" name="name"
 									ng-model="selectedGroup.baseData.name" placeholder=""
 									class="ng-pristine ng-valid form-control" autocomplete="off">
 							</div>
 						</div>
-					</div>
-
-
-					<div class="row">
+					</fieldset>
+				</div>
+				
+				<div class="form form-horizontal" >
+					<fieldset>
+						<legend>Oprávnenia - {{selectedGroup.baseData.name}}</legend>
 						<div class="form-group">
-							<label for="name" class="col-sm-4 control-label">Parent
-								group</label>
-							<div class="col-sm-8">
-								<psui-objectlink schema-fragment="schemaFormOptions.schema.properties.baseData.properties.parent" ng-model="selectedGroup.baseData.parent" />
+							<div class="col-md-12">
+								<div class="row psui-multiselect-box">
+									<div class="col-sm-6 permissions psui-box">
+										<header>Pridelené práva</header>
+										<section class="psui-list" >
+											<div ng-repeat="perm in group.permissions" class="psui-list-item" ng-click="removePermission(perm)">
+												<i class="glyphicon-minus"></i><span>{{perm}}</span>
+											</div>
+										</section>
+									</div>
+									<div class="col-sm-6 permissions psui-box">
+										<header>Dostupné práva</header>
+										<section class="psui-list">
+											<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
+												<i class="glyphicon-plus"></i><span>{{perm}}</span>
+											</div>
+										</section>
+									</div>
+								</div>
 							</div>
 						</div>
+					</fieldset>
+					
+					<div class="form-group">
+						<div class="col-md-12">
+							<button ng-click="updateGroupPermissions()" class="btn btn-primary pull-right">
+								<i class="glyphicon-ok"></i>Uložiť
+							</button>
+						</div>
 					</div>
+				</div>
 				
-
-
-				<div class="row">
-					<div class="col-sm-12">
-						<br>
-						<br>
-						<fieldset>
-							<legend>Oprávnenia - {{selectedGroup.baseData.name}}</legend>
-						</fieldset>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-6 permissions">
-						<p>Pridelené práva</p>
-						<table border="1">
-							<tbody>
-								<tr ng-repeat="perm in group.permissions">
-									<td><a href="" ng-click="removePermission(perm)"><i class="glyphicon glyphicon-minus"></i></a>&nbsp;</td>
-									<td ng-click="removePermission(perm)">{{perm}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="col-md-6 permissions">
-						<p>Dostupné práva</p>
-						<table border="1">
-							<tbody>
-								<tr ng-repeat="perm in permissions">
-									<td><a href="" ng-click="addPermission(perm)"><i
-											class="glyphicon glyphicon-plus"></i></a>&nbsp;</td>
-									<td ng-click="addPermission(perm)">{{perm}}</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-
-				<div class="row">
-					<button ng-click="updateGroupPermissions()" class="btn btn-primary">Uložiť</button>
-				</div>
 			</div>
 		</div>
 	</div>
 </div>
+

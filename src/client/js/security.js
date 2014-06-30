@@ -133,9 +133,10 @@ angular.module('security', [ 'generic-search', 'schema-utils' ])
 
 		                if ($rootScope.security.currentUser && $rootScope.security.currentUser.systemCredentials
 		                        && $rootScope.security.currentUser.systemCredentials.login
-		                        && $rootScope.security.currentUser.systemCredentials.login.permissions) {
-			                for ( var i in requiredPermissions) {
-				                if ($rootScope.security.currentUser.systemCredentials.login.permissions[requiredPermissions[i]] !== true) {
+		                        && $rootScope.security.currentUser.systemCredentials.permissions) {
+			               console.log('ssad',$rootScope.security.currentUser );
+		                	for ( var i in requiredPermissions) {
+				                if ($rootScope.security.currentUser.systemCredentials.permissions[requiredPermissions[i]] !== true) {
 					                // missing permission
 					                return false;
 				                }

@@ -146,11 +146,13 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					if (queryFilter.sorts[i].o === QueryFilter.sort.ASC) {
 						sorts[queryFilter.sorts[i].f] = 1;
 					} else {
-						sorts[queryFilter.sorts[i].f] = 0;
+						sorts[queryFilter.sorts[i].f] = -1;
 					}
 				}
 			}
-
+		
+			log.verbose(searchCriteria,fields,sorts);
+				
 			return {
 				selector: searchCriteria,
 				fields: fields,

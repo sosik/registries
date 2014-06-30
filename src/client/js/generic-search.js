@@ -10,13 +10,14 @@ angular.module('generic-search', ['schema-utils'])
 .factory('generic-search.GenericSearchFactory', [ '$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
 	var service = {};
 
-	service.getSearch = function(searchSchema, criteria) {
+	service.getSearch = function(searchSchema, criteria,sortBy) {
 		console.log(searchSchema, schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')), schemaUtilFactory.concatUri(searchSchema,'search'));
 		return $http({
 		    method : 'POST',
 		    url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
 		    data : {
-		        criteria : criteria
+		        criteria : criteria,
+		        sortBy: sortBy
 		    }
 		});
 	};
@@ -190,6 +191,14 @@ angular.module('generic-search', ['schema-utils'])
 
 	};
 
+	function convertSearchBy(searchBy){
+		if (!searchBy)  {
+			return null;
+		}
+		console.log('makak',{ f:searchBy.header.field, o: searchBy.direction});
+		return [{ f:searchBy.header.field, o: searchBy.direction}];
+	}
+	
 	$scope.search = function() {
 		var c = convertCriteria($scope.searchCrit);
 		// add forced criteria
@@ -197,13 +206,29 @@ angular.module('generic-search', ['schema-utils'])
 			c.push($scope.forcedCriterias[idx]);
 		}
 
-		genericSearchFactory.getSearch($scope.entityUri, c).success(function(data) {
+		genericSearchFactory.getSearch($scope.entityUri, c,convertSearchBy( $scope.sortBy)).success(function(data) {
 			$scope.data = data;
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
+	};	
+	
+	$scope.setSortBy=function (header){
+		if ($scope.sortBy && $scope.sortBy.header===header){
+			if ( 'asc'===$scope.sortBy.direction) {
+				$scope.sortBy={header: header , direction : "desc" };
+			}
+			else {
+				$scope.sortBy={header: header , direction : "asc" };
+			} 
+		}
+		else {
+			$scope.sortBy={header: header , direction : "desc" };
+		}
+		console.log($scope.sortBy);
+		$scope.search();
 	};
-
+	
 	$scope.goView = function(i) {
 			$location.path('registry/view/'+encodeURIComponent( $routeParams.entity)+'/' + $scope.data[i].id);
 	}

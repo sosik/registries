@@ -67,8 +67,8 @@
 							<table class="table">
 								<thead>
 									<tr class="list-header">
-										<th ng-repeat="header in headers">{{header.title}}</th>
-										<th> </th>
+										<th ng-class="(sortBy.header===header)? ((sortBy.direction=='asc')? 'psui-action-sort psui-icon-chevron-up' : 'psui-action-sort psui-icon-chevron-down') : '' "  ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>

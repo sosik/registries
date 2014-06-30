@@ -12,8 +12,25 @@
 		color: $table-th-color;
 		font-weight: normal;
 		border-bottom: 0px !important;
-	}
+		position: relative;
 
+		&.psui-action-sort{
+			cursor: pointer;
+			position: relative;
+			padding-right: $table-cell-padding-horizontal + ($table-cell-padding-horizontal/2);
+			
+			&:before{
+				position: absolute;
+				right: 4px;
+				top: 50%;
+				margin-top: - $font-size-base/2;
+			}
+			&:hover{
+				background-color: $table-tr-selected-bg;	
+			}
+		}
+	}
+	
 	tr{
 		td{
 			border-bottom: 1px solid $table-td-border-color;

@@ -2,6 +2,7 @@
 
 var log = require('./logging.js').getLogger('schemaController.js');
 var extend = require('extend');
+var safeUrlEncoder = require('./safeUrlEncoder.js');
 
 var universalDaoModule = require('./UniversalDao.js');
 
@@ -30,7 +31,7 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 
 	this.getCompiledSchema = function(req, resp) {
 
-		var schemaUri = decodeURIComponent(req.url.substring(17, req.url.lenght));
+		var schemaUri = safeUrlEncoder.decode(req.url.substring(17, req.url.lenght));
 
 		var schema = schemaRegistry.getSchema(schemaUri);
 		if (!schema) {

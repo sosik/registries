@@ -5,7 +5,8 @@
 	 */
 	var encode = function(_in) {
 		var tmp = encodeURIComponent(_in);
-		var out = tmp.replace(/%/g, '~_~');
+		tmp = tmp.replace(/~/g, '%7E');
+		var out = tmp.replace(/%/g, '~');
 
 		return out;
 	};
@@ -14,7 +15,7 @@
 	 * does decoding of previously encoded string by encode function
 	 */
 	var decode = function(_in) {
-		var tmp =  _in.replace(/~_~/g, '%');
+		var tmp =  _in.replace(/~/g, '%');
 		var out = decodeURIComponent(tmp);
 
 		return out;

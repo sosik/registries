@@ -2,6 +2,7 @@
 
 var log = require('./logging.js').getLogger('loginController.js');
 var extend = require('extend');
+var safeUrlEncoder = require('./safeUrlEncoder.js');
 
 var universalDaoModule = require('./UniversalDao.js');
 var DEFAULT_CFG = {
@@ -106,7 +107,7 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 	this.search = function(req, resp) {
 
 		
-		var schema = schemaRegistry.getSchema(decodeURIComponent(req.params.schema));
+		var schema = schemaRegistry.getSchema(safeUrlEncoder.decode(req.params.schema));
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName : schema.compiled.table
 		});

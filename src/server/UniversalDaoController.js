@@ -1,6 +1,7 @@
 var log = require('./logging.js').getLogger('UniversalDaoController.js');
 var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
 var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
+var safeUrlEncoder = require('./safeUrlEncoder.js');
 
 var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 
@@ -41,7 +42,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 	this.getBySchema = function(req, res) {
 		log.verbose(req.params);
 
-		var schemaName = req.params.schema;
+		var schemaName = safeUrlEncoder.decode(req.params.schema);
 		
 		if (!schemaRegistry) {
 			log.error('missing schemaRegistry');

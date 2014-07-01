@@ -3,14 +3,14 @@ var safeUrlEncoder = require(process.cwd() + '/build/server/safeUrlEncoder.js');
 
 describe('safeUrlEncoder', function() {
 	it('should correctly encode', function(done) {
-		var encoded = safeUrlEncoder.encode('uri://xxx/gggg');
-		expect(encoded).to.be.equal('uri~_~3A~_~2F~_~2Fxxx~_~2Fgggg');
+		var encoded = safeUrlEncoder.encode('uri://~xxx/gggg');
+		expect(encoded).to.be.equal('uri~3A~2F~2F~7Exxx~2Fgggg');
 		done();
 	});
 
 	it('should correctly decode', function(done) {
-		var encoded = safeUrlEncoder.decode('uri~_~3A~_~2F~_~2Fxxx~_~2Fgggg');
-		expect(encoded).to.be.equal('uri://xxx/gggg');
+		var encoded = safeUrlEncoder.decode('uri~3A~2F~2F~7Exxx~2Fgggg');
+		expect(encoded).to.be.equal('uri://~xxx/gggg');
 		done();
 	});
 

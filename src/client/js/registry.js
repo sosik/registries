@@ -91,7 +91,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 	$scope.$on('psui:model_changed', function() {
 		$scope.save();
 	});
-	var schemaUri = decodeURIComponent( $routeParams.schema);
+	var schemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
 
 	schemaUtilFactory.getCompiledSchema(schemaUri, 'view')
 	.success(function(data) {

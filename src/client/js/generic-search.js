@@ -230,6 +230,6 @@ angular.module('generic-search', ['schema-utils'])
 	};
 	
 	$scope.goView = function(i) {
-			$location.path('registry/view/'+encodeURIComponent( $routeParams.entity)+'/' + $scope.data[i].id);
+			$location.path('registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id);
 	}
 } ]);

@@ -263,7 +263,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					return;
 				}
 				t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
-					t.storeToken(token, user.systemCredentials.login.loginName, req.ip, function(err, data) {
+					t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err, data) {
 						if (err) {
 							log.error('Failed to store login token', err);
 							resp.send(500, 'Internal Error');
@@ -310,9 +310,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					}
 				}
 			}
-
-			console.log(permissions);
-
+			log.verbose('user permissions resolved',permissions);
 			callback(null, permissions);
 
 		});
@@ -327,7 +325,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		}
 	}
 	this.resolveGroupPermissions = function(groupId, allgroups, permissions) {
-		console.log('resolveGroupPermissions', groupId, allgroups, gr);
 		var gr = findGroup(groupId, allgroups);
 		if (!gr) {
 			return;
@@ -343,7 +340,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 			}
 		}
-		console.log('asda', gr, permissions);
 	};
 
 	/**
@@ -409,11 +405,12 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		callback(uuid.v4());
 	};
 
-	this.storeToken = function(tokenId, user, ip, callback) {
+	this.storeToken = function(tokenId, userId, user, ip, callback) {
 
 		var now = new Date().getTime()
 		var token = {
 		    tokenId : tokenId,
+		    userId : userId,
 		    user : user,
 		    ip : ip,
 		    created : now,
@@ -627,6 +624,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		crypto.pbkdf2(password, salt.toString('base64'), 1000, 256, callback);
 	};
 
+	var t = this;
 	this.authFilter = function(req, res, next) {
 
 		req.authenticated = false;
@@ -646,6 +644,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				if (err) {
 					log.error('Failed to get data from DB', err);
 					next(err);
+					return;
 				}
 				if (tokens.length == 1) {
 					var token = tokens[0];
@@ -663,14 +662,35 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						log.silly('Setting auth info to', token);
 						req.authenticated = true;
 						req.loginName = token.user;
+						userDao.get(token.userId, function(err, user) {
+							if (err) {
+								log.error(err);
+								next(err);
+								return;
+							}
+							log.silly('user found', user);
+							t.resolvePermissions(user, function(err, perm) {
+								if (err) {
+									log.error(err);
+									next(err);
+									return;
+								}
+								req.perm = perm;
+								next();
+							});
+						});
+						
+						
 					} else {
 						log.verbose('Found token %s is not valid, removing cookies', tokenId, {});
 						res.clearCookie(cfg.securityTokenCookie);
 						res.clearCookie(cfg.loginNameCookie);
+						next();
 					}
 
+				}else {
+					next();
 				}
-				next();
 
 			});
 		} else {

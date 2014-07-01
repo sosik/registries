@@ -1,10 +1,10 @@
-angular.module('schema-editor', [])
+angular.module('schema-editor', ['psui-notification'])
 
 .config(['$routeProvider', function($routeProvider) {
 	  $routeProvider.when('/schema/edit', {templateUrl: 'partials/schema-editor.html', controller: 'schemaEditCtrl'});
 	}])
 
-
+//
 .factory('schema-editor.SchemaEditorService', [ '$http', '$rootScope', function($http, $rootScope) {
 	var service = {};
 
@@ -39,7 +39,8 @@ angular.module('schema-editor', [])
 
 	return service;
 } ])
-.controller('schemaEditCtrl', [ '$scope', 'schema-editor.SchemaEditorService', function($scope, schemaService) {
+//
+.controller('schemaEditCtrl', [ '$scope', 'schema-editor.SchemaEditorService','psui.notificationFactory', function($scope, schemaService,notificationFactory) {
 
 	$scope.schemaList = [];
 
@@ -65,11 +66,21 @@ angular.module('schema-editor', [])
 	};
 
 	
-
 	$scope.postData = function(data) {
-		schemaService.getPostContent($scope.selectedSchema.name, data).success(function(data) {
-			$scope.selectedSchema=null;
-		}).error(function(err){$scope.alert=err;});
+		try{
+		 
+			JSON.parse(data);
+
+			schemaService.getPostContent($scope.selectedSchema.name, data).success(function(data) {
+				$scope.selectedSchema=null;
+			}).error(function(err){$scope.alert=err;});
+			
+		}	
+		catch(err){
+			console.log(err);
+			notificationFactory.error({type:'error',text:'Nevalidná schéma: '+ err.message,deletable : true, time:-1, timeout: null});
+		}
+		
 	}
 
 

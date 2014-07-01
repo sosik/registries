@@ -7,13 +7,13 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-env');
 
-	grunt.registerTask('build:shared', ['copy:shared']);
-	grunt.registerTask('build:server', ['build:shared', 'copy:server','copy:ssl']);
-	grunt.registerTask('build:client', ['build:shared', 'copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass:compile']);
+	grunt.registerTask('build:schemas', ['copy:schemas']);
+	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:ssl', 'copy:sharedJsServer']);
+	grunt.registerTask('build:client', ['build:schemas', 'copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass:compile', 'copy:sharedJsClient']);
 
-	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:shared']);
-	grunt.registerTask('test', ['env:test', 'build', 'mochaTest:unitServer']);
-	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer']);
+	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:schemas']);
+	grunt.registerTask('test', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
+	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 
 	grunt.renameTask('clean', '_clean');
@@ -71,9 +71,19 @@ module.exports = function(grunt) {
 					{expand: true, cwd: 'util/ssl', src: ['**'], dest: 'build/server/ssl'}
 				]
 			},
-			shared: {
+			schemas: {
 				files: [
-					{expand: true, cwd: 'src/shared', src: ['**'], dest: 'build/shared/'}
+					{expand: true, cwd: 'src/shared/schemas', src: ['**'], dest: 'build/shared/schemas'}
+				]
+			},
+			sharedJsClient: {
+				files: [
+					{expand: true, cwd: 'src/shared/js', src: ['**'], dest: 'build/client/js'}
+				]
+			},
+			sharedJsServer: {
+				files: [
+					{expand: true, cwd: 'src/shared/js', src: ['**'], dest: 'build/server'}
 				]
 			}
 		},
@@ -83,6 +93,12 @@ module.exports = function(grunt) {
 					reporter: 'spec'
 				},
 				src: ['tests/unit/server/**/*']
+			},
+			unitShared: {
+				options: {
+					reporter: 'spec'
+				},
+				src: ['tests/unit/shared/**/*']
 			},
 			integration: {
 				options: {
@@ -101,9 +117,13 @@ module.exports = function(grunt) {
 				tasks: ['build:client']
 			},
 			
-			shared: {
-				files: ['src/shared/**'],
-				tasks: ['build:shared']
+			schemas: {
+				files: ['src/shared/schemas/**'],
+				tasks: ['build:schemas']
+			},
+			sharedJs: {
+				files: ['src/shared/js/**'],
+				tasks: ['build:server', 'build:client']
 			},
 			sass: {
 				files: ['src/client/scss/**'],

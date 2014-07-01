@@ -25,6 +25,13 @@ var searchControllerModule = require('./searchController.js');
 var schemaControllerModule = require('./schemaController.js');
 
 var app = express();
+
+// setup request logging
+app.use(require('./request-logger.js')
+	.getLogger(require('./logging.js')
+		.getLogger('HTTP'))
+	.logger()
+);
 app.disable('view cache');
 
 // Static data

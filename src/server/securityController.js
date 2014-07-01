@@ -120,6 +120,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.updateUserSecurity = function(req, resp) {
 
+		log.silly(req.body);
+		
 		var userId = req.body.userId;
 		userDao.get(userId, function(err, user) {
 
@@ -138,6 +140,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					user.systemCredentials.permissions = {};
 				}
 
+				if (!user.systemCredentials.login) {
+					user.systemCredentials.login = {};
+				}
+				
 				delete user.systemCredentials.groups;
 
 				if (!user.systemCredentials.groups) {
@@ -160,6 +166,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 				log.info('updating users security of', user.systemCredentials.login.loginName);
 				log.silly(user.systemCredentials);
+				
+				user.systemCredentials.login.loginName=req.body.loginName;
+				user.systemCredentials.login.email=req.body.email;
+
 				userDao.update(user, function(err) {
 					if (err) {
 						resp.send(500, err);
@@ -281,8 +291,12 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	//Traverses groups and collects permission ,  finally user permissions added.
 	this.resolvePermissions = function(user, callback) {
+		if (!user){
+			callback(null,[]);
+			return;
+		}
 		var t = this;
-		if (!user.systemCredentials) {
+		if (!'systemCredentials' in user ) {
 			callback('user without systemCredentials');
 			return;
 		}
@@ -491,24 +505,22 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	this.resetPassword = function(req, resp) {
 		// FIXME construct criteria bt QueryFilter
 		var t = this;
-		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
+		userDao.get(req.body.userId, function(err, data) {
 
 			if (err) {
 				res.send(500, err);
 				throw err;
 			}
 
-			if (data.lenght > 1) {
-				res.send(500, 'multiple matching users');
-				throw 'multiple matching users';
-			}
 
 			var randomPass = t.generatePassword();
 			var newsalt = t.generatePassword();
 
-			user = data[0];
-			if (user.email) {
-
+			var user = data;
+			log.silly(user);
+			log.silly(user.systemCredentials.login.email);
+			if (user.systemCredentials.login.email) {
+				
 				t.hashPassword(newsalt, randomPass, function(err, passwordHash) {
 
 					user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
@@ -520,11 +532,12 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 							resp.send(500, err);
 						}
 
+						log.info('User password reset', user);
 						// FIXME make mail address field as configurable
 						// parameter
-						t.sendResetPasswordMail(user.email, randomPass);
+						t.sendResetPasswordMail(user.systemCredentials.login.email, randomPass);
 
-						resp.send(200);
+						resp.send(200,{email:user.systemCredentials.login.email});
 					});
 				})
 
@@ -631,7 +644,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		req.loginName = 'Anonymous';
 
 		var tokenId = req.cookies.securityToken;
-
+		
 		if (tokenId != null) {
 			log.silly('security token found', tokenId);
 			tokenDao.list({
@@ -668,7 +681,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								next(err);
 								return;
 							}
-							log.silly('user found', user);
 							t.resolvePermissions(user, function(err, perm) {
 								if (err) {
 									log.error(err);

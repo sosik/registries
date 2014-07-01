@@ -74,6 +74,33 @@
 		</div>
 
 		<div ng-show="selectedUser" class="col-md-12 col-lg-4">
+				<div  class="form form-horizontal" >
+					<fieldset>
+						<legend> Prihlasovacie údaje -{{selectedUser.systemCredentials.login.loginName}}</legend>
+						<div class="form-group">
+							<label for="name" class="col-sm-4 control-label">Login</label>
+							<div class="col-sm-8">
+								<input type="text" id="name" name="name"
+									ng-model="selectedUser.systemCredentials.login.loginName" placeholder=""
+									class="ng-pristine ng-valid form-control" autocomplete="off">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="name" class="col-sm-4 control-label">Email</label>
+							<div class="col-sm-8">
+								<input type="text" id="name" name="name"
+									ng-model="selectedUser.systemCredentials.login.email" placeholder=""
+									class="ng-pristine ng-valid form-control" autocomplete="off">
+							</div>
+						</div>
+
+						<div class="form-group">
+							
+						</div>
+						
+					</fieldset>
+				</div>
+		
 			<div  class="form form-horizontal" >
 				<fieldset>
 					<legend>
@@ -139,10 +166,14 @@
 				
 				<div class="form-group">
 					<div class="col-md-12">
+						<button ng-click="resetPassword() " class="btn btn-secondary pull-right">Resetnúť heslo
+						</button>
 						<button ng-click="updateUserSecurity()" class="btn btn-primary pull-right">
 							<i class="glyphicon-ok"></i>{{'security.user.edit.save' |translate}}
 						</button>
 					</div>
+					
+					
 				</div>
 			</div>
 		</div>

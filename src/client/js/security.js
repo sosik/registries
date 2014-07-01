@@ -26,12 +26,12 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		                });
 	                };
 
-	                service.getResetPassword = function(user) {
+	                service.getResetPassword = function(userId) {
 		                return $http({
 		                    method : 'POST',
 		                    url : '/resetPassword/',
 		                    data : {
-			                    login : user
+			                    userId : userId
 		                    }
 		                });
 	                };
@@ -91,21 +91,22 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 	                };
 
-	                service.updateUserSecurity = function(userId, permissions, groups) {
+	                service.updateUserSecurity = function(userId,loginName,email, permissions, groups) {
 
 		                return $http({
 		                    method : 'POST',
 		                    url : '/user/security/update',
 		                    data : {
-		                        userId : userId,
-		                        permissions : permissions,
+		                    	userId : userId,
+		                        loginName: loginName, 
+		                        email: email,
+		                    	permissions : permissions,
 		                        groups : groups
 		                    }
 		                });
 	                };
 
 	                service.updateSecurityGroup = function(oid, groupName, groupId, permissions, parent) {
-		                console.log(oid, groupName, groupId, permissions, parent);
 
 		                return $http({
 		                    method : 'POST',
@@ -134,7 +135,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		                if ($rootScope.security.currentUser && $rootScope.security.currentUser.systemCredentials
 		                        && $rootScope.security.currentUser.systemCredentials.login
 		                        && $rootScope.security.currentUser.systemCredentials.permissions) {
-			               console.log('ssad',$rootScope.security.currentUser );
 		                	for ( var i in requiredPermissions) {
 				                if ($rootScope.security.currentUser.systemCredentials.permissions[requiredPermissions[i]] !== true) {
 					                // missing permission
@@ -174,7 +174,8 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                };
 
 	                $scope.resetPassword = function() {
-		                SecurityService.getResetPassword($scope.user);
+	                	
+	                	console.log('resetPassword not implememted');
 	                };
                 } ])
 //
@@ -252,7 +253,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 	                function fillGroupPerm(group, perms) {
 		              
-	                	console.log(group, perms);
 	                	var retval = [];
 		                if (!group.security) {
 			                group.security = {
@@ -417,7 +417,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 	                function fillUserPerm(user, perms) {
 	                	
-	                	console.log('fillUserPerm',user,perms);
 		                var retval = [];
 
 		                perms.map(function(item) {
@@ -432,7 +431,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                }
 
 	                function fillUserGroups(user, groups) {
-		                console.log('fillUserGroups',user, groups);
 	                	var retval = [];
 
 		                if (!user.systemCredentials.groups == null) {
@@ -455,7 +453,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                }
 
 	                $scope.selectUser = function(user) {
-	                	console.log('selectUser',user);
 		                $scope.selectedUser = user;
 
 		                securityService.getSecurityPermissions().success(function(data) {
@@ -471,10 +468,18 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                };
 
 	                $scope.updateUserSecurity = function() {
-		                securityService.updateUserSecurity($scope.selectedUser.id, $scope.user.permissions, $scope.user.groups).success(function(data) {
+		                securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups).success(function(data) {
 			                $scope.selectedUser = null;
 			                $scope.userList = [];
 		                });
+	                };
+	                
+	                $scope.resetPassword= function (){
+	                	 securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups).success(function(data) {
+	                		 securityService.getResetPassword($scope.selectedUser.id).success(function (data){
+	                			   notificationFactory.info({type:'info',text:'Nové heslo bolo zaslané na: ' +$scope.selectedUser.systemCredentials.login.email,deletable : true, time:5000, timeout: null}); 
+	                		 });
+			             });
 	                };
 
                 } ])

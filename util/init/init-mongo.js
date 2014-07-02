@@ -40,7 +40,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 					 
 				 },
 				 
-				 "permissions" : { "Registry - read" : true ,  "System User" : true , "Registry - write" : true },
+				 "permissions" : { "Registry - read" : true ,  "System User" : true , "Registry - write" : true, "System Admin":true },
 				 "groups" : { }
 			}
 		};

@@ -1,7 +1,7 @@
 angular.module('schema-editor', ['psui-notification'])
 
 .config(['$routeProvider', function($routeProvider) {
-	  $routeProvider.when('/schema/edit', {templateUrl: 'partials/schema-editor.html', controller: 'schemaEditCtrl'});
+	  $routeProvider.when('/schema/edit', {templateUrl: 'partials/schema-editor.html', controller: 'schemaEditCtrl' ,permissions:['System Admin']});
 	}])
 
 //

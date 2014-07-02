@@ -1,15 +1,15 @@
 module.exports = {
-	webserverPort: process.env.OPENSHIFT_NODEJS_PORT || 3000,
-	webserverSecurePort: process.env.OPENSHIFT_NODEJS_PORT || 3443,
-	webserverHost: process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
+	webserverPort: process.env.REGISTRIES_HTTP_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000,
+	webserverSecurePort: process.env.REGISTRIES_HTTPS_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3443,
+	webserverHost: process.env.REGISTRIES_HTTP_IP || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
 	mongoDbURI: (
-				process.env.OPENSHIFT_MONGODB_DB_URL
+				process.env.REGISTRIES_MONGODB_URL || process.env.OPENSHIFT_MONGODB_DB_URL
 				|| 'mongodb://' + (process.env.OPENSHIFT_MONGODB_DB_HOST || 'localhost') + ':' + (process.env.OPENSHIFT_MONGODB_DB_PORT || '27017')
 			) + '/registry',
 	mongoDbURI_test: 'mongodb://localhost:27017/integration_test_' + new Date().getTime(),
 	paths : {
-		photos: process.env.REGISTRIES_PATHS_PHOTO || process.cwd() + '/build/client/img',
-		schemas: process.env.REGISTRIES_PATHS_PHOTO || process.cwd() + '/build/shared/schemas',
+		photos: process.env.REGISTRIES_PATH_PHOTOS || process.cwd() + '/build/client/img',
+		schemas: process.env.REGISTRIES_PATH_SCHEMAS || process.cwd() + '/build/shared/schemas',
 	},
 	schemaRegistry:{
 		schemas : [ 'permissions.json', 'login.json', 'systemCredentials.json', 'people.json',

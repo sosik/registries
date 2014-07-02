@@ -23,9 +23,14 @@
 		background-color: $sidebar-first-level-color-bg;
 		overflow: hidden;
 		left: 0px;
+		width: $sideber-width;
 		
 		&:hover{
 			overflow-y: auto;
+		}
+		
+		ul,li{
+			width: $sideber-width;
 		}
 
 		ul{
@@ -56,7 +61,6 @@
 			color: $sidebar-color-base;
 			padding-right: 2 * $sidebar-menu-item-padding;
 			border-bottom: 1px solid $sidebar-secound-level-color-bg;
-			width: $sideber-width;
 			
 			i{
 				font-size: $sidebar-icon-size;

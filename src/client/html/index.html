@@ -49,6 +49,24 @@
 	<script src="js/psui-objectlink.js"></script>
 	<script src="js/safeUrlEncoder.js"></script>
 	
+	<script type="text/javascript">
+		function menuMouseWheelHandler(){
+			var e = event || window.event,
+				el = document.querySelector('#main-menu .sidebar')
+			;
+			
+			var delta = (e.wheelDelta) ? -e.wheelDelta : e.detail;
+			
+			if (delta < 0 && el.scrollTop == 0){
+				e.preventDefault();
+			}
+			
+			if (delta > 0 && (el.scrollTop >= el.scrollHeight - el.offsetHeight)){
+				e.preventDefault();
+			}
+		}
+	</script>
+
 </head>
 <body ng-app="registries">
 	<div psui-notification></div>

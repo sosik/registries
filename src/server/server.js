@@ -41,8 +41,14 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	if (err) {
 		throw err;
 	}
-	
-	var schemaRegistry = new schemaRegistryModule.SchemaRegistry(config);
+
+	// Load and register schemas
+	var schemasListPaths = JSON.parse(
+		fs.readFileSync(path.join(config.paths.schemas, '_index.json')))
+		.map(function(item) {
+			return path.join(config.paths.schemas, item);
+	});
+	var schemaRegistry = new schemaRegistryModule.SchemaRegistry({schemasList:schemasListPaths});
 	
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
 	

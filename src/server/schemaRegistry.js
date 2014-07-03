@@ -3,8 +3,6 @@
 var log = require('./logging.js').getLogger('SchemaRegistry.js');
 var extend = require('extend');
 
-var universalDaoModule = require('./UniversalDao.js');
-
 var DEFAULT_CFG = {
 	
 };
@@ -28,9 +26,9 @@ var SchemaRegistry = function(options) {
 	this.load = function() {
 		var schemaToolsTmp = new SchemaToolsModule.SchemaTools();
 
-		cfg.schemaRegistry.schemas.map(function(item) {
+		cfg.schemasList.map(function(item) {
 			log.info('Registering schema', item);
-			var content = fs.readFileSync(cfg.paths.schemas+'/'+item);
+			var content = fs.readFileSync(item);
 			log.silly('Registering schema', content.toString());
 			schemaToolsTmp.registerSchema(null, content.toString());
 			

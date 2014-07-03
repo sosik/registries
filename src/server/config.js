@@ -9,7 +9,7 @@ module.exports = {
 	mongoDbURI_test: 'mongodb://localhost:27017/integration_test_' + new Date().getTime(),
 	paths : {
 		photos: process.env.REGISTRIES_PATH_PHOTOS || process.cwd() + '/build/client/img',
-		schemas: process.env.REGISTRIES_PATH_SCHEMAS || process.cwd() + '/build/shared/schemas',
+		schemas: process.env.REGISTRIES_PATH_SCHEMAS || process.cwd() + '/data/schemas'
 	},
 	schemaRegistry:{
 		schemas : [ 'permissions.json', 'login.json', 'systemCredentials.json', 'people.json',

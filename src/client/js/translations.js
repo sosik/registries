@@ -1,7 +1,7 @@
 angular.module('registries')
 .config(['$translateProvider', function($translateProvider) {
 	$translateProvider.preferredLanguage('sk');
-
+	$translateProvider.useMissingTranslationHandlerLog();
 	$translateProvider.translations('sk', {
 		'login.title': 'Prihlásenie',
 		'login.loginName': 'Login',
@@ -46,7 +46,6 @@ angular.module('registries')
 		"generic.search.operator": "Operátor",
 		"generic.search.value": "Hodnota",
 		"generic.search.result.of.searching": "Výsledok vyhľadávania",
-		"generic.search.value": "Hodnota",
 		"registry.new.new": "Nový",
 		"registry.new.cancel": "Zrušiť",
 		"registry.new.send": "Odoslať",

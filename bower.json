@@ -24,6 +24,7 @@
     "ngRangy": "*",
     "angular-cookies": "~1.2.x",
     "angular-ui-ace": "~0.1.1",
-    "angular-translate": "~2.2.0"
+    "angular-translate": "~2.2.0",
+    "angular-translate-handler-log": "~2.0.0"
   }
 }

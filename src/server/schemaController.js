@@ -81,4 +81,4 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 
 module.exports = {
 	SchemaController : SchemaController
-}
+};

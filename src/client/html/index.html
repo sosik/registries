@@ -53,7 +53,7 @@
 	<div psui-notification></div>
 	<div id="main-wrapper" ng-class="{'login-page': !security.currentUser}">
 		<header ng-include="'partials/header.html'"></header>
-		<div id="main-menu" class="" ng-show="app.mainMenu" ng-include="'partials/main-menu.html'"></div>
+		<div id="main-menu" class="" ng-show="app.mainMenu" ng-include="'dataset/get/partials/main-menu.html'"></div>
 		<div psui-notification></div>
 		<div id="content-wrapper" ng-class="{'main-menu-active': app.mainMenu}" ng-view>
 		</div>

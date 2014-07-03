@@ -10,6 +10,8 @@ var bodyParser = require('body-parser')
 var errorhandler = require('errorhandler')
 var path = require('path');
 var photosRepoApp=require('./fsController.js');
+// controller to access dataset specific configuration files
+var datasetRepoApp=require('./fsController.js');
 
 var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js'));
 var config = require(path.join(process.cwd(), '/build/server/config.js'));
@@ -104,6 +106,12 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	photosRepoApp.cfg({rootPath: config.paths.photos ,fileFilter: null});
 	app.use('/photos',photosRepoApp);
+
+	datasetRepoApp.cfg({
+			rootPath:config.paths.dataset,
+			allowedOperations: ['get'],
+			fileFilter: null});
+	app.use('/dataset',datasetRepoApp);
 	    
 //	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
 //		log.info("Http server listening at %j", server.address(), {});

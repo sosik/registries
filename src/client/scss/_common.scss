@@ -22,12 +22,6 @@ body{
   -moz-osx-font-smoothing: grayscale;
 }
 
-a{
-  &:hover{
-    /*text-decoration: none;*/
-  }
-}
-
 h1{
     font-size: $font-size-h1;
 	font-weight: bold;
@@ -38,10 +32,21 @@ h2{
     font-size: $font-size-h2;
 }
 
+#main-wrapper{
+	min-width: $device-min-width;
+	width: 100%;
+	position: absolute;
+	top: 0px;
+	min-height: 100%;
+}
+
 // Content
 #content-wrapper{
-  margin-top: $header-height+15px;
+  padding-top: $header-height + $content-padding / 2;
+  padding-bottom: $footer-height + $content-padding;
+  
   color: $font-color-base;
+  
   h1{
     margin-left: 30px;
     margin-top: 0;

@@ -1,0 +1,15 @@
+#main-wrapper{
+	> footer{
+		position: absolute;
+		bottom: 0px;
+		width: 100%;
+		height: $footer-height;
+		font-size: $footer-font-size;
+		
+		.footer-content{
+			margin: 0px $content-padding;
+			padding: $content-padding/2  0px;
+			border-top: 1px solid $input-border-color; 
+		}
+	}
+}

@@ -1,4 +1,5 @@
 // Devices
+$device-min-width: 320px !default;
 $device-mobile-width: 750px !default;
 $device-tablet-width: 970px !default;
 $device-desktop-width: 1170px !default;
@@ -34,6 +35,19 @@ $icon-font-name: "font" !default;
 $icon-font-svg-id: "font" !default;*/
 $icon-font-family: "Glyphicons Halflings" !default;
 
+// Component common
+$padding-base-vertical: 4px !default;
+$padding-base-horizontal: 12px !default;
+
+$padding-large-vertical: 10px !default;
+$padding-large-horizontal:  16px !default;
+
+$padding-small-vertical: 5px !default;
+$padding-small-horizontal: 10px !default;
+
+// Content
+$content-padding: 30px !default; 
+
 // Header
 $header-height: 46px !default;
 $header-font-size: $font-size-base !default;
@@ -54,16 +68,6 @@ $sidebar-menu-item-padding: 16px;
 $sidebar-icon-size: 23px !default;
 $sidebar-color-hover: $main-color;
 $sideber-width: 250px !default;
-
-// components
-$padding-base-vertical: 4px !default;
-$padding-base-horizontal: 12px !default;
-
-$padding-large-vertical: 10px !default;
-$padding-large-horizontal:  16px !default;
-
-$padding-small-vertical: 5px !default;
-$padding-small-horizontal: 10px !default;
 
 // from
 $input-bg: #fafafa !default;
@@ -106,3 +110,7 @@ $table-tr-even-bg: $input-bg;
 
 // object link
 $objectlink-active-color: $main-color;
+
+// footer
+$footer-height: 50px !default;
+$footer-font-size: 10px !default;

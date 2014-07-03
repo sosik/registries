@@ -70,13 +70,18 @@
 </head>
 <body ng-app="registries">
 	<div psui-notification></div>
-	<div id="main-wrapper" ng-class="{'login-page': !security.currentUser}">
+	<div id="main-wrapper" ng-class="{'login-page': !security.currentUser}" ng-class="{'main-menu-active': app.mainMenu}">
 		<header ng-include="'partials/header.html'"></header>
 		<div id="main-menu" class="" ng-show="app.mainMenu" ng-include="'dataset/get/partials/main-menu.html'"></div>
 		<div psui-notification></div>
-		<div id="content-wrapper" ng-class="{'main-menu-active': app.mainMenu}" ng-view>
+		<div id="content-wrapper" ng-view>
 		</div>
-		<!-- /content-wrapper -->
+		<footer>
+			<div class="footer-content">
+				<span>&copy; Copyright 2014 Unionsoft s r. o.</span>
+				<span class="pull-right">0c814070ac9553846855dde49ee92b4a8ba2dd6e Version 1.0</span>
+			</div>
+		</footer>
 	</div>
 </body>
 </html>

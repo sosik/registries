@@ -67,8 +67,8 @@ fieldset{
 	> legend{
 		text-transform: uppercase;
 		display: block;
-		padding: 10px 0px;
-		margin-bottom: 15px;
+		padding: $padding-large-vertical 0px;
+		margin-bottom: $content-padding / 2;
 		border-bottom: 1px solid $input-border-color; 
 		font-weight: bold;
         font-size: $font-size-base;
@@ -316,7 +316,6 @@ fieldset{
 // btn
 .btn {
     border-radius: 0;
-	/*margin-right: 12px;*/
 	i {
 		margin-right: 12px;
 	}

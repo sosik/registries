@@ -23,8 +23,14 @@
         height:100%;
         #content-wrapper{
             position: relative;
-            height:100%;
+            height: 100%;
+			padding-left: 0px;
         }
+		
+		> footer{
+			padding-left: 0px;
+			display: none;
+		}
     }
 }
 

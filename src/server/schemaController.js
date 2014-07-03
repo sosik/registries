@@ -41,13 +41,13 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 		}
 		resp.send(200, schema.compiled);
 
-	}
+	};
 
 	this.schemaRead = function(req, resp) {
-		var path = req.url.substring(12);
+		var path = req.url.substr(12);
 
 		fsCtrl.get(path, resp, function(err) {
-			if (err != null) {
+			if (err) {
 				resp.send(err.code || 500, err);
 			}
 
@@ -55,10 +55,10 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 	};
 
 	this.schemaReplace = function(req, resp) {
-		var path = req.url.substring(16, req.url);
+		var path = req.url.substr(16);
 
 		fsCtrl.replace(path, req, resp, function(err) {
-			if (err != null) {
+			if (err) {
 				resp.send(err.code || 500, err);
 			}
 			schemaRegistry.load();
@@ -67,10 +67,10 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 	};
 
 	this.schemaList = function(req, resp) {
-		var path = req.url.substring(10, req.url);
+		var path = req.url.substr(10);
 
 		fsCtrl.ls(path, resp, function(err) {
-			if (err != null) {
+			if (err) {
 				resp.send(err.code || 500, err);
 			}
 

@@ -31,7 +31,7 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 
 	this.getCompiledSchema = function(req, resp) {
 
-		var schemaUri = safeUrlEncoder.decode(req.url.substring(17, req.url.lenght));
+		var schemaUri = safeUrlEncoder.decode(req.url.substring(17));
 
 		var schema = schemaRegistry.getSchema(schemaUri);
 		if (!schema) {
@@ -44,7 +44,7 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 	}
 
 	this.schemaRead = function(req, resp) {
-		var path = req.url.substring(12, req.url.lenght);
+		var path = req.url.substring(12);
 
 		fsCtrl.get(path, resp, function(err) {
 			if (err != null) {
@@ -55,7 +55,7 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 	};
 
 	this.schemaReplace = function(req, resp) {
-		var path = req.url.substring(16, req.url.lenght);
+		var path = req.url.substring(16, req.url);
 
 		fsCtrl.replace(path, req, resp, function(err) {
 			if (err != null) {
@@ -67,7 +67,7 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 	};
 
 	this.schemaList = function(req, resp) {
-		var path = req.url.substring(10, req.url.lenght);
+		var path = req.url.substring(10, req.url);
 
 		fsCtrl.ls(path, resp, function(err) {
 			if (err != null) {

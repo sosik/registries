@@ -51,7 +51,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	
 	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,schemaRegistry,{});
-	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{});
+	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{
+		rootPath: config.paths.schemas
+	});
 	
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter );
@@ -69,21 +71,21 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/resetPassword', bodyParser(), function(req, res){securityCtrl.resetPassword(req, res);});
     app.post('/changePassword', bodyParser(), function(req, res){securityCtrl.changePassword(req, res);});
 
-    app.get('/security/permissions',function(req,res){securityCtrl.getPermissions(req,res)});
+    app.get('/security/permissions',function(req,res){securityCtrl.getPermissions(req,res);});
     
-    app.get('/schema/compiled/*',bodyParser(),function(req,res){schemaCtrl.getCompiledSchema(req,res)});
-    app.get('/schema/ls*',bodyParser(),function(req,res){schemaCtrl.schemaList(req,res)});
-    app.get('/schema/get/*',bodyParser(),function(req,res){schemaCtrl.schemaRead(req,res)});
-    app.put('/schema/replace/*',bodyParser(),function(req,res){schemaCtrl.schemaReplace(req,res)});
+    app.get('/schema/compiled/*',bodyParser(),function(req,res){schemaCtrl.getCompiledSchema(req,res);});
+    app.get('/schema/ls*',bodyParser(),function(req,res){schemaCtrl.schemaList(req,res);});
+    app.get('/schema/get/*',bodyParser(),function(req,res){schemaCtrl.schemaRead(req,res);});
+    app.put('/schema/replace/*',bodyParser(),function(req,res){schemaCtrl.schemaReplace(req,res);});
     
 //    app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
-    app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res)});
-    app.post('/user/permissions/update', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res)});
-    app.post('/user/security/update', bodyParser(),function(req,res){securityCtrl.updateUserSecurity(req,res)});
-    app.post('/group/security/update', bodyParser(),function(req,res){securityCtrl.updateGroupSecurity(req,res)});
+    app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res);});
+    app.post('/user/permissions/update', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res);});
+    app.post('/user/security/update', bodyParser(),function(req,res){securityCtrl.updateUserSecurity(req,res);});
+    app.post('/group/security/update', bodyParser(),function(req,res){securityCtrl.updateGroupSecurity(req,res);});
     
-    app.post('/search/def', bodyParser(),function(req,res){searchCtrl.getSearchDef(req,res)});
-    app.post('/search/:schema', bodyParser(),function(req,res){searchCtrl.search(req,res)});
+    app.post('/search/def', bodyParser(),function(req,res){searchCtrl.getSearchDef(req,res);});
+    app.post('/search/:schema', bodyParser(),function(req,res){searchCtrl.search(req,res);});
     
     
 	// Static data

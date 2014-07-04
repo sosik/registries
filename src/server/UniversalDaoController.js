@@ -1,10 +1,14 @@
 var log = require('./logging.js').getLogger('UniversalDaoController.js');
 var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
 var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
-var safeUrlEncoder = require('./safeUrlEncoder.js');
+var securityServiceModule = require(process.cwd() + '/build/server/securityService.js');
 
+var safeUrlEncoder = require('./safeUrlEncoder.js');
 var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 
+var securityService= new securityServiceModule.SecurityService();
+	
+	
 	this.save = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
@@ -23,6 +27,53 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 		});
 	};
 
+	this.saveBySchema = function(req, res) {
+		
+		var schemaName = safeUrlEncoder.decode(req.params.schema);
+		
+		if (!schemaRegistry) {
+			log.error('missing schemaRegistry');
+			throw 'This method requires schemaRegistry';
+		}
+
+		var schema = schemaRegistry.getSchema(schemaName);
+		
+		
+
+		if (!schema) {
+			log.error('schema %s not found', schemaName);
+			throw 'Schema not found';
+		}
+
+		var compiledSchema = schema.compiled;
+
+		if (!compiledSchema) {
+			log.error('schema %s is not compiled', schemaName);
+			throw 'Schema is not compiled';
+		}
+		
+		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.MODIFY,req.perm)){
+			res.send(401);
+			return;
+		} 
+
+		_dao = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{collectionName: compiledSchema.table}
+		);
+
+		log.verbose("data to save", req.body);
+
+		var obj = req.body;
+		_dao.save(obj, function(err, data){
+			if (err) {
+				throw err;
+			}
+
+			res.json(data);
+		});
+	};
+	
 	this.get = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
@@ -40,7 +91,6 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 	};
 
 	this.getBySchema = function(req, res) {
-		log.verbose(req.params);
 
 		var schemaName = safeUrlEncoder.decode(req.params.schema);
 		
@@ -50,6 +100,8 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 		}
 
 		var schema = schemaRegistry.getSchema(schemaName);
+		
+		
 
 		if (!schema) {
 			log.error('schema %s not found', schemaName);
@@ -58,12 +110,18 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 
 		var compiledSchema = schema.compiled;
 
-		log.silly(compiledSchema);
+//		log.silly(compiledSchema);
 
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
 			throw 'Schema is not compiled';
 		}
+		
+		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
+			res.send(401);
+			return;
+		} 
+
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: compiledSchema.table}
@@ -110,6 +168,51 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: req.params.table}
+		);
+
+		_dao.list({}, function(err, data){
+			if (err) {
+				throw err;
+			}
+
+			res.json(data);
+		});
+	};
+	
+	this.listBySchema = function(req, res) {
+		var schemaName = safeUrlEncoder.decode(req.params.schema);
+		
+		if (!schemaRegistry) {
+			log.error('missing schemaRegistry');
+			throw 'This method requires schemaRegistry';
+		}
+
+		var schema = schemaRegistry.getSchema(schemaName);
+		
+		
+
+		if (!schema) {
+			log.error('schema %s not found', schemaName);
+			throw 'Schema not found';
+		}
+
+		var compiledSchema = schema.compiled;
+
+//		log.silly(compiledSchema);
+
+		if (!compiledSchema) {
+			log.error('schema %s is not compiled', schemaName);
+			throw 'Schema is not compiled';
+		}
+		
+		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
+			res.send(401);
+			return;
+		} 
+
+		_dao = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{collectionName: compiledSchema.table}
 		);
 
 		_dao.list({}, function(err, data){

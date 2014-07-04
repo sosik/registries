@@ -4,6 +4,17 @@
     "title": "Security group",
     "type": "object",
     "table": "groups",
+    "_security": {
+    	"_create": {
+    		"_static":["System Admin"]
+    	},
+    	"_read": {
+    		"_static":["System Admin"]
+    	},
+    	"_modify": {
+    		"_static":["System Admin"]
+    	}
+    }, 
     "listFields": [
         {
             "field": "id",

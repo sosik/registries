@@ -67,9 +67,11 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(securityCtrl.authFilter );
 	
 	app.put('/udao/save/:table', bodyParser(), function(req, res){udc.save(req, res);});
+	app.put('/udao/saveBySchema/:schema', bodyParser(), function(req, res){udc.saveBySchema(req, res);});
 	app.get('/udao/get/:table/:id', bodyParser(), function(req, res){udc.get(req, res);});
 	app.get('/udao/getBySchema/:schema/:id', bodyParser(), function(req, res){udc.getBySchema(req, res);});
 	app.get('/udao/list/:table', bodyParser(), function(req, res){udc.list(req, res);});
+	app.get('/udao/listBySchema/:schema', bodyParser(), function(req, res){udc.listBySchema(req, res);});
 	app.post('/udao/search/:table', bodyParser(), function(req, res){udc.search(req, res);});
 
 	app.post('/login', bodyParser(), function(req, res){securityCtrl.login(req, res);});

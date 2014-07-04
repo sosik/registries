@@ -5,3 +5,4 @@ bower_components/
 .project
 .sass-cache/
 nbproject/
+local-config.js

@@ -1,4 +1,8 @@
-module.exports = {
+var fs = require('fs');
+var path = require('path');
+var extend = require('extend');
+
+var config = {
 	webserverPort: process.env.REGISTRIES_HTTP_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000,
 	webserverSecurePort: process.env.REGISTRIES_HTTPS_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3443,
 	webserverHost: process.env.REGISTRIES_HTTP_IP || process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
@@ -56,3 +60,12 @@ module.exports = {
 			}
 		}())
 };
+
+// merge default configuration with local configuration if exists
+var localConfigFile = (process.env.REGISTRIES_LOCAL_CONFIG || path.join(process.cwd() + 'local-config.js'));
+if (fs.existsSync(localConfigFile)) {
+	var localConfig = JSON.parse(fs.readFileSync(localConfigFile));
+
+	config = extend(true, config, localConfig);
+}
+module.exports = config;

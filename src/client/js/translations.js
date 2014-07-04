@@ -45,6 +45,7 @@ angular.module('registries')
 		"generic.search.atribute": "Atribút",
 		"generic.search.operator": "Operátor",
 		"generic.search.value": "Hodnota",
+		"generic.search.view": "Zobraziť",
 		"generic.search.result.of.searching": "Výsledok vyhľadávania",
 		"registry.new.new": "Nový",
 		"registry.new.cancel": "Zrušiť",

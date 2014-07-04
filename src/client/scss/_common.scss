@@ -71,3 +71,33 @@ ul.menu {
     margin-left: 0px;
     margin-right: 0px;
 }
+
+// modal win
+.psui-modal{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 50;
+	background-color: rgba(0, 0, 0, 0.5);
+	@include media-mobile{
+		background-color: rgba(0, 0, 0, 1);
+	}
+		
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	
+	.psui-modal-dialog{
+		position: relative;
+		margin: 30px 0px;
+		float: left;
+		left: 50%;
+	}
+	.psui-modal-content{
+		position: relative;
+		float: left;
+		left: -50%;
+		@include box-shadow(0 3px 9px rgba(0,0,0,.5));
+	}
+}

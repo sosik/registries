@@ -36,19 +36,29 @@ angular.module('psui-imageresizor', ['pascalprecht.translate'])
 			var originImgWidth;
 			var originImgHeight;
 			
-			var resizorCanvas = angular.element('<canvas class="psui-imageresizor-resizor" ></canvas>');
+			var modalEl = angular.element('<div class="psui-imageresizor-resizor" ></div>');
+			modalEl.addClass('psui-modal psui-hidden');
+			wrapper.append(modalEl);
+			
+			var modalContentWrapperEl =  angular.element('<div></div>');
+			modalContentWrapperEl.addClass('psui-modal-dialog');
+			modalEl.append(modalContentWrapperEl);
+			
+			var modalContentEl =  angular.element('<div></div>');
+			modalContentEl.addClass('psui-modal-content');
+			modalContentWrapperEl.append(modalContentEl);
+			
+			var resizorCanvas = angular.element('<canvas ></canvas>');
 			resizorCanvas.attr('width',width);
 			resizorCanvas.attr('height',height);
-			resizorCanvas.addClass('psui-hidden');
-			wrapper.append(resizorCanvas);
+			modalContentEl.append(resizorCanvas);
 			
 			var canvasResult = angular.element('<canvas class="psui-imageresizor-result" width="' + imgWidth + '" height="' + imgHeight + '"></canvas>');
 			canvasResult.addClass('psui-hidden');
 			wrapper.append(canvasResult);
 			
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
-			buttonsHolder.addClass('psui-hidden');
-			wrapper.append(buttonsHolder);
+			modalContentEl.append(buttonsHolder);
 			
 			var buttonRotate = $compile(angular.element('<button class="btn psui-icon-rotate"><span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
 			buttonsHolder.append(buttonRotate);
@@ -153,8 +163,7 @@ angular.module('psui-imageresizor', ['pascalprecht.translate'])
 				originImgWidth = img.width;
 				originImgHeight = img.height;
 				canvasResult.removeClass('psui-hidden');
-				resizorCanvas.removeClass('psui-hidden');
-				buttonsHolder.removeClass('psui-hidden');
+				modalEl.removeClass('psui-hidden');
 				draw(context,context2);
 			};
 
@@ -184,8 +193,7 @@ angular.module('psui-imageresizor', ['pascalprecht.translate'])
 				}
 
 				canvasResult.addClass('psui-hidden');
-				resizorCanvas.addClass('psui-hidden');
-				buttonsHolder.addClass('psui-hidden');
+				modalEl.addClass('psui-hidden');
 			});
 				
 			resizorCanvas.on('mousewheel', function(evt){
@@ -251,4 +259,4 @@ angular.module('psui-imageresizor', ['pascalprecht.translate'])
 	}
 }])
 			
-			
+		

@@ -1,20 +1,34 @@
 .psui-uploadable-image{
     cursor: pointer;
-    
-    ~ .psui-buttons-holder{
-        z-index: 11;
-        right: 100%;
+}
+
+.psui-imageresizor-resizor{
+	.psui-buttons-holder{
         .btn{
             color: $font-color-light;
         }
     }
-}
-
-.psui-imageresizor-resizor {
-	position:absolute;
-	right:100%;
-	top: 0;
-	z-index:10;
+	
+	.psui-modal-dialog{
+		@include media-mobile{
+			margin: 0px;
+		}
+	}
+	
+	.psui-modal-content{
+		background-color: #000000;
+		canvas{
+			cursor: move;
+			@include media-tablet{
+				zoom: 0.7;
+			}
+			
+			@include media-mobile{
+				max-width: 100%;
+				max-height: 100%;
+			}
+		}
+	}
 }
 
 .psui-imageresizor-result {

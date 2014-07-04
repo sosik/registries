@@ -62,7 +62,7 @@ var config = {
 };
 
 // merge default configuration with local configuration if exists
-var localConfigFile = (process.env.REGISTRIES_LOCAL_CONFIG || path.join(process.cwd() + 'local-config.js'));
+var localConfigFile = (process.env.REGISTRIES_LOCAL_CONFIG || path.join(process.cwd(), 'local-config.js'));
 if (fs.existsSync(localConfigFile)) {
 	var localConfig = JSON.parse(fs.readFileSync(localConfigFile));
 

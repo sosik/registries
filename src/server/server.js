@@ -117,22 +117,38 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 //		log.info("Http server listening at %j", server.address(), {});
 //	});
 	
-	var sslKey =fs.readFileSync(process.cwd()+'/build/server/ssl/server.key');
-	var sslCert =fs.readFileSync(process.cwd()+'/build/server/ssl/server.crt');
-	var ssl = {
-			key: sslKey.toString(),
-			cert: sslCert.toString(),
-			passphrase: 'changeit'
-	};
 
+	if (process.env.REGISTRIES_PRODUCTION) {
+		// We are in production environment, use only http port
 
-	// Create an HTTP service.
-	http.createServer(app).listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
-		log.info("Http server listening at %j",config.webserverPort || 3000, {});
+		var port = config.webserverPort;
+		var host = config.webserverHost;
+
+		// Create an HTTP service.
+		http.createServer(app)
+		.listen(port, host, function() {
+			log.info("Http server listening at %s:%s", host, port);
 		});
-	// Create an HTTPS service identical to the HTTP service.
-	https.createServer(ssl, app).listen(config.webserverSecurePort || 3443, config.webserverHost || "0.0.0.0", function(){
-		log.info("Http server listening at %j", config.webserverSecurePort || 3443, {});
-	});
+	} else {
+		// We are NOT in production environment, use https port
+
+		var port = config.webserverSecurePort;
+		var host = config.webserverHost;
+
+		var sslKey =fs.readFileSync(path.join(process.cwd(), 'build', 'server', 'ssl', 'server.key'));
+		var sslCert =fs.readFileSync(path.join(process.cwd(), 'build', 'server', 'ssl', 'server.crt'));
+
+		var ssl = {
+				key: sslKey.toString(),
+				cert: sslCert.toString(),
+				passphrase: 'changeit'
+		};
+
+		// Create an HTTPS service identical to the HTTP service.
+		https.createServer(ssl, app)
+		.listen(port, host, function(){
+			log.info("Https (secure) server listening at %s:%s", host, port);
+		});
+	}
 	
 });

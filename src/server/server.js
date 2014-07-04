@@ -131,7 +131,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		log.info("Http server listening at %j",config.webserverPort || 3000, {});
 		});
 	// Create an HTTPS service identical to the HTTP service.
-	https.createServer(ssl, app).listen(config.webSecureserverPort || 3443, config.webserverHost || "0.0.0.0", function(){
+	https.createServer(ssl, app).listen(config.webserverSecurePort || 3443, config.webserverHost || "0.0.0.0", function(){
 		log.info("Http server listening at %j", config.webserverSecurePort || 3443, {});
 	});
 	

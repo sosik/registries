@@ -59,10 +59,14 @@ angular.module('registries', [
 	
 	// hang on route change, so we can check if user meets security criteria
 	$rootScope.$on('$routeChangeStart', function(evt, nextRoute, currentRoute) {
-		if (changeRouteRuleActive && (!$rootScope.security.currentUser || !SecurityService.hasPermissions(nextRoute.permissions))) {
-			//FIXME this call doesn't work , newer version of angular should be used. 
-			evt.preventDefault();
-			notificationFactory.error('Chybajúce oprávnenie: '+nextRoute.permissions);
+		if (nextRoute && nextRoute.permissions) {
+			// check permissions only if defined
+			if (changeRouteRuleActive && (!$rootScope.security.currentUser || !SecurityService.hasPermissions(nextRoute.permissions))) {
+				//FIXME this call doesn't work , newer version of angular should be used. 
+				evt.preventDefault();
+				// TODO TRANSLATE
+				notificationFactory.error('Chybajúce oprávnenie: '+nextRoute.permissions);
+			}
 		}
 	});
 

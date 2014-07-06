@@ -417,16 +417,22 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 	                function fillUserPerm(user, perms) {
 	                	
+	                	console.log(user,perms);
+	                	
 		                var retval = [];
 
-		                perms.map(function(item) {
+		                if ( 'systemCredentials' in user ){
+		                	if('permissions' in user.systemCredentials ){
+		                		for(per in user.systemCredentials.permissions ){
+		                			if (user.systemCredentials.permissions[per]){
+		                				retval.push(per);
+						                remove(perms, per);
+		                			}
+		                		}
+		                	}
 		                	
-			                if (user.systemCredentials.permissions && item in user.systemCredentials.permissions && user.systemCredentials.permissions[item]) {
-				                retval.push(item);
-				                remove(perms, item);
-			                }
-		                });
-
+		                }
+		                
 		                return retval;
 	                }
 

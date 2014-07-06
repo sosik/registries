@@ -416,11 +416,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                };
 
 	                function fillUserPerm(user, perms) {
-	                	
-	                	console.log(user,perms);
-	                	
 		                var retval = [];
-
 		                if ( 'systemCredentials' in user ){
 		                	if('permissions' in user.systemCredentials ){
 		                		for(per in user.systemCredentials.permissions ){
@@ -430,7 +426,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		                			}
 		                		}
 		                	}
-		                	
 		                }
 		                
 		                return retval;

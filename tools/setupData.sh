@@ -4,6 +4,7 @@ declare -A datasets
 
 datasets=(
 	["caihp"]="https://github.com/sosik/registries-data-caihp.git"
+	["caihp-petugez"]="https://github.com/petugez/registries-data-caihp.git"
 )
 
 if [ $# -lt 1 ]; then

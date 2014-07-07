@@ -132,6 +132,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			var viewElement;
 			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
 				viewElement = angular.element($compile('<div psui-objectlink-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
+			} else if (elm.prop('tagName') == 'PSUI-UPLOADABLE-IMAGE') {
+				viewElement = angular.element($compile('<img ng-src="{{'+attrs.ngModel +'}}" src=""></img>')(scope));
 			} else {
 				viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
 			}
@@ -437,7 +439,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 							} else if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								input = angular.element('<psui-uploadable-image '
+								input = angular.element('<psui-uploadable-image psui-inlineedit="view"'
 									+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
 									+ '" psui-imageresizor-height="'+value2.render.height + '" ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
 							} else {

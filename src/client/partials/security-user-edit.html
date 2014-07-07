@@ -8,7 +8,7 @@
 					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
 						<div class="col-sm-5">
-							<select class="form-control" ng-model="crit.attribute.path"
+							<select class="form-control" ng-model="crit.attribute"
 								ng-options="att.title for att in searchDef.attributes"></select>
 						</div>
 						<div class="col-sm-2">

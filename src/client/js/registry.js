@@ -110,7 +110,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 /**
  * places validation mark to element
  */
-.directive('psuiInlineedit', ['$timeout', function($timeout) {
+.directive('psuiInlineedit', ['$timeout', '$compile', '$parse', function($timeout, $compile, $parse) {
 	return {
 		restrict: 'A',
 		require: ['^ngModel', '^?psuiFormCtrl'],
@@ -129,30 +129,33 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			if (controller[0]) {
 				ngModel = controller[0];
 			}
-			var viewElement = angular.element('<div></div>');
+			var viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
 			viewElement.addClass('psui-inlineedit-view');
 			// there is ngModel, define commit and cancel
 			if (ngModel) {
-				ngModel.$render = function() {
+/*				ngModel.$render = function() {
 					elm.val(ngModel.$viewValue || '');
-					viewElement.text(ngModel.$viewValue || '');
+					//viewElement.text(ngModel.$viewValue || '');
 				}
 
 				scope.$watch(function(scope) {return ngModel.$viewValue;}, function() {
-					viewElement.text(ngModel.$viewValue || '');
+					//viewElement.text(ngModel.$viewValue || '');
 				})
-
+*/
 				commit = function() {
-					scope.$apply( function() {
+/*					scope.$apply( function() {
 						ngModel.$setViewValue(elm.val());
 					});
-					changeMode('view');
+*/					changeMode('view');
 					scope.$emit('psui:model_changed');
 				}
 
 				cancel = function() {
-					elm.val(oldValue);
-					ngModel.$setViewValue(elm.val());
+/*					elm.val(oldValue);
+ */
+						//elm.val(oldValue);
+						//ngModel.$setViewValue(oldValue);
+					$parse(attrs.ngModel).assign(scope, oldValue);
 					changeMode('view');
 				}
 
@@ -233,7 +236,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 //					editBtn.removeClass('psui-hidden');
 					commitBtn.addClass('psui-hidden');
 					cancelBtn.addClass('psui-hidden');
-					viewElement.text(elm.val());
+					//viewElement.text(elm.val());
 					viewElement.removeClass('psui-hidden');
 					elm.addClass('psui-hidden');
 //					if (editBtnHideTimeout) {
@@ -249,7 +252,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					cancelBtn.removeClass('psui-hidden');
 					viewElement.addClass('psui-hidden');
 					elm.removeClass('psui-hidden');
-					oldValue = elm.val();
+					oldValue = ngModel.$viewValue;
 					// monitor who has focus
 					scope.$apply(function() {
 						psuiFormCtrl.setActiveControl(elm);
@@ -263,8 +266,9 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			});
 
 			cancelBtn.on('click', function(evt) {
-				cancel();
-				changeMode('view');
+				scope.$apply(function() {
+					cancel();
+				});
 			});
 
 //			editBtn.on('click', function(evt) {

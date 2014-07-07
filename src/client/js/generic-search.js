@@ -10,14 +10,15 @@ angular.module('generic-search', ['schema-utils'])
 .factory('generic-search.GenericSearchFactory', [ '$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
 	var service = {};
 
-	service.getSearch = function(searchSchema, criteria,sortBy) {
+	service.getSearch = function(searchSchema, criteria,sortBy,limit) {
 		
 		return $http({
 		    method : 'POST',
 		    url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
 		    data : {
 		        criteria : criteria,
-		        sortBy: sortBy
+		        sortBy: sortBy, 
+		        limit: limit
 		    }
 		});
 	};
@@ -161,6 +162,7 @@ angular.module('generic-search', ['schema-utils'])
 		$scope.entity = data.title;
 		$scope.addCrit(); 
 		$scope.headers = data.listFields;
+		$scope.sortBy={header: data.listFields[0] , direction : "asc" };
 		$scope.forcedCriterias = data.forcedCriterias || [];
 		
 	}).error(function(err) {

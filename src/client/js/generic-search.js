@@ -10,7 +10,7 @@ angular.module('generic-search', ['schema-utils'])
 .factory('generic-search.GenericSearchFactory', [ '$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
 	var service = {};
 
-	service.getSearch = function(searchSchema, criteria,sortBy,limit) {
+	service.getSearch = function(searchSchema, criteria,sortBy,skip,limit) {
 		
 		return $http({
 		    method : 'POST',
@@ -18,7 +18,8 @@ angular.module('generic-search', ['schema-utils'])
 		    data : {
 		        criteria : criteria,
 		        sortBy: sortBy, 
-		        limit: limit
+		        limit: limit,
+		        skip: skip
 		    }
 		});
 	};
@@ -127,9 +128,14 @@ angular.module('generic-search', ['schema-utils'])
 	$scope.headers = {};
 	$scope.forcedCriterias = [];
 	
+	$scope.lastCriteria={};
+	
+	
     $scope.addCrit = function() {
     	$scope.searchCrit.push({});
     };
+    
+    var pageSize=20;
     
     
     var generateTableHeaders = function(schema, obj) {
@@ -192,11 +198,10 @@ angular.module('generic-search', ['schema-utils'])
 
 	};
 
-	function convertSearchBy(searchBy){
+	function convertSortBy(searchBy){
 		if (!searchBy)  {
 			return null;
 		}
-		console.log('makak',{ f:searchBy.header.field, o: searchBy.direction});
 		return [{ f:searchBy.header.field, o: searchBy.direction}];
 	}
 	
@@ -207,12 +212,36 @@ angular.module('generic-search', ['schema-utils'])
 			c.push($scope.forcedCriterias[idx]);
 		}
 
-		genericSearchFactory.getSearch($scope.entityUri, c,convertSearchBy( $scope.sortBy)).success(function(data) {
+		console.log();
+		$scope.lastCriteria=JSON.parse(JSON.stringify(c));
+		
+		genericSearchFactory.getSearch($scope.entityUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
 			$scope.data = data;
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
 	};	
+	
+	
+	$scope.searchNext = function() {
+		var c = convertCriteria($scope.searchCrit);
+		// add forced criteria
+		for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
+			c.push($scope.forcedCriterias[idx]);
+		}
+		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,pageSize).success(function(data) {
+			
+			console.log('merging ',$scope.data , data );
+			data.map(function (newItems){
+				$scope.data.push(newItems);
+			});
+			
+			
+		}).error(function(err) {
+			notificationFactory.error(err);
+		});
+	};	
+	
 	
 	$scope.setSortBy=function (header){
 		if ($scope.sortBy && $scope.sortBy.header===header){
@@ -226,7 +255,6 @@ angular.module('generic-search', ['schema-utils'])
 		else {
 			$scope.sortBy={header: header , direction : "desc" };
 		}
-		console.log($scope.sortBy);
 		$scope.search();
 	};
 	

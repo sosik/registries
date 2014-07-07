@@ -18,6 +18,8 @@ var QueryFilter = function() {
 	this.crits = [];
 	this.fields = [];
 	this.sorts = [];
+	this.limit=1000;
+	this.skip=0;
 
 	this.addCriterium = function(field, op, val) {
 		var c = {};
@@ -87,6 +89,15 @@ var QueryFilter = function() {
 
 		return this;
 	};
+	
+	this.setLimit= function (limit){
+		this.limit=limit;	
+	};
+	
+	this.setSkip= function (skip){
+		this.skip=skip;	
+	};
+	
 };
 
 module.exports = {

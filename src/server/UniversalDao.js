@@ -131,6 +131,7 @@ var UniversalDao = function(mongoDriver, options) {
 	this.list = function(queryFilter, callback) {
 		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
 		
+			log.silly(_findOptions);
 		_collection.find(_findOptions.selector, _findOptions, function(err, cursor){
 			if (err) {
 				callback(err);

@@ -156,7 +156,9 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			return {
 				selector: searchCriteria,
 				fields: fields,
-				sort: sorts
+				sort: sorts,
+				skip: queryFilter.skip,
+				limit: queryFilter.limit
 			};
 		}
 	};

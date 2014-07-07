@@ -115,7 +115,9 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 		log.verbose('search using criteria',schema.compiled.table, req.body.criteria );
 		dao.list({
 			crits : req.body.criteria,
-			sorts: req.body.sortBy
+			sorts: req.body.sortBy,
+			limit: req.body.limit,
+			skip: req.body.skip
 		}, function(err, data) {
 			if (err) {
 				resp.send(500, err);

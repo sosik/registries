@@ -1,4 +1,37 @@
 angular.module('psui-objectlink', [])
+.directive('psuiObjectlinkView', ['$parse', function($parse) {
+	return {
+		restrict: 'A',
+		require: ['^ngModel'],
+		link: function(scope, elm, attrs, ctrls) {
+			var schemaFragment = null;
+
+			if (attrs.schemaFragment) {
+				schemaFragment = $parse(attrs.schemaFragment);
+			}
+			var ngModel = ctrls[0];
+
+			ngModel.$render = function() {
+				if (ngModel.$viewValue) {
+					if (ngModel.$viewValue.refData) {
+						var displayText = '';
+						for (var i in ngModel.$viewValue.refData) {
+							if (typeof ngModel.$viewValue.refData[i] === 'string') {
+								displayText = ngModel.$viewValue.refData[i] + ' ';
+							}
+						}
+
+						elm.text(displayText);
+					} else {
+						elm.text('');
+					}
+				} else {
+					elm.text('');
+				}
+			};
+		}
+	};
+}])
 .directive('psuiObjectlink', ['$compile', '$parse', '$http', function($compile, $parse, $http) {
 	return {
 		restrict: 'E',
@@ -119,7 +152,7 @@ angular.module('psui-objectlink', [])
 							e.on('click', function(evt) {
 								ngModel.$setViewValue(angular.element(evt.target).data('data'));
 								ngModel.$render();
-								scope.$emit('psui:model_changed');
+								//scope.$emit('psui:model_changed');
 								dropdownHolder.addClass('psui-hidden');
 							});
 							dropdown.append(e);

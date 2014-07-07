@@ -129,7 +129,12 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			if (controller[0]) {
 				ngModel = controller[0];
 			}
-			var viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
+			var viewElement;
+			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
+				viewElement = angular.element($compile('<div psui-objectlink-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
+			} else {
+				viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
+			}
 			viewElement.addClass('psui-inlineedit-view');
 			// there is ngModel, define commit and cancel
 			if (ngModel) {
@@ -428,7 +433,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 							var input;
 							var isRequired = (value2.required ? ' psui-required': '');
 							if (value2.$objectLink) {
-								input = angular.element('<psui-objectlink schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
+								input = angular.element('<psui-objectlink psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
 							} else if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {

@@ -106,9 +106,11 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(express.static(__dirname + '/public'));
 	app.use(errorhandler({ dumpExceptions: true, showStack: true }));
 	
+	log.verbose('Configuring photos sub applicaction');
 	photosRepoApp.cfg({rootPath: config.paths.photos ,fileFilter: null});
 	app.use('/photos',photosRepoApp);
 
+	log.verbose('Configuring dataset sub applicaction');
 	datasetRepoApp.cfg({
 			rootPath:config.paths.dataset,
 			allowedOperations: ['get'],

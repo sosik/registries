@@ -16,12 +16,19 @@ var DEFAULT_CFG = {
 
 app.cfg = function(options) {
 	var prop = extend(true, {}, DEFAULT_CFG, options);
+
+	if (options && options.allowedOperations) {
+		// ovewrride default deep copy
+		prop.allowedOperations = options.allowedOperations;
+	}
+
 	app.prop = prop;
 	app.fsCtrl = new fsCtrlModule.FsCtrl(prop);
 
 // Register only allowed operations
 // ls
 	if (prop.allowedOperations.indexOf('ls') > -1) {
+		log.verbose('Registering allowed opperation ls');
 		app.get('/ls*', function(req, resp) {
 			var path = req.url.substring(3);
 
@@ -32,8 +39,11 @@ app.cfg = function(options) {
 
 			});
 		});
+	}
+	
 // get
-	} else if (prop.allowedOperations.indexOf('get') > -1) {
+	if (prop.allowedOperations.indexOf('get') > -1) {
+		log.verbose('Registering allowed opperation get');
 		app.get('/get/*', function(req, resp) {
 			var path = req.url.substring(5);
 
@@ -44,8 +54,11 @@ app.cfg = function(options) {
 
 			});
 		});
+	}
+
 // rm
-	} else if (prop.allowedOperations.indexOf('rm') > -1) {
+	if (prop.allowedOperations.indexOf('rm') > -1) {
+		log.verbose('Registering allowed opperation rm');
 		app.get('/rm/*', function(req, resp) {
 			var path = req.url.substring(4);
 
@@ -56,8 +69,11 @@ app.cfg = function(options) {
 
 			});
 		});
+	}
+
 // mkdir
-	} else if (prop.allowedOperations.indexOf('mkdir') > -1) {
+	if (prop.allowedOperations.indexOf('mkdir') > -1) {
+		log.verbose('Registering allowed opperation mkdir');
 		app.get('/mkdir/*', function(req, resp) {
 			var path = req.url.substring(7);
 
@@ -68,8 +84,11 @@ app.cfg = function(options) {
 
 			});
 		});
+	}
+
 // put
-	} else if (prop.allowedOperations.indexOf('put') > -1) {
+	if (prop.allowedOperations.indexOf('put') > -1) {
+		log.verbose('Registering allowed opperation put');
 		app.put('/put/*', function(req, resp) {
 			var path = req.url.substring(5);
 
@@ -80,8 +99,11 @@ app.cfg = function(options) {
 
 			});
 		});
+	}
+
 // putgetpath
-	} else if (prop.allowedOperations.indexOf('putgetpath') > -1) {
+	if (prop.allowedOperations.indexOf('putgetpath') > -1) {
+		log.verbose('Registering allowed opperation putgetpath');
 		app.put('/putgetpath/*', function(req, resp) {
 			var path = req.url.substring('/putgetpath/'.length);
 
@@ -94,8 +116,10 @@ app.cfg = function(options) {
 				resp.send(200, path);
 			});
 		});
+	}
+
 // replace
-	} else if (prop.allowedOperations.indexOf('replace') > -1) {
+	if (prop.allowedOperations.indexOf('replace') > -1) {
 		app.put('/replace/*', function(req, resp) {
 			var path = req.url.substring(9);
 

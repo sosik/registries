@@ -84,7 +84,8 @@ fieldset{
 	position: relative;
 	display: block;
 	font-size: $font-size-base;
-	line-height: $line-height-base;
+	/*line-height: $line-height-base;*/
+	line-height: 24px;
 	border-width: 1px;
 	border-color: #ffffff;
 	border-style: dashed;

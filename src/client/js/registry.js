@@ -211,8 +211,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				wrapper.append(actionsHolder);
 			}
 
-			var commitBtn = angular.element('<span class="psui-btn psui-commit-btn"><i></i><span>save</span></span>');
-			var cancelBtn = angular.element('<span class="psui-btn psui-cancel-btn"><i></i><span>cancel</span></span>');
+			var commitBtn = angular.element($compile('<span class="psui-btn psui-commit-btn"><i></i><span>{{\'psui-objectlink.btn.save\'|translate}}</span></span>')(scope));
+			var cancelBtn = angular.element($compile('<span class="psui-btn psui-cancel-btn"><i></i><span>{{\'psui-objectlink.btn.cancel\'|translate}}</span></span>')(scope));
 //			var editBtn = angular.element('<span class="psui-edit-btn"><i></i><span>edit</span></span>');
 
 			if (ngModel) {

@@ -117,7 +117,8 @@ angular.module('registries')
 		'security.user.edit.add':'Pridať',
 		'security.user.edit.attribute':'Atribút',
 		'security.user.edit.cancel':'Zrušiť',
-		
+		'psui-objectlink.btn.save': 'Uložiť',
+		'psui-objectlink.btn.cancel': 'Zrušiť',
 		
 		"errors.validation.required": "Povinné pole",
 

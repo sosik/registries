@@ -580,7 +580,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.sendResetPasswordMail = function(email, newPass, callback) {
 		var mailOptions = {
-		    from : "petugez@gmail.com",
+		    from : "websupport@unionsoft.sk",
 		    to : email,
 		    subject : "[Registry] Your new password ",
 		    text : "Your new password is: " + newPass,

@@ -35,7 +35,7 @@ angular.module('psui-objectlink', [])
 .directive('psuiObjectlink', ['$compile', '$parse', '$http', function($compile, $parse, $http) {
 	return {
 		restrict: 'E',
-		require: ['^ngModel'],
+		require: ['^ngModel', '^?psuiFormCtrl'],
 		link: function(scope, elm, attrs, ctrls) {
 			var schemaFragment = null;
 
@@ -166,6 +166,21 @@ angular.module('psui-objectlink', [])
 			queryField.on('keyup', function(evt) {
 					doSearch();
 			});
+
+			// if there is psui-form-ctrl bind active component change and close dropdown
+			var psuiFormCtrl;
+			if (ctrls[1]) {
+				var psuiFormCtrl = ctrls[1];
+
+				scope.$watch(
+					psuiFormCtrl.getActiveControl,
+					function(newVal, oldVal) {
+						if (newVal !== elm && oldVal === elm) {
+							dropdownHolder.addClass('psui-hidden');
+						}
+					}
+				);
+			}
 		}
 	};
 }]);

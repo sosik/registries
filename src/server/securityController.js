@@ -17,7 +17,7 @@ var DEFAULT_CFG = {
     tokenIdColumnName : 'tokenId',
     securityTokenCookie : 'securityToken',
     loginNameCookie : 'loginName',
-    tokenExpiration : 900000,
+    tokenExpiration : 3600000,
     generatedPasswordLen : 8
 };
 

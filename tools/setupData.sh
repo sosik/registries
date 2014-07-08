@@ -4,6 +4,7 @@ declare -A datasets
 
 datasets=(
 	["caihp"]="https://github.com/sosik/registries-data-caihp.git"
+	["svf"]="https://github.com/sosik/registries-data-svf.git"
 	["caihp-petugez"]="https://github.com/petugez/registries-data-caihp.git"
 )
 

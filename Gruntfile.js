@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-env');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
-	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:ssl', 'copy:sharedJsServer']);
+	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:templates','copy:ssl', 'copy:sharedJsServer']);
 	grunt.registerTask('build:client', ['build:schemas', 'copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass:compile', 'copy:sharedJsClient']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:schemas']);
@@ -64,6 +64,11 @@ module.exports = function(grunt) {
 			server: {
 				files: [
 					{expand: true, cwd: 'src/server', src: ['**'], dest: 'build/server/'}
+				]
+			},
+			templates: {
+				files: [
+					{expand: true, cwd: 'src/server/templates', src: ['**'], dest: 'build/server/templates'}
 				]
 			},
 			ssl: {

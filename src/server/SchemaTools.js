@@ -73,7 +73,12 @@ var SchemaTools = function() {
 		
 
 		if (typeof schema === 'string') {
+			try {
 			schemaObj = JSON.parse(schema);
+			} catch (ex) {
+				log.error('Failed to parse schema invalid JSON', ex);
+				throw ex;
+			}
 		} else if (typeof schema === 'object') {
 			schemaObj = schema;
 		}

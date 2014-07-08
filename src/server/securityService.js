@@ -37,10 +37,9 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 				if ('_static' in schema['_security'][action]) {
 					var requiredPerms = schema['_security'][action]['_static'];
 					 requiredPerms.map(function(required) {
-						if (avaliablePerm===null ||  !(required in avaliablePerm)  ||  !(avaliablePerm[required]) ){
-							missingPerm= required;
+						if ( !(required in avaliablePerm)  ||  !(avaliablePerm[required]) ){
+							missingPerm=required;
 						}	
-					
 					
 					});
 

@@ -21,6 +21,8 @@ var DEFAULT_CFG = {
     generatedPasswordLen : 8
 };
 
+//
+
 var transport = nodemailer.createTransport("Sendmail");
 
 var SchemaToolsModule = require('./SchemaTools.js');
@@ -669,7 +671,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 		req.authenticated = false;
 		req.loginName = 'Anonymous';
-
+		req.perm={};
 		var tokenId = req.cookies.securityToken;
 		
 		if (tokenId != null) {

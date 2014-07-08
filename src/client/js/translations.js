@@ -63,6 +63,7 @@ angular.module('registries')
 		"security.group.edit.name.of.group": "Názov skupiny",
 		"security.group.edit.id.of.group": "Identifikátor skupiny",
 		"security.group.edit.modification.of.security.group": "Modifikácia bezpečnostnej skupiny",
+		"security.user.edit.modification.done": "Použivateľ bol modifikovaný",
 		"schema.editor.save": "Uložiť",
 		"schema.editor.edit": "Upraviť",
 		"schema.editor.id": "ID",

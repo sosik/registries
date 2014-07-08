@@ -442,9 +442,9 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 	                $scope.updateUserSecurity = function() {
 		                securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups).success(function(data) {
-			                $scope.selectedUser = null;
-			                $scope.userList = [];
-		                });
+		                	notificationFactory.info({translationCode:'security.user.edit.modification.done',time:3000});
+		                	$scope.search();
+		                }).error(function (err){notificationFactory.error(err)});
 	                };
 	                
 	                $scope.resetPassword= function (){

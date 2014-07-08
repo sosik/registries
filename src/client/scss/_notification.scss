@@ -5,6 +5,10 @@
 	right: 0px;
 	text-align: center;
 	z-index: 1900;
+	
+	@include media-tablet-min{
+		padding-left: $sideber-width;
+	}
 
 	button{
 		position: absolute;

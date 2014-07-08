@@ -64,7 +64,7 @@ label {
 }
 
 fieldset{
-	> legend{
+	> legend, .legend{
 		text-transform: uppercase;
 		display: block;
 		padding: $padding-large-vertical 0px;
@@ -329,5 +329,14 @@ fieldset{
 		+ .btn{
 			margin-left: 12px;
 		}
+	}
+}
+
+.btn-group-vertical{
+	.btn-link{
+		color: $button-submit-bg;
+		padding: $btn-vertical-padding 0px;
+		margin: $btn-vertical-margin 0px;
+		line-height: 2 * $btn-vertical-margin + 2 * $btn-vertical-padding + 16px;
 	}
 }

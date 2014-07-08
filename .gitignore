@@ -7,3 +7,4 @@ bower_components/
 .settings
 nbproject/
 local-config.js
+npm-debug.log

@@ -56,7 +56,7 @@ $header-bg: $main-color !default;
 $header-color-base: $font-color-base !default;
 $header-light-bg: lighten($header-bg, 30%) !default;
 $header-notification-color: red !default;
-$header-box-shadow: lighten(#383838, 40%);
+$header-box-shadow: lighten(#383838, 40%) !default;
 
 // Main Menu
 $sidebar-size: 55px;
@@ -66,7 +66,7 @@ $sidebar-first-level-color-bg: #212121 !default;
 $sidebar-secound-level-color-bg: lighten($sidebar-first-level-color-bg, 10%) !default;
 $sidebar-menu-item-padding: 16px;
 $sidebar-icon-size: 23px !default;
-$sidebar-color-hover: $main-color;
+$sidebar-color-hover: $main-color !default;
 $sideber-width: 250px !default;
 
 // from
@@ -90,26 +90,28 @@ $errors-color: $page-bg !default;
 
 // datepicker
 $datepicker-border-color: $input-border-color !default;
-$datepicker-active-color: $main-color;
-$datepicker-color: lighten($font-color-base,10%);
-$datepicker-other-days-color: lighten($font-color-base,50%);
+$datepicker-active-color: $main-color !default;
+$datepicker-color: lighten($font-color-base,10%) !default;
+$datepicker-other-days-color: lighten($font-color-base,50%) !default;
 
 // Buttons
 $btn-primary-color: #fff !default;
 $btn-primary-bg: $main-color !default;
 $btn-primary-border: darken($btn-primary-bg, 5%) !default;
+$btn-vertical-padding: 6px !default;
+$btn-vertical-margin: $padding-base-vertical !default;
 
 // tables
-$table-cell-padding-vertical: 4px;
-$table-cell-padding-horizontal: 12px;
-$table-th-bg: $input-border-color;
-$table-th-color: $font-color-light;
-$table-td-border-color: lighten($table-th-bg,20%);
-$table-tr-selected-bg: $main-color;
-$table-tr-even-bg: $input-bg;
+$table-cell-padding-vertical: 4px !default;
+$table-cell-padding-horizontal: 12px !default;
+$table-th-bg: $input-border-color !default;
+$table-th-color: $font-color-light !default;
+$table-td-border-color: lighten($table-th-bg,20%) !default;
+$table-tr-selected-bg: $main-color !default;
+$table-tr-even-bg: $input-bg !default;
 
 // object link
-$objectlink-active-color: $main-color;
+$objectlink-active-color: $main-color !default;
 
 // footer
 $footer-height: 50px !default;

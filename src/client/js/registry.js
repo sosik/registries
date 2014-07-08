@@ -40,6 +40,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		.success(function(data, status, headers, config){
 			notificationFactory.clear();
 			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
+		}).error(function(err) {
+			notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
 		});
 	};
 

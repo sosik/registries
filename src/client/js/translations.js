@@ -7,6 +7,7 @@ angular.module('registries')
 		'login.loginName': 'Login',
 		'login.password': 'Heslo',
 		'login.forgottenPassword': 'Zabudnuté heslo',
+		'login.authentication.failed': 'Prihlásenie zlyhalo',
 		"schema.people.baseData": "Základné informácie",
 		"schema.people.baseData.identifier": "Identifikátor",
 		"schema.people.baseData.name": "Meno",

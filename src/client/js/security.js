@@ -78,7 +78,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		                    method : 'GET',
 		                    url : '/security/permissions',
 
-		                })
+		                });
 
 	                };
 
@@ -87,7 +87,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		                return $http({
 		                    method : 'GET',
 		                    url : '/user/permissions/' + userId
-		                })
+		                });
 
 	                };
 
@@ -147,43 +147,15 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 			                // non valid current user, no permissions
 			                return false;
 		                }
-	                }
+	                };
 
 	                return service;
                 } ])
 //
-.controller(
-        'security.loginCtrl',
-        [ '$scope', 'security.SecurityService', '$rootScope', '$location', 'psui.notificationFactory',
-                function($scope, SecurityService, $rootScope, $location, notificationFactory) {
-	                // FIXME remove this in production
-	                $scope.user = 'johndoe';
-	                $scope.password = 'johndoe';
-
-	                /**
-					 * Login button click
-					 */
-	                $scope.login = function() {
-		                SecurityService.getLogin($scope.user, $scope.password).success(function(data, status, headers, config) {
-			                $rootScope.security.currentUser = data;
-			                $location.path('/personal-page');
-		                }).error(function(data, status, headers, config) {
-			                delete $rootScope.security.currentUser;
-			                notificationFactory.error(data);
-		                });
-	                };
-
-	                $scope.resetPassword = function() {
-	                	
-	                	console.log('resetPassword not implememted');
-	                };
-                } ])
-//
-.controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location', function($scope, SecurityService, $rootScope, $location) {
+.controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location,notificationFactory) {
 	// FIXME remove this in production
 	$scope.user = 'johndoe';
 	$scope.password = 'johndoe';
-	$scope.alert = null;
 
 	/**
 	 * Login button click
@@ -191,11 +163,11 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	$scope.login = function() {
 		SecurityService.getLogin($scope.user, $scope.password).success(function(data, status, headers, config) {
 			$rootScope.security.currentUser = data;
-			$scope.alert = null;
 			$location.path('/personal-page');
 		}).error(function(data, status, headers, config) {
 			delete $rootScope.security.currentUser;
-			$scope.alert = data;
+			 var mes = {translationCode:'login.authentication.failed',time:5000};
+			 notificationFactory.error(mes);
 		});
 	};
 
@@ -215,8 +187,9 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 			                $cookieStore.remove('securityToken');
 			                $location.path('/login');
 		                })
-	                }
-                } ])
+	                };
+                } 
+        ])
 //                
 .controller(
         'security.groupEditCtrl',
@@ -249,7 +222,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 				                arr.splice(i, 1);
 			                }
 		                }
-	                }
+	                };
 
 	                function fillGroupPerm(group, perms) {
 		              
@@ -307,10 +280,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 			                $scope.permissions = data;
 			                $scope.group.permissions = fillGroupPerm($scope.selectedGroup, data);
 		                }).error(function(err) {
-			                if (err) {
-				                $scope.alert = err;
-				                console.log(err);
-			                }
+		                	 notificationFactory.error(err);
 		                });
 	                };
 
@@ -459,12 +429,14 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		                securityService.getSecurityPermissions().success(function(data) {
 			                $scope.permissions = data;
 			                $scope.user.permissions = fillUserPerm($scope.selectedUser, data);
-		                }).error(function(err){console.log(err);});
+		                }).error(function(err){ notificationFactory.error(err);});
 
 		                securityService.getSecurityGroups().success(function(data) {
 			                $scope.groups = data;
 			                $scope.user.groups = fillUserGroups($scope.selectedUser, $scope.groups);
-		                }).error(function(err){console.log(err);});;
+		                }).error(function(err){
+		                	 notificationFactory.error(err);
+		                	});;
 
 	                };
 

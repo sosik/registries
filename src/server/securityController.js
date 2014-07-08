@@ -272,19 +272,37 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					resp.send(500, 'Not authenticated.');
 					return;
 				}
-				t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
-					t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err, data) {
-						if (err) {
-							log.error('Failed to store login token', err);
-							resp.send(500, 'Internal Error');
-							return;
-						}
-						t.setCookies(resp, token, user.systemCredentials.login.loginName);
-
-						resp.send(200, user);
+				
+				t.resolvePermissions(user,function (err,permissions){
+					
+					if (err) {
+						log.error('Failed to resolvePermissions permissions', err);
+						resp.send(500, 'Internal Error');
 						return;
-					});
-				});
+					}
+					console.log(permissions);
+					if ('System User' in  permissions&&permissions['System User'] ){
+						t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
+							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err, data) {
+								if (err) {
+									log.error('Failed to store login token', err);
+									resp.send(500, 'Internal Error');
+									return;
+								}
+								t.setCookies(resp, token, user.systemCredentials.login.loginName);
+								
+								resp.send(200, user);
+								return;
+							});
+						});
+						
+					}
+					else {
+						log.verbose('Not authorized', err);
+						resp.send(401, 'Not authorized.');
+					}
+				}); 
+				
 			});
 		});
 	};

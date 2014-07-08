@@ -54,6 +54,7 @@ var securityService= new securityServiceModule.SecurityService();
 		
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.MODIFY,req.perm)){
 			res.send(401);
+			log.verbose('Not authorized to save object ',schemaName);
 			return;
 		} 
 
@@ -110,8 +111,6 @@ var securityService= new securityServiceModule.SecurityService();
 
 		var compiledSchema = schema.compiled;
 
-//		log.silly(compiledSchema);
-
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
 			throw 'Schema is not compiled';
@@ -119,6 +118,7 @@ var securityService= new securityServiceModule.SecurityService();
 		
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
 			res.send(401);
+			log.verbose('Not authorized to get object ',schemaName);
 			return;
 		} 
 

@@ -36,7 +36,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			return;
 		}
 
-		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
+		$http({url: '/udao/saveBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri($scope.currentSchemaUri , 'new')), method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
 			notificationFactory.clear();
 			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
@@ -69,6 +69,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 	$scope.currentSchema = $routeParams.schema;
 	$scope.currentId = $routeParams.id;
+	$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
 
 	$scope.model = {};
 	$scope.model.obj = {};
@@ -79,7 +80,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 	};
 
 	$scope.save = function() {
-		$http({url: '/udao/save/'+$scope.schemaFormOptions.schema.table, method: 'PUT',data: $scope.model.obj})
+		$http({url: '/udao/saveBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri($scope.currentSchemaUri, 'new')), method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
 			notificationFactory.info({translationCode:'registry.succesfully.saved', time:3000});
 		})

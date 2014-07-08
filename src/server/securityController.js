@@ -301,22 +301,9 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			return;
 		}
 		var permissions = {};
-
+		
+		// if has no groups 
 		if (!user.systemCredentials.groups || user.systemCredentials.groups.length === 0) {
-			callback(null, permissions);
-			return;
-		}
-
-		groupDao.list({}, function(err, groups) {
-			if (err) {
-				calback(err);
-				return;
-			}
-
-			for ( var gr in user.systemCredentials.groups) {
-				t.resolveGroupPermissions(user.systemCredentials.groups[gr].id, groups, permissions);
-			}
-
 			if (user.systemCredentials.permissions) {
 				for ( var per in user.systemCredentials.permissions) {
 					if (user.systemCredentials.permissions[per] === true) {
@@ -326,7 +313,29 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			}
 			log.verbose('user permissions resolved',permissions);
 			callback(null, permissions);
+			return;
+		}
 
+		groupDao.list({}, function(err, groups) {
+			if (err) {
+				calback(err);
+				return;
+			}
+			//resolve groups
+			for ( var gr in user.systemCredentials.groups) {
+				t.resolveGroupPermissions(user.systemCredentials.groups[gr].id, groups, permissions);
+			}
+
+			//merge user rights
+			if (user.systemCredentials.permissions) {
+				for ( var per in user.systemCredentials.permissions) {
+					if (user.systemCredentials.permissions[per] === true) {
+						permissions[per] = true;
+					}
+				}
+			}
+			log.verbose('user permissions resolved',permissions);
+			callback(null, permissions);
 		});
 
 	};

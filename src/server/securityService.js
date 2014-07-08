@@ -52,6 +52,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 			log.silly('schema has no security section', schema.id);
 		}
 
+		log.silly('missing perm',missingPerm);
 		return missingPerm===null;
 
 	}

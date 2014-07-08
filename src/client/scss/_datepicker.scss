@@ -22,9 +22,7 @@
 .psui-datepicker-dropdown{
     background: $page-bg;
     @include box-shadow(0 5px 10px rgba(0,0,0,.3));
-    /*border: 1px solid $errors-color;*/
     border-radius: 0px 0px 6px 6px;
-    /*padding: 6px;*/
     outline: 0px;
     color: lighten($font-color-base,20%);
     
@@ -124,6 +122,12 @@
                 color: $datepicker-other-days-color;
                 cursor: default;
             }
+			&.current{
+				 background-color: $input-border-color;
+			}
+			&.selected{
+				background-color: $datepicker-active-color;
+			}
         }
     }
     

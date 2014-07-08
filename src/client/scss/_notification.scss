@@ -1,0 +1,67 @@
+.psui-notification{
+	position: absolute;
+	top: $header-height + $content-padding / 2 ;
+	left: 0px;
+	right: 0px;
+	text-align: center;
+	z-index: 1900;
+
+	button{
+		position: absolute;
+		top: 2px;
+		right: -3px;
+		font-size: $font-size-large;
+		background: none;
+		border: none;
+		
+		&:hover{
+			color: $font-color-base;
+		}
+		
+		&:before { 
+			content: "\e014"; 
+			position: relative;
+			font-family: $icon-font-family;
+			font-style: normal;
+			font-weight: normal;
+			line-height: 1;
+			cursor: pointer;
+			text-align: left;
+		}
+	}
+	
+	> div {
+		position: relative;
+		padding: 14px 28px 14px 14px;
+		margin: 4px 4px 4px 4px;
+		display: inline-block;
+		@include box-shadow( 0 2px 8px rgba(0, 0, 0, 0.3));
+		border-radius: 3px;
+		border-style: solid;
+		border-width: 1px;
+		width: 70%;
+		text-align: left;
+		
+		@include media-mobile{
+			width: 94%;
+		}
+	}
+	
+	.psui-notification-error{
+		border-color: #ebccd1;
+		background-color: #f2dede;
+		color: #a94442;
+	}
+	
+	.psui-notification-warn{
+		border-color: #eae834;
+		background-color: #fffeae;
+		color: #a08c04;
+	}
+	
+	.psui-notification-info{
+		border-color: #00c405;
+		background-color: #ddffcf;
+		color: #005302;
+	}
+}

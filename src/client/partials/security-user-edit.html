@@ -76,9 +76,9 @@
 		<div ng-show="selectedUser" class="col-md-12 col-lg-4">
 				<div  class="form form-horizontal" >
 					<fieldset>
-						<legend> Prihlasovacie údaje -{{selectedUser.systemCredentials.login.loginName}}</legend>
+						<legend>{{'security.user.edit.login.data' |translate}} -{{selectedUser.systemCredentials.login.loginName}}</legend>
 						<div class="form-group">
-							<label for="name" class="col-sm-4 control-label">Login</label>
+							<label for="name" class="col-sm-4 control-label">{{'security.user.edit.login' |translate}}</label>
 							<div class="col-sm-8">
 								<input type="text" id="name" name="name"
 									ng-model="selectedUser.systemCredentials.login.loginName" placeholder=""
@@ -86,7 +86,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="name" class="col-sm-4 control-label">Email</label>
+							<label for="name" class="col-sm-4 control-label">{{'security.user.edit.email' |translate}}</label>
 							<div class="col-sm-8">
 								<input type="text" id="name" name="name"
 									ng-model="selectedUser.systemCredentials.login.email" placeholder=""
@@ -112,7 +112,7 @@
 						<div class="col-md-12">
 							<div class="row psui-multiselect-box">
 								<div class="col-sm-6 permissions psui-box">
-									<header>Pridelené skupiny</header>
+									<header>{{'security.user.edit.added.groups' |translate}}</header>
 									<section class="psui-list" >
 										<div ng-repeat="group in user.groups" class="psui-list-item" ng-click="removeGroup(group)">
 											<i class="glyphicon-minus"></i><span>{{group.baseData.name}}</span>
@@ -120,7 +120,7 @@
 									</section>
 								</div>
 								<div class="col-sm-6 permissions psui-box">
-									<header>Dostupné skupiny</header>
+									<header>{{'security.user.edit.available.groups' |translate}}</header>
 									<section class="psui-list">
 										<div ng-repeat="group in groups" class="psui-list-item" ng-click="addGroup(group)">
 											<i class="glyphicon-plus"></i><span>{{group.baseData.name}}</span>
@@ -144,7 +144,7 @@
 						<div class="col-md-12">
 							<div class="row psui-multiselect-box">
 								<div class="col-sm-6 permissions psui-box">
-									<header>Pridelené práva</header>
+									<header>{{'security.user.edit.added.permissions' |translate}}Pridelené práva</header>
 									<section class="psui-list" >
 										<div ng-repeat="perm in user.permissions" class="psui-list-item" ng-click="removePermission(perm)">
 											<i class="glyphicon-minus"></i><span>{{perm}}</span>
@@ -152,7 +152,7 @@
 									</section>
 								</div>
 								<div class="col-sm-6 permissions psui-box">
-									<header>Dostupné práva</header>
+									<header>{{'security.user.edit.available.permissions' |translate}}Dostupné práva</header>
 									<section class="psui-list">
 										<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
 											<i class="glyphicon-plus"></i><span>{{perm}}</span>
@@ -166,7 +166,7 @@
 				
 				<div class="form-group">
 					<div class="col-md-12">
-						<button ng-click="resetPassword() " class="btn btn-secondary pull-right">Resetnúť heslo
+						<button ng-click="resetPassword() " class="btn btn-secondary pull-right">{{'security.user.edit.reset.password' |translate}}
 						</button>
 						<button ng-click="updateUserSecurity()" class="btn btn-primary pull-right">
 							<i class="glyphicon-ok"></i>{{'security.user.edit.save' |translate}}

@@ -1,5 +1,21 @@
 .psui-uploadable-image{
     cursor: pointer;
+	text-align: center;
+	display: inline-block;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	border: 1px solid $input-border-color;
+	margin: ($field-padding-vertical) 0px ($field-padding-vertical) ($padding-base-horizontal);
+}
+
+.psui-uploadable-image-fbutton {
+	display: none !important;
+}
+
+.psui-uploadable-image-img {
+/*	width: inherit;
+	height: inherit;*/
 }
 
 .psui-imageresizor-resizor{
@@ -33,7 +49,7 @@
 
 .psui-imageresizor-result {
 	position:absolute;
-	left: 0;
-	top: 0;
+	left: $padding-base-horizontal;
+	top: $field-padding-vertical;
 	z-index:10;
 }

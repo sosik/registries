@@ -136,7 +136,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
 				viewElement = angular.element($compile('<div psui-objectlink-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-UPLOADABLE-IMAGE') {
-				viewElement = angular.element($compile('<img ng-src="{{'+attrs.ngModel +'}}" src="" psui-default-src="/img/no_photo.jpg"></img>')(scope));
+				viewElement = angular.element($compile('<div><img ng-src="{{'+attrs.ngModel +'}}" src="" psui-default-src="/img/no_photo.jpg"></img></div>')(scope));
 			} else {
 				viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
 			}

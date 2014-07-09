@@ -346,6 +346,14 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 			var render = function() {
 				var properties = options.schema.properties;
+				if (options.schema.transCode){
+					var registryTitle = angular.element('<h1>{{\'' + options.schema.transCode +'\' | translate }}</h1>');
+					element.append(registryTitle);
+					$compile(registryTitle)(scope);
+				} else if (options.schema.title){
+					var registryTitle = angular.element('<h1>' + options.schema.title +'</h1>');
+					element.append(registryTitle);
+				}
 				console.log(properties);
 				angular.forEach(properties, function(value, key) {
 					if (value.type === 'object') {

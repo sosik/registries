@@ -7,6 +7,7 @@ var nodemailer = require("nodemailer");
 
 var log = require('./logging.js').getLogger('securityController.js');
 var QueryFilter = require('./QueryFilter.js');
+var renderModule = require('./renderService.js');
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
@@ -32,10 +33,13 @@ var fs = require('fs');
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
-
+	
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.userCollection
 	});
+	
+	var renderService = new renderModule.RenderService();
+	
 
 	var tokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.tokenCollection
@@ -564,7 +568,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						log.info('User password reset', user);
 						// FIXME make mail address field as configurable
 						// parameter
-						t.sendResetPasswordMail(user.systemCredentials.login.email, randomPass);
+						t.sendResetPasswordMail(user.systemCredentials.login.email,randomPass,user,cfg.webserverPublicUrl);
 
 						resp.send(200,{email:user.systemCredentials.login.email});
 					});
@@ -578,19 +582,30 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	};
 
-	this.sendResetPasswordMail = function(email, newPass, callback) {
+	this.sendResetPasswordMail = function(email, newPass,user,serviceUrl) {
+		
+		var userName='';
+		
+		var userName='';
+		if ('baseData'  in user){
+			userName= user.baseData.name+ ' '+user.baseData.surName;
+		} 
+		else {
+			userName=user.systemCredentials.login.loginName;
+		}
+		
 		var mailOptions = {
 		    from : "websupport@unionsoft.sk",
 		    to : email,
 		    subject : "[Registry] Your new password ",
-		    text : "Your new password is: " + newPass,
-		    html : "<h3>New Password</h3><h4> Your new password is: <b>" + newPass + " </b> </h4>"
+		    text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{'userName':userName,'userPassword':newPass,'serviceUrl':serviceUrl})
 		}
+//		html : "<h3>New Password</h3><h4> Your new password is: <b>" + newPass + " </b> </h4>"
 
 		log.verbose('Sending mail ', mailOptions);
 
-		transport.sendMail(mailOptions, callback);
-
+		transport.sendMail(mailOptions);
+		
 	}
 
 	/**
@@ -660,7 +675,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		}
 
 		return retVal;
-	}
+	};
 
 	this.hashPassword = function(salt, password, callback) {
 		crypto.pbkdf2(password, salt.toString('base64'), 1000, 256, callback);

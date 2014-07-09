@@ -14,7 +14,7 @@ var fs = require('fs');
 
 
 var templates = {
-    MAIL_USER_PASSWORD : 'user-reset-password-txt.tmpl'
+    MAIL_USER_PASSWORD_RESET: 'user-reset-password-txt.tmpl'
 };
 
 var RenderService = function( options) {
@@ -36,7 +36,7 @@ var RenderService = function( options) {
 	}
 	
 	
-//	console.log('render',this.render( templates.MAIL_USER_PASSWORD,{'userName':'xxx','userPassword':'adsadsa'}));
+//	console.log('render',this.render( templates.MAIL_USER_PASSWORD_RESET,{'userName':'xxx','userPassword':'adsadsa'}));
 };
 
 module.exports = {

@@ -52,7 +52,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
 	
-	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,{});
+	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,config);
 //	var userCtrl = new  userControllerModule.UserController(mongoDriver,{});
 	
 	

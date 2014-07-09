@@ -63,9 +63,10 @@ angular.module('registries', [
 			// check permissions only if defined
 			if (changeRouteRuleActive && (!$rootScope.security.currentUser || !SecurityService.hasPermissions(nextRoute.permissions))) {
 				//FIXME this call doesn't work , newer version of angular should be used. 
-				evt.preventDefault();
+//				evt.preventDefault();
 				// TODO TRANSLATE
-				notificationFactory.error('Chybajúce oprávnenie: '+nextRoute.permissions);
+				notificationFactory.error({translationCode:'security.user.missing.permissions',translationData: nextRoute.permissions ,time:5000});
+				$location.url('/login');
 			}
 		}
 	});

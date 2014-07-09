@@ -122,11 +122,13 @@ angular.module('psui-datepicker', [])
 					if (elm.val()){
 						var arr = elm.val().split(".");
 						if((arr[0] && arr[1] && arr[2]) && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
-							arr[1]= arr[1]-1;
-							var datum = new Date(arr[2], arr[1], arr[0]);
-							selDate = new Date(datum.getTime());
-							dateTbody.empty();
-							makeDateTable(datum);
+							scope.$apply(function(){
+								arr[1]= arr[1]-1;
+								var datum = new Date(arr[2], arr[1], arr[0]);
+								selDate = new Date(datum.getTime());
+								dateTbody.empty();
+								makeDateTable(datum);
+								});
 						}
 					}
 					
@@ -141,12 +143,13 @@ angular.module('psui-datepicker', [])
 					if(elm.val()){
 						var arr = elm.val().split(".");
 						if((arr[0] && arr[1] && arr[2]) && arr[0]>0 && arr[0]<32 && arr[1]>0 && arr[1]<13){
-							arr[1]= arr[1]-1;
-							var datum = new Date(arr[2], arr[1], arr[0]);
-							selDate = new Date(datum.getTime());
-							dateTbody.empty();
-							makeDateTable(datum);
-							
+							scope.$apply(function(){
+								arr[1]= arr[1]-1;
+								var datum = new Date(arr[2], arr[1], arr[0]);
+								selDate = new Date(datum.getTime());
+								dateTbody.empty();
+								makeDateTable(datum);
+							});
 						}
 					}
 					dropdown.removeClass('psui-hidden');

@@ -69,6 +69,7 @@ function parse() {
 		    // Handle special case of empty last value.
 //		    if (/,\s*$/.test(text)) a.push('');
 		    
+			console.log('DDDDDDDD>>>',parts);
 
 			if (def.collDef.length != parts.length) {
 				console.log('line', lineN, ' does not match def.-->', def.collDef.length,parts.length ,'\n', line,'\n', parts.join('|'));
@@ -206,14 +207,16 @@ function parseDef(rawDef) {
 // Calls function(s) to resolve value
 function convertValue(d, v) {
 	var tmp = v;
+	console.log(d,v);
+	
 	d.convert.map(function(fun) {
 		if (typeof (fun) == 'function') {
 			tmp = fun(tmp);
 		} else {
 			try {
-				tmp = eval(fun + "(" + v + ")");
+				tmp = eval(fun + "(\'" + v + "\')");
 			} catch (err) {
-				console.log('Not able to evaluate ', fun, 'on ', tmp);
+				console.log('Not able to evaluate ', fun, 'on ', tmp,err);
 			}
 		}
 	});
@@ -269,6 +272,20 @@ function upCase(item) {
 	return item.toUpperCase();
 }
 
+
+function reformatDate(date){
+	if (!date) {
+		return null;
+	}
+	var parts=date.toString().split('-');
+	if (parts.length===3){
+		return parts[2]+'.'+parts[1]+'.'+parts[0];
+	}
+	else {
+		console.log('!!!'+ date);
+		return 'invalid '+date;
+	}
+}
 
 function remapPlayerPosition(item){
 	

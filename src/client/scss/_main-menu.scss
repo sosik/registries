@@ -3,6 +3,7 @@
 	top: $header-height;
 	bottom: 0px;
 	z-index: 11;
+	@include user-select(none);
 	
 	&.ng-hide{
 		display: block !important;

@@ -25,6 +25,7 @@
     border-radius: 0px 0px 6px 6px;
     outline: 0px;
     color: lighten($font-color-base,20%);
+	@include user-select(none);
     
     &:not([class*="psui-hidden"]){
         ~ .psui-buttons-holder {
@@ -41,7 +42,6 @@
     .action-previous
     ,.action-next{
         position: relative;
-        /*top: 1px;*/
         font-family: $icon-font-family;
         font-style: normal;
         font-weight: normal;

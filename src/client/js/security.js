@@ -404,7 +404,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                function fillUserGroups(user, groups) {
 	                	var retval = [];
 
-		                if (!user.systemCredentials.groups == null) {
+	                	if (!('systemCredentials' in user)){
+	                		 user.systemCredentials={};
+	                	}
+		                if ( !('groups' in user.systemCredentials)) {
 			                user.systemCredentials.groups = [];
 		                }
 
@@ -425,6 +428,15 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 	                $scope.selectUser = function(user) {
 		                $scope.selectedUser = user;
+		               
+		                if (!('systemCredentials' in user)){
+	                		 user.systemCredentials={};
+	                		 user.systemCredentials.login={loginName:''};
+	                	}
+		                if ( !('groups' in user.systemCredentials)) {
+			                user.systemCredentials.groups = [];
+		                }
+
 
 		                securityService.getSecurityPermissions().success(function(data) {
 			                $scope.permissions = data;

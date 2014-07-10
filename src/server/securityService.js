@@ -66,8 +66,8 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 
 	function hasPermission(coll, perm) {
 		
-		for (var i = coll.length; i--;) {
-			if (coll[i] === perm) {
+		for(var per in coll){
+			if (coll[per]  &&  per===perm) {
 				return true;
 			}
 		}

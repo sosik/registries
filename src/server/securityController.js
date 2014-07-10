@@ -126,11 +126,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		return false;
 	};
 
-	
-	
-
 	this.updateUserSecurity = function(req, resp) {
-
+		
 		if (!securityService.userHasPermissions(req,'Security - write')){
 			resp.send(401 , securityService.missingPermissionMessage('Security - write'));
 			log.verbose('missing perm Security - write');
@@ -302,7 +299,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						resp.send(500, 'Internal Error');
 						return;
 					}
-					console.log(permissions);
 					if ('System User' in  permissions&&permissions['System User'] ){
 						t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
 							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err, data) {

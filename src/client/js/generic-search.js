@@ -1,4 +1,4 @@
-angular.module('generic-search', ['schema-utils'])
+angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 //
 .config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/search/:entity', {
@@ -114,7 +114,7 @@ angular.module('generic-search', ['schema-utils'])
 	return service;
 } ])
 //
-.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory ) {
+.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate ) {
 	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 	$scope.entityUri = entityUri;
@@ -166,6 +166,10 @@ angular.module('generic-search', ['schema-utils'])
 
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
+		
+		console.log(data.transCode);
+		$scope.entity = $translate.instant( data.transCode);
+
 		$scope.addCrit(); 
 		$scope.headers = data.listFields;
 		$scope.sortBy={header: data.listFields[0] , direction : "asc" };

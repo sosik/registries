@@ -15,7 +15,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="group in groups">
+						<tr ng-class="{'psui-active': (selectedGroup===group)}"  ng-repeat="group in groups">
 							<td>{{$index + 1}}</td>
 							<td>{{group.baseData.name}}</td>
 							<td class="psui-actions-holder">

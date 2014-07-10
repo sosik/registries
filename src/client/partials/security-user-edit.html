@@ -54,7 +54,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="obj in userList" ng-click="goView($index)"
+								<tr ng-class="{'psui-active': (selectedUser===obj)}" ng-repeat="obj in userList" ng-click="goView($index)"
 									class="list-row">
 									<td ng-repeat="header in headers">{{getVal("obj." +
 										header.field)}} {{$eval("obj."+header.field)}}</td>

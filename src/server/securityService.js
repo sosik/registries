@@ -29,8 +29,6 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 
 	this.hasRightForAction = function(schema, action, avaliablePerm) {
 
-		console.log(schema,action,avaliablePerm);
-
 		var missingPerm=null
 		if ('_security' in schema) {
 			if (action in schema['_security']) {
@@ -40,11 +38,8 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 						if ( !(required in avaliablePerm)  ||  !(avaliablePerm[required]) ){
 							missingPerm=required;
 						}	
-					
 					});
-
 				}
-
 			}
 
 		} else {
@@ -55,8 +50,33 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		return missingPerm===null;
 
 	}
+/**
+ * Method verifies if current user (req.perm) contains required permission
+ */
+	this.userHasPermissions = function (req,perm) { 
+		if (!req.perm || (perm && hasPermission(req.perm,perm))){
+			return true;
+		}
+		return false;
+	}
+	
+	this.missingPermissionMessage=function(perm){
+		return {translationCode:'security.user.missing.permissions',translationData:perm, time:3000};
+	}
 
+	function hasPermission(coll, perm) {
+		
+		for (var i = coll.length; i--;) {
+			if (coll[i] === perm) {
+				return true;
+			}
+		}
+		return false;
+	}
 };
+
+
+
 
 module.exports = {
     actions : actions,

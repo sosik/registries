@@ -5,10 +5,13 @@ var crypto = require("crypto");
 var uuid = require('node-uuid');
 var nodemailer = require("nodemailer");
 
+
 var log = require('./logging.js').getLogger('securityController.js');
 var QueryFilter = require('./QueryFilter.js');
 var renderModule = require('./renderService.js');
 var universalDaoModule = require('./UniversalDao.js');
+
+var securityServiceModule = require('./securityService.js');
 
 var DEFAULT_CFG = {
     userCollection : 'people',
@@ -33,6 +36,7 @@ var fs = require('fs');
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
+	var securityService=new securityServiceModule.SecurityService();
 	
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.userCollection
@@ -120,13 +124,18 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			}
 		}
 		return false;
-	}
+	};
 
+	
 	
 
 	this.updateUserSecurity = function(req, resp) {
 
-		log.silly(req.body);
+		if (!securityService.userHasPermissions(req,'Security - write')){
+			resp.send(401 , securityService.missingPermissionMessage('Security - write'));
+			log.verbose('missing perm Security - write');
+			return;
+		}
 		
 		var userId = req.body.userId;
 		userDao.get(userId, function(err, user) {
@@ -193,6 +202,13 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.updateGroupSecurity = function(req, resp) {
 
+		
+		if (!securityService.userHasPermissions(req,'Security - write')){
+			resp.send(401, err);
+			log.verbose('missing perm Security - write');
+			return;
+		}
+		
 		var groupId = req.body.oid;
 		groupDao.get(groupId, function(err, group) {
 
@@ -536,6 +552,15 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	 * be used by authorized person ( no 'accidental' password resets)
 	 */
 	this.resetPassword = function(req, resp) {
+		
+		
+		
+		if (!securityService.userHasPermissions(req,'Security - write')){
+			resp.send(401 , securityService.missingPermissionMessage('Security - write'));
+			log.verbose('missing perm Security - write');
+			return;
+		}
+		
 		// FIXME construct criteria bt QueryFilter
 		var t = this;
 		userDao.get(req.body.userId, function(err, data) {

@@ -183,8 +183,8 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                $scope.logout = function() {
 		                SecurityService.getLogout().then(function(data, status, headers, config) {
 			                $scope.security.currentUser = undefined;
-			                $cookieStore.remove('loginName');
-			                $cookieStore.remove('securityToken');
+//			                $cookieStore.remove('loginName');
+//			                $cookieStore.remove('securityToken');
 			                $location.path('/login');
 		                })
 	                };
@@ -444,15 +444,25 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		                securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups).success(function(data) {
 		                	notificationFactory.info({translationCode:'security.user.edit.modification.done',time:3000});
 		                	$scope.search();
-		                }).error(function (err){notificationFactory.error(err)});
+		                }).error(function (err,data){
+		                	console.log(err,data);
+		                	notificationFactory.error(err)});
 	                };
 	                
 	                $scope.resetPassword= function (){
+	                	console.log('sdfdsfdsfdsfdsfddsfs');
 	                	 securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups).success(function(data) {
 	                		 securityService.getResetPassword($scope.selectedUser.id).success(function (data){
-	                			   notificationFactory.info({type:'info',text:'Nové heslo bolo zaslané na: ' +$scope.selectedUser.systemCredentials.login.email,deletable : true, time:5000, timeout: null}); 
-	                		 });
-			             });
+	                			 notificationFactory.info({type:'info',text:'Nové heslo bolo zaslané na: ' +$scope.selectedUser.systemCredentials.login.email,deletable : true, time:5000, timeout: null}); 
+	                			 }).error(function (err,data){
+	                				 console.log(err);
+	                				 notificationFactory.error(err)
+	                				 });
+	                		
+			             }).error(function (err,data){
+            				 console.log(err);
+            				 notificationFactory.error(err)
+            				 });
 	                };
 
                 } ])
@@ -474,7 +484,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						var mes = {translationCode:'personal.change.password.password.changed'};
 						notificationFactory.info(mes);
 			                }).error(function(data, status, headers, config) {
-						var mes = {translationCode:'personal.change.password.password.not.changed',translationData:data};
+						var mes = {translationCode:'security.user.missing.permissions',translationData:data,time:3000};
 						notificationFactory.error(mes);
 			                });
 		                }

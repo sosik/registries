@@ -61,7 +61,7 @@
 							<table class="table">
 								<thead>
 									<tr class="list-header">
-										<th ng-class="(sortBy.header===header)? ((sortBy.direction=='asc')? 'psui-action-sort psui-icon-chevron-up' : 'psui-action-sort psui-icon-chevron-down') : '' "  ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
+										<th  ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -73,7 +73,7 @@
 										<td class="psui-actions-holder">
 											<span class="psui-btn psui-view-btn">
 												<i></i><span>{{'generic.search.view' | translate}}</span>
-											</span>
+											</span> 
 										</td>
 									</tr>
 								</tbody>

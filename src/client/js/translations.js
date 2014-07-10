@@ -135,7 +135,10 @@ angular.module('registries')
 		"errors.validation.required": "Povinné pole",
 		"schema.editor.schema.editing":"Úprava schémy",
 		'security.group.edit.parent.group':'Rodičovská skupina',
-
+		"schemas.group.base.data":"Základné údaje",
+		"schemas.group.base.data.ID":"Identifikátor",
+		"schemas.group.base.data.name":"Názov skupiny",
+		"schemas.group.base.data.parent.group":"Rodičovská skupina",
 	});
 
 	$translateProvider.translations('cz', {
@@ -256,6 +259,10 @@ angular.module('registries')
 		'psui-objectlink.btn.save': 'Uložit',
 		'psui-objectlink.btn.cancel': 'Zrušit',
 		'security.group.edit.parent.group':'Rodičovská skupina',
+		"schemas.group.base.data":"Základní údaje",
+		"schemas.group.base.data.ID":"Identifikátor",
+		"schemas.group.base.data.name":"Jméno skupiny",
+		"schemas.group.base.data.parent.group":"Rodičovská skupina",
 	});
 }])
 .controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {

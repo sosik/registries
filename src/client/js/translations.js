@@ -1,6 +1,5 @@
 angular.module('registries')
 .config(['$translateProvider', function($translateProvider) {
-	$translateProvider.preferredLanguage('sk');
 	$translateProvider.useMissingTranslationHandlerLog();
 	$translateProvider.translations('sk', {
 		'login.title': 'Prihlásenie',

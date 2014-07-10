@@ -91,6 +91,7 @@ fieldset{
 	border-style: dashed;
 	padding: $field-padding-vertical $padding-base-horizontal*3 $field-padding-vertical $padding-base-horizontal;	
 	@include user-select(none); 
+	@include transition(border-color .5s);
 	
 	&:before{
 		content: " ";
@@ -107,7 +108,8 @@ fieldset{
 		right: 1px;
 		bottom: 1px;
 		background-color: $input-bg;
-		padding: 6px;
+		padding: $field-padding-vertical 6px $field-padding-vertical 6px;
+		@include transition(background-color .5s);
 	}
 	
 	&:hover{

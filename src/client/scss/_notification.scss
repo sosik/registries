@@ -45,6 +45,7 @@
 		border-width: 1px;
 		width: 70%;
 		text-align: left;
+		/*@include transition(all 5s);*/
 		
 		@include media-mobile{
 			width: 94%;

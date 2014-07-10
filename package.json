@@ -29,10 +29,10 @@
     "mongodb": "*",
     "node-uuid": "*",
     "nodemailer": "^0.6.5",
-    "supervisor": "^0.6.0",
-    "winston": "^0.7.3",
     "readline": "*",
-    "swig":"1.4.1"
+    "supervisor": "^0.6.0",
+    "swig": "^1.4.1",
+    "winston": "^0.7.3"
   },
   "devDependencies": {
     "grunt-contrib-sass": "^0.7.3"

@@ -43,6 +43,10 @@
 			}
 		}
 		
+		&.psui-active{
+			background-color: $table-tr-selected-bg;
+		}
+		
 	}
 	td{
 		border-bottom: 1px solid $table-td-border-color;

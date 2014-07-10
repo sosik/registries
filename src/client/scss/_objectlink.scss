@@ -53,7 +53,8 @@
             cursor: pointer;
             color: lighten($font-color-base,20%);
             line-height: $line-height-base;
-            
+            @include user-select(none);
+			
             &:hover,
             &:focus,
             &.active{

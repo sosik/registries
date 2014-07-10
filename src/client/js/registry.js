@@ -1,4 +1,4 @@
-angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink'])
+angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src'])
 .controller('registry.newCtrl', ['$route',
 		'$scope',
 		'$routeParams',
@@ -136,7 +136,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
 				viewElement = angular.element($compile('<div psui-objectlink-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-UPLOADABLE-IMAGE') {
-				viewElement = angular.element($compile('<img ng-src="{{'+attrs.ngModel +'}}" src=""></img>')(scope));
+				viewElement = angular.element($compile('<img ng-src="{{'+attrs.ngModel +'}}" src="" psui-default-src="/img/no_photo.jpg"></img>')(scope));
 			} else {
 				viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
 			}
@@ -349,7 +349,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				console.log(properties);
 				angular.forEach(properties, function(value, key) {
 					if (value.type === 'object') {
-						var fieldSet = angular.element('<fieldset></fieldset');
+						var fieldSet = angular.element('<fieldset></fieldset>');
 						element.append(fieldSet);
 						fieldSet.wrap('<div class="col-md-6"></div>');
 						fieldSet.append('<legend>'+value.title+'</legend>');

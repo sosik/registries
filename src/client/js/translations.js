@@ -20,8 +20,18 @@ angular.module('registries')
 		"menu.stadium.title": "Štadión",
 		"menu.club.title": "Klub",
 		"menu.person.title": "Osoba",
-
 		"menu.company.title": "Spoločnosť",
+		"menu.new.person.lower.level": "Nová osoba",
+		"menu.new.company.lower.level": "Nová spoločnosť",
+		"menu.search.person.lower.level": "Hľadať osobu",
+		"menu.search.member.lower.level": "Hľadať člena",
+		"menu.search.player.lower.level": "Hľadať hráča",
+		"menu.search.referee.lower.level": "Hľadať rozhodcu",
+		"menu.search.coach.lower.level": "Hľadať trénera",
+		"menu.search.company.lower.level": "Hľadať spoločnosť",
+		"menu.search.club.lower.level": "Hľadať klub",
+		"menu.search.association.lower.level": "Hľadať zväz",
+		
 		"menu.my.profile.title": "Môj profil",
 		"menu.permissions.title": "Oprávnenia",
 		"menu.schemas.title": "Schémy",
@@ -124,6 +134,8 @@ angular.module('registries')
 		'psui-objectlink.btn.cancel': 'Zrušiť',
 		
 		"errors.validation.required": "Povinné pole",
+		
+		
 
 
 	});

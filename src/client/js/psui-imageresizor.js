@@ -25,8 +25,8 @@ angular.module('psui-imageresizor', ['pascalprecht.translate'])
 			var imgWidth = attrs.psuiImageresizorWidth || 0;
 			var imgHeight = attrs.psuiImageresizorHeight || 0;
 			var resize = 1;
-			var width = imgWidth*3;
-			var height = imgHeight*3;
+			var width = imgWidth*1.5;
+			var height = imgHeight*1.5;
 			var state = 0;
 			var pomer;
 			var x,y;

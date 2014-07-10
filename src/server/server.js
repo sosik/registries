@@ -9,9 +9,7 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var errorhandler = require('errorhandler')
 var path = require('path');
-var photosRepoApp=require('./fsController.js');
-// controller to access dataset specific configuration files
-var datasetRepoApp=require('./fsController.js');
+var fsController=require('./fsController.js');
 
 var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js'));
 var config = require(path.join(process.cwd(), '/build/server/config.js'));
@@ -107,11 +105,11 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(errorhandler({ dumpExceptions: true, showStack: true }));
 	
 	log.verbose('Configuring photos sub applicaction');
-	photosRepoApp.cfg({rootPath: config.paths.photos ,fileFilter: null});
+	var photosRepoApp = fsController.create({rootPath: config.paths.photos ,fileFilter: null});
 	app.use('/photos',photosRepoApp);
 
 	log.verbose('Configuring dataset sub applicaction');
-	datasetRepoApp.cfg({
+	var datasetRepoApp = fsController.create({
 			rootPath:config.paths.dataset,
 			allowedOperations: ['get'],
 			fileFilter: null});

@@ -6,15 +6,15 @@ var extend = require('extend');
 var path = require('path');
 var fsCtrlModule = require('./fsService.js');
 
-var app = express();
-
 var DEFAULT_CFG = {
 	rootPath : '/tmp',
 	filePathRegexp : /^\/fs\/\w+/,
 	allowedOperations: [ 'ls', 'get', 'rm', 'mkdir', 'put', 'putgetpath', 'replace' ]
 };
 
-app.cfg = function(options) {
+var create = function(options) {
+	var app = express();
+
 	var prop = extend(true, {}, DEFAULT_CFG, options);
 
 	if (options && options.allowedOperations) {
@@ -131,6 +131,9 @@ app.cfg = function(options) {
 			});
 		});
 	}
-};
 
-module.exports = app;
+
+	return app;
+}
+
+module.exports = {create: create};

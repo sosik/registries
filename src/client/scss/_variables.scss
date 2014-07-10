@@ -95,9 +95,14 @@ $datepicker-color: lighten($font-color-base,10%) !default;
 $datepicker-other-days-color: lighten($font-color-base,50%) !default;
 
 // Buttons
-$btn-primary-color: #fff !default;
+$btn-primary-color: $font-color-light !default;
 $btn-primary-bg: $main-color !default;
 $btn-primary-border: darken($btn-primary-bg, 5%) !default;
+
+$btn-secoundary-color: $font-color-light !default;
+$btn-secoundary-bg: $input-border-color !default;
+$btn-secoundary-border: darken($btn-secoundary-bg, 5%) !default;
+
 $btn-vertical-padding: 6px !default;
 $btn-vertical-margin: $padding-base-vertical !default;
 

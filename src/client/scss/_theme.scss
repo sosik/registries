@@ -25,3 +25,7 @@ table.schemaedit tr.selected td {
 .btn-primary {
   @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
 }
+
+.btn-secondary {
+  @include button-variant($btn-secoundary-color, $btn-secoundary-bg, $btn-secoundary-border);
+}

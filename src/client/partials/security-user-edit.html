@@ -144,7 +144,7 @@
 						<div class="col-md-12">
 							<div class="row psui-multiselect-box">
 								<div class="col-sm-6 permissions psui-box">
-									<header>{{'security.user.edit.added.permissions' |translate}}Pridelené práva</header>
+									<header>{{'security.user.edit.added.permissions' |translate}}</header>
 									<section class="psui-list" >
 										<div ng-repeat="perm in user.permissions" class="psui-list-item" ng-click="removePermission(perm)">
 											<i class="glyphicon-minus"></i><span>{{perm}}</span>
@@ -152,7 +152,7 @@
 									</section>
 								</div>
 								<div class="col-sm-6 permissions psui-box">
-									<header>{{'security.user.edit.available.permissions' |translate}}Dostupné práva</header>
+									<header>{{'security.user.edit.available.permissions' |translate}}</header>
 									<section class="psui-list">
 										<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
 											<i class="glyphicon-plus"></i><span>{{perm}}</span>

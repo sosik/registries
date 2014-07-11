@@ -7,7 +7,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	});
 } ])
 //
-.factory('generic-search.GenericSearchFactory', [ '$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
+.factory('generic-search.GenericSearchFactory', [ '$http', 'schema-utils.SchemaUtilFactory', '$translate', function($http, schemaUtilFactory, $translate) {
 	var service = {};
 
 	service.getSearch = function(searchSchema, criteria,sortBy,skip,limit) {
@@ -75,7 +75,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 					resultArr.push({
 					    path : pathPrefix + pr,
 					    type : objectDef.properties[pr].type,
-					    title : objectDef.properties[pr].title
+					    title : objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title
 					});
 				}
 			}

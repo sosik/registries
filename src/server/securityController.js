@@ -128,12 +128,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.updateUserSecurity = function(req, resp) {
 		
-		if (!securityService.userHasPermissions(req,'Security - write')){
-			resp.send(401 , securityService.missingPermissionMessage('Security - write'));
-			log.verbose('missing perm Security - write');
-			return;
-		}
-		
 		var userId = req.body.userId;
 		userDao.get(userId, function(err, user) {
 
@@ -201,7 +195,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 		
 		if (!securityService.userHasPermissions(req,'Security - write')){
-			resp.send(401, err);
+			resp.send(403, err);
 			log.verbose('missing perm Security - write');
 			return;
 		}
@@ -317,7 +311,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					}
 					else {
 						log.verbose('Not authorized', err);
-						resp.send(401, 'Not authorized.');
+						resp.send(403, securityService.missingPermissionMessage('System User'));
 					}
 				}); 
 				
@@ -537,7 +531,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			});
 		} else {
-			resp.send(500, 'SecurityToken Missings.');
+			resp.send(500, 'SecurityToken missings.');
 			return;
 		}
 
@@ -548,14 +542,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	 * be used by authorized person ( no 'accidental' password resets)
 	 */
 	this.resetPassword = function(req, resp) {
-		
-		
-		
-		if (!securityService.userHasPermissions(req,'Security - write')){
-			resp.send(401 , securityService.missingPermissionMessage('Security - write'));
-			log.verbose('missing perm Security - write');
-			return;
-		}
 		
 		// FIXME construct criteria bt QueryFilter
 		var t = this;
@@ -688,7 +674,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	};
 
-	this.generatePassword = function generatePassword() {
+	this.generatePassword = function () {
 		var length = cfg.generatedPasswordLen, charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", retVal = "";
 
 		for (var i = 0, n = charset.length; i < length; ++i) {

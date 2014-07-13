@@ -5,9 +5,9 @@ var express = require('express');
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
-var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
-var errorhandler = require('errorhandler')
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var errorhandler = require('errorhandler');
 var path = require('path');
 var fsController=require('./fsController.js');
 
@@ -17,7 +17,8 @@ var config = require(path.join(process.cwd(), '/build/server/config.js'));
 var universalDaoControllerModule = require(process.cwd() + '/build/server/UniversalDaoController.js');
 
 var securityControllerModule = require('./securityController.js');
-//var userControllerModule = require('./userController.js');
+var securityServiceModule = require('./securityService.js');
+var securityService= new securityServiceModule.SecurityService();
 
 var schemaRegistryModule = require('./schemaRegistry.js');
 
@@ -53,8 +54,6 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
 	
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,config);
-//	var userCtrl = new  userControllerModule.UserController(mongoDriver,{});
-	
 	
 	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,schemaRegistry,{});
 	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{
@@ -62,38 +61,39 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	});
 	
 	app.use(cookieParser());
-	app.use(securityCtrl.authFilter );
+	app.use(securityCtrl.authFilter);
 	
-	app.put('/udao/save/:table', bodyParser(), function(req, res){udc.save(req, res);});
-	app.put('/udao/saveBySchema/:schema', bodyParser(), function(req, res){udc.saveBySchema(req, res);});
-	app.get('/udao/get/:table/:id', bodyParser(), function(req, res){udc.get(req, res);});
-	app.get('/udao/getBySchema/:schema/:id', bodyParser(), function(req, res){udc.getBySchema(req, res);});
-	app.get('/udao/list/:table', bodyParser(), function(req, res){udc.list(req, res);});
-	app.get('/udao/listBySchema/:schema', bodyParser(), function(req, res){udc.listBySchema(req, res);});
-	app.post('/udao/search/:table', bodyParser(), function(req, res){udc.search(req, res);});
+	app.put('/udao/save/:table',  securityService.authenRequired,bodyParser(), function(req, res){udc.save(req, res);});
+	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser(), function(req, res){udc.saveBySchema(req, res);});
+	app.get('/udao/get/:table/:id',securityService.authenRequired, bodyParser(), function(req, res){udc.get(req, res);});
+	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, bodyParser(), function(req, res){udc.getBySchema(req, res);});
+	app.get('/udao/list/:table',securityService.authenRequired, bodyParser(), function(req, res){udc.list(req, res);});
+	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser(), function(req, res){udc.listBySchema(req, res);});
+	app.post('/udao/search/:table',securityService.authenRequired, bodyParser(), function(req, res){udc.search(req, res);});
 
 	app.post('/login', bodyParser(), function(req, res){securityCtrl.login(req, res);});
 	app.get('/logout', bodyParser(), function(req, res){securityCtrl.logout(req, res);});
-	app.get('/user/current', bodyParser(), function(req, res){securityCtrl.getCurrentUser(req, res);});
+	app.get('/user/current',securityService.authenRequired, bodyParser(), function(req, res){securityCtrl.getCurrentUser(req, res);});
 	
-	app.post('/resetPassword', bodyParser(), function(req, res){securityCtrl.resetPassword(req, res);});
-    app.post('/changePassword', bodyParser(), function(req, res){securityCtrl.changePassword(req, res);});
+	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser(), function(req, res){securityCtrl.resetPassword(req, res);});
+    app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser(), function(req, res){securityCtrl.changePassword(req, res);});
 
-    app.get('/security/permissions',function(req,res){securityCtrl.getPermissions(req,res);});
+    app.get('/security/permissions',securityService.authenRequired,function(req,res){securityCtrl.getPermissions(req,res);});
     
-    app.get('/schema/compiled/*',bodyParser(),function(req,res){schemaCtrl.getCompiledSchema(req,res);});
-    app.get('/schema/ls*',bodyParser(),function(req,res){schemaCtrl.schemaList(req,res);});
-    app.get('/schema/get/*',bodyParser(),function(req,res){schemaCtrl.schemaRead(req,res);});
-    app.put('/schema/replace/*',bodyParser(),function(req,res){schemaCtrl.schemaReplace(req,res);});
+    app.get('/schema/compiled/*',securityService.hasPermFilter('System User').check,bodyParser(),function(req,res){schemaCtrl.getCompiledSchema(req,res);});
+    app.get('/schema/ls*',securityService.hasPermFilter('System Admin').check,bodyParser(),function(req,res){schemaCtrl.schemaList(req,res);});
+    app.get('/schema/get/*',securityService.hasPermFilter('System Admin').check,bodyParser(),function(req,res){schemaCtrl.schemaRead(req,res);});
+    app.put('/schema/replace/*',securityService.hasPermFilter('System Admin').check,bodyParser(),function(req,res){schemaCtrl.schemaReplace(req,res);});
     
 //    app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
-    app.get('/user/permissions/:id',bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res);});
-    app.post('/user/permissions/update', bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res);});
-    app.post('/user/security/update', bodyParser(),function(req,res){securityCtrl.updateUserSecurity(req,res);});
-    app.post('/group/security/update', bodyParser(),function(req,res){securityCtrl.updateGroupSecurity(req,res);});
+    app.get('/user/permissions/:id',securityService.hasPermFilter('Security - write').check,bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res);});
+    app.post('/user/permissions/update',securityService.hasPermFilter('Security - write').check, bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res);});
+    app.post('/user/security/update',securityService.hasPermFilter('Security - write').check, bodyParser(),function(req,res){securityCtrl.updateUserSecurity(req,res);});
+    app.post('/group/security/update',securityService.hasPermFilter('Security - write').check, bodyParser(),function(req,res){securityCtrl.updateGroupSecurity(req,res);});
     
-    app.post('/search/def', bodyParser(),function(req,res){searchCtrl.getSearchDef(req,res);});
-    app.post('/search/:schema', bodyParser(),function(req,res){searchCtrl.search(req,res);});
+    app.post('/search/def',securityService.authenRequired, bodyParser(),function(req,res){searchCtrl.getSearchDef(req,res);});
+    app.post('/search/:schema',securityService.authenRequired, bodyParser(),function(req,res){searchCtrl.search(req,res);});
+    
     
     
 	// Static data

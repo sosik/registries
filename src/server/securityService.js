@@ -40,20 +40,32 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 						}	
 					});
 				}
+			}else {
+				log.verbose('schema does not have section for action', schema.id, action);
 			}
 
 		} else {
-			log.silly('schema has no security section', schema.id);
+			log.verbose('schema has no security section', schema.id);
 		}
 
 		log.silly('missing perm',missingPerm);
 		return missingPerm===null;
 
-	}
+	};
+	
+
+	this.requiredPermissions = function(schema, action) {
+		return schema['_security'][action]['_static'].join(' ');
+	};
+	
+	
 /**
  * Method verifies if current user (req.perm) contains required permission
  */
 	this.userHasPermissions = function (req,perm) { 
+		
+		log.verbose('?user has perm ', perm);
+		
 		if (!req.perm || (perm && hasPermission(req.perm,perm))){
 			return true;
 		}
@@ -61,7 +73,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	}
 	
 	this.missingPermissionMessage=function(perm){
-		return {translationCode:'security.user.missing.permissions',translationData:perm, time:3000};
+		return {missingPerm:perm};
 	}
 
 	function hasPermission(coll, perm) {
@@ -73,6 +85,40 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		}
 		return false;
 	}
+
+	this.authenRequired= function (req,res,next){
+		if (!req.authenticated ) { 
+			res.send(401);
+		}else { 
+			next();
+		}
+	};
+	
+	
+	
+	this.hasPermFilter= function (perm){
+		var t=this;
+		 var f= function (perm){
+			 	var xperm=perm;
+		 		this.check=function(req,res,next){
+					 log.verbose('checking for perm',xperm);
+						if (!req.authenticated ) { 
+							res.send(401);
+						}else
+							if (!hasPermission(req.perm,xperm)) {
+								res.send(403,t.missingPermissionMessage(xperm));
+							}
+							else { 
+								next();
+							}
+						
+					};
+			 
+		 		};
+			log.verbose('created checker for perm',perm);
+		return new f(perm);
+	};
+
 };
 
 

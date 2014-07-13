@@ -28,7 +28,7 @@ var RenderService = function( options) {
 	//compile templates
 	for (var templ in templates) { 
 		swig.compileFile(getTemplateFileName(templates[templ]));
-		console.log('Template compiled',templ);
+		log.verbose('Template compiled',templ);
 	}
 	
 	this.render=function (templ,ctx){

@@ -235,7 +235,6 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		}
 		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,pageSize).success(function(data) {
 			
-			console.log('merging ',$scope.data , data );
 			data.map(function (newItems){
 				$scope.data.push(newItems);
 			});

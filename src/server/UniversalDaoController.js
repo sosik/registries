@@ -53,7 +53,7 @@ var securityService= new securityServiceModule.SecurityService();
 		}
 		
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.MODIFY,req.perm)){
-			res.send(401);
+			res.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.MODIFY)));
 			log.verbose('Not authorized to save object ',schemaName);
 			return;
 		} 
@@ -117,7 +117,7 @@ var securityService= new securityServiceModule.SecurityService();
 		}
 		
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
-			res.send(401);
+			res.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
 			log.verbose('Not authorized to get object ',schemaName);
 			return;
 		} 
@@ -206,7 +206,7 @@ var securityService= new securityServiceModule.SecurityService();
 		}
 		
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
-			res.send(401);
+			res.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
 			return;
 		} 
 

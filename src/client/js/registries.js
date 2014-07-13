@@ -16,7 +16,7 @@ angular.module('registries', [
 		'pascalprecht.translate',
 		'psui-objectlink'
 ])
-.config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});
 	$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 	$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
@@ -26,6 +26,32 @@ angular.module('registries', [
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl',permissions:['Registry - read']});
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 }])
+.config(['$httpProvider', function ($httpProvider) {
+    $httpProvider.interceptors.push(function ($q,$injector) {
+        return {
+            'response': function (response) {
+                //Will only be called for HTTP up to 300
+                return response;
+            },
+            'responseError': function (rejection) {
+            	if(rejection.status === 401) {
+                    $injector.get ('$location').url('/login');
+                    $injector.get ('psui.notificationFactory').warn({translationCode:'security.user.session.expired',time:5000} );
+                    $injector('$rootScope').app.mainMenu=false;
+                    $injector('$rootScope').security.currentUser = undefined;
+                }else
+                
+                if(rejection.status === 403) {
+                  $injector.get ('$location').url('/login');
+                  $injector.get('psui.notificationFactory').warn({translationCode:'security.user.missing.permissions',translationData:rejection.data.missingPerm,time:5000});
+                }else
+                return $q.reject(rejection);
+            }
+        };
+    });
+}])
+//
+
 /**
  * Main function, initializes all required data and scopes. For configuration of $providers
  * use .config
@@ -33,8 +59,6 @@ angular.module('registries', [
 .run(["$rootScope", '$location', 'security.SecurityService', '$cookies','psui.notificationFactory', function($rootScope, $location, SecurityService,$cookies,notificationFactory) {
 	$rootScope.security = $rootScope.security || {};
 	// by default, current user is undefined, as there is noone logged in
-	
-	$rootScope.cookies=$cookies;
 	
 	var changeRouteRuleActive=false;
 	
@@ -62,10 +86,7 @@ angular.module('registries', [
 		if (nextRoute && nextRoute.permissions) {
 			// check permissions only if defined
 			if (changeRouteRuleActive && (!$rootScope.security.currentUser || !SecurityService.hasPermissions(nextRoute.permissions))) {
-				//FIXME this call doesn't work , newer version of angular should be used. 
-//				evt.preventDefault();
-				// TODO TRANSLATE
-				notificationFactory.error({translationCode:'security.user.missing.permissions',translationData: nextRoute.permissions ,time:5000});
+				notificationFactory.warn({translationCode:'security.user.missing.permissions',translationData: nextRoute.permissions ,time:5000});
 				$location.url('/login');
 			}
 		}

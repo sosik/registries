@@ -69,6 +69,7 @@ angular.module('registries')
 		"security.group.edit.modification.of.security.group": "Modifikácia bezpečnostnej skupiny",
 		"security.user.edit.modification.done": "Použivateľ bol modifikovaný",
 		"security.user.missing.permissions":"Chybajúce oprávnenie: {{data}}",
+		"security.user.session.expired":"Pre nečinnosť ste boli odhlásený.",
 		"schema.editor.save": "Uložiť",
 		"schema.editor.edit": "Upraviť",
 		"schema.editor.id": "ID",

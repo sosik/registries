@@ -4,6 +4,10 @@ var log = require('./logging.js').getLogger('loginController.js');
 var extend = require('extend');
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 
+
+var securityServiceModule = require(process.cwd() + '/build/server/securityService.js');
+var securityService= new securityServiceModule.SecurityService();
+
 var universalDaoModule = require('./UniversalDao.js');
 var DEFAULT_CFG = {
 		
@@ -57,7 +61,7 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 		var entity=req.body.entity;
 		var schemaUri=DEFAULT_CFG.entityToNs[entity];
 		
-		console.log(entity,schemaUri);
+		log.verbose('getSearchDef',entity,schemaUri);
 		var schema = schemaRegistry.getSchema(schemaUri);
 		var retval = {};
 
@@ -111,8 +115,21 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName : schema.compiled.table
 		});
+		
+		
+		var compiledSchema = schema.compiled;
 
-		log.verbose('search using criteria',schema.compiled.table, req.body.criteria );
+		if (!compiledSchema) {
+			log.error('schema %s is not compiled', schemaName);
+			throw 'Schema is not compiled';
+		}
+		
+
+		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
+			resp.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
+			return;
+		} 
+
 		dao.list({
 			crits : req.body.criteria,
 			sorts: req.body.sortBy,
@@ -122,11 +139,11 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 			if (err) {
 				resp.send(500, err);
 			} else {
-				resp.send(200, data)
+				resp.send(200, data);
 			}
 		});
 
-	}
+	};
 
 };
 

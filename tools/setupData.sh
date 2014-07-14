@@ -9,6 +9,8 @@ datasets=(
 	["caihp-petugez"]="https://github.com/petugez/registries-data-caihp.git"
 	["caihp-mkotul"]="https://github.com/mkotul/registries-data-caihp.git"
 	["svf-mkotul"]="https://github.com/mkotul/registries-data-svf.git"
+	["srz-petugez"]="https://github.com/petugez/registries-data-srz.git"
+	["svf-petugez"]="https://github.com/petugez/registries-data-svf.git"
 )
 
 if [ $# -lt 1 ]; then

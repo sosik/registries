@@ -4,8 +4,8 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
         'security.SecurityService',
         [
                 '$http',
-                '$rootScope',
-                function($http, $rootScope) {
+                '$rootScope','schema-utils.SchemaUtilFactory',
+                function($http, $rootScope,schemaUtilFactory) {
 	                var service = {};
 
 	                service.getLogin = function(user, password) {
@@ -57,10 +57,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	                };
 
 	                service.getSecurityGroups = function() {
-
+	                	var entityUri='uri://registries/security#groupmaster/new'
 		                return $http({
 		                    method : 'GET',
-		                    url : '/udao/list/groups',
+		                    url : '/udao/listBySchema/'+schemaUtilFactory.encodeUri(entityUri),
 		                });
 
 	                };
@@ -292,7 +292,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
         [ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory',
                 'psui.notificationFactory', function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
 
-	                var entityUri = 'uri://registries/member';
+	                var entityUri = 'uri://registries/user#security';
 
 	                $scope.userList = [];
 	                $scope.selectedUser = null;

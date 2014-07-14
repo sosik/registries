@@ -63,36 +63,36 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter);
 	
-	app.put('/udao/save/:table',  securityService.authenRequired,bodyParser(), function(req, res){udc.save(req, res);});
-	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser(), function(req, res){udc.saveBySchema(req, res);});
-	app.get('/udao/get/:table/:id',securityService.authenRequired, bodyParser(), function(req, res){udc.get(req, res);});
-	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, bodyParser(), function(req, res){udc.getBySchema(req, res);});
-	app.get('/udao/list/:table',securityService.authenRequired, bodyParser(), function(req, res){udc.list(req, res);});
-	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser(), function(req, res){udc.listBySchema(req, res);});
-	app.post('/udao/search/:table',securityService.authenRequired, bodyParser(), function(req, res){udc.search(req, res);});
+	app.put('/udao/save/:table',  securityService.authenRequired,bodyParser.json(), function(req, res){udc.save(req, res);});
+	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.saveBySchema(req, res);});
+	app.get('/udao/get/:table/:id',securityService.authenRequired, bodyParser.json(), function(req, res){udc.get(req, res);});
+	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, bodyParser.json(), function(req, res){udc.getBySchema(req, res);});
+	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.list(req, res);});
+	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.listBySchema(req, res);});
+	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.search(req, res);});
 
-	app.post('/login', bodyParser(), function(req, res){securityCtrl.login(req, res);});
-	app.get('/logout', bodyParser(), function(req, res){securityCtrl.logout(req, res);});
-	app.get('/user/current',securityService.authenRequired, bodyParser(), function(req, res){securityCtrl.getCurrentUser(req, res);});
+	app.post('/login', bodyParser.json(), function(req, res){securityCtrl.login(req, res);});
+	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});
+	app.get('/user/current',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.getCurrentUser(req, res);});
 	
-	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser(), function(req, res){securityCtrl.resetPassword(req, res);});
-    app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser(), function(req, res){securityCtrl.changePassword(req, res);});
+	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(), function(req, res){securityCtrl.resetPassword(req, res);});
+    app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(), function(req, res){securityCtrl.changePassword(req, res);});
 
     app.get('/security/permissions',securityService.authenRequired,function(req,res){securityCtrl.getPermissions(req,res);});
     
-    app.get('/schema/compiled/*',securityService.hasPermFilter('System User').check,bodyParser(),function(req,res){schemaCtrl.getCompiledSchema(req,res);});
-    app.get('/schema/ls*',securityService.hasPermFilter('System Admin').check,bodyParser(),function(req,res){schemaCtrl.schemaList(req,res);});
-    app.get('/schema/get/*',securityService.hasPermFilter('System Admin').check,bodyParser(),function(req,res){schemaCtrl.schemaRead(req,res);});
-    app.put('/schema/replace/*',securityService.hasPermFilter('System Admin').check,bodyParser(),function(req,res){schemaCtrl.schemaReplace(req,res);});
+    app.get('/schema/compiled/*',securityService.hasPermFilter('System User').check,bodyParser.json(),function(req,res){schemaCtrl.getCompiledSchema(req,res);});
+    app.get('/schema/ls*',securityService.hasPermFilter('System Admin').check,bodyParser.json(),function(req,res){schemaCtrl.schemaList(req,res);});
+    app.get('/schema/get/*',securityService.hasPermFilter('System Admin').check,bodyParser.json(),function(req,res){schemaCtrl.schemaRead(req,res);});
+    app.put('/schema/replace/*',securityService.hasPermFilter('System Admin').check,bodyParser.json(),function(req,res){schemaCtrl.schemaReplace(req,res);});
     
 //    app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
-    app.get('/user/permissions/:id',securityService.hasPermFilter('Security - write').check,bodyParser(),function(req,res){securityCtrl.getUserPermissions(req,res);});
-    app.post('/user/permissions/update',securityService.hasPermFilter('Security - write').check, bodyParser(),function(req,res){securityCtrl.updateUserPermissions(req,res);});
-    app.post('/user/security/update',securityService.hasPermFilter('Security - write').check, bodyParser(),function(req,res){securityCtrl.updateUserSecurity(req,res);});
-    app.post('/group/security/update',securityService.hasPermFilter('Security - write').check, bodyParser(),function(req,res){securityCtrl.updateGroupSecurity(req,res);});
+    app.get('/user/permissions/:id',securityService.hasPermFilter('Security - write').check,bodyParser.json(),function(req,res){securityCtrl.getUserPermissions(req,res);});
+    app.post('/user/permissions/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateUserPermissions(req,res);});
+    app.post('/user/security/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateUserSecurity(req,res);});
+    app.post('/group/security/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateGroupSecurity(req,res);});
     
-    app.post('/search/def',securityService.authenRequired, bodyParser(),function(req,res){searchCtrl.getSearchDef(req,res);});
-    app.post('/search/:schema',securityService.authenRequired, bodyParser(),function(req,res){searchCtrl.search(req,res);});
+    app.post('/search/def',securityService.authenRequired, bodyParser.json(),function(req,res){searchCtrl.getSearchDef(req,res);});
+    app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){searchCtrl.search(req,res);});
     
     
     

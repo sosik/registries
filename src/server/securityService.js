@@ -1,21 +1,11 @@
 'use strict';
 
 var extend = require('extend');
-var crypto = require("crypto");
-var uuid = require('node-uuid');
-var nodemailer = require("nodemailer");
+
 
 var log = require('./logging.js').getLogger('SecurityService.js');
-var QueryFilter = require('./QueryFilter.js');
-var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {};
-
-var transport = nodemailer.createTransport("Sendmail");
-
-var SchemaToolsModule = require('./SchemaTools.js');
-
-var fs = require('fs');
 
 var actions = {
     READ : '_read',
@@ -28,7 +18,9 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
 	this.hasRightForAction = function(schema, action, avaliablePerm) {
-
+		
+		log.verbose('checking permision on schema:action',schema,action);
+		
 		var missingPerm=null
 		if ('_security' in schema) {
 			if (action in schema['_security']) {
@@ -48,7 +40,9 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 			log.verbose('schema has no security section', schema.id);
 		}
 
-		log.silly('missing perm',missingPerm);
+		if (missingPerm){
+			log.silly('missing perm',missingPerm);
+		}
 		return missingPerm===null;
 
 	};
@@ -64,7 +58,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
  */
 	this.userHasPermissions = function (req,perm) { 
 		
-		log.verbose('?user has perm ', perm);
+		log.verbose('check user has perm ', perm);
 		
 		if (!req.perm || (perm && hasPermission(req.perm,perm))){
 			return true;
@@ -127,4 +121,4 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 module.exports = {
     actions : actions,
     SecurityService : SecurityService
-}
+};

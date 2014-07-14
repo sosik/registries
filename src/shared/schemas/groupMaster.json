@@ -14,9 +14,15 @@
 		}
 	},
 	"view" : {
+		"_security" : {
+			"$ref" : "uri://registries/security#group/_security"
+		},
 		"$ref" : "uri://registries/security#groupmaster/new"
 	},
 	"search" : {
+		"_security" : {
+			"$ref" : "uri://registries/security#group/_security"
+		},
 		"$ref" : "uri://registries/security#groupmaster/new"
 	}
 }

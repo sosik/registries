@@ -137,8 +137,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
 
-				log.silly(req.body);
-
 				if (!user.systemCredentials) {
 					user.systemCredentials = {};
 				}
@@ -170,8 +168,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				if (user.systemCredentials.groups.length === 0) {
 					user.systemCredentials.groups = null;
 				}
-				log.info('updating users security of', user.systemCredentials.login.loginName);
-				log.silly(user.systemCredentials);
+
+				log.verbose('updating users security of', user.systemCredentials.login.loginName);
 				
 				user.systemCredentials.login.loginName=req.body.loginName;
 				user.systemCredentials.login.email=req.body.email;
@@ -193,13 +191,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.updateGroupSecurity = function(req, resp) {
 
-		
-		if (!securityService.userHasPermissions(req,'Security - write')){
-			resp.send(403, err);
-			log.verbose('missing perm Security - write');
-			return;
-		}
-		
 		var groupId = req.body.oid;
 		groupDao.get(groupId, function(err, group) {
 
@@ -552,13 +543,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				throw err;
 			}
 
-
 			var randomPass = t.generatePassword();
 			var newsalt = t.generatePassword();
 
 			var user = data;
-			log.silly(user);
-			log.silly(user.systemCredentials.login.email);
 			if (user.systemCredentials.login.email) {
 				
 				t.hashPassword(newsalt, randomPass, function(err, passwordHash) {

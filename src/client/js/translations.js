@@ -198,6 +198,8 @@ angular.module('registries')
 		'security.group.edit.name.of.group': 'Název skupiny',
 		'security.group.edit.id.of.group': 'Identifikátor skupiny',
 		'security.group.edit.modification.of.security.group': 'Modifikace bezpečnostní skupiny',
+		'security.user.edit.modification.done': 'Modifikace uživatela',
+		'security.user.session.expired':'Relace vypršela',
 		'schema.editor.save': 'Uložit',
 		'schema.editor.edit': 'Upravit',
 		'schema.editor.id': 'ID ',

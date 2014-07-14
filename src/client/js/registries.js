@@ -20,14 +20,14 @@ angular.module('registries', [
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});
 	$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 	$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
-	$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/security-group-edit.html', controller: 'security.groupEditCtrl', permissions:['System Admin']});
-	$routeProvider.when('/security/user/edit', {templateUrl: 'partials/security-user-edit.html', controller: 'security.userEditCtrl',permissions:['System Admin']});
+	$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/security-group-edit.html', controller: 'security.groupEditCtrl', permissions:['Security - read']});
+	$routeProvider.when('/security/user/edit', {templateUrl: 'partials/security-user-edit.html', controller: 'security.userEditCtrl',permissions:['Security - read']});
 	$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/registry-new.html', controller: 'registry.newCtrl',permissions:['Registry - write']});
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl',permissions:['Registry - read']});
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 }])
 .config(['$httpProvider', function ($httpProvider) {
-    $httpProvider.interceptors.push(function ($q,$injector) {
+    $httpProvider.interceptors.push(function ($q,$injector,$rootScope) {
         return {
             'response': function (response) {
                 //Will only be called for HTTP up to 300
@@ -35,10 +35,10 @@ angular.module('registries', [
             },
             'responseError': function (rejection) {
             	if(rejection.status === 401) {
+            		$rootScope.security.currentUser = undefined;
+                    $rootScope.app.mainMenu=false;
                     $injector.get ('$location').url('/login');
                     $injector.get ('psui.notificationFactory').warn({translationCode:'security.user.session.expired',time:5000} );
-                    $injector('$rootScope').app.mainMenu=false;
-                    $injector('$rootScope').security.currentUser = undefined;
                 }else
                 
                 if(rejection.status === 403) {

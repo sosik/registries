@@ -428,15 +428,20 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 	                $scope.selectUser = function(user) {
 		                $scope.selectedUser = user;
-		               
 		                if (!('systemCredentials' in user)){
-	                		 user.systemCredentials={};
-	                		 user.systemCredentials.login={loginName:''};
-	                	}
-		                if ( !('groups' in user.systemCredentials)) {
-			                user.systemCredentials.groups = [];
+		                	user.systemCredentials={};
+		                	if ('contactInfo' in user && 'email' in user['contactInfo']){
+		                		user.systemCredentials.login={loginName:user.contactInfo.email,email:user.contactInfo.email};
+		                		$scope.updateUserSecurity();
+		                		} else {
+		                			user.systemCredentials={};
+		                			user.systemCredentials.login={loginName:''};
+			                	}
 		                }
-
+		                
+		                if ( !('groups' in user.systemCredentials)) {
+		                	user.systemCredentials.groups = [];
+		                }
 
 		                securityService.getSecurityPermissions().success(function(data) {
 			                $scope.permissions = data;

@@ -34,6 +34,7 @@ var create = function(options) {
 
 			app.fsCtrl.ls(path, resp, function(err) {
 				if (err) {
+					log.error('Failed to ls', err);
 					resp.send(err.code || 500, err);
 				}
 
@@ -49,6 +50,7 @@ var create = function(options) {
 
 			app.fsCtrl.get(path, resp, function(err) {
 				if (err) {
+					log.error('Failed to get', err);
 					resp.send(err.code || 500, err);
 				}
 
@@ -64,6 +66,7 @@ var create = function(options) {
 
 			app.fsCtrl.rm(path, resp, function(err) {
 				if (err) {
+					log.error('Failed to rm', err);
 					resp.send(err.code || 500, err);
 				}
 
@@ -79,6 +82,7 @@ var create = function(options) {
 
 			app.fsCtrl.mkdir(path, resp, function(err) {
 				if (err) {
+					log.error('Failed to mkdir', err);
 					resp.send(err.code || 500, err);
 				}
 
@@ -94,6 +98,7 @@ var create = function(options) {
 
 			app.fsCtrl.put(path, resp, function(err) {
 				if (err) {
+					log.error('Failed to put', err);
 					resp.send(err.code || 500, err);
 				}
 
@@ -125,6 +130,7 @@ var create = function(options) {
 
 			app.fsCtrl.replace(path, req, resp, function(err) {
 				if (err) {
+					log.error('Failed to replace', err);
 					resp.send(err.code || 500, err);
 				}
 

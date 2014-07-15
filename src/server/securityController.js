@@ -107,7 +107,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				for ( var gr in user.systemCredentials.groups) {
 					groups.push(gr);
 				}
-				userRes.groups = perrmissions;
+				userRes.groups = groups;
 				resp.send(200, userRes);
 			}
 
@@ -317,7 +317,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			return;
 		}
 		var t = this;
-		if (!'systemCredentials' in user ) {
+		if (!('systemCredentials' in user)) {
 			callback('user without systemCredentials');
 			return;
 		}
@@ -374,7 +374,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			return;
 		}
 		if (gr.baseData.parent.oid) {
-			this.resolveGroupPermissions(gr.baseData.parent.oid, allgroups, permissions)
+			this.resolveGroupPermissions(gr.baseData.parent.oid, allgroups, permissions);
 		}
 
 		if (gr.security && gr.security.permissions) {
@@ -482,7 +482,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 		var tokenId = req.cookies.securityToken;
 
-		if (tokenId != null) {
+		if (tokenId !== null) {
 
 			tokenDao.list({
 				crits : [ {
@@ -579,15 +579,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.sendResetPasswordMail = function(email, newPass,user,serviceUrl) {
 		
-		var userName='';
-		
-		var userName='';
-		if ('baseData'  in user){
-			userName= user.baseData.name+ ' '+user.baseData.surName;
-		} 
-		else {
-			userName=user.systemCredentials.login.loginName;
-		}
+		var userName=user.systemCredentials.login.loginName;
 		
 		var mailOptions = {
 		    from : "websupport@unionsoft.sk",

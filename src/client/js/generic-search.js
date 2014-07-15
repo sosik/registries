@@ -73,9 +73,9 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 					collectProperties(pr + '.', objectDef.properties[pr], resultArr)
 				} else {
 					resultArr.push({
-					    path : pathPrefix + pr,
-					    type : objectDef.properties[pr].type,
-					    title : objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title
+					    path: pathPrefix + pr,
+					    type: objectDef.properties[pr].type,
+					    title: objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title
 					});
 				}
 			}
@@ -86,23 +86,23 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		retval.schema = schema.url;
 		retval.attributes = [];
 		retval.operators = [ {
-		    title : '=',
-		    value : 'eq'
+		    title: '=',
+		    value: 'eq'
 		}, {
-		    title : '>',
-		    value : 'gt'
+		    title: '>',
+		    value: 'gt'
 		}, {
-		    title : '<',
-		    value : 'lt'
+		    title: '<',
+		    value: 'lt'
 		}, {
-		    title : '!=',
-		    value : 'neq'
+		    title: '!=',
+		    value: 'neq'
 		}, {
-		    title : 'starts',
-		    value : 'starts'
+		    title: 'starts',
+		    value: 'starts'
 		}, {
-		    title : 'exists',
-		    value : 'ex'
+		    title: 'exists',
+		    value: 'ex'
 		} ];
 
 		collectProperties('', schema, retval.attributes);
@@ -114,7 +114,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	return service;
 } ])
 //
-.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate ) {
+.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate','$filter', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate,$filter ) {
 	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 	$scope.entityUri = entityUri;
@@ -164,12 +164,12 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 
 	schemaUtilFactory.getCompiledSchema(entityUri, 'search').success(function(data) {
 
+		$scope.schema=data;
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
-		
-		console.log(data.transCode);
-		$scope.entity = $translate.instant( data.transCode);
 
+		$scope.entity = $translate.instant( data.transCode);
+		
 		$scope.addCrit(); 
 		$scope.headers = data.listFields;
 		$scope.sortBy={header: data.listFields[0] , direction : "asc" };
@@ -196,7 +196,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 					op : c.operator.value
 				});
 			}
-		})
+		});
 	
 		return retval;
 
@@ -216,7 +216,6 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 			c.push($scope.forcedCriterias[idx]);
 		}
 
-		console.log();
 		$scope.lastCriteria=JSON.parse(JSON.stringify(c));
 		
 		genericSearchFactory.getSearch($scope.entityUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
@@ -246,6 +245,79 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	};	
 	
 	
+		
+	function toCsv(schema,data){ 
+		var retVal="";
+		
+		for (var li in schema.listFields){
+			var lisDef=schema.listFields[li];
+			retVal+=lisDef.title;
+			retVal+=',';
+		}
+		retVal+="\r\n";
+		
+		for(var item in data){
+			var row=[]
+			for (var li in schema.listFields){
+				var lisDef=schema.listFields[li];
+				retVal+=getValue(data[item],schema.listFields[li]['field'])+",";
+			}
+			retVal+="\r\n";
+		}
+		
+		return retVal;
+	}
+	
+	
+	function getValue(obj,fieldPath){
+		
+		var parts=fieldPath.split('.');
+		var iter=obj;
+		parts.map(function(part) {
+			
+			if (part in iter){
+				iter = iter[part];
+			}
+			else {
+				iter={};
+			}
+		});
+		
+		if (iter.constructor === String){
+			console.log('isString');
+			if (iter.indexOf(',')>-1){
+				iter='"'+iter+'"';
+			}
+		}
+		return iter;
+		
+	}	
+	
+	$scope.exportCsv = function() {
+		var c = convertCriteria($scope.searchCrit);
+		// add forced criteria
+		for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
+			c.push($scope.forcedCriterias[idx]);
+		}
+		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,10000).success(function(data) {
+
+			data=toCsv($scope.schema,data);
+			
+			var blob = new Blob([data], {type: 'text/csv;charset=utf-8'});
+			var url  = window.URL || window.webkitURL;
+			var link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+			link.href = url.createObjectURL(blob);
+			link.download = 'search-export.csv'; // whatever file name you want :)
+
+			var event = document.createEvent("MouseEvents");
+			event.initEvent("click", true, false);
+			link.dispatchEvent(event); 
+			
+		}).error(function(err) {
+			notificationFactory.error(err);
+		});
+	};
+	
 	$scope.setSortBy=function (header){
 		if ($scope.sortBy && $scope.sortBy.header===header){
 			if ( 'asc'===$scope.sortBy.direction) {
@@ -263,5 +335,5 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	
 	$scope.goView = function(i) {
 			$location.path('registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id);
-	}
+	};
 } ]);

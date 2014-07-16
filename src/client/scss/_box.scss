@@ -3,11 +3,11 @@
 	border: 1px solid $input-border-color;
 	
 	> header{
-        position: relative;
-        background-color: $input-border-color;	
-    	padding: $field-padding-vertical $padding-base-horizontal;	
+		position: relative;
+		background-color: $input-border-color;	
+		padding: $field-padding-vertical $padding-base-horizontal;	
 		color: $font-color-light;
-    }
+	}
 	
 	> section{
 		overflow: auto;

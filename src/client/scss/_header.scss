@@ -47,14 +47,14 @@
 					
 					i{
 						+ span{
-                            @include media-mobile{
-                                margin-left: 0px;
-                            }
+							@include media-mobile{
+								margin-left: 0px;
+							}
 							margin-left: 10px;
 						}
 					}
 					span{
-                        @include media-mobile{
+						@include media-mobile{
 							display:none;
 						}
 						text-transform: uppercase;
@@ -62,14 +62,14 @@
 						top: -1px;
 						+ i{
 							margin-left: 10px;
-                            @include media-mobile{
-                                margin-left: 0px;
-                            }
+							@include media-mobile{
+								margin-left: 0px;
+							}
 						}
 					}
 				}
 				
-                
+				
 				a {
 					line-height: $header-height;
 					font-size: $font-size-base;

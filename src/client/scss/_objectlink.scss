@@ -1,65 +1,65 @@
 .psui-objectlink-dropdown{
-    background: $page-bg;
-    @include box-shadow(0 5px 10px rgba(0,0,0,.3));
-    border: 0px;
-    border-radius: 6px;
-    padding: 0px;
-    outline: 0px;
-    
-    &:not([class*="psui-hidden"]){
-        ~ .psui-buttons-holder {
-            .psui-icon-chevron-down{
-                @include rotate(180deg);
-            }
-        }
-    }
-    
-    .form-control{
-        float: none;
-        padding-right: $padding-base-horizontal + 20;
-    }
-    
-    > header{
-        position: relative;
-        background-color: $input-border-color;	
-    	padding: $field-padding-vertical $padding-base-horizontal;	
-    
-        &:after{
-            font-family: $icon-font-family;
-            content: "\e003";
-            position: absolute;
-            top: 1px;
-            right: 1px;
-            bottom: 1px;
-            background-color: $input-bg;
-            padding: $field-padding-vertical*2+2 $padding-base-horizontal/2;
-            line-height: $line-height-base;
-            background-color: $input-border-color;
-            color: $font-color-light;
-            z-index: 3;
-        }
-    }
-    
-    section{
-        max-height: 150px;
-        overflow: hidden;
-        overflow-y: auto;
-        display: block;
-        margin: 0px;
-        
-        > div {
-            padding: $field-padding-vertical $padding-base-horizontal $field-padding-vertical $padding-base-horizontal*2;	
-            border-bottom: 1px dotted $page-bg;
-            cursor: pointer;
-            color: lighten($font-color-base,20%);
-            line-height: $line-height-base;
-            @include user-select(none);
-			
-            &:hover,
-            &:focus,
-            &.active{
-                background-color: $objectlink-active-color;	
-            }
-        }
-    }
+	background: $page-bg;
+	@include box-shadow(0 5px 10px rgba(0,0,0,.3));
+	border: 0px;
+	border-radius: 6px;
+	padding: 0px;
+	outline: 0px;
+
+	&:not([class*="psui-hidden"]){
+		~ .psui-buttons-holder {
+			.psui-icon-chevron-down{
+				@include rotate(180deg);
+			}
+		}
+	}
+
+	.form-control{
+		float: none;
+		padding-right: $padding-base-horizontal + 20;
+	}
+
+	> header{
+		position: relative;
+		background-color: $input-border-color;	
+		padding: $field-padding-vertical $padding-base-horizontal;	
+
+		&:after{
+			font-family: $icon-font-family;
+			content: "\e003";
+			position: absolute;
+			top: 1px;
+			right: 1px;
+			bottom: 1px;
+			background-color: $input-bg;
+			padding: $field-padding-vertical*2+2 $padding-base-horizontal/2;
+			line-height: $line-height-base;
+			background-color: $input-border-color;
+			color: $font-color-light;
+			z-index: 3;
+		}
+	}
+
+	section{
+		max-height: 150px;
+		overflow: hidden;
+		overflow-y: auto;
+		display: block;
+		margin: 0px;
+
+		> div {
+			padding: $field-padding-vertical $padding-base-horizontal $field-padding-vertical $padding-base-horizontal*2;	
+			border-bottom: 1px dotted $page-bg;
+			cursor: pointer;
+			color: lighten($font-color-base,20%);
+			line-height: $line-height-base;
+			@include user-select(none);
+
+			&:hover,
+			&:focus,
+			&.active{
+				background-color: $objectlink-active-color;	
+			}
+		}
+	}
 }

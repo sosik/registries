@@ -1,134 +1,134 @@
 .psui-datepicker{
-    padding-right: $padding-base-horizontal + 19;
-    &.psui-hidden{
-        ~ .psui-buttons-holder{
-            display: none;
-        }
-    }
-    
-    ~ .psui-dropdown{
-        right: 0px;
-        z-index: 5;
-        top: 34px;
-    }
-    
-     ~ .psui-buttons-holder{
-        .psui-icon-chevron-down:before{
-            top: 3px;
-        }
-     }
+	padding-right: $padding-base-horizontal + 19;
+	&.psui-hidden{
+		~ .psui-buttons-holder{
+			display: none;
+		}
+	}
+
+	~ .psui-dropdown{
+		right: 0px;
+		z-index: 5;
+		top: 34px;
+	}
+
+	 ~ .psui-buttons-holder{
+		.psui-icon-chevron-down:before{
+			top: 3px;
+		}
+	 }
 }
 
 .psui-datepicker-dropdown{
-    background: $page-bg;
-    @include box-shadow(0 5px 10px rgba(0,0,0,.3));
-    border-radius: 0px 0px 6px 6px;
-    outline: 0px;
-    color: lighten($font-color-base,20%);
+	background: $page-bg;
+	@include box-shadow(0 5px 10px rgba(0,0,0,.3));
+	border-radius: 0px 0px 6px 6px;
+	outline: 0px;
+	color: lighten($font-color-base,20%);
 	@include user-select(none);
-    
-    &:not([class*="psui-hidden"]){
-        ~ .psui-buttons-holder {
-            .psui-icon-chevron-down{
-                @include rotate(180deg);
-            }
-        }
-    }
-    
-    table{
-        width: 259px;
-    }
-    
-    .action-previous
-    ,.action-next{
-        position: relative;
-        font-family: $icon-font-family;
-        font-style: normal;
-        font-weight: normal;
-        line-height: 1;
-        cursor: pointer;
-        text-align: left;
-    }
-    
-    .action-next{
-        text-align: right;
-    }
-    
-    [class*="action-"]
-    ,.days td:not([class*="other"])
-    ,.months td
-    ,.years td
-    {
-        cursor: pointer;
-        &:hover{
-            background-color: $datepicker-active-color;
-        }
-    }
-    
-    .days td:not([class*="other"])
-    ,.months td
-    ,.years td{
-         color: $datepicker-color;
-    }
-    
-    tr.header,
-    tr.labels{
-        [class*="action-"]{
-            &:hover{
-                background-color: $datepicker-active-color;
-            }
-        }
-        td{
-            background-color: $input-border-color;
-            color: $font-color-base;
-            border: 1px solid $input-border-color;
-        }
-    }
-    
-    .months td{
-        width: 25%;
-    }
-    
-    .action-previous{
-         &:before { 
-             content: "\e079"; 
-         }
-    }
-    .action-next{
-        &:before { 
-             content: "\e080"; 
-         }
-    }
-    
-    td{
-        text-align: center ;
-        padding: 4px 10px;
-    }
-    
+
+	&:not([class*="psui-hidden"]){
+		~ .psui-buttons-holder {
+			.psui-icon-chevron-down{
+				@include rotate(180deg);
+			}
+		}
+	}
+
+	table{
+		width: 259px;
+	}
+
+	.action-previous
+	,.action-next{
+		position: relative;
+		font-family: $icon-font-family;
+		font-style: normal;
+		font-weight: normal;
+		line-height: 1;
+		cursor: pointer;
+		text-align: left;
+	}
+
+	.action-next{
+		text-align: right;
+	}
+
+	[class*="action-"]
+	,.days td:not([class*="other"])
+	,.months td
+	,.years td
+	{
+		cursor: pointer;
+		&:hover{
+			background-color: $datepicker-active-color;
+		}
+	}
+
+	.days td:not([class*="other"])
+	,.months td
+	,.years td{
+		 color: $datepicker-color;
+	}
+
+	tr.header,
+	tr.labels{
+		[class*="action-"]{
+			&:hover{
+				background-color: $datepicker-active-color;
+			}
+		}
+		td{
+			background-color: $input-border-color;
+			color: $font-color-base;
+			border: 1px solid $input-border-color;
+		}
+	}
+
+	.months td{
+		width: 25%;
+	}
+
+	.action-previous{
+		 &:before { 
+			 content: "\e079"; 
+		 }
+	}
+	.action-next{
+		&:before { 
+			 content: "\e080"; 
+		 }
+	}
+
+	td{
+		text-align: center ;
+		padding: 4px 10px;
+	}
+
 /*   tr:nth-child(2) td{
         padding-bottom: $font-size-base;
     }*/
-    
-    .labels{
-        td{
-            border-bottom: 1px solid $datepicker-border-color;
-        }
-    }
-    
-    .days{
-        td{
-            text-align: right;
-            &.other{
-                color: $datepicker-other-days-color;
-                cursor: default;
-            }
+
+	.labels{
+		td{
+			border-bottom: 1px solid $datepicker-border-color;
+		}
+	}
+
+	.days{
+		td{
+			text-align: right;
+			&.other{
+				color: $datepicker-other-days-color;
+				cursor: default;
+			}
 			&.current{
 				 background-color: $input-border-color;
 			}
 			&.selected{
 				background-color: $datepicker-active-color;
 			}
-        }
-    }
-    
+		}
+	}
+
 }

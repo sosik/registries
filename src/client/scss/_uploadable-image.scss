@@ -1,5 +1,5 @@
 .psui-uploadable-image{
-    cursor: pointer;
+	cursor: pointer;
 	text-align: center;
 	display: inline-block;
 	background-size: contain;
@@ -20,10 +20,10 @@
 
 .psui-imageresizor-resizor{
 	.psui-buttons-holder{
-        .btn{
-            color: $font-color-light;
-        }
-    }
+		.btn{
+			color: $font-color-light;
+		}
+	}
 	
 	.psui-modal-dialog{
 		@include media-mobile{

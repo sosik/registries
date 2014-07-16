@@ -1,9 +1,9 @@
 'use strict';
 
 var extend = require('extend');
-var crypto = require("crypto");
+var crypto = require('crypto');
 var uuid = require('node-uuid');
-var nodemailer = require("nodemailer");
+var nodemailer = require('nodemailer');
 
 
 var log = require('./logging.js').getLogger('securityController.js');
@@ -27,11 +27,7 @@ var DEFAULT_CFG = {
 
 //
 
-var transport = nodemailer.createTransport("Sendmail");
-
-var SchemaToolsModule = require('./SchemaTools.js');
-
-var fs = require('fs');
+var transport = nodemailer.createTransport('Sendmail');
 
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
@@ -67,23 +63,25 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.getUserPermissions = function(req, resp) {
 
-		var userId = req.url.substring(18, req.url.lenght);
+		var userId = req.url.substring(18);
 
 		userDao.get(userId, function(err, user) {
 
 			if (err) {
 				resp.send(500, err);
+				log.warn('getUserPermissions',userId,err);
 			} else {
 				var userRes = {};
 				userRes.loginName = user.systemCredentials.loginName;
-				var perrmissions = [];
+				var permissions = [];
 
 				for ( var per in user.systemCredentials.permissions) {
 					if (user.systemCredentials.permissions[per]) {
-						perrmissions.push(per);
+						permissions.push(per);
 					}
 				}
-				userRes.permissions = perrmissions;
+				userRes.permissions = permissions;
+				log.verbose('getUserPermissions result',userId,permissions);
 				resp.send(200, userRes);
 			}
 
@@ -99,6 +97,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.send(500, err);
+				log.warn('getUserGroups',userId,err);
 			} else {
 				var userRes = {};
 				userRes.loginName = user.systemCredentials.loginName;
@@ -133,6 +132,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.send(500, err);
+				log.warn('updateUserSecurity',userId,err);
 			} else {
 
 				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
@@ -177,7 +177,9 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				userDao.update(user, function(err) {
 					if (err) {
 						resp.send(500, err);
+						log.warn('updateUserSecurity',userId,err);
 					} else {
+						log.info('updateUserSecurity updated',userId);
 						resp.send(200);
 					}
 
@@ -196,11 +198,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.send(500, err);
+				log.warn('updateGroupSecurity',groupId,err);
 			} else {
 
 				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
-
-				log.silly(req.body);
 
 				if (!group.security) {
 					group.security = {};
@@ -222,20 +223,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 
 				log.info('updating groups security of', group);
-				log.silly(group);
 				groupDao.update(group, function(err) {
 					if (err) {
 						resp.send(500, err);
+						log.warn('Group update failed',groupId,err);
 					} else {
 						resp.send(200);
+						log.info('Security group updated',groupId);
 					}
-
 				});
-
 			}
-
 		});
-
 	};
 
 	/**
@@ -244,25 +242,19 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	 * into DB and sets that token as cookies.
 	 */
 	this.login = function(req, resp) {
-		log.silly('login atempt', req.body.login);
-		// more problems than benefits
-		// if (req.authenticated) {
-		// log.verbose('User is already authenticated');
-		// resp.send(500, 'User already authenticated');
-		// return;
-		// }
+		log.debug('login atempt', req.body.login);
 
 		var t = this;
 
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
 			if (err) {
-				log.error('Failed to list users from DB', err);
+				log.warn('Failed to list users from DB', err);
 				resp.send(500, err);
 				return;
 			}
 
 			if (data.length !== 1) {
-				log.verbose('Found more or less then 1 user with provided credentials', data.length);
+				log.warn('Found more or less then 1 user with provided credentials', data.length);
 				resp.send(500, 'users found ' + data.length);
 				return;
 			}
@@ -272,7 +264,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			t.verifyUserPassword(user, req.body.password, function(err) {
 				if (err) {
-					log.verbose('Password verification failed', err);
+					log.debug('Password verification failed', err);
 					resp.send(500, 'Not authenticated.');
 					return;
 				}
@@ -280,20 +272,20 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				t.resolvePermissions(user,function (err,permissions){
 					
 					if (err) {
-						log.error('Failed to resolvePermissions permissions', err);
+						log.warn('Failed to resolvePermissions permissions', err);
 						resp.send(500, 'Internal Error');
 						return;
 					}
 					if ('System User' in  permissions&&permissions['System User'] ){
 						t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
-							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err, data) {
+							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
 									resp.send(500, 'Internal Error');
 									return;
 								}
 								t.setCookies(resp, token, user.systemCredentials.login.loginName);
-								
+								log.info('user logged in',user.id);
 								resp.send(200, user);
 								return;
 							});
@@ -301,7 +293,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						
 					}
 					else {
-						log.verbose('Not authorized', err);
+						log.warn('Not system user ',user.systemCredentials.login.loginName);
 						resp.send(403, securityService.missingPermissionMessage('System User'));
 					}
 				}); 
@@ -339,7 +331,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 		groupDao.list({}, function(err, groups) {
 			if (err) {
-				calback(err);
+				callback(err);
 				return;
 			}
 			//resolve groups
@@ -391,14 +383,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	 */
 	this.getCurrentUser = function(req, resp) {
 		var t = this;
-		if (!req.authenticated) {
-			resp.send(500, 'User is not authenticated');
-			return;
-		}
-
+		//FIXME use userId
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 			if (err) {
 				resp.send(500, err);
+				log.warn('getCurrentUser', err);
 				return;
 			}
 
@@ -418,6 +407,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				delete user.systemCredentials.login.passwordHash;
 				delete user.systemCredentials.login.salt;
 				delete user.systemCredentials.groups;
+				log.verbose('getCurrentUser result',user);
 				resp.send(200, user);
 			});
 		});
@@ -439,7 +429,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			if (user.systemCredentials.login.passwordHash === hashPass.toString('base64')) {
 				callback(null);
 			} else {
-				log.verbose('Password does not match stored password');
+				log.debug('Password does not match stored password',user.systemCredentials.login.loginName);
 				callback(new Error('Password does not match'));
 			}
 		});
@@ -451,7 +441,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.storeToken = function(tokenId, userId, user, ip, callback) {
 
-		var now = new Date().getTime()
+		var now = new Date().getTime();
 		var token = {
 		    tokenId : tokenId,
 		    userId : userId,
@@ -462,7 +452,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		    touched : now
 		};
 
-		log.silly('Storing security token', token);
+		log.verbose('Storing security token', token);
 		tokenDao.save(token, callback);
 
 	};
@@ -476,6 +466,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		resp.cookie(cfg.loginNameCookie, loginName, {
 			httpOnly : false
 		});
+		log.verbose('setCookies',loginName );
 	};
 
 	this.logout = function(req, resp) {
@@ -501,7 +492,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						var token = tokens[0];
 						token.valid = false;
 
-						tokenDao.update(token, function(err, data) {
+						tokenDao.update(token, function(err) {
 							if (err) {
 								log.error('Failed to update security token', err);
 								resp.send(500, err);
@@ -510,11 +501,13 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 							resp.clearCookie(cfg.securityTokenCookie);
 							resp.clearCookie(cfg.loginNameCookie);
+							log.info('user log out ',token.user);
 							resp.send(200);
 						});
 
 					} else {
 						resp.send(500, 'Token does not exist.');
+						log.debug('logout','Token does not exist.',tokenId);
 						return;
 					}
 
@@ -523,6 +516,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			});
 		} else {
 			resp.send(500, 'SecurityToken missings.');
+			log.debug('logout','SecurityToken missings.',tokenId);
 			return;
 		}
 
@@ -539,7 +533,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		userDao.get(req.body.userId, function(err, data) {
 
 			if (err) {
-				res.send(500, err);
+				resp.send(500, err);
+				log.error('resetPassword',err);
 				throw err;
 			}
 
@@ -555,25 +550,26 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 					user.systemCredentials.login.salt = newsalt;
 
-					userDao.update(user, function(err, data) {
+					userDao.update(user, function(err) {
 						if (err) {
 							resp.send(500, err);
 						}
 
-						log.info('User password reset', user);
+						log.info('User password reset',user.systemCredentials.login);
 						// FIXME make mail address field as configurable
 						// parameter
 						t.sendResetPasswordMail(user.systemCredentials.login.email,randomPass,user,cfg.webserverPublicUrl);
 
 						resp.send(200,{email:user.systemCredentials.login.email});
 					});
-				})
+				});
 
 			} else {
-				resp.send(500, 'User mail not specified');
+				log.debug('resetPassword',  'User mail not specified',user.systemCredentials.login );
+				resp.send(500, 'User mail not specified.');
 			}
 
-		})
+		});
 
 	};
 
@@ -582,18 +578,18 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		var userName=user.systemCredentials.login.loginName;
 		
 		var mailOptions = {
-		    from : "websupport@unionsoft.sk",
+		    from : 'websupport@unionsoft.sk',
 		    to : email,
-		    subject : "[Registry] Your new password ",
+		    subject : '[Registry] Your new password ',
 		    text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{'userName':userName,'userPassword':newPass,'serviceUrl':serviceUrl})
-		}
-//		html : "<h3>New Password</h3><h4> Your new password is: <b>" + newPass + " </b> </h4>"
+		};
+//		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
 
 		log.verbose('Sending mail ', mailOptions);
 
 		transport.sendMail(mailOptions);
 		
-	}
+	};
 
 	/**
 	 * method should be used to re-generate new password for user Method should
@@ -610,7 +606,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 
 			if (err) {
-				res.send(500, err);
+				resp.send(500, err);
 			} else {
 
 				if (data.length != 1) {
@@ -620,7 +616,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					var user = data[0];
 					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
 						if (err) {
-							log.verbose('Old passwrod does not match!');
+							log.debug('Old passwrod does not match!');
 							resp.send(500, 'Old password does not match!');
 							return;
 						} else {
@@ -629,33 +625,29 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 							var newsalt = t.generatePassword();
 
 							t.hashPassword(newsalt, newPass, function(err, passwordHash) {
-
 								user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
-
 								user.systemCredentials.login.salt = newsalt;
-								userDao.update(user, function(err, data) {
+								userDao.update(user, function(err) {
 									if (err) {
 										resp.send(500, err);
 										return;
 									} else {
-										log.silly('Password successfully changed');
+										log.info('Password successfully changed',user.systemCredentials.login.loginName);
 										resp.send(200);
 										return;
 									}
 								});
-							})
+							});
 						}
-					})
+					});
 				}
-
 			}
-
-		})
+		});
 
 	};
 
 	this.generatePassword = function () {
-		var length = cfg.generatedPasswordLen, charset = "abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", retVal = "";
+		var length = cfg.generatedPasswordLen, charset = 'abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', retVal = '';
 
 		for (var i = 0, n = charset.length; i < length; ++i) {
 			retVal += charset.charAt(Math.floor(Math.random() * n));
@@ -676,8 +668,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		req.perm={};
 		var tokenId = req.cookies.securityToken;
 		
-		if (tokenId != null) {
-			log.silly('security token found', tokenId);
+		if (tokenId !== null) {
+			log.debug('security token found', tokenId);
 			tokenDao.list({
 				crits : [ {
 				    op : 'eq',
@@ -697,11 +689,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					if (token.valid && req.ip == token.ip && token.touched > (now - cfg.tokenExpiration)) {
 						token.touched = now;
 						// TODO maybe some filtering for updates
-						tokenDao.update(token, function(err, data) {
+						tokenDao.update(token, function(err) {
 							if (err) {
-								log.verbose('Failed to update security token in DB, sillently dropping', err);
+								log.debug('Failed to update security token in DB, sillently dropping', err);
 							}
-						})
+						});
 
 						log.silly('Setting auth info to', token);
 						req.authenticated = true;
@@ -725,7 +717,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						
 						
 					} else {
-						log.verbose('Found token %s is not valid, removing cookies', tokenId, {});
+						log.debug('authFilter','Found token %s is not valid, removing cookies', tokenId, {});
 						res.clearCookie(cfg.securityTokenCookie);
 						res.clearCookie(cfg.loginNameCookie);
 						next();
@@ -737,7 +729,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			});
 		} else {
-			log.verbose('no security token found');
+			log.debug('authFilter','no security token found');
 			next();
 		}
 
@@ -747,4 +739,4 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 module.exports = {
 	SecurityController : SecurityController
-}
+};

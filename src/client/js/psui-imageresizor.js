@@ -220,40 +220,106 @@ angular.module('psui-imageresizor', ['pascalprecht.translate'])
 				
 			})
 			
-			resizorCanvas.on('mousedown',function(evt){
-				
-				state = 1;
-				
-			})
-			
-			resizorCanvas.on('mouseup mouseleave',function(evt){
-			
-				state = 0;
-			
-			})
-			
-			resizorCanvas.on('mousemove',function(evt){
+			function moveImg(clientX, clientY){
 				if (state == 1){
 					if (numberOfRot == 0){
-						difX = difX + evt.clientX - x;
-						difY = difY + evt.clientY - y;
+						difX = difX + clientX - x;
+						difY = difY + clientY - y;
 					} else if (numberOfRot == 1){
-						difX = difX + evt.clientY - y;
-						difY = difY - evt.clientX + x;
+						difX = difX + clientY - y;
+						difY = difY - clientX + x;
 					} else if (numberOfRot == 2){
-						difX = difX - evt.clientX + x;
-						difY = difY - evt.clientY + y;
+						difX = difX - clientX + x;
+						difY = difY - clientY + y;
 					} else if (numberOfRot == 3){
-						difX = difX - evt.clientY + y;
-						difY = difY + evt.clientX - x;
+						difX = difX - clientY + y;
+						difY = difY + clientX - x;
 					}
 					
 					draw(context,context2);
 				}
-				x = evt.clientX;
-				y = evt.clientY;
-				
+				x = clientX;
+				y = clientY;
+			}
+			
+			resizorCanvas.on('mousedown',function(evt){
+				state = 1;
 			})
+			
+			resizorCanvas.on('mouseup mouseleave',function(evt){
+				state = 0;
+			})
+			
+			resizorCanvas.on('mousemove',function(evt){
+				moveImg(evt.clientX, evt.clientY);
+			})
+			
+		
+			var zoomTouch = [];
+			
+			resizorCanvas.on('touchstart',function(evt){
+				state = 1;
+				
+				if (evt.targetTouches.length === 1) {
+					x = evt.targetTouches[0].clientX;
+					y = evt.targetTouches[0].clientY;
+				} else if(evt.targetTouches.length === 2){
+					zoomTouch = [
+						getVector(evt.targetTouches[0]),
+						getVector(evt.targetTouches[1])
+					];
+				}
+				evt.preventDefault();
+			})
+			
+			resizorCanvas.on('touchend',function(evt){
+				state = 0;
+				evt.preventDefault();
+			})
+			
+			resizorCanvas.on('touchmove',function(evt){
+				if (evt.targetTouches.length === 1) {
+					moveImg(
+						evt.targetTouches[0].clientX, 
+						evt.targetTouches[0].clientY
+					);
+				} else if(evt.targetTouches.length === 2){
+					var currentZoomTouch = [
+							getVector(evt.targetTouches[0]),
+							getVector(evt.targetTouches[1])
+						]
+					;
+					
+					resize = resize + 
+							(
+								vectorLength(currentZoomTouch[0],currentZoomTouch[1]) -
+								vectorLength(zoomTouch[0],zoomTouch[1])
+							) / 100
+					;
+					
+
+					draw(context,context2);
+					zoomTouch = currentZoomTouch;
+				}
+				
+				evt.preventDefault();
+			})
+			
+			function getVector(vec){
+				return {
+					x: vec.clientX,
+					y: vec.clientY
+				};
+			}
+			
+			function vectorLength(vec1, vec2){
+				var x = Math.abs(vec1.x-vec2.x),
+					y = Math.abs(vec1.y-vec2.y)
+				;
+				return Math.sqrt(
+					x*x + y*y 
+				);
+			}
 			
 		}
 	}

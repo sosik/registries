@@ -10,7 +10,11 @@
 }
 
 .psui-uploadable-image-fbutton {
-	display: none !important;
+	/*display: none !important;*/
+	visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: -5000px;
 }
 
 .psui-uploadable-image-img {
@@ -31,12 +35,16 @@
 		}
 	}
 	
+	canvas{
+		@include user-select(none);
+	}
+	
 	.psui-modal-content{
 		background-color: #000000;
 		canvas{
 			cursor: move;
 			@include media-tablet{
-				zoom: 0.7;
+				zoom: 1;
 			}
 			
 			@include media-mobile{

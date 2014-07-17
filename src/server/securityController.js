@@ -682,11 +682,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					next(err);
 					return;
 				}
-				if (tokens.length == 1) {
+				if (tokens.length === 1) {
 					var token = tokens[0];
 					// TODO validate IP
 					var now = new Date().getTime();
-					if (token.valid && req.ip == token.ip && token.touched > (now - cfg.tokenExpiration)) {
+					if (token.valid && req.ip === token.ip && token.touched > (now - cfg.tokenExpiration)) {
 						token.touched = now;
 						// TODO maybe some filtering for updates
 						tokenDao.update(token, function(err) {

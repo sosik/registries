@@ -60,8 +60,10 @@
 			display: block;
 			line-height: $sidebar-size;
 			color: $sidebar-color-base;
-			padding-right: 2 * $sidebar-menu-item-padding;
+			padding-right: $sidebar-menu-item-padding - 10px;
 			border-bottom: 1px solid $sidebar-secound-level-color-bg;
+			
+			margin-right: 10px;
 			
 			i{
 				font-size: $sidebar-icon-size;
@@ -82,8 +84,22 @@
 
 		}
 		
+		div{
+			position:relative;
+			&:before{
+				width: $sideber-width;
+				position: absolute;
+				bottom: -1px;
+				left: 0px;
+				content: "";
+				display: block;
+				border-bottom: 1px solid $sidebar-secound-level-color-bg;
+			}
+		}
+		
 		ul ul{
 			height: 0px;
+			background-color: $sidebar-secound-level-color-bg;
 			a{
 				background-color: $sidebar-secound-level-color-bg;
 				padding-left: $sidebar-size;

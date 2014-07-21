@@ -148,21 +148,5 @@
 }
 
 #main-wrapper{
-	#content-wrapper{
-		@extend %main-menu-deactive;
-	}
-	
-	> footer{
-		@extend %main-menu-deactive;
-	}
-	
-	&.main-menu-active{
-		#content-wrapper{
-			@extend %main-menu-active;
-		}
-		
-		> footer{
-			@extend %main-menu-active;
-		}
-	}
+	@extend %main-menu-deactive;
 }

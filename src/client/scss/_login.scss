@@ -20,17 +20,19 @@
 
 #main-wrapper{
 	&.login-page{
-		height:100%;
+		padding-left: 0px;
 		#content-wrapper{
-			position: relative;
 			height: 100%;
-			padding-left: 0px;
+			position: relative;
 		}
 		
-		> footer{
-			padding-left: 0px;
-			display: none;
-		}
+		#content{
+			padding-bottom: 0px;
+			> footer{
+				padding-left: 0px;
+				display: none;
+			}
+		} 
 	}
 }
 

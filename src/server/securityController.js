@@ -14,15 +14,17 @@ var universalDaoModule = require('./UniversalDao.js');
 var securityServiceModule = require('./securityService.js');
 
 var DEFAULT_CFG = {
-    userCollection : 'people',
-    loginColumnName : 'systemCredentials.login.loginName',
-    groupCollection : 'groups',
-    tokenCollection : 'token',
-    tokenIdColumnName : 'tokenId',
-    securityTokenCookie : 'securityToken',
-    loginNameCookie : 'loginName',
-    tokenExpiration : 3600000,
-    generatedPasswordLen : 8
+	userCollection : 'people',
+	profileCollection: 'securityProfiles',
+	loginColumnName : 'systemCredentials.login.loginName',
+	groupCollection : 'groups',
+	tokenCollection : 'token',
+	tokenIdColumnName : 'tokenId',
+	securityTokenCookie : 'securityToken',
+	loginNameCookie : 'loginName',
+	profileCookie : 'profile',
+	tokenExpiration : 3600000,
+	generatedPasswordLen : 8
 };
 
 //
@@ -38,6 +40,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		collectionName : cfg.userCollection
 	});
 	
+	var profileDao = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : cfg.profileCollection
+	});
+
 	var renderService = new renderModule.RenderService();
 	
 
@@ -50,7 +56,12 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	});
 
 	this.getPermissions = function(req, resp) {
+		console.log('asdsadsadmakakakakaka');
+
+
 		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
+
+		console.log('>>>defaultObj',defaultObj);
 
 		var result = [];
 
@@ -191,6 +202,119 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	};
 
+this.updateSecurityProfile = function(req, resp) {
+		
+		var profileId = req.body.profileId;
+		profileDao.get(profileId, function(err, profile) {
+
+			if (err) {
+				resp.send(500, err);
+				log.warn('updateProfileSecurity',profileId,err);
+			} else {
+
+				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
+
+				if (!('security' in profile)) {
+					profile.security = {};
+				}
+				
+				if (!('permissions' in profile.security)) {
+					profile.security.permissions = {};
+				}
+
+				delete profile.security.groups;
+
+				if (!profile.security.groups) {
+					profile.security.groups = [];
+				}
+
+				for ( var per in defaultObj) {
+					profile.security.permissions[per] = (hasPermission(req.body.permissions, per)?true:null);
+				}
+
+				req.body.groups.map(function(group) {
+					profile.security.groups.push({
+						id : group.id
+					});
+				});
+
+				if (profile.security.groups.length === 0) {
+					profile.security.groups = null;
+				}
+
+				log.verbose('updating profiles security of', profile.baseData.name);
+				
+				profile.baseData={};
+				profile.baseData.name=req.body.profileName;
+
+
+				//merge&clean 
+				if ('forcedCriteria' in profile ) { 
+
+					for(var sch in profile.forcedCriteria ){
+						if (checkPresentSchemaCrits(req.body.criteria,sch)){
+							for (var i in profile.forcedCriteria[sch].criteria){
+								profile.forcedCriteria[sch].criteria[i]=null;
+							}
+
+						} else {
+							profile.forcedCriteria[sch]=null;
+						}
+					}
+
+				}else {
+					profile.forcedCriteria={};
+				}
+
+				if ('criteria' in req.body){
+					console.log(req.body);
+					var i = 0 ;
+					for (var cc in req.body.criteria){
+						cc=req.body.criteria[cc];
+						var forced;
+						if (!(cc.schema in profile.forcedCriteria)){
+							profile.forcedCriteria[cc.schema]={criteria:[]};
+						}
+
+						 forced=profile.forcedCriteria[cc.schema]
+						 forced.criteria[i++]={f:cc.f,op:cc.op,v:cc.v};
+						
+					}
+				}
+				console.log('>>>> to store',profile);
+
+				profileDao.update(profile, function(err) {
+					if (err) {
+						resp.send(500, err);
+						log.warn('updateprofileSecurity',profileId,err);
+					} else {
+						log.info('updateprofileSecurity updated',profileId);
+						resp.send(200);
+					}
+
+				});
+
+			}
+
+		});
+
+	};
+
+	function checkPresentSchemaCrits(criteria,schema){
+		for(var crit in criteria){
+			console.log('11111',crit,schema);
+			if (criteria[crit].schema===schema){
+				console.log('present');
+				return true;
+			}
+		}
+		return false;
+	}
+
+	this.getSearchSchemas=function(req,resp){
+		resp.send(200, schemaRegistry.getSchemaNamesBySuffix('search'));
+	};
+
 	this.updateGroupSecurity = function(req, resp) {
 
 		var groupId = req.body.oid;
@@ -286,7 +410,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								}
 								t.setCookies(resp, token, user.systemCredentials.login.loginName);
 								log.info('user logged in',user.id);
-								resp.send(200, user);
+								resp.send(200, deflateUser(user,permissions));
 								return;
 							});
 						});
@@ -301,8 +425,48 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			});
 		});
 	};
+	
+	this.selectprofile=function(req,resp){
+		
+		log.silly('Selecting profile or user', req.loginName);
+		if (!req.loginName) {
+			resp.send(500, 'User must be logged in for password change');
+			throw 'User must be logged in for password change';
+		}
+	
+		var t = this;
+		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, users) {
 
-	//Traverses groups and collects permission ,  finally user permissions added.
+			if (err) {
+				resp.send(500, err);
+				log.debug('selectProfile',err);
+				return;
+			}
+
+			if (users.length != 1) {
+				resp.send(500, 'user not found');
+				log.debug('selectProfile', 'user not found');
+				return;
+			}
+
+			var user= users[0];
+			if (!('profiles' in user.systemCredentials)){
+				resp.send(500, 'user has no profiles');
+				return;
+			}
+			
+			if (user.systemCredentials.profiles.indexOf(req.body.profile)<0){
+				resp.send(500, 'user has no profiles');	
+				return;
+			}
+
+			t.setProfileCookie(resp,req.body.profile);
+			resp.send(200);
+
+		});
+
+	};
+	//Traverses groups and collects permission, finally user permissions added.
 	this.resolvePermissions = function(user, callback) {
 		if (!user){
 			callback(null,[]);
@@ -402,16 +566,18 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					resp.send(500, err);
 					return;
 				}
-				delete user.systemCredentials.permissions;
-				user.systemCredentials.permissions = permissions;
-				delete user.systemCredentials.login.passwordHash;
-				delete user.systemCredentials.login.salt;
-				delete user.systemCredentials.groups;
-				log.verbose('getCurrentUser result',user);
-				resp.send(200, user);
+				log.verbose('getCurrentUser result',deflateUser(user,permissions));
+				resp.send(200, deflateUser(user,permissions));
 			});
 		});
 	};
+	/**
+	* Minimalistic version of user return
+	*/
+	function deflateUser(user,permissions){
+		log.silly(permissions);
+		return {systemCredentials:{login:{loginName:user.systemCredentials.login.loginName},permissions:permissions,profiles:user.systemCredentials.profiles||[]}};
+	}
 
 	this.verifyUserPassword = function(user, passwordSample, callback) {
 		if (!user) {
@@ -468,6 +634,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 		log.verbose('setCookies',loginName );
 	};
+
+	this.setProfileCookie = function(resp, profile) {
+
+		resp.cookie(cfg.profileCookie, profile, {
+		    httpOnly : true,
+		    secure : true
+		});
+		
+		log.verbose('setProfileCookie',profile );
+	};
+
 
 	this.logout = function(req, resp) {
 
@@ -578,10 +755,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		var userName=user.systemCredentials.login.loginName;
 		
 		var mailOptions = {
-		    from : 'websupport@unionsoft.sk',
-		    to : email,
-		    subject : '[Registry] Your new password ',
-		    text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{'userName':userName,'userPassword':newPass,'serviceUrl':serviceUrl})
+			from : 'websupport@unionsoft.sk',
+			to : email,
+			subject : '[Registry] Your new password ',
+			text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{'userName':userName,'userPassword':newPass,'serviceUrl':serviceUrl})
 		};
 //		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
 
@@ -666,15 +843,18 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		req.authenticated = false;
 		req.loginName = 'Anonymous';
 		req.perm={};
-		var tokenId = req.cookies.securityToken;
+		var tokenId = req.cookies[cfg.securityTokenCookie];
+		var selectedProfile = req.cookies[cfg.profileCookie];
+		
+		log.silly('Cookies received', tokenId,selectedProfile);
 		
 		if (tokenId !== null) {
 			log.debug('security token found', tokenId);
 			tokenDao.list({
 				crits : [ {
-				    op : 'eq',
-				    v : tokenId,
-				    f : cfg.tokenIdColumnName
+					op : 'eq',
+					v : tokenId,
+					f : cfg.tokenIdColumnName
 				} ]
 			}, function(err, tokens) {
 				if (err) {
@@ -698,12 +878,22 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						log.silly('Setting auth info to', token);
 						req.authenticated = true;
 						req.loginName = token.user;
+
 						userDao.get(token.userId, function(err, user) {
 							if (err) {
 								log.error(err);
 								next(err);
 								return;
 							}
+							log.silly(user.systemCredentials.profiles);
+							
+							for(var index in  user.systemCredentials.profiles){
+								if ( user.systemCredentials.profiles[index]===req.cookies[cfg.profileCookie]){
+									req.selectedProfile = selectedProfile;
+									log.debug('profile set to' , selectedProfile);
+								}
+							}
+
 							t.resolvePermissions(user, function(err, perm) {
 								if (err) {
 									log.error(err);
@@ -714,8 +904,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								next();
 							});
 						});
-						
-						
+
 					} else {
 						log.debug('authFilter','Found token %s is not valid, removing cookies', tokenId, {});
 						res.clearCookie(cfg.securityTokenCookie);

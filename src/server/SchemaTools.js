@@ -1,6 +1,6 @@
 'use strict';
 
-var log = require('./logging.js').getLogger('fsService.js');
+var log = require('./logging.js').getLogger('SchemaTools.js');
 var URL = require('url');
 var path = require('path');
 var extend = require('extend');
@@ -71,6 +71,7 @@ var SchemaTools = function() {
 	this.registerSchema = function(uri, schema, override) {
 		var schemaObj = null;
 		
+		log.silly("registering object",uri);
 
 		if (typeof schema === 'string') {
 			try {
@@ -121,6 +122,23 @@ var SchemaTools = function() {
 		//TODO do traversing in schema structure URI and fragment information
 		var url = URL.parse(normalizeURL(URL.parse(uri)));
 		return schemasCache[URL.format(url)];
+	};
+
+
+	/**
+	 * finds schema-fragments that ends with specified suffix 
+	 */
+	this.getSchemaNamesBySuffix = function(suffix) {
+		//TODO do traversing in schema structure URI and fragment information
+		var retVal=[];
+		var suffix2='#'+suffix;
+		for (var schemaUrl in schemasCache) {
+				if (schemaUrl.indexOf(suffix2, schemaUrl.length - suffix2.length) !== -1){
+					retVal.push(schemaUrl.toString());
+				}
+		}
+
+		return retVal;
 	};
 
 	var that = this;

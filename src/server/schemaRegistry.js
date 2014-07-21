@@ -43,14 +43,18 @@ var SchemaRegistry = function(options) {
 
 	this.createDefaultObject = function(schmaUri) {
 		return this.schemaTools.createDefaultObject(schmaUri);
-	}
+	};
 
 	this.getSchema = function(schmaUri) {
 		return this.schemaTools.getSchema(schmaUri);
-	}
+	};
+
+	this.getSchemaNamesBySuffix=function(suffix){
+		return this.schemaTools.getSchemaNamesBySuffix(suffix);
+	};
 
 };
 
 module.exports = {
 	SchemaRegistry : SchemaRegistry
-}
+};

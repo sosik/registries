@@ -93,6 +93,7 @@ var securityService= new securityServiceModule.SecurityService();
 
 	this.getBySchema = function(req, res) {
 
+		console.log(req.params);
 		var schemaName = safeUrlEncoder.decode(req.params.schema);
 		
 		if (!schemaRegistry) {
@@ -127,6 +128,10 @@ var securityService= new securityServiceModule.SecurityService();
 			{collectionName: compiledSchema.table}
 		);
 
+		if (!req.params.id){
+			log.error('Id is not defined for read from schema', schemaName);
+			throw 'Id is not defined.';
+		}
 		_dao.get(req.params.id, function(err, data){
 			if (err) {
 				throw err;

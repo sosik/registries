@@ -4,33 +4,43 @@
 			<div class="col-md-6 col-md-offset-3">
 				<fieldset>
 					<span class="legend">{{'login.title'|translate}}</span>
-                    
-                    <div class="lang" ng-controller="langSelectCtrl"><a href="#" ng-click="setLang('sk')">SK</a> | <a href="#" ng-click="setLang('cz')">CZ</a></div>
+					<div class="lang" ng-controller="langSelectCtrl"><a href="#" ng-click="setLang('sk')">SK</a> | <a href="#" ng-click="setLang('cz')">CZ</a></div>
 
-					<div class="form-group">
+					<div ng-disabled="profiles" class="form-group">
 						<label for="name" class="col-sm-4 control-label">{{'login.loginName' | translate}}</label>
 						<div class="col-sm-8">
-							<input type="text" ng-model="user"
+							<input ng-disabled="profiles" type="text" ng-model="user"
 								placeholder="{{'login.loginName' | translate}}" class="form-control"
 								autocomplete="off">
 						</div>
 					</div>
 
-					<div class="form-group">
+					<div  class="form-group">
 						<label for="password" class="col-sm-4 control-label">{{'login.password' | translate}}</label>
 						<div class="col-sm-8">
-							<input type="password" ng-model="password"
+							<input ng-disabled="profiles" type="password" ng-model="password"
 								placeholder="{{'login.password' | translate}}"
 								class="form-control" autocomplete="off">
 						</div>
 					</div>
+					<div ng-show="profiles" class="form-group">
+						<label for="password" class="col-sm-4 control-label">{{'login.profile' | translate}}</label>
+						<div class="col-sm-8">
+							<select class="form-control"
+								ng-model="selectedProfile"
+								ng-Init="selectedProfile=profiles[0]"
+								ng-options="prof for prof in profiles"></select>
+						</div>
+					</div>
+
 
 					<div class="form-group">
 						<div class="col-sm-4">&nbsp;</div>
 						<div class="col-sm-7">
 							<div class="btn-group-vertical">
-								<button ng-click="login()" class="btn btn-primary"><i class="glyphicon-log-in"></i> {{'login.title' | translate}}</button>
-								<a href="#" class="btn-link" ng-click="resetPassword()">{{'login.forgottenPassword' | translate}}</a>
+								<button ng-show="profiles" ng-click="selectProfile()" class="btn btn-primary"><i class="glyphicon-log-in"></i> {{'login.selected.profile.continue' | translate}}</button>
+								<button ng-show="!profiles" ng-click="login()" class="btn btn-primary"><i class="glyphicon-log-in"></i> {{'login.title' | translate}}</button>
+								<a href="#" ng-show="!profiles" class="btn-link" ng-click="resetPassword()">{{'login.forgottenPassword' | translate}}</a>
 							</div>
 						</div>
 					</div>

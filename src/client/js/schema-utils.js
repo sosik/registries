@@ -7,10 +7,15 @@ angular.module('schema-utils', ['registries'])
 	 * It does proper URI escaping
 	 */
 	service.getCompiledSchema = function(schemaUri, suffix) {
-		var _schemaUri = this.concatUri(schemaUri, suffix);
+		var _schemaUri = schemaUri;
+		
+		if (suffix){
+		 _schemaUri = this.concatUri(schemaUri, suffix);
+		}
+		
 		return $http({
-		    method : 'GET',
-		    url : '/schema/compiled/' + this.encodeUri(_schemaUri)
+			method : 'GET',
+			url : '/schema/compiled/' + this.encodeUri(_schemaUri)
 		});
 
 	};
@@ -55,5 +60,5 @@ angular.module('schema-utils', ['registries'])
  * Filter for encoding url directly in html code
  */
 .filter('uriescape', ['schema-utils.SchemaUtilFactory', function(schemaUtilFactory) {
-  return  function(data){return schemaUtilFactory.encodeUri(data);};
+	return  function(data){return schemaUtilFactory.encodeUri(data);};
 }]);

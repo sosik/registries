@@ -22,6 +22,7 @@ angular.module('registries', [
 	$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
 	$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/security-group-edit.html', controller: 'security.groupEditCtrl', permissions:['Security - read']});
 	$routeProvider.when('/security/user/edit', {templateUrl: 'partials/security-user-edit.html', controller: 'security.userEditCtrl',permissions:['Security - read']});
+	$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/security-profile-edit.html', controller: 'security.profileEditCtrl',permissions:['Security - read']});	
 	$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/registry-new.html', controller: 'registry.newCtrl',permissions:['Registry - write']});
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl',permissions:['Registry - read']});
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});

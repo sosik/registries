@@ -149,7 +149,20 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					cwd: 'src/client/scss/',
-					src: ['*.scss'],
+					src: ['main.scss'],
+					dest: 'build/client/css/',
+					ext: '.css'
+				}]
+			},
+			bootstrap: {
+				options: {
+					unixNewlines: true,
+					sourcemap: true
+				},
+				files: [{
+					expand: true,
+					cwd: 'src/client/scss/',
+					src: ['bootstrap.scss'],
 					dest: 'build/client/css/',
 					ext: '.css'
 				}]

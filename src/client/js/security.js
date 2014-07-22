@@ -19,12 +19,12 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							}
 						});
 					};
-					service.selectProfile=function(profile){
+					service.selectProfile=function(profileId){
 						return $http({
 							method : 'POST',
 							url : '/user/profile/',
 							data : {
-								profile : profile
+								profileId : profileId
 							}
 						});
 					};
@@ -91,6 +91,15 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						});
 
 					};
+					service.getSecurityProfiles = function() {
+
+						return $http({
+							method : 'GET',
+							url : '/security/profiles',
+
+						});
+
+					};
 					service.getSecuritySearchSchemas= function() {
 
 						return $http({
@@ -108,7 +117,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 					};
 
-					service.updateUserSecurity = function(userId,loginName,email, permissions, groups) {
+					service.updateUserSecurity = function(userId,loginName,email,profiles) {
 
 						return $http({
 							method : 'POST',
@@ -117,8 +126,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 								userId : userId,
 								loginName: loginName, 
 								email: email,
-								permissions : permissions,
-								groups : groups
+								profiles : profiles
 							}
 						});
 					};
@@ -194,12 +202,16 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	 */
 	$scope.login = function() {
 		SecurityService.getLogin($scope.user, $scope.password).success(function(user, status, headers, config) {
-			$rootScope.security.currentUser = user;
 			if (user.systemCredentials.profiles.length>1){
 				$scope.profiles=user.systemCredentials.profiles;
 			}
 			else {
-				$location.path('/personal-page');
+				SecurityService.selectProfile(user.systemCredentials.profiles.id).success(function(){
+					$rootScope.security.currentUser =SecurityService.getCurrentUser().success(function(data){
+					$rootScope.security.currentUser=data;
+					$location.path('/personal-page');
+					});
+				});
 			}
 		}).error(function(data, status, headers, config) {
 			delete $rootScope.security.currentUser;
@@ -209,7 +221,12 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	};
 
 	$scope.selectProfile=function(){
-		SecurityService.selectProfile($scope.selectedProfile);
+		SecurityService.selectProfile($scope.selectedProfile.id).success(function(){
+			 SecurityService.getCurrentUser().success(function(data){
+				$rootScope.security.currentUser=data;
+				$location.path('/personal-page');
+			});
+		});
 	};
 
 	$scope.resetPassword = function() {
@@ -339,9 +356,11 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					$scope.selectedUser = null;
 
 					$scope.user = {};
-					$scope.user.permissions = [];
-					$scope.user.groups = [];
+					
 					$scope.headers = {};
+
+					$scope.profiles=[];
+					$scope.user.profiles=[];
 
 					$scope.removeCrit = function(index) {
 						$scope.searchCrit.splice(index, 1);
@@ -406,61 +425,34 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						}
 					}
 
-					$scope.addPermission = function(value) {
-						$scope.user.permissions.push(value);
-						remove($scope.permissions, value);
+					
 
-					};
-					$scope.removePermission = function(value) {
-						$scope.permissions.push(value);
-						remove($scope.user.permissions, value);
-					};
 
-					$scope.addGroup = function(value) {
-						$scope.user.groups.push(value);
-						remove($scope.groups, value);
-
+					$scope.addProfile = function(value) {
+						$scope.user.profiles.push(value);
+						remove($scope.profiles, value);
 					};
-					$scope.removeGroup = function(value) {
-						$scope.groups.push(value);
-						remove($scope.user.groups, value);
+					$scope.removeProfile = function(value) {
+						$scope.profiles.push(value);
+						remove($scope.user.profiles, value);
 					};
 
-					function fillUserPerm(user, perms) {
-						var retval = [];
-						if ( 'systemCredentials' in user ){
-							if('permissions' in user.systemCredentials ){
-								for(per in user.systemCredentials.permissions ){
-									if (user.systemCredentials.permissions[per]){
-										retval.push(per);
-										remove(perms, per);
-									}
-								}
-							}
-						}
-						
-						return retval;
-					}
-
-					function fillUserGroups(user, groups) {
+					function fillUserProfiles(user, groups) {
 						var retval = [];
 
 						if (!('systemCredentials' in user)){
 							 user.systemCredentials={};
 						}
 						if ( !('groups' in user.systemCredentials)) {
-							user.systemCredentials.groups = [];
+							user.systemCredentials.profiles = [];
 						}
 
-						for ( var ug in user.systemCredentials.groups) {
-							var usergroup = user.systemCredentials.groups[ug];
+						for ( var ug in user.systemCredentials.profiles) {
 							groups.map(function(item) {
-
-								if (usergroup.id === item.id) {
+								if (ug === item.id) {
 									retval.push(item);
 									remove(groups, item);
 								}
-
 							});
 						}
 
@@ -469,37 +461,41 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 					$scope.selectUser = function(user) {
 						$scope.selectedUser = user;
+						if ( !('groups' in user.systemCredentials)) {
+							user.systemCredentials.groups = [];
+						}
+
+
+						securityService.getSecurityProfiles().success(function(data) {
+							$scope.profiles = data;
+							$scope.user.profiles = fillUserProfiles($scope.selectedUser, data);
+						}).error(function(err){ notificationFactory.error(err);});
+
 						if (!('systemCredentials' in user)){
 							user.systemCredentials={};
 							if ('contactInfo' in user && 'email' in user['contactInfo']){
 								user.systemCredentials.login={loginName:user.contactInfo.email,email:user.contactInfo.email};
-								$scope.updateUserSecurity();
+								setTimeout( $scope.updateUserSecurity(),2000);
 								} else {
 									user.systemCredentials={};
 									user.systemCredentials.login={loginName:''};
 								}
 						}
 						
-						if ( !('groups' in user.systemCredentials)) {
-							user.systemCredentials.groups = [];
-						}
-
-						securityService.getSecurityPermissions().success(function(data) {
-							$scope.permissions = data;
-							$scope.user.permissions = fillUserPerm($scope.selectedUser, data);
-						}).error(function(err){ notificationFactory.error(err);});
-
-						securityService.getSecurityGroups().success(function(data) {
-							$scope.groups = data;
-							$scope.user.groups = fillUserGroups($scope.selectedUser, $scope.groups);
-						}).error(function(err){
-							 notificationFactory.error(err);
-							});;
-
 					};
 
+					function convertProfiles(profiles){
+						var retval=[];
+						
+						for (var profile in profiles){
+							retval.push({id:profiles[profile].id});
+						}
+
+						return retval;
+					}
+
 					$scope.updateUserSecurity = function() {
-						securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups).success(function(data) {
+						securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email,convertProfiles( $scope.user.profiles)).success(function(data) {
 							notificationFactory.info({translationCode:'security.user.edit.modification.done',time:3000});
 							$scope.search();
 						}).error(function (err,data){
@@ -508,7 +504,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					};
 					
 					$scope.resetPassword= function (){
-						 securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups).success(function(data) {
+						 securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups,$scope.user.profiles).success(function(data) {
 							 securityService.getResetPassword($scope.selectedUser.id).success(function (data){
 								 notificationFactory.info({type:'info',text:'Nové heslo bolo zaslané na: ' +$scope.selectedUser.systemCredentials.login.email,deletable : true, time:5000, timeout: null}); 
 								 }).error(function (err,data){
@@ -689,7 +685,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					};
 
 					function fillProfilePerm(profile, perms) {
-						console.log(profile,perms);
 						var retval = [];
 						if ( 'security' in profile ){
 							if('permissions' in profile.security ){
@@ -747,10 +742,8 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							for(var schema in profile.forcedCriteria){
 								for(var critIter in profile.forcedCriteria[schema].criteria){
 									var crit=profile.forcedCriteria[schema].criteria[critIter];
-									console.log('kkkk',crit);
 									var modelCrit={schema:schema,operator:mapOperator(crit.op),attribute:crit.f,value:crit.v}
 									$scope.schemaChange(modelCrit,function(c){
-										console.log(c);
 										c.attribute=mapAttribute( c.attDef.attributes,c.attribute);
 										$scope.profileCrit.push(c);
 									});
@@ -758,7 +751,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							}
 						}
 						securityService.getSecurityPermissions().success(function(data) {
-							console.log('>>>perm',data);
 							$scope.permissions = data;
 							$scope.profile.permissions = fillProfilePerm($scope.selectedProfile, data);
 							

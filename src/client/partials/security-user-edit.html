@@ -101,42 +101,13 @@
 					</fieldset>
 				</div>
 		
-			<div  class="form form-horizontal" >
-				<fieldset>
-					<legend>
-						{{'security.user.edit.groups.for.users' |translate}} -
-							{{selectedUser.systemCredentials.login.loginName}}
-					</legend>
-					
-					<div class="form-group">
-						<div class="col-md-12">
-							<div class="row psui-multiselect-box">
-								<div class="col-sm-6 permissions psui-box">
-									<header>{{'security.user.edit.added.groups' |translate}}</header>
-									<section class="psui-list" >
-										<div ng-repeat="group in user.groups" class="psui-list-item" ng-click="removeGroup(group)">
-											<i class="glyphicon-minus"></i><span>{{group.baseData.name}}</span>
-										</div>
-									</section>
-								</div>
-								<div class="col-sm-6 permissions psui-box">
-									<header>{{'security.user.edit.available.groups' |translate}}</header>
-									<section class="psui-list">
-										<div ng-repeat="group in groups" class="psui-list-item" ng-click="addGroup(group)">
-											<i class="glyphicon-plus"></i><span>{{group.baseData.name}}</span>
-										</div>
-									</section>
-								</div>
-							</div>
-						</div>
-					</div>
-				</fieldset>
-			</div>
 			
 			<div  class="form form-horizontal" >
+				
+
 				<fieldset class="row">
 					<legend>
-						{{'security.user.edit.permissions.for.user' |translate}} -
+						{{'security.user.edit.profile' |translate}} -
 							{{selectedUser.systemCredentials.login.loginName}}
 					</legend>
 					
@@ -144,18 +115,18 @@
 						<div class="col-md-12">
 							<div class="row psui-multiselect-box">
 								<div class="col-sm-6 permissions psui-box">
-									<header>{{'security.user.edit.added.permissions' |translate}}</header>
+									<header>{{'security.user.edit.added.profiles' |translate}}</header>
 									<section class="psui-list" >
-										<div ng-repeat="perm in user.permissions" class="psui-list-item" ng-click="removePermission(perm)">
-											<i class="glyphicon-minus"></i><span>{{perm}}</span>
+										<div ng-repeat="profile in user.profiles" class="psui-list-item" ng-click="removeProfile(profile)">
+											<i class="glyphicon-minus"></i><span>{{profile.baseData.name}}</span>
 										</div>
 									</section>
 								</div>
 								<div class="col-sm-6 permissions psui-box">
-									<header>{{'security.user.edit.available.permissions' |translate}}</header>
+									<header>{{'security.user.edit.available.profiles' |translate}}</header>
 									<section class="psui-list">
-										<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
-											<i class="glyphicon-plus"></i><span>{{perm}}</span>
+										<div ng-repeat="profile in profiles" class="psui-list-item" ng-click="addProfile(profile)">
+											<i class="glyphicon-plus"></i><span>{{profile.baseData.name}}</span>
 										</div>
 									</section>
 								</div>

@@ -94,6 +94,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/user/security/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateUserSecurity(req,res);});
 	app.post('/group/security/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateGroupSecurity(req,res);});
 	app.post('/security/profile/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateSecurityProfile(req,res);});
+	app.get('/security/profiles',securityService.authenRequired,function(req,res){securityCtrl.getProfiles(req,res);});
 
 	app.post('/search/def',securityService.authenRequired, bodyParser.json(),function(req,res){searchCtrl.getSearchDef(req,res);});
 	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){searchCtrl.search(req,res);});

@@ -56,12 +56,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	});
 
 	this.getPermissions = function(req, resp) {
-		console.log('asdsadsadmakakakakaka');
-
 
 		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
-
-		console.log('>>>defaultObj',defaultObj);
 
 		var result = [];
 
@@ -70,6 +66,20 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		}
 
 		resp.send(200, result);
+	};
+
+
+	this.getProfiles = function(req, resp) {
+
+		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
+
+		profileDao.list({},function(err,data){
+			if (err){
+				resp.send(500,err);
+				return;
+			}
+			resp.send(200, data);
+		});
 	};
 
 	this.getUserPermissions = function(req, resp) {
@@ -151,34 +161,25 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				if (!user.systemCredentials) {
 					user.systemCredentials = {};
 				}
-				if (!user.systemCredentials.permissions) {
-					user.systemCredentials.permissions = {};
-				}
+				
 
 				if (!user.systemCredentials.login) {
 					user.systemCredentials.login = {};
 				}
 				
-				delete user.systemCredentials.groups;
-
-				if (!user.systemCredentials.groups) {
-					user.systemCredentials.groups = [];
+				if (!('profiles' in user.systemCredentials)) {
+					user.systemCredentials.profiles = {};
 				}
+				
 
-				for ( var per in defaultObj) {
-					user.systemCredentials.permissions[per] = (hasPermission(req.body.permissions, per)?true:null);
+				//clear curent
+				for(var prof in user.systemCredentials.profiles ) {
+					user.systemCredentials.profiles[prof]=null;
 				}
-
-				req.body.groups.map(function(group) {
-					user.systemCredentials.groups.push({
-						id : group.id
-					});
-
+				//set new
+				req.body.profiles.map(function(profile) {
+					user.systemCredentials.profiles[profile.id]=true;
 				});
-
-				if (user.systemCredentials.groups.length === 0) {
-					user.systemCredentials.groups = null;
-				}
 
 				log.verbose('updating users security of', user.systemCredentials.login.loginName);
 				
@@ -267,7 +268,6 @@ this.updateSecurityProfile = function(req, resp) {
 				}
 
 				if ('criteria' in req.body){
-					console.log(req.body);
 					var i = 0 ;
 					for (var cc in req.body.criteria){
 						cc=req.body.criteria[cc];
@@ -281,8 +281,7 @@ this.updateSecurityProfile = function(req, resp) {
 						
 					}
 				}
-				console.log('>>>> to store',profile);
-
+				log.verbose('updating profile',profile);
 				profileDao.update(profile, function(err) {
 					if (err) {
 						resp.send(500, err);
@@ -302,9 +301,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 	function checkPresentSchemaCrits(criteria,schema){
 		for(var crit in criteria){
-			console.log('11111',crit,schema);
 			if (criteria[crit].schema===schema){
-				console.log('present');
 				return true;
 			}
 		}
@@ -377,6 +374,7 @@ this.updateSecurityProfile = function(req, resp) {
 				return;
 			}
 
+
 			if (data.length !== 1) {
 				log.warn('Found more or less then 1 user with provided credentials', data.length);
 				resp.send(500, 'users found ' + data.length);
@@ -393,14 +391,14 @@ this.updateSecurityProfile = function(req, resp) {
 					return;
 				}
 				
-				t.resolvePermissions(user,function (err,permissions){
+				t.resolvePermissions(user,req.selectedProfileId,function (err,permissions){
 					
 					if (err) {
 						log.warn('Failed to resolvePermissions permissions', err);
 						resp.send(500, 'Internal Error');
 						return;
 					}
-					if ('System User' in  permissions&&permissions['System User'] ){
+					// if ('System User' in  permissions&&permissions['System User'] ){
 						t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
 							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
 								if (err) {
@@ -410,23 +408,32 @@ this.updateSecurityProfile = function(req, resp) {
 								}
 								t.setCookies(resp, token, user.systemCredentials.login.loginName);
 								log.info('user logged in',user.id);
-								resp.send(200, deflateUser(user,permissions));
+								
+								t.resolveProfiles(user,function(err,u){
+									if (err) {
+										resp.send(500,err);
+										return;
+									}
+
+									resp.send(200, deflateUser(u,permissions));
+								});
+
 								return;
 							});
 						});
 						
-					}
-					else {
-						log.warn('Not system user ',user.systemCredentials.login.loginName);
-						resp.send(403, securityService.missingPermissionMessage('System User'));
-					}
+					// }
+					// else {
+					// 	log.warn('Not system user ',user.systemCredentials.login.loginName);
+					// 	resp.send(403, securityService.missingPermissionMessage('System User'));
+					// }
 				}); 
 				
 			});
 		});
 	};
 	
-	this.selectprofile=function(req,resp){
+	this.selectProfile=function(req,resp){
 		
 		log.silly('Selecting profile or user', req.loginName);
 		if (!req.loginName) {
@@ -455,65 +462,111 @@ this.updateSecurityProfile = function(req, resp) {
 				return;
 			}
 			
-			if (user.systemCredentials.profiles.indexOf(req.body.profile)<0){
+			if (user.systemCredentials.profiles[req.body.profileId]!=true){
 				resp.send(500, 'user has no profiles');	
 				return;
 			}
 
-			t.setProfileCookie(resp,req.body.profile);
+			t.setProfileCookie(resp,req.body.profileId);
 			resp.send(200);
 
 		});
 
 	};
+
+	this.resolveProfiles=function (user,callback){
+		
+		profileDao.list({},function(err,data){
+			
+			if (err){
+				callback(err);
+				return;
+			}
+
+			var profiles=[];
+			for (var profileId in user.systemCredentials.profiles){
+				data.map(function(pr){
+					if (pr.id===profileId){
+						profiles.push({id:profileId,name:pr.baseData.name});
+					}
+				});	
+			}
+
+			user.systemCredentials.profiles=profiles;
+			callback(null,user);
+
+		});
+
+	};
+
 	//Traverses groups and collects permission, finally user permissions added.
-	this.resolvePermissions = function(user, callback) {
+	this.resolvePermissions = function(user,selectedProfileId, callback) {
 		if (!user){
 			callback(null,[]);
 			return;
 		}
 		var t = this;
-		if (!('systemCredentials' in user)) {
-			callback('user without systemCredentials');
-			return;
-		}
-		var permissions = {};
-		
-		// if has no groups 
-		if (!user.systemCredentials.groups || user.systemCredentials.groups.length === 0) {
-			if (user.systemCredentials.permissions) {
-				for ( var per in user.systemCredentials.permissions) {
-					if (user.systemCredentials.permissions[per] === true) {
-						permissions[per] = true;
-					}
-				}
-			}
-			log.verbose('user permissions resolved',permissions);
-			callback(null, permissions);
+		if (!selectedProfileId){
+			callback(null,[]);
 			return;
 		}
 
-		groupDao.list({}, function(err, groups) {
-			if (err) {
+		profileDao.get(selectedProfileId,function(err,profile){
+			if (err){
 				callback(err);
+				log.error('resolvePermissions',err);
+					return;
+			}
+			if (!profile){
+				callback(null,{});
 				return;
 			}
-			//resolve groups
-			for ( var gr in user.systemCredentials.groups) {
-				t.resolveGroupPermissions(user.systemCredentials.groups[gr].id, groups, permissions);
+			log.silly('profile to resolve security',profile);
+			
+			if (!('security' in profile)) {
+					callback(null,{});
+				return;
 			}
-
-			//merge user rights
-			if (user.systemCredentials.permissions) {
-				for ( var per in user.systemCredentials.permissions) {
-					if (user.systemCredentials.permissions[per] === true) {
-						permissions[per] = true;
+			var permissions = {};
+				
+				// if has no groups 
+			if (!profile.security.groups || profile.security.groups.length === 0) {
+				if (profile.security.permissions) {
+					for ( var per in profile.security.permissions) {
+						if (profile.security.permissions[per] === true) {
+							permissions[per] = true;
+						}
 					}
 				}
+				log.verbose('user permissions resolved',permissions);
+				callback(null, permissions);
+				return;
 			}
-			log.verbose('user permissions resolved',permissions);
-			callback(null, permissions);
+
+				groupDao.list({}, function(err, groups) {
+					if (err) {
+						callback(err);
+						return;
+					}
+					//resolve groups
+					for ( var gr in profile.security.groups) {
+						t.resolveGroupPermissions(profile.security.groups[gr].id, groups, permissions);
+					}
+
+					//merge user rights
+					if (profile.security.permissions) {
+						for ( var per in profile.security.permissions) {
+							if (profile.security.permissions[per] === true) {
+								permissions[per] = true;
+							}
+						}
+					}
+					log.verbose('profile permissions resolved',permissions);
+					callback(null, permissions);
+				});
+			
 		});
+
 
 	};
 
@@ -561,7 +614,7 @@ this.updateSecurityProfile = function(req, resp) {
 				return;
 			}
 			var user = data[0];
-			t.resolvePermissions(user, function(err, permissions) {
+			t.resolvePermissions(user,req.selectedProfileId, function(err, permissions) {
 				if (err) {
 					resp.send(500, err);
 					return;
@@ -880,21 +933,23 @@ this.updateSecurityProfile = function(req, resp) {
 						req.loginName = token.user;
 
 						userDao.get(token.userId, function(err, user) {
-							if (err) {
+							if (err||user==null) {
 								log.error(err);
 								next(err);
 								return;
 							}
-							log.silly(user.systemCredentials.profiles);
-							
-							for(var index in  user.systemCredentials.profiles){
-								if ( user.systemCredentials.profiles[index]===req.cookies[cfg.profileCookie]){
-									req.selectedProfile = selectedProfile;
-									log.debug('profile set to' , selectedProfile);
+								// log.silly(user.systemCredentials.profiles);
+							if ( 'profiles' in user.systemCredentials) {
+								for(var profileId in user.systemCredentials.profiles){
+									if ( profileId===req.cookies[cfg.profileCookie]){
+										req.selectedProfileId = profileId;
+										log.debug('profile set to' , profileId);
+									}
 								}
 							}
+							
 
-							t.resolvePermissions(user, function(err, perm) {
+							t.resolvePermissions(user,req.selectedProfileId, function(err, perm) {
 								if (err) {
 									log.error(err);
 									next(err);

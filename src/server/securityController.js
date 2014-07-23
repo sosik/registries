@@ -172,14 +172,16 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 				
 
-				//clear curent
-				for(var prof in user.systemCredentials.profiles ) {
-					user.systemCredentials.profiles[prof]=null;
+				if ('profiles' in req.body){
+					//clear curent
+					for(var prof in user.systemCredentials.profiles ) {
+						user.systemCredentials.profiles[prof]=null;
+					}
+					//set new
+					req.body.profiles.map(function(profile) {
+						user.systemCredentials.profiles[profile.id]=true;
+					});
 				}
-				//set new
-				req.body.profiles.map(function(profile) {
-					user.systemCredentials.profiles[profile.id]=true;
-				});
 
 				log.verbose('updating users security of', user.systemCredentials.login.loginName);
 				

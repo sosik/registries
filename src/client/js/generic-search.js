@@ -299,7 +299,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
 			c.push($scope.forcedCriterias[idx]);
 		}
-		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,10000).success(function(data) {
+		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),0,10000).success(function(data) {
 
 			data=toCsv($scope.schema,data);
 			

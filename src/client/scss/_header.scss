@@ -34,6 +34,12 @@
 		nav{
 			float: right;
 
+			.user-profile{
+				@include media-mobile{
+					display:none;
+				}
+			}
+			
 			li{
 				display: block;
 				float: left;

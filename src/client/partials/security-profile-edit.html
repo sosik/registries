@@ -76,7 +76,7 @@
 		<div ng-show="selectedProfile" class="col-md-12 col-lg-4">
 				<div  class="form form-horizontal" >
 					<fieldset>
-						<legend>{{'security.profile.edit.name.data' |translate}} -{{selectedProfile.baseData.name}}</legend>
+						<legend>{{'security.profile.edit.name.data' |translate}} - {{selectedProfile.baseData.name}}</legend>
 						<div class="form-group">
 							<label for="name" class="col-sm-4 control-label">{{'security.profile.edit.name' |translate}}</label>
 							<div class="col-sm-8">
@@ -95,8 +95,7 @@
 			<div  class="form form-horizontal" >
 				<fieldset>
 					<legend>
-						{{'security.profile.edit.groups' |translate}} -
-							{{selectedProfile.baseData.name}}
+						{{'security.profile.edit.groups' |translate}} - {{selectedProfile.baseData.name}}
 					</legend>
 					
 					<div class="form-group">
@@ -158,7 +157,7 @@
 
 			
 				<fieldset>
-				<legend>{{'security.profile.edit.data.criteria' |translate}} ({{entity}})</legend>
+				<legend>{{'security.profile.edit.data.criteria' |translate}} - {{selectedProfile.baseData.name}}</legend>
 				
 					<div class="row form-group psui-search-condition" ng-repeat="crit in profileCrit">
 						<div class="col-sm-5">

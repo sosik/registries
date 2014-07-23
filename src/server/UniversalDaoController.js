@@ -93,7 +93,7 @@ var securityService= new securityServiceModule.SecurityService();
 
 	this.getBySchema = function(req, res) {
 
-		console.log(req.params);
+		log.silly('getBySchema',req.params);
 		var schemaName = safeUrlEncoder.decode(req.params.schema);
 		
 		if (!schemaRegistry) {

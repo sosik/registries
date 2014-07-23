@@ -629,7 +629,7 @@ this.updateSecurityProfile = function(req, resp) {
 	*/
 	function deflateUser(user,permissions){
 		log.silly(permissions);
-		return {systemCredentials:{login:{loginName:user.systemCredentials.login.loginName},permissions:permissions,profiles:user.systemCredentials.profiles||[]}};
+		return {id:user.id,systemCredentials:{login:{loginName:user.systemCredentials.login.loginName},permissions:permissions,profiles:user.systemCredentials.profiles||[]}};
 	}
 
 	this.verifyUserPassword = function(user, passwordSample, callback) {

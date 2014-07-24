@@ -153,6 +153,25 @@ var UniversalDao = function(mongoDriver, options) {
 			});
 		});
 	};
+	/**
+	 * Counts objects queried by criteria
+	 *
+	 * @param {Object} queryFilter - search options - use QueryFilter class
+	 * @param {resultCallback} callback - async callback, result parameter contains count
+	 */
+	this.count = function(queryFilter, callback) {
+		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
+			delete _findOptions.limit;
+		
+			log.silly(_findOptions);
+		_collection.find(_findOptions.selector, _findOptions, function(err, cursor){
+			if (err) {
+				callback(err);
+				return;
+			}
+			cursor.count(callback);
+		});
+	};
 
 	/**
 	 * Get actual dao options

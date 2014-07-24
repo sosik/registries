@@ -41,6 +41,9 @@ angular.module('registries')
 		"menu.schema.list.lower.level": "Zoznam schém",
 		'menu.new.profile.lower.level':'Nový bezpečnostný profil',
 		'menu.profiles.lower.level':'Hľadať bezpečnostný profil',
+		'menu.statistics.title':'Štatistiky',
+		'menu.statistics.show.title':'Zobraziť',
+		
 		"header.settings": "Nastavenia",
 		"header.log.out": "Odhlásiť sa",
 		"personal.change.password.change.password": "Zmena hesla",
@@ -169,6 +172,10 @@ angular.module('registries')
 		"schemas.group.base.data.ID":"Identifikátor",
 		"schemas.group.base.data.name":"Názov skupiny",
 		"schemas.group.base.data.parent.group":"Rodičovská skupina",
+		'schema.statistics.view':'Štatistiky',
+		'schema.statistics.baseData':'Základné',
+		'schema.statistics.member.count':'Počet členov',
+		'schema.statistics.women.count':'Počet žien'
 	});
 
 	$translateProvider.translations('cz', {
@@ -201,6 +208,8 @@ angular.module('registries')
 		'menu.schema.list.lower.level': 'Seznam schémat',
 		'menu.new.profile.lower.level':'Nový bezpečnostnej profil',
 		'menu.profiles.lower.level':'Hledat bezpečnostnej profil',
+		'menu.statistics.title':'Statistiky',
+		'menu.statistics.show.title':'Zobrazit',
 		'header.settings': 'Nastavení',
 		'header.log.out': 'Odhlásit se',
 		'personal.change.password.change.password': 'Změna hesla',
@@ -327,6 +336,10 @@ angular.module('registries')
 		"schemas.group.base.data.ID":"Identifikátor",
 		"schemas.group.base.data.name":"Jméno skupiny",
 		"schemas.group.base.data.parent.group":"Rodičovská skupina",
+		'schema.statistics.view':'Statistiky',
+		'schema.statistics.baseData':'Základní',
+		'schema.statistics.member.count':'Počet členov',
+		'schema.statistics.women.count':'Počet žien'
 	});
 }])
 .controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {

@@ -24,6 +24,7 @@ var schemaRegistryModule = require('./schemaRegistry.js');
 
 var searchControllerModule = require('./searchController.js');
 var schemaControllerModule = require('./schemaController.js');
+var statisticsControllerModule = require('./statisticsController.js');
 
 var app = express();
 
@@ -56,6 +57,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,config);
 	
 	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,schemaRegistry,{});
+	var statisticsCtrl = new  statisticsControllerModule.StatisticsController(mongoDriver,{});
 	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{
 		rootPath: config.paths.schemas
 	});
@@ -82,6 +84,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/security/permissions',securityService.authenRequired,function(req,res){securityCtrl.getPermissions(req,res);});
 	app.get('/security/search/schemas',securityService.authenRequired,function(req,res){securityCtrl.getSearchSchemas(req,res);});
 
+	app.get('/statistics',securityService.hasPermFilter('Registry - read').check,function(req,res){statisticsCtrl.getStatistics(req,res);});
 
 	app.get('/schema/compiled/*',securityService.hasPermFilter('System User').check,bodyParser.json(),function(req,res){schemaCtrl.getCompiledSchema(req,res);});
 	app.get('/schema/ls*',securityService.hasPermFilter('System Admin').check,bodyParser.json(),function(req,res){schemaCtrl.schemaList(req,res);});

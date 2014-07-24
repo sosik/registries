@@ -2,8 +2,8 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 //
 .config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/search/:entity', {
-	    templateUrl : 'partials/generic-search.html',
-	    controller : 'SearchCtrl'
+		templateUrl : 'partials/generic-search.html',
+		controller : 'SearchCtrl'
 	});
 } ])
 //
@@ -13,14 +13,14 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	service.getSearch = function(searchSchema, criteria,sortBy,skip,limit) {
 		
 		return $http({
-		    method : 'POST',
-		    url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
-		    data : {
-		        criteria : criteria,
-		        sortBy: sortBy, 
-		        limit: limit,
-		        skip: skip
-		    }
+			method : 'POST',
+			url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
+			data : {
+				criteria : criteria,
+				sortBy: sortBy, 
+				limit: limit,
+				skip: skip
+			}
 		});
 	};
 
@@ -73,9 +73,9 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 					collectProperties(pr + '.', objectDef.properties[pr], resultArr)
 				} else {
 					resultArr.push({
-					    path: pathPrefix + pr,
-					    type: objectDef.properties[pr].type,
-					    title: objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title
+						path: pathPrefix + pr,
+						type: objectDef.properties[pr].type,
+						title: objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title
 					});
 				}
 			}
@@ -86,23 +86,23 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		retval.schema = schema.url;
 		retval.attributes = [];
 		retval.operators = [ {
-		    title: '=',
-		    value: 'eq'
+			title: '=',
+			value: 'eq'
 		}, {
-		    title: '>',
-		    value: 'gt'
+			title: '>',
+			value: 'gt'
 		}, {
-		    title: '<',
-		    value: 'lt'
+			title: '<',
+			value: 'lt'
 		}, {
-		    title: '!=',
-		    value: 'neq'
+			title: '!=',
+			value: 'neq'
 		}, {
-		    title: 'starts',
-		    value: 'starts'
+			title: 'starts',
+			value: 'starts'
 		}, {
-		    title: 'exists',
-		    value: 'ex'
+			title: 'exists',
+			value: 'ex'
 		} ];
 
 		collectProperties('', schema, retval.attributes);
@@ -131,14 +131,14 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	$scope.lastCriteria={};
 	
 	
-    $scope.addCrit = function() {
-    	$scope.searchCrit.push({});
-    };
-    
-    var pageSize=20;
-    
-    
-    var generateTableHeaders = function(schema, obj) {
+	$scope.addCrit = function() {
+		$scope.searchCrit.push({});
+	};
+	
+	var pageSize=20;
+	
+	
+	var generateTableHeaders = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
 			if (value.type === 'object') {

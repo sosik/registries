@@ -4,6 +4,7 @@ angular.module('registries', [
 		'security',
 		'personal-page',
 		'statistics',
+		'massmailing',
 		'schema-editor',
 		'generic-search',
 		'registry',
@@ -21,6 +22,7 @@ angular.module('registries', [
 .config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});
 	$routeProvider.when('/statistics', {templateUrl: '/partials/registry-view.html', controller: 'statistics.viewCtrl', permissions:['Registry - read']});
+	$routeProvider.when('/massmailing', {templateUrl: '/partials/massmailing.html', controller: 'massmailing.editCtrl', permissions:['Registry - write']});
 	$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 	$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
 	$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/security-group-edit.html', controller: 'security.groupEditCtrl', permissions:['Security - read']});

@@ -19,6 +19,12 @@ angular.module('schema-utils', ['registries'])
 		});
 
 	};
+	service.listBySchema = function(schemaUri) {
+		return $http({
+			method : 'GET',
+			url : '/udao/listBySchema/'+service.encodeUri(schemaUri)
+		});
+	};
 
 	/**
 	 * concatenates schema uri and fragment in propper way

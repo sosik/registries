@@ -2,6 +2,8 @@ var fs = require('fs');
 var path = require('path');
 var extend = require('extend');
 
+
+
 var config = {
 	webserverPort: process.env.REGISTRIES_HTTP_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000,
 	webserverSecurePort: process.env.REGISTRIES_HTTPS_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3443,
@@ -59,7 +61,11 @@ var config = {
 						addLabel: true
 					};
 			}
-		}())
+		}()),
+	collation : {
+		numberOfChars: 5,
+		language: 'sk'
+	}
 };
 
 // merge default configuration with local configuration if exists

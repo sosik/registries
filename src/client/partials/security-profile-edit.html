@@ -72,8 +72,9 @@
 			</div>
 			
 		</div>
-
-		<div ng-show="selectedProfile" class="col-md-12 col-lg-4">
+	</div>
+	<div class="row">
+		<div ng-show="selectedProfile" class="col-md-12 col-lg-8">
 				<div  class="form form-horizontal" >
 					<fieldset>
 						<legend>{{'security.profile.edit.name.data' |translate}} - {{selectedProfile.baseData.name}}</legend>
@@ -160,11 +161,11 @@
 				<legend>{{'security.profile.edit.data.criteria' |translate}} - {{selectedProfile.baseData.name}}</legend>
 				
 					<div class="row form-group psui-search-condition" ng-repeat="crit in profileCrit">
-						<div class="col-sm-5">
+						<div class="col-sm-3">
 							<select class="form-control" ng-model="crit.schema"
 								ng-options="schema for schema in searchSchemas"  ng-change="schemaChange(crit)" ></select>
 						</div>
-						<div class="col-sm-5">
+						<div class="col-sm-3">
 							<select class="form-control" ng-model="crit.attribute"
 								ng-options="att.title for att in crit.attDef.attributes"></select>
 						</div>
@@ -173,7 +174,7 @@
 								class="form-control" ng-model="crit.operator"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-2">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid form-control"

@@ -6,4 +6,13 @@
 	right: 0px;
 	z-index: 5;
 	top: 34px;
+	
+	&:not([class*="psui-hidden"]){
+		~ .psui-buttons-holder {
+			.psui-icon-chevron-down{
+				@include rotate(180deg);
+			}
+		}
+	}
 }
+ 

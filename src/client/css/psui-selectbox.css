@@ -1,5 +1,17 @@
-.psui-dropdown {
+.psui-selectbox ~ .psui-dropdown {
 	width: 100%;
+}
+
+.psui-selectbox.psui-hidden ~ .psui-buttons-holder{
+	display: none;
+}
+
+.psui-selectbox{
+	line-height: 2em;
+}
+	
+
+.psui-dropdown {
 	background: none repeat scroll 0 0 white;
     border: 0 none;
     border-radius: 6px;

@@ -1,22 +1,71 @@
-'use strict';
-
 angular.module('psui', [])
-.factory('psui.dropdownFactory', [function() {
-	var PsuiDropdown = function(wrapper) {
-		var _isVisible = false;
+/**
+ * @ngService psui.dropdownService
+ *
+ * ```
+ * {
+ * 		visible {bool} <- if is dropdown visible at construction time
+ * 		searchaable {bool} <- defines, if dropdown should contain search text box
+ * }
+ * ```
+ */
+.service('psui.dropdownFactory', [function() {
+	var Dropdown = function(options) {
+		options = options || {};
+		var _isVisible = options.visible || false;
+		var _useSearchInput = options.searchable || false;
+		var _dropdown = angular.element('<div class="psui-dropdown"></div>');
+		var _itemsHolder = angular.element('<section></section>');
 		var _selected = -1;
-		var _dropdown = angular.element('<div class="psui-dropdown psui-hidden"></div>');
-		var _dropdownData = [];
-		var _eventHandlers = {};
+		var _data = [];
+		var _actualData = [];
+		var _searchInput = null;
 
-		_dropdown.attr('tabindex', -1);
-		wrapper.append(_dropdown);
+		_dropdown.append(_itemsHolder);
+
+		// search text box
+		if (_useSearchInput) {
+			var _searchInputWrapper = angular.element('<header></header>');
+			_searchInput = angular.element('<input class="form-control"></input>');
+			_searchInputWrapper.append(_searchInput);
+			_dropdown.prepend(_searchInputWrapper);
+
+			var _oldVal = '';
+			var that = this;
+			_searchInput.on('keyup mouseup', function(evt) {
+				evt.preventDefault();
+				if (_searchInput.val() === _oldVal) {
+					//nothing changed
+					return;
+				}
+
+				_oldVal = _searchInput.val();
+				
+				that.onSearchChanged(_searchInput.val());
+				
+			});
+		}
+
 		/**
 		 * Shows dropdown
 		 */
 		this.show = function() {
+			if (_isVisible) {
+				// already visible, do nothing
+				return;
+			}
 			_dropdown.removeClass('psui-hidden');
 			_isVisible = true;
+			this.unselectAll();
+			if (_searchInput) {
+				_searchInput.val('');
+				this.resetActualData();
+				_searchInput[0].focus();
+			}
+
+			// reset scroll
+			_itemsHolder[0].scrollTop = 0;
+			_itemsHolder[0].scrollLeft = 0;
 		};
 
 		/**
@@ -39,153 +88,188 @@ angular.module('psui', [])
 		 * of this method there will be no element celected.
 		 */
 		this.unselectAll = function() {
-			_dropdown.children().removeClass('psui-selected');
+			_itemsHolder.children().removeClass('psui-selected');
+			_selected = -1;
 		};
 
+		/**
+		 *	Handles change of active element (mouse moves on elements)
+		 *	@param {number} index - index of data item overtaking selection
+		 */
+		this.onActiveChanged = function() {
+			// do someting
+			return;
+		};
+
+		/**
+		 * Handles selection of element, can be overrinden
+		 * @param {number} index - index of selected item in _data array
+		 */
+		this.onSelected = function() {
+			this.hide();
+		};
+
+		/**
+		 * Handles changes in search expression, can be overriden
+		 * @param {number} search - current value of search expression
+		 */
+		this.onSearchChanged = function(search) {
+			_actualData = [];
+			var re = new RegExp('^' + search,'i');
+			for (var i = 0; i < _data.length; ++i) {
+				if (re.test(_data[i]))	 {
+					_actualData.push(i);
+				}
+			}
+
+			this.redraw();
+		}
+
+		/**
+		 * Redraw actual dropdown elements
+		 */
 		this.redraw = function() {
-			_dropdown.empty();
+			_itemsHolder.empty();
 			_selected = -1;
 
-			if (_dropdownData.length < 1) {
-				this.hide();
+			if (_actualData.length < 1) {
+				//this.hide();
 				return;
 			}
 
 			var that = this;
-			for (var i = 0; i < _dropdownData.length; i++) {
-				var e = this.generateElement(i);
-				e.data('index', i);
-				e.on('mouseover click', function(evt) {
+			for (var i = 0; i < _actualData.length; i++) {
+				var e = this.generateElement(_actualData[i]);
+				e.data('index', _actualData[i]);
+				e.on('mouseover', function(evt) {
 					that.unselectAll();
 					var element = angular.element(evt.target);
 					var index = element.data('index');
-					if (index) {
+					if (typeof index !== 'undefined') {
 						_selected = index;
-					}
-					element.addClass('psui-selected');
-					that.triggerHandler('psui:changed', {index: index});
-
-					if (evt.type === 'click') {
-						that.triggerHandler('psui:confirmed', {index: index});
+						element.addClass('psui-selected');
+						that.onActiveChanged(index);
 					}
 				});
-				_dropdown.append(e);
-			}
 
+				e.on('click', function(evt) {
+					var element = angular.element(evt.target);
+					var index = element.data('index');
+					if (typeof index !== 'undefined') {
+						_selected = index;
+						that.onSelected(index);
+					}
+				})
+				_itemsHolder.append(e);
+			}
 		};
 
 		/**
 		 * This method can be overriden to achieve special element creation
 		 */
 		this.generateElement = function(index) {
-			var d = _dropdownData[index];
+			var d = _data[index];
 
-			if (d) {
-				if ('string' === typeof d) {
-					
-					return angular.element('<div>' + d + '</div>');
-				} else if ('object' === typeof d) {
-					// k as key in {k: 'key', v: 'val'}
-					if (d.k) {
-						return angular.element('<div>' + d.k + '</div>');
-					} else {
-						for (var k in d) {
-							return angular.element('<div>' + d[k] + '</div>');
-						}
-					}
-				}
-			} 
-			throw new Error('Invalid element');
+			if (typeof d === 'string') {
+				return angular.element('<div>' + d + '</div>');
+			} else if ((typeof d === 'object') && (typeof d.k !== 'undefined') && (typeof d.v !== 'undefined')) {
+				return angular.element('<div>'+ d.v + ' - ' + d.k + '</div>');
+			}
 		};
 
 		/**
-		 * Set data for dropdown
+		 * Method resets actual data to contain all data.
+		 */
+		this.resetActualData = function() {
+			_actualData = [];
+			for (var i = 0; i < _data.length; ++i) {
+				_actualData.push(i);
+			}
+		}
+
+		/**
+		 * Set actual data for dropdown
 		 */
 		this.setData = function(data) {
 			if (!angular.isArray(data)) {
-				throw new Error('Data have to be array');
+				throw new Error('Data has to be array');
 			}
-			_dropdownData = data;
+			_data = data;
+			this.resetActualData();
 			_selected = -1;
 			this.redraw();
 		};
 
 		/**
-		 * Method changes selected element by index. If paraeter relative is provided
-		 * selection is relative to currently selected element.
+		 * Returns dropdown DOM element wrapped as angular element
 		 */
-		this.change = function(index, relative) {
-			if (relative) {
-				var newIdx = _selected + index;
-			} else {
-				var newIdx = index;
-			}
-
-			if (_dropdownData[newIdx]) {
-				_selected = newIdx;
-
-				this.unselectAll();
-				angular.element(_dropdown.children()[newIdx]).addClass('psui-selected');
-				this.triggerHandler('psui:changed', {index: newIdx});
-
-				// calculate scroll
-				var heightToCurrent = 0;
-				for (var i = 0; i < _selected; i++) {
-					heightToCurrent += _dropdown.children()[_selected].offsetHeight;
-				}
-
-				if (heightToCurrent < _dropdown[0].scrollTop) {
-					_dropdown[0].scrollTop = heightToCurrent;
-				} else if (heightToCurrent + _dropdown.children()[_selected].offsetHeight > _dropdown[0].scrollTop + _dropdown[0].offsetHeight) {
-					_dropdown[0].scrollTop += _dropdown.children()[_selected].offsetHeight;
-				}
-			}
-		};
-
-		this.selected = function() {
-			return _selected;
+		this.getDropdownElement = function() {
+			return _dropdown;
 		}
 
-		/**
-		 * Registers event handler. If event name is prefixed with "psui:"
-		 * it is considered psui event. Otherwise it is delegated to appropriate dom element.
-		 *
-		 * Handled psui events:
-		 * psui:changed - triggered when selection changes
-		 * psui:confirmed - triggered when is selection confirmed
-		 */
-		this.on = function(evtName, func) {
-			if (evtName && evtName.indexOf('psui:') === 0) {
-				// register local psui events
-				_eventHandlers[evtName] = _eventHandlers[evtName] || {};
-				_eventHandlers[evtName][func.toString()] = func;
-			} else {
-				_dropdown.on(evtName, func);
-			}
-		};
+		if (_isVisible) {
+			this.show();
+		} else {
+			this.hide();
+		}
 
-		this.off = function(evtName, func) {
-			if (evtName && evtName.indexOf('psui:') === 0) {
-				// register local psui events
-				_eventHandlers[evtName] = _eventHandlers[evtName] || {};
-				if (_eventHandlers[evtName][func.toString()]) {
-					delete _eventHandlers[evtName][func.toString()];
-				}
-			} else {
-				_dropdown.off(evtName, func);
-			}
-		};
 
-		this.triggerHandler = function(evtName, data) {
-			_eventHandlers[evtName] = _eventHandlers[evtName] || {};
-			for (var handler in _eventHandlers[evtName]) {
-				data.name = evtName;
-				_eventHandlers[evtName][handler](data);
-			}
-		};
 	};
 
 	return {
-		PsuiDropdown : PsuiDropdown
+		createDropdown : function(options) {
+			return new Dropdown(options);
+		}
+	}
+}])
+.directive('psuiAccordionElement', [function() {
+	return {
+		restrict: 'A',
+		scope: true,
+		compile: function(elm, attrs) {
+			var titleHolder = angular.element('<div href="#" ng-click="titleClick()"></div>');
+
+			var titleElm = angular.element('<span></span>');
+
+			if (attrs.title) {
+				titleHolder.prepend(titleElm);
+			}
+
+			if (attrs.iconClass) {
+				titleHolder.prepend('<i class="'+attrs.iconClass+'"></i>');
+			}
+
+			elm.prepend(titleHolder);
+
+			return function(scope, elm, attrs) {
+				scope.accordion = {};
+				scope.accordion.active = false;
+
+				if (attrs.title) {
+					titleElm.text(attrs.title);
+					attrs.$observe('title', function(newVal) {
+						titleElm.text(newVal);
+					});
+				}
+
+				var toggleActivity = function() {
+					if (scope.accordion.active) {
+						elm.removeClass('psui-accordion-active');
+						scope.accordion.active = false;
+					} else {
+						elm.addClass('psui-accordion-active');
+						scope.accordion.active = true;
+					}
+				};
+
+				if (scope.accordion.active) {
+						elm.addClass('psui-accordion-active');
+				}
+
+				scope.titleClick = function() {
+					toggleActivity();
+				};
+			};
+		},
 	};
 }]);

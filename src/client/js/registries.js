@@ -15,7 +15,8 @@ angular.module('registries', [
 		'psui-notification',
 		'psui-validity-mark',
 		'pascalprecht.translate',
-		'psui-objectlink'
+		'psui-objectlink',
+		'psui-selectbox'
 ])
 .config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});

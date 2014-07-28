@@ -1,4 +1,4 @@
-angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src'])
+angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src', 'psui-selectbox'])
 .controller('registry.newCtrl', ['$route',
 		'$scope',
 		'$routeParams',
@@ -135,6 +135,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			var viewElement;
 			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
 				viewElement = angular.element($compile('<div psui-objectlink-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
+			} else if (elm.prop('tagName') == 'PSUI-SELECTBOX') {
+				viewElement = angular.element($compile('<div psui-selectbox-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-UPLOADABLE-IMAGE') {
 				viewElement = angular.element($compile('<div><img ng-src="{{'+attrs.ngModel +'}}" src="" psui-default-src="/img/no_photo.jpg"></img></div>')(scope));
 			} else {
@@ -378,8 +380,10 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 							if (value2.$objectLink) {
 								input = angular.element('<psui-objectlink schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
-							} else 	if (value2.render && value2.render.component === 'psui-datepicker') {
+							} else if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+							} else if (value2.render && value2.render.component === 'psui-selectbox') {
+								input = angular.element('<psui-selectbox schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" psui-validity-mark class="form-control" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								input = angular.element('<psui-uploadable-image '
 								+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
@@ -457,6 +461,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 								input = angular.element('<psui-objectlink psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
 							} else if (value2.render && value2.render.component === 'psui-datepicker') {
 								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+							} else if (value2.render && value2.render.component === 'psui-selectbox') {
+								input = angular.element('<psui-selectbox psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" psui-validity-mark class="form-control" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
 								input = angular.element('<psui-uploadable-image psui-inlineedit="view"'
 									+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width

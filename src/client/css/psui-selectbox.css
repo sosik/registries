@@ -1,0 +1,59 @@
+.psui-dropdown {
+	width: 100%;
+	background: none repeat scroll 0 0 white;
+    border: 0 none;
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    outline: 0 none;
+    padding: 0;
+
+}
+
+.psui-selectbox:focus {
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+}
+
+.psui-dropdown header {
+	background-color: #b0b0b0;
+	padding: 4px 12px;
+	position: relative;
+}
+
+.psui-dropdown header:after {
+	background-color: #b0b0b0;
+    bottom: 1px;
+    color: white;
+    content: "";
+    font-family: "Glyphicons Halflings";
+    line-height: 1.42857;
+    padding: 10px 6px;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    z-index: 3;
+}
+
+.psui-dropdown header input {
+	float: none !important;
+    padding-right: 32px;
+}
+
+.psui-dropdown section {
+	display: block;
+    margin: 0;
+    max-height: 150px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.psui-dropdown section div {
+	-moz-user-select: none;
+    border-bottom: 1px dotted white;
+    color: #666666;
+    cursor: pointer;
+    line-height: 1.42857;
+    padding: 4px 12px 4px 24px;
+}
+.psui-dropdown .psui-selected {
+	background-color: #fdb730;
+}

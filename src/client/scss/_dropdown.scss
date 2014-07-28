@@ -1,3 +1,9 @@
 .psui-dropdown{
 	position: absolute;
 }
+
+.psui-wrapper > .psui-dropdown {
+	right: 0px;
+	z-index: 5;
+	top: 34px;
+}

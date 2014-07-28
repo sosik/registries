@@ -1,10 +1,15 @@
 var log = require('./logging.js').getLogger('_mongoDriver.js');
-
+/*
+ * @module mongoDriver
+ */
 module.exports = function(MongoClient, ObjectID, QueryFilter) {
 	var _database = null;
 
 	return {
-		/* async db initialization */
+		/*
+		 * @func init
+		 *  async db initialization
+		 */
 		init: function(mongoDbURI, callback) {
 			MongoClient.connect(mongoDbURI, function(err, db) {
 				if (err) {

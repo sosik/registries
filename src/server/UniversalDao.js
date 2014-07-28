@@ -55,14 +55,20 @@ var UniversalDao = function(mongoDriver, options) {
 	 * @param {resultCallback} callback - async callback
 	 */
 	this.get = function(id, callback) {
-		_collection.findOne(mongoDriver.id2_id({"id":id}), function(err, data) {
-			if (err) {
-				callback(err);
-				return;
-			}
+		if (id) {
+			_collection.findOne(mongoDriver.id2_id({"id":id}), function(err, data) {
+				if (err) {
+					callback(err);
+					return;
+				}
 
-			callback(null, mongoDriver._id2id(data));
-		});
+				callback(null, mongoDriver._id2id(data));
+			});
+		} else {
+			log.error('Property "id" is undefined!');
+			callback(new Error('Property "id" is undefined'));
+			return;
+		}
 	};
 
 	/**

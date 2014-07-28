@@ -117,7 +117,15 @@ angular.module('psui', [])
 			_actualData = [];
 			var re = new RegExp('^' + search,'i');
 			for (var i = 0; i < _data.length; ++i) {
-				if (re.test(_data[i]))	 {
+				if (typeof _data[i] === 'string') {
+					if (re.test(_data[i]))	 {
+						_actualData.push(i);
+					}
+				} else if (typeof _data[i] === 'object' && _data[i].k && _data[i].k) {
+					if (re.test(_data[i].v)) {
+						_actualData.push(i);
+					}
+				} else {
 					_actualData.push(i);
 				}
 			}

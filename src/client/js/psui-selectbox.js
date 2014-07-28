@@ -1,6 +1,6 @@
 'use strict';
-angular.module('psui-selectbox', ['psui'])
-.directive('psuiSelectboxView', ['$parse', function($parse) {
+angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
+.directive('psuiSelectboxView', ['$parse', '$translate', function($parse, $translate) {
 	return {
 		restrict: 'A',
 		require: ['^ngModel'],
@@ -19,7 +19,7 @@ angular.module('psui-selectbox', ['psui'])
 					// there are transCodes
 					for (var i = 0; i < schemaFragment.enum.length; i++) {
 						data.push({
-							v: schemaFragment.enumTransCodes[i],
+							v: $translate.instant(schemaFragment.enumTransCodes[i]),
 							k: schemaFragment.enum[i]
 						})
 					}
@@ -54,7 +54,7 @@ angular.module('psui-selectbox', ['psui'])
 		}
 	};
 }])
-.directive('psuiSelectbox', ['psui.dropdownFactory', '$parse', function (dropdownFactory, $parse) {
+.directive('psuiSelectbox', ['psui.dropdownFactory', '$parse', '$translate', function (dropdownFactory, $parse, $translate) {
 	return {
 		restrict: 'E',
 		require: ['?ngModel', '^?psuiFormCtrl'],
@@ -124,7 +124,7 @@ angular.module('psui-selectbox', ['psui'])
 					// there are transCodes
 					for (var i = 0; i < schemaFragment.enum.length; i++) {
 						data.push({
-							v: schemaFragment.enumTransCodes[i],
+							v: $translate.instant(schemaFragment.enumTransCodes[i]),
 							k: schemaFragment.enum[i]
 						})
 					}

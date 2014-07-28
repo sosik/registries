@@ -85,7 +85,7 @@ angular.module('psui-notification', ['pascalprecht.translate'])
 						}
 						elm.append($rootScope.psuiNotification.message[i].element);
 						if ($rootScope.psuiNotification.message[i].deletable){
-							var buttonDelete = angular.element('<button></button>');
+							var buttonDelete = angular.element('<button type="button"></button>');
 							$rootScope.psuiNotification.message[i].element.append(buttonDelete);
 							var searchedMessage = $rootScope.psuiNotification.message[i];
 							buttonDelete.on('click',function(evt){

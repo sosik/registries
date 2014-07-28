@@ -67,7 +67,7 @@ angular.module('psui-datepicker', [])
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
 			
-			var buttonShowDropdown = angular.element('<button class="btn psui-icon-calendar"></button>');
+			var buttonShowDropdown = angular.element('<button type="button" class="btn psui-icon-calendar"></button>');
 			buttonShowDropdown.attr('tabindex', -1);
 			buttonsHolder.append(buttonShowDropdown);
     

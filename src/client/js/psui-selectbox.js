@@ -160,7 +160,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
-			var buttonShowDropdown = angular.element('<button class="btn psui-icon-chevron-down"></button>');
+			var buttonShowDropdown = angular.element('<button type="button" class="btn psui-icon-chevron-down"></button>');
 			buttonShowDropdown.attr('tabindex', '-1');
 			buttonsHolder.append(buttonShowDropdown);
 			buttonShowDropdown.on('click', function(evt) {

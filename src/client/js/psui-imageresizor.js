@@ -60,10 +60,10 @@ angular.module('psui-imageresizor', ['pascalprecht.translate'])
 			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			modalContentEl.append(buttonsHolder);
 			
-			var buttonRotate = $compile(angular.element('<button class="btn psui-icon-rotate"><span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
+			var buttonRotate = $compile(angular.element('<button type="button" class="btn psui-icon-rotate"><span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
 			buttonsHolder.append(buttonRotate);
 			
-			var buttonOk = $compile(angular.element('<button class="btn psui-icon-ok"><span>{{\'psui.imageresizor.ok\' | translate}}</span></button>'))(scope);
+			var buttonOk = $compile(angular.element('<button type="button" class="btn psui-icon-ok"><span>{{\'psui.imageresizor.ok\' | translate}}</span></button>'))(scope);
 			buttonsHolder.append(buttonOk);
 
 			var numberOfRot = 0;

@@ -85,6 +85,10 @@ angular.module('registries', [
 		changeRouteRuleActive=true;
 	}
 	
+	$rootScope.$on('$routeChangeStart', function() {
+		notificationFactory.clear()
+	});
+	
 	// hang on route change, so we can check if user meets security criteria
 	$rootScope.$on('$routeChangeStart', function(evt, nextRoute, currentRoute) {
 		if (nextRoute && nextRoute.permissions) {

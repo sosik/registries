@@ -7,7 +7,7 @@
 	z-index: 1900;
 	
 	@include media-tablet-min{
-		padding-left: $sideber-width;
+		left: $sideber-width;
 	}
 
 	button{
@@ -35,6 +35,7 @@
 	}
 	
 	> div {
+		word-wrap: break-word;
 		position: relative;
 		padding: 14px 28px 14px 14px;
 		margin: 4px 4px 4px 4px;

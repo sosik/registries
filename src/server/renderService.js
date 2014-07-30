@@ -1,16 +1,13 @@
 'use strict';
 
 var extend = require('extend');
-var crypto = require("crypto");
 
-var swig = require("swig");
+var swig = require('swig');
 
 var log = require('./logging.js').getLogger('RenderService.js');
 var DEFAULT_CFG = {
 		templateFolder: process.cwd()+'/build/server/templates' 
 };
-
-var fs = require('fs');
 
 
 var templates = {
@@ -31,15 +28,22 @@ var RenderService = function( options) {
 		log.verbose('Template compiled',templ);
 	}
 	
-	this.render=function (templ,ctx){
+	this.render=function(templ,ctx){
 		return swig.renderFile(getTemplateFileName(templ),ctx);
-	}
+	};
 	
-	
+	this.renderInstant=function(template,ctx){
+		return swig.render(template,ctx);
+	};
+
+
 //	console.log('render',this.render( templates.MAIL_USER_PASSWORD_RESET,{'userName':'xxx','userPassword':'adsadsa'}));
 };
 
+
+
+
 module.exports = {
 		templates : templates,
-    RenderService : RenderService
-}
+		RenderService : RenderService
+};

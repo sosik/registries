@@ -25,6 +25,7 @@ var schemaRegistryModule = require('./schemaRegistry.js');
 var searchControllerModule = require('./searchController.js');
 var schemaControllerModule = require('./schemaController.js');
 var statisticsControllerModule = require('./statisticsController.js');
+var massmailingCotrollerModule = require('./massmailingController.js');
 
 var app = express();
 
@@ -61,6 +62,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{
 		rootPath: config.paths.schemas
 	});
+
+	var massmailingCtr= new massmailingCotrollerModule.MassmailingController(mongoDriver,{});
 	
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter);
@@ -76,13 +79,14 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/login', bodyParser.json(), function(req, res){securityCtrl.login(req, res);});
 	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});
 	app.get('/user/current',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.getCurrentUser(req, res);});
-	app.post('/user/profile',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.selectProfile(req, res);})
+	app.post('/user/profile',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.selectProfile(req, res);});
 	
-	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(), function(req, res){securityCtrl.resetPassword(req, res);});
-	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(), function(req, res){securityCtrl.changePassword(req, res);});
+	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req, res){securityCtrl.resetPassword(req, res);});
+	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(),function(req, res){securityCtrl.changePassword(req, res);});
 
 	app.get('/security/permissions',securityService.authenRequired,function(req,res){securityCtrl.getPermissions(req,res);});
 	app.get('/security/search/schemas',securityService.authenRequired,function(req,res){securityCtrl.getSearchSchemas(req,res);});
+	app.post('/massmailing/send',securityService.hasPermFilter('Registry - write').check,bodyParser.json(),function(req,res){massmailingCtr.sendMail(req,res);});
 
 	app.get('/statistics',securityService.hasPermFilter('Registry - read').check,function(req,res){statisticsCtrl.getStatistics(req,res);});
 
@@ -120,7 +124,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 			allowedOperations: ['get'],
 			fileFilter: null});
 	app.use('/dataset',datasetRepoApp);
-	    
+	
 //	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
 //		log.info("Http server listening at %j", server.address(), {});
 //	});
@@ -135,7 +139,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		// Create an HTTP service.
 		http.createServer(app)
 		.listen(port, host, function() {
-			log.info("Http server listening at %s:%s", host, port);
+			log.info('Http server listening at %s:%s', host, port);
 		});
 	} else {
 		// We are NOT in production environment, use https port
@@ -155,7 +159,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		// Create an HTTPS service identical to the HTTP service.
 		https.createServer(ssl, app)
 		.listen(port, host, function(){
-			log.info("Https (secure) server listening at %s:%s", host, port);
+			log.info('Https (secure) server listening at %s:%s', host, port);
 		});
 	}
 	

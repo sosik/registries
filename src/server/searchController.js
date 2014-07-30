@@ -73,6 +73,7 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 	this.search = function(req, resp) {
 
 		
+		log.silly('searching for', req.params);
 		var schema = schemaRegistry.getSchema(safeUrlEncoder.decode(req.params.schema));
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName: schema.compiled.table

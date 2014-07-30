@@ -940,6 +940,7 @@ this.updateSecurityProfile = function(req, resp) {
 								next(err);
 								return;
 							}
+							req.currentUser=user;
 								// log.silly(user.systemCredentials.profiles);
 							if ( 'profiles' in user.systemCredentials) {
 								for(var profileId in user.systemCredentials.profiles){

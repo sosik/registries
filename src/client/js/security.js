@@ -464,10 +464,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 					$scope.selectUser = function(user) {
 						$scope.selectedUser = user;
-						if ( !('groups' in user.systemCredentials)) {
-							user.systemCredentials.groups = [];
-						}
-
 
 						securityService.getSecurityProfiles().success(function(data) {
 							$scope.profiles = data;

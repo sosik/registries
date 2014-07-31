@@ -247,12 +247,13 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	
 		
 	function toCsv(schema,data){ 
-		var retVal="";
+		var retVal='';
+		var separator=';';
 		
 		for (var li in schema.listFields){
 			var lisDef=schema.listFields[li];
 			retVal+=lisDef.title;
-			retVal+=',';
+			retVal+=separator;
 		}
 		retVal+="\r\n";
 		
@@ -260,7 +261,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 			var row=[]
 			for (var li in schema.listFields){
 				var lisDef=schema.listFields[li];
-				retVal+=getValue(data[item],schema.listFields[li]['field'])+",";
+				retVal+=getValue(data[item],schema.listFields[li]['field'])+separator;
 			}
 			retVal+="\r\n";
 		}

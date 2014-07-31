@@ -111,7 +111,7 @@ angular.module('psui-uploadable-image', [])
 						notificationFactory.error({translationCode:'psui.uploadable.image.unsupported.image.type'});
 					} else {
 						if (imgCtrl && imgCtrl.srcElm) {
-							imgCtrl.srcElm.src = URL.createObjectURL(file);
+							imgCtrl.srcElm.src = webkitURL.createObjectURL(file) || URL.createObjectURL(file);
 							imgCtrl.imageProcessed = function(blob) {
 								var uploader = new psFileUploadFactory.FileUploader(scope, blob, 'image/jpeg', '/photos/putgetpath/');
 								uploader.upload(function(err, path) {

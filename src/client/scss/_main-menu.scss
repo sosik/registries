@@ -1,9 +1,12 @@
 #main-menu{
-	position: fixed;
+	position: absolute;
 	top: $header-height;
 	bottom: 0px;
 	z-index: 11;
 	@include user-select(none);
+	background: $sidebar-first-level-color-bg;
+	left: 0px;
+	@include transition(left .5s);
 	
 	&.ng-hide{
 		display: block !important;
@@ -14,14 +17,7 @@
 		}
 	}
 	
-	left: 0px;
-	@include transition(left .5s);
-	
 	.sidebar{
-		position: absolute;
-		top: 0px;
-		bottom: 0px;
-		background-color: $sidebar-first-level-color-bg;
 		overflow: auto;
 		left: 0px;
 		width: $sideber-width;

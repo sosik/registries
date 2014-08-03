@@ -7,18 +7,6 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		'schema-utils.SchemaUtilFactory',
 		'psui.notificationFactory',
 		function($route, $scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
-	var generateObjectFromSchema = function(schema, obj) {
-		var _obj = obj;
-		angular.forEach(schema.properties, function(value, key){
-			if (value.type === 'object') {
-				_obj[key] = {};
-				generateObjectFromSchema(value, _obj[key]);
-			} else {
-				_obj[key] = '';
-			}
-		});
-	};
-
 	$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
 
 	$scope.model = {};
@@ -51,24 +39,12 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 	schemaUtilFactory.getCompiledSchema($scope.currentSchemaUri, 'new').success(function(data) {
 		$scope.schemaFormOptions.schema = data;
-		generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+		schemaUtilFactory.generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 	}).error(function(err) {
 		notificationFactory.error(err);
 	});
 }])
 .controller('registry.viewCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory','psui.notificationFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
-	var generateObjectFromSchema = function(schema, obj) {
-		var _obj = obj;
-		angular.forEach(schema.properties, function(value, key){
-			if (value.type === 'object') {
-				_obj[key] = {};
-				generateObjectFromSchema(value, _obj[key]);
-			} else {
-				_obj[key] = '';
-			}
-		});
-	};
-
 	$scope.currentSchema = $routeParams.schema;
 	$scope.currentId = $routeParams.id;
 	$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
@@ -102,7 +78,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		
 		$http({ method : 'GET',url: '/udao/getBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(schemaUri, 'view'))+'/'+ $scope.currentId})
 		.success(function(data, status, headers, config){
-			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+			schemaUtilFactory.generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 			$scope.model.obj = data;
 		}).error(function(err) {
 			notificationFactory.error(err);

@@ -19,12 +19,32 @@ angular.module('schema-utils', ['registries'])
 		});
 
 	};
+
 	service.listBySchema = function(schemaUri) {
 		return $http({
 			method : 'GET',
 			url : '/udao/listBySchema/'+service.encodeUri(schemaUri)
 		});
 	};
+
+	/**
+	 * Generates empty object from schema
+	 *
+	 * @param {object} schema object to generate object by
+	 * @param {object} object that will be enriched by properties descripbed in schema
+	 */
+	service.generateObjectFromSchema = function generateObjectFromSchema(schema, obj) {
+		var _obj = obj;
+		angular.forEach(schema.properties, function(value, key){
+			if (value.type === 'object') {
+				_obj[key] = {};
+				generateObjectFromSchema(value, _obj[key]);
+			} else {
+				_obj[key] = '';
+			}
+		});
+	};
+
 
 	/**
 	 * concatenates schema uri and fragment in propper way

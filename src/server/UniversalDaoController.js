@@ -194,7 +194,6 @@ var securityService= new securityServiceModule.SecurityService();
 
 		var schema = schemaRegistry.getSchema(schemaName);
 		
-		
 
 		if (!schema) {
 			log.error('schema %s not found', schemaName);
@@ -220,7 +219,11 @@ var securityService= new securityServiceModule.SecurityService();
 			{collectionName: compiledSchema.table}
 		);
 
-		_dao.list({}, function(err, data){
+		var crits={};
+		if (req.profile){
+				securityService.applyProfileCrits(req.profile,schemaName,crits);
+		}
+		_dao.list(crits, function(err, data){
 			if (err) {
 				throw err;
 			}

@@ -541,7 +541,7 @@ this.updateSecurityProfile = function(req, resp) {
 					}
 				}
 				log.verbose('user permissions resolved',permissions);
-				callback(null, permissions);
+				callback(null, permissions,profile);
 				return;
 			}
 
@@ -564,7 +564,7 @@ this.updateSecurityProfile = function(req, resp) {
 						}
 					}
 					log.verbose('profile permissions resolved',permissions);
-					callback(null, permissions);
+					callback(null, permissions,profile);
 				});
 			
 		});
@@ -952,13 +952,14 @@ this.updateSecurityProfile = function(req, resp) {
 							}
 							
 
-							t.resolvePermissions(user,req.selectedProfileId, function(err, perm) {
+							t.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
 								if (err) {
 									log.error(err);
 									next(err);
 									return;
 								}
 								req.perm = perm;
+								req.profile = profile;
 								next();
 							});
 						});

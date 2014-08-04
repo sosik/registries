@@ -5,6 +5,8 @@ var extend = require('extend');
 
 var log = require('./logging.js').getLogger('SecurityService.js');
 
+var QueryFilter = require('./QueryFilter.js');
+
 var DEFAULT_CFG = {};
 
 var actions = {
@@ -88,13 +90,26 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		}
 	};
 	
-	
+	/**
+		method merges profile criteria to specified qf
+	*/
+	this.applyProfileCrits=function(profile,schemaName,qf){
+
+		// query=QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName)
+		if ('forcedCriteria' in profile && schemaName in profile.forcedCriteria){
+			for (var crit in profile.forcedCriteria[schemaName].criteria){
+				var c=profile.forcedCriteria[schemaName].criteria[crit];
+				qf.addCriterium(c.f,c.op,c.v);
+			}
+		}
+		return qf;
+	};
 	
 	this.hasPermFilter= function (perm){
 		var t=this;
-		 var f= function (perm){
-			 	var xperm=perm;
-		 		this.check=function(req,res,next){
+		var f= function (perm){
+				var xperm=perm;
+				this.check=function(req,res,next){
 					 log.verbose('checking for perm',xperm);
 						if (!req.authenticated ) { 
 							res.send(401);
@@ -107,8 +122,8 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 							}
 						
 					};
-			 
-		 		};
+			
+				};
 			log.verbose('created checker for perm',perm);
 		return new f(perm);
 	};

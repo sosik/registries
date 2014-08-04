@@ -69,3 +69,7 @@
 .psui-dropdown .psui-selected {
 	background-color: #fdb730;
 }
+
+.override-before:before {
+	content: none !important;
+}

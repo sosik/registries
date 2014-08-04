@@ -168,7 +168,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
 
-		$scope.entity = $translate.instant( data.transCode);
+		$scope.entity = $translate.instant( data.transCode || data.title);
 		
 		$scope.addCrit(); 
 		$scope.headers = data.listFields;

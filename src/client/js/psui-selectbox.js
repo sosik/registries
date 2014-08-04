@@ -90,7 +90,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 			}
 
 			var commitChange = function(index) {
-				elm.text(data[index].v);
+				elm.text(dropdown.data[index].v);
 			};
 
 			if (ctrls[0]) {
@@ -103,6 +103,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 					scope.$apply(function() {
 						ngModelCtrl.$setViewValue(val.k);
 					});
+					elm[0].focus();
 				};
 
 				ngModelCtrl.$render = function() {
@@ -178,34 +179,55 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 					evt.preventDefault();
 				}
 			});
-/*			elm.on('keypress', function(evt) {
-				switch (evt.key) {
-					case 'Down': // key down
-						if (dropdown.isVisible()) {
-							dropdown.change(+1, true);
+			
+			
+			elm.on('keydown', function(evt) {
+				switch (evt.keyCode) {
+					case 40: // key down
+						if (!dropdown.isVisible()) {
+							dropdown.show();
 						}
-						dropdown.show();
 						evt.preventDefault();
 						break;
-					case 'Up': // key down
-						if (dropdown.isVisible()) {
-							dropdown.change(-1, true);
-						}
-						dropdown.show();
+					case 38: // key up
 						evt.preventDefault();
 						break;
-					case 'Enter': // key enter
-						if (dropdown.selected() > -1) {
-							commitChange(dropdown.selected());
-							dropdown.hide();
-							elm.text(data[dropdown.selected()]);
-							evt.preventDefault();
+					case 13: // key enter
+						if (!dropdown.isVisible()) {
+							dropdown.show();
 						}
+						evt.preventDefault();
 						break;
 				}
 				// any other key
 			});
-*/
+			
+			buttonShowDropdown.on('keydown', function(evt) {
+				switch (evt.keyCode) {
+					case 40: // key down
+						if (!dropdown.isVisible()) {
+							dropdown.show();
+						}
+						evt.preventDefault();
+						break;
+					case 38: // key up
+						evt.preventDefault();
+						break;
+					case 13: // key enter
+						if (!dropdown.isVisible()) {
+							dropdown.show();
+						}
+						evt.preventDefault();
+						break;
+				}
+				// any other key
+			});
+			
+			buttonShowDropdown.on('focus', function(evt){
+				dropdown.cancelTimeout();
+			})
+			
+
 			//dropdown.on('psui:changed', function(evt) {
 			//	elm[0].focus();
 			//});

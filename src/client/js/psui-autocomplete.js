@@ -167,8 +167,7 @@ angular.module('psui-autocomplete', [])
 			elm.on('keypress', function(evt) {
 				var children = dropdown.children();
 				switch (evt.keyCode) {
-					case 13:
-						// enter
+					case 13:// enter
 						elm[0].selectionStart = elm[0].selectionEnd = -1;
 						updateViewValue(scope.parseValue(scope.dropdownData[keyboardSelected]));
 						commitDropdownSellection();

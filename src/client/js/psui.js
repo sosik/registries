@@ -9,7 +9,7 @@ angular.module('psui', [])
  * }
  * ```
  */
-.service('psui.dropdownFactory', [function() {
+.service('psui.dropdownFactory', ['$timeout', function($timeout) {
 	var Dropdown = function(options) {
 		options = options || {};
 		var _isVisible = options.visible || false;
@@ -20,6 +20,8 @@ angular.module('psui', [])
 		var _data = [];
 		var _actualData = [];
 		var _searchInput = null;
+		var hideDropdown;
+		var actualIndex;
 
 		_dropdown.append(_itemsHolder);
 
@@ -149,6 +151,7 @@ angular.module('psui', [])
 			for (var i = 0; i < _actualData.length; i++) {
 				var e = this.generateElement(_actualData[i]);
 				e.data('index', _actualData[i]);
+				e.attr('tabindex', -1);
 				e.on('mouseover', function(evt) {
 					that.unselectAll();
 					var element = angular.element(evt.target);
@@ -157,10 +160,18 @@ angular.module('psui', [])
 						_selected = index;
 						element.addClass('psui-selected');
 						that.onActiveChanged(index);
+						console.log(_selected);
 					}
 				});
-
+				
+				e.on('focus', function(evt){
+					console.log('ccc');
+					//$timeout.cancel(hideDropdown);
+					that.cancelTimeout();
+				})
+				
 				e.on('click', function(evt) {
+					console.log('aaa');
 					var element = angular.element(evt.target);
 					var index = element.data('index');
 					if (typeof index !== 'undefined') {
@@ -214,7 +225,74 @@ angular.module('psui', [])
 		this.getDropdownElement = function() {
 			return _dropdown;
 		}
-
+		
+		/**
+		 * Select value in dropdown with keys
+		 */
+		_dropdown.on('keydown', function(evt) {
+			switch (evt.keyCode) {
+				case 40: // key down
+					var sel = _selected;
+					that.unselectAll();
+					_selected = sel;
+					_selected++;
+					if (_selected > _actualData.length - 1){
+						_selected--;
+					}
+					var elm = angular.element(_itemsHolder.children()[_selected]);
+					elm.addClass('psui-selected');
+					var offsetHeight = elm[0].offsetHeight;
+					if (_itemsHolder[0].scrollTop > _selected * offsetHeight - 4*offsetHeight && _itemsHolder[0].scrollTop < _selected * offsetHeight) {
+					} else {
+						_itemsHolder[0].scrollTop = _selected * offsetHeight - 4*offsetHeight;
+					}
+					actualIndex = elm.data('index');
+					evt.preventDefault();
+					break;
+				case 38: // key up
+					var sel = _selected;
+					that.unselectAll();
+					_selected = sel;
+					_selected--;
+					if (_selected < 0){
+						_selected++;
+					}
+					var elm = angular.element(_itemsHolder.children()[_selected]);
+					elm.addClass('psui-selected');
+					var offsetHeight = elm[0].offsetHeight;
+					if (_itemsHolder[0].scrollTop < _selected * offsetHeight && _itemsHolder[0].scrollTop > _selected * offsetHeight - 5 * offsetHeight) {
+					} else {
+						_itemsHolder[0].scrollTop = _selected * offsetHeight;
+					}
+					actualIndex = elm.data('index');
+					evt.preventDefault();
+					break;
+				case 13: // key enter
+					that.onSelected(actualIndex);
+					evt.preventDefault();
+					break;
+				case 9: // key tab
+					that.onSelected(actualIndex);
+					evt.preventDefault();
+					break;
+			}
+			// any other key
+		});
+		
+		var close = function(){
+			that.hide();
+		}
+		
+		this.cancelTimeout = function(){
+			$timeout.cancel(hideDropdown);
+		};
+		
+		_searchInput.on('blur', function(evt){
+			hideDropdown = $timeout(close, 5, false);
+		});
+		
+		
+		
 		if (_isVisible) {
 			this.show();
 		} else {

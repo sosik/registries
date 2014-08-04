@@ -206,7 +206,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 				$scope.profiles=user.systemCredentials.profiles;
 			}
 			else {
-				console.log(user,user.systemCredentials.profiles[0].id);
 
 				SecurityService.selectProfile(user.systemCredentials.profiles[0].id).success(function(){
 					$rootScope.security.currentUser =SecurityService.getCurrentUser().success(function(data){
@@ -223,10 +222,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	};
 
 	$scope.selectProfile=function(){
+		if (!$scope.selectedProfile) return;
 		SecurityService.selectProfile($scope.selectedProfile.id).success(function(){
 			 SecurityService.getCurrentUser().success(function(data){
 				$rootScope.security.currentUser=data;
-				console.log('adsada',data);
 				$location.path('/personal-page');
 			});
 		});
@@ -446,7 +445,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						if (!('systemCredentials' in user)){
 							 user.systemCredentials={};
 						}
-						if ( !('groups' in user.systemCredentials)) {
+						if ( !('profiles' in user.systemCredentials)) {
 							user.systemCredentials.profiles = [];
 						}
 

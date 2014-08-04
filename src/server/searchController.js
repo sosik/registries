@@ -99,10 +99,10 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 		} 
 
 		var crits=req.body;
-
+		console.log(crits);
 		//remap to QueryFiter
 		var qf=QueryFilter.create();
-		if('sortBy' in crits){
+		if('sortBy' in crits && crits.sortBy){
 			qf.addSort(crits.sortBy[0].f,crits.sortBy[0].o);
 		} 
 		if ('limit' in crits){ 

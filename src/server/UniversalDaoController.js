@@ -2,6 +2,7 @@ var log = require('./logging.js').getLogger('UniversalDaoController.js');
 var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
 var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
 var securityServiceModule = require(process.cwd() + '/build/server/securityService.js');
+var QueryFilter = require('./QueryFilter.js');
 
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 var UniversalDaoController = function(mongoDriver, schemaRegistry) {
@@ -214,16 +215,21 @@ var securityService= new securityServiceModule.SecurityService();
 			return;
 		} 
 
+		var qf=QueryFilter.create();
+
+		if (req.profile){
+				qf=securityService.applyProfileCrits(req.profile,schemaName,qf);
+		}
+
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: compiledSchema.table}
 		);
-
-		var crits={};
+		
 		if (req.profile){
-				securityService.applyProfileCrits(req.profile,schemaName,crits);
+				securityService.applyProfileCrits(req.profile,schemaName,qf);
 		}
-		_dao.list(crits, function(err, data){
+		_dao.list(qf, function(err, data){
 			if (err) {
 				throw err;
 			}

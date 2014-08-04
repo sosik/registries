@@ -265,8 +265,8 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 			}
 			retVal+="\r\n";
 		}
-		
-		return retVal;
+
+		return TextEncoder('cp1250', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
 	}
 	
 	
@@ -304,7 +304,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 
 			data=toCsv($scope.schema,data);
 			
-			var blob = new Blob([data], {type: 'text/csv;charset=utf-8'});
+			var blob = new Blob([data], {type: 'text/csv;charset=cp1250'});
 			var url  = window.URL || window.webkitURL;
 			var link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
 			link.href = url.createObjectURL(blob);

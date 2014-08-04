@@ -15,18 +15,24 @@ angular.module('psui-objectlink', [])
 				if (ngModel.$viewValue) {
 					if (ngModel.$viewValue.refData) {
 						var displayText = '';
+						var count = 0;
 						for (var i in ngModel.$viewValue.refData) {
 							if (typeof ngModel.$viewValue.refData[i] === 'string') {
-								displayText = ngModel.$viewValue.refData[i] + ' ';
+								++count;
+							}
+						}
+						for (var i in ngModel.$viewValue.refData) {
+							if (typeof ngModel.$viewValue.refData[i] === 'string') {
+								displayText += '<td style="width: '+100/count+'%;">' + ngModel.$viewValue.refData[i] + '</td>';
 							}
 						}
 
-						elm.text(displayText);
+						elm.html('<table style="width:100%; table-layout: fixed;"><tr>' + displayText + '</tr></table>');
 					} else {
-						elm.text('');
+						elm.html('&nbsp;');
 					}
 				} else {
-					elm.text('');
+					elm.html('&nbsp;');
 				}
 			};
 		}
@@ -48,9 +54,31 @@ angular.module('psui-objectlink', [])
 				if (ngModel.$viewValue) {
 					if (ngModel.$viewValue.refData) {
 						var displayText = '';
+						var count = 0;
 						for (var i in ngModel.$viewValue.refData) {
 							if (typeof ngModel.$viewValue.refData[i] === 'string') {
-								displayText = ngModel.$viewValue.refData[i] + ' ';
+								++count;
+							}
+						}
+						for (var i in ngModel.$viewValue.refData) {
+							if (typeof ngModel.$viewValue.refData[i] === 'string') {
+								displayText += '<td style="width: '+100/count+'%;">' + ngModel.$viewValue.refData[i] + '</td>';
+							}
+						}
+
+						elm.html('<table style="width:100%; table-layout: fixed;"><tr>' + displayText + '</tr></table>');
+					} else {
+						elm.html('&nbsp;');
+					}
+				} else {
+					elm.html('&nbsp;');
+				}
+/*				if (ngModel.$viewValue) {
+					if (ngModel.$viewValue.refData) {
+						var displayText = '';
+						for (var i in ngModel.$viewValue.refData) {
+							if (typeof ngModel.$viewValue.refData[i] === 'string') {
+								displayText += ngModel.$viewValue.refData[i] + ' ';
 							}
 						}
 
@@ -61,7 +89,36 @@ angular.module('psui-objectlink', [])
 				} else {
 					elm.text('');
 				}
+*/			};
+
+			// custom require validation
+			var validateRequire = function(val) {
+				if (val && val.registry && val.registry.length && val.registry.length > 0 && val.oid && val.oid.length && val.oid.length > 0) {
+					ngModel.$setValidity('required', true);
+					console.log('valid');
+				} else {
+					ngModel.$setValidity('required', false);
+					console.log('invalid');
+				}
+
+				return val;
 			};
+
+			if (attrs.xpsuiRequired) {
+				ngModel.$parsers.unshift(validateRequire);
+				ngModel.$formatters.unshift(validateRequire);
+			}
+
+			ngModel.$isEmpty = function(val) {
+				if (val && val.registry && val.registry.length && val.registry.length > 0 && val.oid && val.oid.length && val.oid.length > 0) {
+					console.log('not empty');
+					return false;
+				}
+
+					console.log('empty');
+				return true;
+			};
+
 			
 			var wrapper;
 			
@@ -137,21 +194,37 @@ angular.module('psui-objectlink', [])
 									var sData = {};
 									//setter.assign(rData.refData, getter(data[i]));
 									setter.assign(sData, getter(data[i]));
+									if (typeof sData[field] === 'undefined') {
+										sData[field] = '';
+									}
 									angular.extend(rData.refData, sData);
 								}
 							}
 
-							var displayText = 'xx';
+							var displayText = '';
+							var count = 0;
 							for (var j in rData.refData) {
-								displayText = rData.refData[j] + ' ';
+								if (typeof rData.refData[j] === 'string') {
+									++count;
+								}
+							}
+							for (j in rData.refData) {
+								if (typeof rData.refData[j] === 'string') {
+									displayText += '<td style="width: '+100/count+'%;">' + rData.refData[j] + '</td>';
+								}
 							}
 
-							e.text(displayText);
+							e.html('<table style="width:100%; table-layout: fixed;"><tr>' + displayText + '</tr></table>');
+
+							//e.text(displayText);
 							e.data('data', rData);
 
 							e.on('click', function(evt) {
-								ngModel.$setViewValue(angular.element(evt.target).data('data'));
-								ngModel.$render();
+								scope.$apply(function() {
+									//ngModel.$setViewValue(angular.copy(angular.element(evt.target).data('data'), ngModel.$viewValue));
+									ngModel.$setViewValue(angular.element(evt.currentTarget).data('data'));
+									ngModel.$render();
+								});
 								//scope.$emit('psui:model_changed');
 								dropdownHolder.addClass('psui-hidden');
 							});

@@ -110,7 +110,10 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			}
 			var viewElement;
 			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
-				viewElement = angular.element($compile('<div psui-objectlink-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
+				viewElement = angular.element($compile('<div psui-objectlink-view class="override-before" ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
+			} else if (elm.prop('tagName') == 'PSUI-ARRAY-CONTROL') {
+				console.log('inlineeditscope', scope);
+				viewElement = angular.element($compile('<div class="override-before"><div ng-repeat="ae in ' + attrs.ngModel + '" psui-objectlink-view ng-model="ae" schema-fragment="'+attrs.schemaFragment+'.items">x</div></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-SELECTBOX') {
 				viewElement = angular.element($compile('<div psui-selectbox-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-UPLOADABLE-IMAGE') {
@@ -144,6 +147,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 						//elm.val(oldValue);
 						//ngModel.$setViewValue(oldValue);
 					$parse(attrs.ngModel).assign(scope, oldValue);
+					console.log(oldValue);
 					changeMode('view');
 				}
 
@@ -240,7 +244,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					cancelBtn.removeClass('psui-hidden');
 					viewElement.addClass('psui-hidden');
 					elm.removeClass('psui-hidden');
-					oldValue = ngModel.$viewValue;
+					oldValue = angular.copy(ngModel.$modelValue);
 					// monitor who has focus
 					scope.$apply(function() {
 						psuiFormCtrl.setActiveControl(elm);
@@ -315,6 +319,26 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		}
 	}
 }])
+.directive('psuiAppendToArray', ['$parse', 'psui.notificationFactory', function($parse, notifications) {
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs) {
+			var arrayPath = attrs.psuiAppendToArray;
+			var arrayGetter = $parse(arrayPath);
+
+			element.on('click', function(evt) {
+				scope.$apply(function() {
+					if (arrayGetter(scope).indexOf('') < 0) {
+						arrayGetter(scope).push({});
+					} else {
+						notifications.warn({translationCode:'registry.duplicate.forbidden', time:3000});
+					}
+				});
+				evt.preventDefault();
+			});
+		}
+	}
+}])
 .directive('psuiSchemaForm', ['$compile', function($compile) {
 	return {
 		restrict: 'A',
@@ -341,36 +365,45 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 						fieldSet.append('<legend>'+(value.transCode ? '{{\''+ value.transCode+'\'| translate}}' : value.title)+'</legend>');
 						angular.forEach(value.properties, function(value2, key2) {
 							var isRequired = (value2.required ? ' psui-required': '');
-
 							var formGroup = angular.element('<div class="form-group"></div>');
-							var label = angular.element('<label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>');
-							
+
 							var fieldHolder = angular.element('<div class="col-sm-8"></div>');
 							var fieldHolderInner = angular.element('<div class="input-group"></div>');
 							fieldHolder.append(fieldHolderInner);
+							
+							var label = angular.element('<label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>');
 
 							formGroup.append(label);
 							formGroup.append(fieldHolder);
 
 							var input;
 
-							if (value2.$objectLink) {
-								input = angular.element('<psui-objectlink schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
-							} else if (value2.render && value2.render.component === 'psui-datepicker') {
-								input = angular.element('<input psui-validity-mark psui-datepicker type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
-							} else if (value2.render && value2.render.component === 'psui-selectbox') {
-								input = angular.element('<psui-selectbox schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" psui-validity-mark class="form-control" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
-							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								input = angular.element('<psui-uploadable-image '
-								+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
-									+ '" psui-imageresizor-height="'+value2.render.height + '" psui-validity-mark ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+							if (value2.type === 'array') {
+								//input = angular.element('<div class="input-group" ng-repeat="ae in '+options.modelPath+'.'+key+'.'+key2+' track by $id(ae)"></div>')
+								//fieldHolderInner.append(angular.element('<div><button type="button" class="btn pull-right" psui-append-to-array="'+options.modelPath+'.'+key+'.'+key2+'">Pridať</button></div>'));
+								//input.append(angular.element('<psui-objectlink psui-validity-mark schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'.items" ng-model="'+options.modelPath+'.'+key+'.'+key2+'[$index]"></psui-objectlink>'));
+								input = angular.element('<psui-array-control schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-array-control>');
 							} else {
-								input = angular.element('<input psui-validity-mark type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
-							}
 
-							// validations
-							if (value2.required) {
-								input.attr('required', true);
+								if (value2.$objectLink) {
+									input = angular.element('<psui-objectlink psui-validity-mark schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
+								} else if (value2.render && value2.render.component === 'psui-datepicker') {
+									input = angular.element('<input psui-validity-mark psui-datepicker type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								} else if (value2.render && value2.render.component === 'psui-selectbox') {
+									input = angular.element('<psui-selectbox schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" psui-validity-mark class="form-control" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
+									input = angular.element('<psui-uploadable-image '
+									+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
+										+ '" psui-imageresizor-height="'+value2.render.height + '" psui-validity-mark ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								} else {
+									input = angular.element('<input psui-validity-mark type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								}
+
+								// validations
+								if (value2.required) {
+									input.attr('required', true);
+								}
+
 							}
 
 							fieldHolderInner.append(input);
@@ -391,6 +424,38 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				console.log('options changed');
 				render();
 			});
+		}
+	}
+}])
+.directive('psuiArrayControl', ['$compile', function($compile) {
+	return {
+		restrict: 'E',
+		scope: {
+			'ngModel' : '=',
+			'schemaFragment' : '='
+		},
+		template: '<div style="position: relative;" class="input-group" ng-repeat="ae in ngModel track by $id(ae)">'
+					+ '<button style="position: absolute; right: 100%;" class="psui-btn" ng-click="removeByIndex($index);"><i class="glyphicon-minus"></i>Odstrániť</button><psui-objectlink psui-validity-mark schema-fragment="schemaFragment.items" ng-model="ngModel[$index]"></psui-objectlink>'
+					+'</div>'
+					+ '<button class="psui-btn pull-right" ng-click="appendNew();"><i class="glyphicon-plus"></i> Pridať</button>',
+		link: function(scope, element, attrs, controller) {
+			console.log(scope.psuiModel);
+			console.log(scope.schemaFragment);
+
+			var modelChanged = function() {
+				console.log('model changed', scope.ngModel);
+			}
+
+			scope.$watchCollection('ngModel', modelChanged);
+
+			scope.removeByIndex = function(idx) {
+				scope.ngModel.splice(idx,1);
+			}
+
+			scope.appendNew = function() {
+				scope.ngModel.push({});
+			}
+
 		}
 	}
 }])
@@ -431,22 +496,29 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 							formGroup.append(label);
 							formGroup.append(fieldHolder);
 
-							var input;
 							var isRequired = (value2.required ? ' psui-required': '');
-							if (value2.$objectLink) {
-								input = angular.element('<psui-objectlink psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
-							} else if (value2.render && value2.render.component === 'psui-datepicker') {
-								input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
-							} else if (value2.render && value2.render.component === 'psui-selectbox') {
-								input = angular.element('<psui-selectbox psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" psui-validity-mark class="form-control" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
-							} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
-								input = angular.element('<psui-uploadable-image psui-inlineedit="view"'
-									+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
-									+ '" psui-imageresizor-height="'+value2.render.height + '" ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
-							} else {
-								input = angular.element('<input psui-validity-mark psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
-							}
+							var input;
 
+							if (value2.type === 'array') {
+								//input = angular.element('<div style="border-bottom: 1px silver dotted;" class="input-group" ng-repeat="ae in '+options.modelPath+'.'+key+'.'+key2+' track by $id(ae)"></div>')
+								//fieldHolderInner.append(angular.element('<div><button type="button" class="btn pull-right" psui-append-to-array="'+options.modelPath+'.'+key+'.'+key2+'">Pridať</button></div>'));
+								//input.append(angular.element('<psui-objectlink psui-inlineedit="view" psui-validity-mark schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'.items" ng-model="'+options.modelPath+'.'+key+'.'+key2+'[$index]"></psui-objectlink>'));
+								input = angular.element('<psui-array-control psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-array-control>');
+							} else {
+								if (value2.$objectLink) {
+									input = angular.element('<psui-objectlink psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
+								} else if (value2.render && value2.render.component === 'psui-datepicker') {
+									input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								} else if (value2.render && value2.render.component === 'psui-selectbox') {
+									input = angular.element('<psui-selectbox psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" psui-validity-mark class="form-control" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								} else if (value2.render && value2.render.component === 'psui-uploadable-image') {
+									input = angular.element('<psui-uploadable-image psui-inlineedit="view"'
+										+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
+										+ '" psui-imageresizor-height="'+value2.render.height + '" ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								} else {
+									input = angular.element('<input psui-validity-mark psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
+								}
+							}
 							// validations
 							if (value2.required) {
 								input.attr('required', true);

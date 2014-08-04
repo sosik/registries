@@ -39,6 +39,8 @@ angular.module('schema-utils', ['registries'])
 			if (value.type === 'object') {
 				_obj[key] = {};
 				generateObjectFromSchema(value, _obj[key]);
+			} else if (value.type === 'array') {
+				_obj[key] = [];
 			} else {
 				_obj[key] = '';
 			}

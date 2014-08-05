@@ -1,3 +1,9 @@
+@mixin media-print {
+	@media print {
+		@content;
+	}
+}
+
 @mixin media-desktop {
 	@media only screen and (min-width: $device-desktop-width) {
 		@content;

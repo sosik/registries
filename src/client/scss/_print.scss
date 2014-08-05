@@ -1,0 +1,42 @@
+@include media-print {
+	#main-wrapper{
+		> header{
+			display: none;
+		}
+	}
+	
+	#main-menu{
+		display: none;
+	}
+	
+	#content{
+		> footer{
+			display: none;
+		}
+	}
+	
+	#content-wrapper{
+		height: auto;
+		overflow: visible;
+		padding: 0px;
+	}
+	
+	* {
+		color: #000;	
+		background-color: #fff;
+		@include box-shadow(none);
+	}
+	
+	.form-group{
+		[class*="col-"]{
+			float: left;
+		}
+		.col-sm-4 {
+			width: 33%;
+		}
+	}
+	
+	label.psui-required:after{
+		content: "";
+	}
+}

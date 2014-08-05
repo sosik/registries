@@ -8,6 +8,8 @@
 	left: 0px;
 	@include transition(left .5s);
 	
+	overflow: auto;
+	
 	&.ng-hide{
 		display: block !important;
 		
@@ -18,7 +20,7 @@
 	}
 	
 	.sidebar{
-		overflow: auto;
+		/*overflow: auto;*/
 		left: 0px;
 		width: $sideber-width;
 
@@ -114,12 +116,12 @@
 
 .no-touch{
 	#main-menu{
-		.sidebar{
+		/*.sidebar{*/
 			overflow: hidden;
 			&:hover{
 				overflow-y: auto;
 			}
-		}
+		/*}*/
 	}
 }
 

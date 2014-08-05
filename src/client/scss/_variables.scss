@@ -2,7 +2,8 @@
 $device-min-width: 320px !default;
 $device-mobile-width: 750px !default;
 $device-tablet-width: 970px !default;
-$device-desktop-width: 1170px !default;
+$device-desktop-width: 1200px !default;
+$device-large-width: 1400px !default;
 
 // Colors
 $font-color-base: #333333 !default;
@@ -119,5 +120,7 @@ $table-tr-even-bg: $input-bg !default;
 $objectlink-active-color: $main-color !default;
 
 // footer
-$footer-height: 50px !default;
+$footer-height: 60px !default;
+$footer-height-small: 80px !default;
+$footer-height-xs: 115px !default;
 $footer-font-size: 10px !default;

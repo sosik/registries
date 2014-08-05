@@ -202,3 +202,9 @@
 		background-color: $color;
 	}
 }
+
+@mixin appearance($args...){
+  -webkit-appearance: $args;
+  -moz-appearance: $args;
+  appearance: $args;
+}

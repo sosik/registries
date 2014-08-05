@@ -77,9 +77,15 @@
 			<div id="content">
 				<ng-view></ng-view>
 				<footer>
-					<div class="footer-content">
-						<span>&copy; Copyright 2014 Unionsoft s r. o.</span>
-						<span class="pull-right">CODEBASE : Version ##CODEBASE_VERSION_PLACEHOLDER##, Commit ##CODEBASE_COMMIT_PLACEHOLDER##, Build date ##CODEBASE_BUILDDATE_PLACEHOLDER##<br/>DATASET: Version ##DATASET_VERSION_PLACEHOLDER##, Commit ##DATASET_COMMIT_PLACEHOLDER##</span>
+					<div class="footer-content container-fluid">
+						<div class="row">
+							<div class="col-lg-3">
+								&copy; Copyright 2014 Unionsoft s r. o.
+							</div>
+							<div class="col-lg-9 version">
+								CODEBASE : Version ##CODEBASE_VERSION_PLACEHOLDER##, Commit ##CODEBASE_COMMIT_PLACEHOLDER##, Build date ##CODEBASE_BUILDDATE_PLACEHOLDER##<br/>DATASET: Version ##DATASET_VERSION_PLACEHOLDER##, Commit ##DATASET_COMMIT_PLACEHOLDER##
+							</div>
+						</div>
 					</div>
 				</footer>
 			</div>

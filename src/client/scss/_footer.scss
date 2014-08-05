@@ -1,4 +1,16 @@
 #content {
+	
+	padding-bottom: $footer-height + $content-padding;
+	position: relative;
+	@include media-desktop-max{
+		padding-bottom: $footer-height-small + $content-padding;
+	}
+	
+	@include media-mobile{
+		padding-bottom: $footer-height-xs + $content-padding;
+	}
+		
+		
 	> footer{
 		position: absolute;
 		bottom: 0px;
@@ -6,10 +18,47 @@
 		height: $footer-height;
 		font-size: $footer-font-size;
 		
+		@include media-desktop-max{
+			height: $footer-height-small;
+		}
+		@include media-mobile{
+			height: $footer-height-xs;
+		}
+		
+		
 		.footer-content{
 			margin: 0px $content-padding;
 			padding: $content-padding/2  0px;
 			border-top: 1px solid $input-border-color; 
 		}
+		
+		div{
+			padding: 0px;
+		}
+		
+		.version{
+			@include media-desktop{
+				text-align: right;
+			}
+		}
+		
+		
+		
+/*		span{
+			&:last-child{
+				text-align: right;
+				@include media-tablet-max  {
+					background: red;
+					display: block;
+					float: none !important;
+					text-align: left !important;
+				}
+			}
+			
+		}
+		
+		@include media-tablet-max  {
+			height: $footer-height-small;
+		}*/
 	}
 }

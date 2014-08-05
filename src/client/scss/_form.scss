@@ -1,3 +1,7 @@
+input, textarea, selectbox{
+	@include appearance(none);
+}
+
 // common form
 .form{
 	.input-group{

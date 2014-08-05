@@ -4,6 +4,12 @@
 	}
 }
 
+@mixin media-desktop-max {
+	@media only screen and (max-width: $device-desktop-width - 1) {
+		@content;
+	}
+}
+
 @mixin media-tablet-up {
 	@media only screen and (min-width: $device-mobile-width)  {
 		@content;
@@ -19,7 +25,7 @@
 @mixin media-tablet-max {
 	@media only screen and (max-width: $device-tablet-width)  {
 		@content;
-}
+	}
 }
 
 
@@ -31,6 +37,12 @@
 
 @mixin media-mobile {
 	@media only screen and (max-width: $device-mobile-width - 1) {
+		@content;
+	}
+}
+
+@mixin media-large-max {
+	@media only screen and (max-width: $device-large-width - 1) {
 		@content;
 	}
 }

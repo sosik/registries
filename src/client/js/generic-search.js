@@ -1,3 +1,4 @@
+'use strict';
 angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 //
 .config([ '$routeProvider', function($routeProvider) {
@@ -26,51 +27,24 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 
 	service.parseSearchDef = function(schema) {
 		
-		var collectPropertyPaths = function(schemaFragment, path, properties) {
-
-			for ( var prop in schemaFragment) {
-				switch (prop) {
-				case '$schema':
-				case 'id':
-				case 'type':
-				case '$ref':
-					// skip schema keywords;
-					break;
-				default:
-					var propLocalPath = null;
-					var propUrl = null;
-
-					if (schema.def[prop].id) {
-						// id is defined, lets override canonical resolution
-						propUrl = URL.resolve(uri, schema.def[prop].id);
-						// make id argument absolute
-						schema.def[prop].id = propUrl;
-						propLocalPath = URL.parse(propUrl).hash;
-						propLocalPath = (propLocalPath && propLocalPath.length > 0 ? propLocalPath : "#");
-					} else {
-						propLocalPath = localPath + (localPath === "#" ? '' : '/') + prop;
-						propUrl = URL.resolve(uri, propLocalPath);
-					}
-
-					if ('object' === typeof schema.def[prop]) {
-						// dive only if it is object
-						that.registerSchema(propUrl, schema.def[prop], true);
-						parseInternal(propUrl, that.getSchema(propUrl), propLocalPath);
-					}
-				}
-			}
-		};
-
 		var retval = {};
 
 		function collectProperties(pathPrefix, objectDef, resultArr) {
 			for ( var pr in objectDef.properties) {
-				if (objectDef.properties[pr].$objectLink) {
-					// do not allow search by object link for now
+
+					if (objectDef.properties[pr].$objectLink) {
+						resultArr.push({
+							path: pathPrefix + pr+'.oid',
+							type: objectDef.properties[pr].type,
+							objectLink:objectDef.properties[pr].$objectLink,
+							schemaFragment:objectDef.properties[pr],
+							title: (objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title)+' ->'
+						});
+
 					continue;
 				}
 				if (objectDef.properties[pr].type === 'object') {
-					collectProperties(pr + '.', objectDef.properties[pr], resultArr)
+					collectProperties(pr + '.', objectDef.properties[pr], resultArr);
 				} else {
 					resultArr.push({
 						path: pathPrefix + pr,
@@ -114,7 +88,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	return service;
 } ])
 //
-.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate','$filter', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate,$filter ) {
+.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate ) {
 	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 	$scope.entityUri = entityUri;
@@ -137,18 +111,6 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	
 	var pageSize=20;
 	
-	
-	var generateTableHeaders = function(schema, obj) {
-		var _obj = obj;
-		angular.forEach(schema.properties, function(value, key){
-			if (value.type === 'object') {
-				_obj[key] = {};
-				generateObjectFromSchema(value, _obj[key]);
-			} else {
-				_obj[key] = '';
-			}
-		});
-	};
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
@@ -172,12 +134,18 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		
 		$scope.addCrit(); 
 		$scope.headers = data.listFields;
-		$scope.sortBy={header: data.listFields[0] , direction : "asc" };
+		$scope.sortBy={header: data.listFields[0] , direction : 'asc' };
 		$scope.forcedCriterias = data.forcedCriterias || [];
-		
 	}).error(function(err) {
 		notificationFactory.error(err);
 	});
+
+	$scope.selectedCritAttribute=function(crit){
+		if (crit.attribute.objectLink){
+			crit.object={};
+		}
+	};
+
 
 	$scope.removeCrit = function(index) {
 		$scope.searchCrit.splice(index, 1);
@@ -189,15 +157,24 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 
 		crit.map(function(c) {
 			if (c && c.attribute && c.attribute.path) {
+				if (c.attribute.objectLink){
+					retval.push({
+						f : c.attribute.path,
+						v : c.obj.oid,
+						op : c.operator.value
+					});	
+				}
+				else {
+					retval.push({
+						f : c.attribute.path,
+						v : c.value,
+						op : c.operator.value
+					});	
+				}
 				
-				retval.push({
-					f : c.attribute.path,
-					v : c.value,
-					op : c.operator.value
-				});
 			}
 		});
-	
+
 		return retval;
 
 	};
@@ -255,18 +232,16 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 			retVal+=lisDef.title;
 			retVal+=separator;
 		}
-		retVal+="\r\n";
+		retVal+='\r\n';
 		
 		for(var item in data){
-			var row=[]
-			for (var li in schema.listFields){
-				var lisDef=schema.listFields[li];
-				retVal+=getValue(data[item],schema.listFields[li]['field'])+separator;
+			for ( li in schema.listFields){
+				retVal+=getValue(data[item],schema.listFields[li].field)+separator;
 			}
-			retVal+="\r\n";
+			retVal+='\r\n';
 		}
 
-		return TextEncoder('cp1250', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
+		return new TextEncoder('cp1250', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
 	}
 	
 	
@@ -285,7 +260,6 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		});
 		
 		if (iter.constructor === String){
-			console.log('isString');
 			if (iter.indexOf(',')>-1){
 				iter='"'+iter+'"';
 			}
@@ -306,12 +280,12 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 			
 			var blob = new Blob([data], {type: 'text/csv;charset=cp1250'});
 			var url  = window.URL || window.webkitURL;
-			var link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+			var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
 			link.href = url.createObjectURL(blob);
 			link.download = 'search-export.csv'; // whatever file name you want :)
 
-			var event = document.createEvent("MouseEvents");
-			event.initEvent("click", true, false);
+			var event = document.createEvent('MouseEvents');
+			event.initEvent('click', true, false);
 			link.dispatchEvent(event); 
 			
 		}).error(function(err) {
@@ -322,14 +296,14 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	$scope.setSortBy=function (header){
 		if ($scope.sortBy && $scope.sortBy.header===header){
 			if ( 'asc'===$scope.sortBy.direction) {
-				$scope.sortBy={header: header , direction : "desc" };
+				$scope.sortBy={header: header , direction : 'desc' };
 			}
 			else {
-				$scope.sortBy={header: header , direction : "asc" };
+				$scope.sortBy={header: header , direction : 'asc' };
 			} 
 		}
 		else {
-			$scope.sortBy={header: header , direction : "desc" };
+			$scope.sortBy={header: header , direction : 'desc' };
 		}
 		$scope.search();
 	};

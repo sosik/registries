@@ -17,13 +17,21 @@
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-3" ng-show="!crit.objectLink">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid form-control"
 								autocomplete="off">
 
 						</div>
+						<div class="col-sm-3" ng-show="crit.objectLink">
+							<input
+								type="text" id="name" name="name" ng-model="crit.selectedObject"
+								placeholder="value" class="ng-pristine ng-valid form-control"
+								autocomplete="off">
+
+						</div>
+
 						<div class="col-sm-2">
 							<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right">
 						<i class="glyphicon-remove"></i>{{'security.profile.edit.cancel' |translate}}
@@ -174,12 +182,17 @@
 								class="form-control" ng-model="crit.operator"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="col-sm-2">
+						<div class="col-sm-2" ng-show="!crit.attribute.objectLink">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid form-control"
 								autocomplete="off">
 						</div>
+
+						<div ng-show="crit.attribute.objectLink" class="col-sm-2">
+							<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
+						</div>
+
 						<div class="col-sm-2">
 							<button ng-click="removeProfileCrit($index)" class="btn btn-secundary pull-right">
 						<i class="glyphicon-remove"></i>{{'security.profile.edit.cancel' |translate}}

@@ -11,8 +11,6 @@ var QueryFilter = require('./QueryFilter.js');
 var renderModule = require('./renderService.js');
 var universalDaoModule = require('./UniversalDao.js');
 
-var securityServiceModule = require('./securityService.js');
-
 var DEFAULT_CFG = {
 	userCollection : 'people',
 	profileCollection: 'securityProfiles',
@@ -34,7 +32,6 @@ var transport = nodemailer.createTransport('Sendmail');
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
-	var securityService=new securityServiceModule.SecurityService();
 	
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.userCollection
@@ -70,8 +67,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 
 	this.getProfiles = function(req, resp) {
-
-		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
 
 		profileDao.list({},function(err,data){
 			if (err){
@@ -155,8 +150,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				resp.send(500, err);
 				log.warn('updateUserSecurity',userId,err);
 			} else {
-
-				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
 
 				if (!user.systemCredentials) {
 					user.systemCredentials = {};
@@ -274,12 +267,12 @@ this.updateSecurityProfile = function(req, resp) {
 					for (var cc in req.body.criteria){
 						cc=req.body.criteria[cc];
 						var forced;
-						if (!(cc.schema in profile.forcedCriteria)){
+						if (!(cc.schema in profile.forcedCriteria) || !(cc.schema in  profile.forcedCriteria) ){
 							profile.forcedCriteria[cc.schema]={criteria:[]};
 						}
 
-						 forced=profile.forcedCriteria[cc.schema]
-						 forced.criteria[i++]={f:cc.f,op:cc.op,v:cc.v};
+						forced=profile.forcedCriteria[cc.schema];
+						forced.criteria[i++]={f:cc.f,op:cc.op,v:cc.v,obj:cc.obj};
 						
 					}
 				}
@@ -464,7 +457,7 @@ this.updateSecurityProfile = function(req, resp) {
 				return;
 			}
 			
-			if (user.systemCredentials.profiles[req.body.profileId]!=true){
+			if (user.systemCredentials.profiles[req.body.profileId]!==true){
 				resp.send(500, 'user has no profiles');	
 				return;
 			}
@@ -935,7 +928,7 @@ this.updateSecurityProfile = function(req, resp) {
 						req.loginName = token.user;
 
 						userDao.get(token.userId, function(err, user) {
-							if (err||user==null) {
+							if (err||user===null) {
 								log.error(err);
 								next(err);
 								return;

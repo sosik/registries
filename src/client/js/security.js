@@ -172,9 +172,8 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							return true;
 						}
 
-						if ($rootScope.security.currentUser && $rootScope.security.currentUser.systemCredentials
-								&& $rootScope.security.currentUser.systemCredentials.login
-								&& $rootScope.security.currentUser.systemCredentials.permissions) {
+						if ($rootScope.security.currentUser && $rootScope.security.currentUser.systemCredentials && $rootScope.security.currentUser.systemCredentials.login &&
+						 $rootScope.security.currentUser.systemCredentials.permissions) {
 							for ( var i in requiredPermissions) {
 								if ($rootScope.security.currentUser.systemCredentials.permissions[requiredPermissions[i]] !== true) {
 									// missing permission
@@ -201,7 +200,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	 * Login button click
 	 */
 	$scope.login = function() {
-		SecurityService.getLogin($scope.user, $scope.password).success(function(user, status, headers, config) {
+		SecurityService.getLogin($scope.user, $scope.password).success(function(user) {
 			if (user.systemCredentials.profiles.length>1){
 				$scope.profiles=user.systemCredentials.profiles;
 			}
@@ -214,7 +213,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					});
 				});
 			}
-		}).error(function(data, status, headers, config) {
+		}).error(function(err) {
+			if (err){
+				console.log(err);
+			}
 			delete $rootScope.security.currentUser;
 			var mes = {translationCode:'login.authentication.failed',time:5000};
 			notificationFactory.error(mes);
@@ -238,15 +240,13 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 //
 .controller(
 		'security.logoutCtrl',
-		[ "$scope", "security.SecurityService", "$location", '$cookieStore', '$rootScope',
-				function($scope, SecurityService, $location, $cookieStore, $rootScope) {
+		[ '$scope', 'security.SecurityService', '$location', 
+				function($scope, SecurityService, $location) {
 					$scope.logout = function() {
-						SecurityService.getLogout().then(function(data, status, headers, config) {
+						SecurityService.getLogout().then(function() {
 							$scope.security.currentUser = undefined;
-//			                $cookieStore.remove('loginName');
-//			                $cookieStore.remove('securityToken');
 							$location.path('/login');
-						})
+						});
 					};
 				} 
 		])
@@ -471,7 +471,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 						if (!('systemCredentials' in user)){
 							user.systemCredentials={};
-							if ('contactInfo' in user && 'email' in user['contactInfo']){
+							if ('contactInfo' in user && 'email' in user.contactInfo){
 								user.systemCredentials.login={loginName:user.contactInfo.email,email:user.contactInfo.email};
 								setTimeout( $scope.updateUserSecurity(),2000);
 								} else {
@@ -493,26 +493,26 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					}
 
 					$scope.updateUserSecurity = function() {
-						securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email,convertProfiles( $scope.user.profiles)).success(function(data) {
+						securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email,convertProfiles( $scope.user.profiles)).success(function() {
 							notificationFactory.info({translationCode:'security.user.edit.modification.done',time:3000});
 							$scope.search();
-						}).error(function (err,data){
-							console.log(err,data);
+						}).error(function (err){
+							console.log(err);
 							notificationFactory.error(err)});
 					};
 					
 					$scope.resetPassword= function (){
-						 securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups,$scope.user.profiles).success(function(data) {
-							 securityService.getResetPassword($scope.selectedUser.id).success(function (data){
+						 securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups,$scope.user.profiles).success(function() {
+							 securityService.getResetPassword($scope.selectedUser.id).success(function (){
 								 notificationFactory.info({type:'info',text:'Nové heslo bolo zaslané na: ' +$scope.selectedUser.systemCredentials.login.email,deletable : true, time:5000, timeout: null}); 
-								 }).error(function (err,data){
+								 }).error(function (err){
 									 console.log(err);
-									 notificationFactory.error(err)
+									 notificationFactory.error(err);
 									 });
 							
-						 }).error(function (err,data){
+						 }).error(function (err){
 							 console.log(err);
-							 notificationFactory.error(err)
+							 notificationFactory.error(err);
 							 });
 					};
 
@@ -606,46 +606,61 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					}
 
 					function convertCriteria(crit) {
+
 						var retval = [];
 
 						crit.map(function(c) {
-
-							if (c.attribute && c.attribute.path && c.operator.value) {
-								if (!c.value) {
-									c.value = '';
+							if (c && c.attribute && c.attribute.path) {
+								if (c.attribute.objectLink){
+									retval.push({
+										f : c.attribute.path,
+										v : c.object.oid,
+										op : c.operator.value
+									});
 								}
-								retval.push({
-									f : c.attribute.path,
-									v : c.value,
-									op : c.operator.value
-								});
+								else {
+									retval.push({
+										f : c.attribute.path,
+										v : c.value,
+										op : c.operator.value
+									});
+								}
+
 							}
 						});
-
 						return retval;
-
 					}
+
 					function convertProfileCriteria(crit) {
+
 						var retval = [];
 
 						crit.map(function(c) {
-
-							if (c.attribute && c.attribute.path && c.operator.value) {
-								if (!c.value) {
-									c.value = '';
+							if (c && c.attribute && c.attribute.path) {
+								if (c.attribute.objectLink){
+									retval.push({
+										schema: c.schema,
+										f : c.attribute.path,
+										v : c.obj.oid,
+										op : c.operator.value,
+										obj: c.obj
+									});
 								}
-								retval.push({
-									schema:c.schema,
-									f : c.attribute.path,
-									v : c.value,
-									op : c.operator.value
-								});
+								else {
+									retval.push({
+										schema: c.schema,
+										f : c.attribute.path,
+										v : c.value,
+										op : c.operator.value
+									});
+								}
+
 							}
 						});
-
 						return retval;
-
 					}
+
+
 					$scope.search = function() {
 						genericSearchFactory.getSearch(entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
 							$scope.profileList = data;
@@ -740,9 +755,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							for(var schema in profile.forcedCriteria){
 								for(var critIter in profile.forcedCriteria[schema].criteria){
 									var crit=profile.forcedCriteria[schema].criteria[critIter];
-									var modelCrit={schema:schema,operator:mapOperator(crit.op),attribute:crit.f,value:crit.v}
+									var modelCrit={schema:schema,operator:mapOperator(crit.op),attribute:crit.f,value:crit.v};
 									$scope.schemaChange(modelCrit,function(c){
 										c.attribute=mapAttribute( c.attDef.attributes,c.attribute);
+										c.obj=crit.obj;
 										$scope.profileCrit.push(c);
 									});
 								}
@@ -759,7 +775,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							$scope.profile.groups = fillProfileGroups($scope.selectedProfile, $scope.groups);
 						}).error(function(err){
 							 notificationFactory.error(err);
-							});;
+							});
 
 					};
 
@@ -767,8 +783,8 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						securityService.updateProfileSecurity($scope.selectedProfile.id, $scope.selectedProfile.baseData.name, $scope.profile.permissions, $scope.profile.groups,convertProfileCriteria($scope.profileCrit)).success(function(data) {
 							notificationFactory.info({translationCode:'security.profile.edit.modification.done',time:3000});
 							$scope.search();
-						}).error(function (err,data){
-							console.log(err,data);
+						}).error(function (err){
+							console.log(err);
 							notificationFactory.error(err)});
 					};
 					
@@ -787,10 +803,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					var mes = {translationCode:'personal.change.password.passwords.not.equal'};
 					notificationFactory.warn(mes);
 						} else {
-							SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data, status, headers, config) {
+							SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data) {
 						var mes = {translationCode:'personal.change.password.password.changed'};
 						notificationFactory.info(mes);
-							}).error(function(data, status, headers, config) {
+							}).error(function(err,data) {
 						var mes = {translationCode:'security.user.missing.permissions',translationData:data,time:3000};
 						notificationFactory.error(mes);
 							});

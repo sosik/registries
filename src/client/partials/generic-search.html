@@ -12,26 +12,27 @@
 					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
 						<div class="col-sm-4">
-							<!--<label for="name" class="control-label">{{'generic.search.atribute' | translate}}</label><br>-->
-							<select class="form-control"
+							<select class="form-control" ng-change="selectedCritAttribute(crit)"
 								ng-model="crit.attribute"
 								ng-options="att.title for att in searchDef.attributes"></select>
 						</div>
 						<div class="col-sm-2">
-							<!--<label for="name" class="control-label">{{'generic.search.operator' | translate}}</label><br>-->
 							<select class="form-control"
 								ng-model="crit.operator"
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="col-sm-4">
-							<!--<label for="name" class="control-label">{{'generic.search.value' | translate}}</label><br>-->
+						<div class="col-sm-4" ng-show="!crit.attribute.objectLink">
 							<input type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="" class="ng-pristine ng-valid form-control"
 								autocomplete="off">
 						</div>
+					
+						<div ng-show="crit.attribute.objectLink" class="col-sm-4 form-group">
+							<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
+						</div>
+
 						<div class="col-sm-2">
-							<!--<label class="control-label">&nbsp;</label><br>-->
 							<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right"><i class="glyphicon-remove"></i>{{'generic.search.remove' | translate}}</button>
 						</div>
 					</div>
@@ -44,11 +45,6 @@
 							<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
 						</div>
 					</div>
-
-<!--					<div class="form-group col-sm-12">
-						<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>{{'generic.search.add' | translate}}</button>
-						<button ng-click="search()" class="btn btn-primary"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
-					</div>-->
 
 				</div>
 			</div>

@@ -165,13 +165,12 @@ angular.module('psui', [])
 				});
 				
 				e.on('focus', function(evt){
-					console.log('ccc');
+					
 					//$timeout.cancel(hideDropdown);
 					that.cancelTimeout();
 				})
 				
 				e.on('click', function(evt) {
-					console.log('aaa');
 					var element = angular.element(evt.target);
 					var index = element.data('index');
 					if (typeof index !== 'undefined') {
@@ -285,6 +284,11 @@ angular.module('psui', [])
 		
 		this.cancelTimeout = function(){
 			$timeout.cancel(hideDropdown);
+		};
+		
+		this.searchInputValue = function(){
+			console.log(_searchInput.val());
+			return _searchInput.val();
 		};
 		
 		_searchInput.on('blur', function(evt){

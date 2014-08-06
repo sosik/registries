@@ -38,11 +38,12 @@ angular.module('psui-objectlink', [])
 		}
 	};
 }])
-.directive('psuiObjectlink', ['$compile', '$parse', '$http', function($compile, $parse, $http) {
+.directive('psuiObjectlink', ['psui.dropdownFactory', '$compile', '$parse', '$http', function(dropdownFactory, $compile, $parse, $http) {
 	return {
 		restrict: 'E',
 		require: ['^ngModel', '^?psuiFormCtrl'],
 		link: function(scope, elm, attrs, ctrls) {
+			var dataArray = new Array();
 			var schemaFragment = null;
 
 			if (attrs.schemaFragment) {
@@ -131,38 +132,59 @@ angular.module('psui-objectlink', [])
 				wrapper = angular.element('<span class="psui-wrapper"></span>');
 				elm.wrap(wrapper);
 			}
-
+			
+			if (!attrs.tabindex) {
+				attrs.$set('tabindex', 0);
+			}
+			
 			elm.addClass('psui-datepicker');
 			elm.addClass('form-control');
+			
+			// handle ng-model
+			var updateViewValue = function(val) {
+				for (var i  = 0; i < dataArray.length; i++) {
+					if (dataArray[i].k === val) {
+						elm.text(dataArray[i].v);
+						return;
+					}
+				}
 
-			var dropdownHolder = angular.element('<div class="psui-objectlink-dropdown" style="width:100%;"></div>');
-			wrapper.append(dropdownHolder);
-			dropdownHolder.addClass('psui-dropdown');
+				console.log('Key not found in data');
+				elm.text('');
+			}
+			
+			var commitChange = function(index) {
+				elm.text(dropdown.data[index]);
+			};
 
+			if (ctrls[0]) {
+				var ngModelCtrl = ctrls[0];
+				//ng-model controller is there
+				
+				var commitChange = function(index) {
+					var val = dataArray[index];
+					elm.text(val);
+					scope.$apply(function() {
+						ngModelCtrl.$setViewValue(val);
+					});
+					elm[0].focus();
+				};
+
+				ngModelCtrl.$render = function() {
+					updateViewValue(ngModelCtrl.$viewValue || '');
+				}
+			}
+			
             var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
 			var buttonShowDropdown = angular.element('<button type="button" class="btn psui-icon-chevron-down"></button>');
 			buttonShowDropdown.attr('tabindex', '-1');
 			buttonsHolder.append(buttonShowDropdown);
 
-			var queryField = angular.element('<input class="form-control"></input>');
-			dropdownHolder.append(queryField);
-            
-            queryField.wrap( "<header></header>" );
-
-			var searchResultHolder = angular.element('<div></div>');
-
-			dropdownHolder.addClass('psui-hidden');
-
-			var dropdown = angular.element('<section></section>');
-			dropdownHolder.append(dropdown);
-//            dropdown.addClass('psui-objectlink-list');
-
-			buttonShowDropdown.on('click', function() {
-				dropdownHolder.toggleClass('psui-hidden');
-			});
-
-			var doSearch = function() {
+			
+			var dataArray = new Array();
+			
+			var doSearch = function(callback) {
 				if (schemaFragment(scope)) {
 					var qfName = null;
 					for (var f in schemaFragment(scope).$objectLink){
@@ -173,10 +195,9 @@ angular.module('psui-objectlink', [])
 							break;
 						}
 					}
-					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria:[{op:'starts', v: queryField.val(), f: qfName}]} })
+					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria:[{op:'starts', v: dropdown.searchInputValue(), f: qfName}]} })
 					.success(function(data, status, headers, config){
-						console.log(data);
-						dropdown.empty();
+						console.log('blabla' + data);
 						for (var i = 0; i < data.length; ++i) {
 							var rData = {
 								registry: schemaFragment(scope).$objectLink.registry,
@@ -184,7 +205,7 @@ angular.module('psui-objectlink', [])
 								refData: {}
 							};
 
-							var e = angular.element('<div></div>');
+							//var e = angular.element('<div></div>');
 							for (var field in schemaFragment(scope).$objectLink) {
 								if (field != 'registry') {
 									var dataField = schemaFragment(scope).$objectLink[field];
@@ -201,44 +222,87 @@ angular.module('psui-objectlink', [])
 								}
 							}
 
-							var displayText = '';
-							var count = 0;
-							for (var j in rData.refData) {
-								if (typeof rData.refData[j] === 'string') {
-									++count;
-								}
-							}
 							for (j in rData.refData) {
 								if (typeof rData.refData[j] === 'string') {
-									displayText += '<td style="width: '+100/count+'%;">' + rData.refData[j] + '</td>';
+									//displayText += '<td style="width: '+100/count+'%;">' + rData.refData[j] + '</td>';
+									dataArray.push(rData.refData[j]);
 								}
 							}
 
-							e.html('<table style="width:100%; table-layout: fixed;"><tr>' + displayText + '</tr></table>');
-
-							//e.text(displayText);
-							e.data('data', rData);
-
-							e.on('click', function(evt) {
-								scope.$apply(function() {
-									//ngModel.$setViewValue(angular.copy(angular.element(evt.target).data('data'), ngModel.$viewValue));
-									ngModel.$setViewValue(angular.element(evt.currentTarget).data('data'));
-									ngModel.$render();
-								});
-								//scope.$emit('psui:model_changed');
-								dropdownHolder.addClass('psui-hidden');
-							});
-							dropdown.append(e);
-
-							console.log(rData);
 						}
+						callback();
 					}).error(function(err) {
 					});
 				}
+				
 			}
-			queryField.on('keyup', function(evt) {
-					doSearch();
+			
+			
+			var dropdown = new dropdownFactory.createDropdown({searchable: true});
+			doSearch(function(){dropdown.setData(dataArray);});
+
+			
+			buttonShowDropdown.on('click', function() {
+				if (dropdown.isVisible()) {
+					dropdown.hide();
+				} else {
+					dropdown.show();
+				}
 			});
+			
+			elm.on('keydown', function(evt) {
+				switch (evt.keyCode) {
+					case 40: // key down
+						if (!dropdown.isVisible()) {
+							dropdown.show();
+						}
+						evt.preventDefault();
+						break;
+					case 38: // key up
+						evt.preventDefault();
+						break;
+					case 13: // key enter
+						if (!dropdown.isVisible()) {
+							dropdown.show();
+						}
+						evt.preventDefault();
+						break;
+				}
+				// any other key
+			});
+			
+			buttonShowDropdown.on('keydown', function(evt) {
+				switch (evt.keyCode) {
+					case 40: // key down
+						if (!dropdown.isVisible()) {
+							dropdown.show();
+						}
+						evt.preventDefault();
+						break;
+					case 38: // key up
+						evt.preventDefault();
+						break;
+					case 13: // key enter
+						if (!dropdown.isVisible()) {
+							dropdown.show();
+						}
+						evt.preventDefault();
+						break;
+				}
+				// any other key
+			});
+			
+			buttonShowDropdown.on('focus', function(evt){
+				dropdown.cancelTimeout();
+			});
+			
+			// override dropdown select functionality
+			dropdown.onSelected = function(index) {
+				commitChange(index);
+				this.hide();
+				elm[0].focus();
+			};
+			wrapper.append(dropdown.getDropdownElement());
 
 			// if there is psui-form-ctrl bind active component change and close dropdown
 			var psuiFormCtrl;
@@ -249,7 +313,7 @@ angular.module('psui-objectlink', [])
 					psuiFormCtrl.getActiveControl,
 					function(newVal, oldVal) {
 						if (newVal !== elm && oldVal === elm) {
-							dropdownHolder.addClass('psui-hidden');
+							dropdown.hide();
 						}
 					}
 				);

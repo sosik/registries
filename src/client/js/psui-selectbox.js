@@ -172,15 +172,6 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 				}
 			});
 
-
-			elm.on('keyup', function(evt) {
-				if (evt.key === 'Down') {
-					dropdown.show();
-					evt.preventDefault();
-				}
-			});
-			
-			
 			elm.on('keydown', function(evt) {
 				switch (evt.keyCode) {
 					case 40: // key down

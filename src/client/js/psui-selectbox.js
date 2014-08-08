@@ -150,7 +150,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 			}
 
 			var dropdown = new dropdownFactory.createDropdown({searchable: true});
-			dropdown.setData(data);
+			//dropdown.setData(data);
 
 			// override dropdown select functionality
 			dropdown.onSelected = function(index) {
@@ -169,6 +169,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 					dropdown.hide();
 				} else {
 					dropdown.show();
+					dropdown.setData(data);
 				}
 			});
 
@@ -177,6 +178,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 					case 40: // key down
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							dropdown.setData(data);
 						}
 						evt.preventDefault();
 						break;
@@ -186,6 +188,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 					case 13: // key enter
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							dropdown.setData(data);
 						}
 						evt.preventDefault();
 						break;
@@ -198,6 +201,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 					case 40: // key down
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							dropdown.setData(data);
 						}
 						evt.preventDefault();
 						break;
@@ -207,6 +211,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 					case 13: // key enter
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							dropdown.setData(data);
 						}
 						evt.preventDefault();
 						break;
@@ -217,18 +222,6 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 			buttonShowDropdown.on('focus', function(evt){
 				dropdown.cancelTimeout();
 			})
-			
-
-			//dropdown.on('psui:changed', function(evt) {
-			//	elm[0].focus();
-			//});
-
-			//dropdown.on('psui:confirmed', function(evt) {
-			//	elm.text(data[evt.index]);
-			//	commitChange(dropdown.selected());
-			//	dropdown.hide();
-			//});
-			
 			
 			// if there is psui-form-ctrl bind active component change and close dropdown
 			var psuiFormCtrl;

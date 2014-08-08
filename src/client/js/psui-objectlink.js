@@ -185,6 +185,7 @@ angular.module('psui-objectlink', [])
 			var dataArray = new Array();
 			
 			var doSearch = function(callback) {
+				dataArray = [];
 				if (schemaFragment(scope)) {
 					var qfName = null;
 					for (var f in schemaFragment(scope).$objectLink){
@@ -239,7 +240,9 @@ angular.module('psui-objectlink', [])
 			
 			
 			var dropdown = new dropdownFactory.createDropdown({searchable: true});
-			doSearch(function(){dropdown.setData(dataArray);});
+			
+			
+			//doSearch(function(){dropdown.setData(dataArray);});
 
 			
 			buttonShowDropdown.on('click', function() {
@@ -247,6 +250,7 @@ angular.module('psui-objectlink', [])
 					dropdown.hide();
 				} else {
 					dropdown.show();
+					doSearch(function(){dropdown.setData(dataArray);});
 				}
 			});
 			
@@ -255,6 +259,7 @@ angular.module('psui-objectlink', [])
 					case 40: // key down
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							doSearch(function(){dropdown.setData(dataArray);});
 						}
 						evt.preventDefault();
 						break;
@@ -264,6 +269,7 @@ angular.module('psui-objectlink', [])
 					case 13: // key enter
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							doSearch(function(){dropdown.setData(dataArray);});
 						}
 						evt.preventDefault();
 						break;
@@ -276,6 +282,7 @@ angular.module('psui-objectlink', [])
 					case 40: // key down
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							doSearch(function(){dropdown.setData(dataArray);});
 						}
 						evt.preventDefault();
 						break;
@@ -285,6 +292,7 @@ angular.module('psui-objectlink', [])
 					case 13: // key enter
 						if (!dropdown.isVisible()) {
 							dropdown.show();
+							doSearch(function(){dropdown.setData(dataArray);});
 						}
 						evt.preventDefault();
 						break;

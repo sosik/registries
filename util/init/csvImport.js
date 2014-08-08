@@ -28,9 +28,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 function parse() {
 
 	var rd = readline.createInterface({
-	    input : fs.createReadStream(path),
-	    output : process.stdout,
-	    terminal : false
+			input : fs.createReadStream(path),
+			output : process.stdout,
+			terminal : false
 	});
 
 	var def = null;
@@ -41,7 +41,7 @@ function parse() {
 	rd.on('line', function(line) {
 
 		if (!def) {
-			var parts = line.split(',');
+			var parts = line.split(';');
 			def = parseDef(parts);
 			if (def.save) {
 				dao = new universalDaoModule.UniversalDao(mongoDriver, {
@@ -55,20 +55,21 @@ function parse() {
 			var re_value = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
 			
 			
-			var parts = [];                     // Initialize array to receive values.
+			var parts = [];// Initialize array to receive values.
 			line.replace(re_value, // "Walk" the string using replace with callback.
-		        function(m0, m1, m2, m3) {
+						function(m0, m1, m2, m3) {
 //				console.log(m0, m1, m2, m3);
-		            // Remove backslash from \' in single quoted values.
-		            if      (m1 !== undefined) parts.push(m1.replace(/\\'/g, "'"));
-		            // Remove backslash from \" in double quoted values.
-		            else if (m2 !== undefined) parts.push(m2.replace(/\\"/g, '"'));
-		            else if (m3 !== undefined) parts.push(m3);
-		            return ''; // Return empty string.
-		        });
-		    // Handle special case of empty last value.
+								// Remove backslash from \' in single quoted values.
+								if      (m1 !== undefined) parts.push(m1.replace(/\\'/g, "'"));
+								// Remove backslash from \" in double quoted values.
+								else if (m2 !== undefined) parts.push(m2.replace(/\\"/g, '"'));
+								else if (m3 !== undefined) parts.push(m3);
+								return ''; // Return empty string.
+						});
+				// Handle special case of empty last value.
 //		    if (/,\s*$/.test(text)) a.push('');
-		    
+				
+			parts=line.split(';');
 			console.log('DDDDDDDD>>>',parts);
 
 			if (def.collDef.length != parts.length) {
@@ -149,7 +150,12 @@ function resolveToObjectLink(json,path,callback){
  * @returns
  */
 function defConversion(item) {
-	return item.trim().replace(/\'/g, '');
+
+	var val= item.trim().replace(/\'/g, '');
+	if (val.length){
+		return val;
+	}
+	return null;
 }
 
 /**
@@ -178,21 +184,21 @@ function parseDef(rawDef) {
 
 			if (items.length == 1) {
 				collDef.push({
-				    from : item,
-				    to : item,
-				    convert : [ defConversion ]
+						from : item,
+						to : item,
+						convert : [ defConversion ]
 				});
 			} else if (items.length == 2) {
 				collDef.push({
-				    from : items[0],
-				    to : items[1],
-				    convert : [ defConversion ]
+						from : items[0],
+						to : items[1],
+						convert : [ defConversion ]
 				});
 			} else if (items.length > 2) {
 				collDef.push({
-				    from : items[0],
-				    to : items[items.length - 1],
-				    convert : items.slice(1, items.length - 1)
+						from : items[0],
+						to : items[items.length - 1],
+						convert : items.slice(1, items.length - 1)
 				});
 			}
 			break;
@@ -214,14 +220,22 @@ function convertValue(d, v) {
 			tmp = fun(tmp);
 		} else {
 			try {
-				tmp = eval(fun + "(\'" + v + "\')");
+				if (tmp==null){
+					tmp = eval(fun + "(null)");
+				} else{
+					tmp = eval(fun + "(\'" + tmp + "\')");
+				}
 			} catch (err) {
-				console.log('Not able to evaluate ', fun, 'on ', tmp,err);
+				console.log('Not able to evaluate ', fun, ' on ', tmp,err);
 			}
 		}
 	});
 
 	return tmp;
+}
+
+function separateFullstop(item){
+	return item.replace('\.','\. ');
 }
 
 function applyValue(o, d, v) {
@@ -247,9 +261,9 @@ function applyValue(o, d, v) {
 
 function objLinkOrganization(item) {
 	var ret=	{
-	    "registry" : "organizations",
-	    "oid" : "",
-	    unresolved : item
+			"registry" : "organizations",
+			"oid" : "",
+			unresolved : item
 	};
 	console.log(ret);
 	return ret;
@@ -273,6 +287,18 @@ function upCase(item) {
 }
 
 
+
+
+function lowerCase(item) {
+	return item.toLowerCase();
+}
+
+function zeroToNull(item){
+	if ('0'==item) return null;
+	return item;
+}
+
+
 function reformatDate(date){
 	if (!date) {
 		return null;
@@ -284,6 +310,79 @@ function reformatDate(date){
 	else {
 		console.log('!!!'+ date);
 		return 'invalid '+date;
+	}
+}
+
+function part1(str){
+	if (!str) return null;
+	return str.split(' ')[0];
+}
+
+function part2(str){
+	if (!str) return null;
+	
+	return str.split(' ')[1];
+}
+
+function mapGenderTrueFalse(item){
+	if (item == 'TRUE') { 
+		return 'M';
+	}
+	if (item == 'FALSE') { 
+		return 'Z';
+	}
+	return null;
+}
+
+function camelCase(input) { 
+		return input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+		// return input.toLowerCase();
+}
+
+function mapDochodca(item) {
+	if (item==="D") { 
+		return 'Dôchodca';
+	}
+	return null;
+}
+
+function mapTrueFalse(item){
+	if (item.toLowerCase()=='true'){
+		return 'A';
+	} else {
+		return 'N';
+	}
+
+}
+
+function fullDate(item){
+	if (!item)return null;
+	if (item.length===4) {
+		return "1.1."+item;
+	}
+	return item;
+}
+
+function fullDateEndYear(item){
+	if (!item||null==item)return null;
+
+	if (item.length===4) {
+		return "31.12."+item;
+	}
+	return item;
+}
+
+function mapInvalid(item){
+	if (item ==="I") return 'A'; 
+	return 'N'; 
+}
+
+function mapZaznamPlatnyNeplatny(item){
+	if('Platný'==item){
+		return 'A';
+	}
+	else {
+		return 'N';
 	}
 }
 

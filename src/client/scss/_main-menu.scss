@@ -116,12 +116,24 @@
 
 .no-touch{
 	#main-menu{
-		/*.sidebar{*/
-			overflow: hidden;
-			&:hover{
-				overflow-y: auto;
+		overflow: hidden;
+		&:hover{
+			overflow-y: auto;
+		}
+	}
+}
+
+.touch{
+	#main-menu{
+		.sidebar{
+			a,div{
+				&:hover,
+				&.active{
+					color: $sidebar-color-base;
+				}
 			}
-		/*}*/
+		}
+		
 	}
 }
 

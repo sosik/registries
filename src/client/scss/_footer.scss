@@ -41,24 +41,5 @@
 				text-align: right;
 			}
 		}
-		
-		
-		
-/*		span{
-			&:last-child{
-				text-align: right;
-				@include media-tablet-max  {
-					background: red;
-					display: block;
-					float: none !important;
-					text-align: left !important;
-				}
-			}
-			
-		}
-		
-		@include media-tablet-max  {
-			height: $footer-height-small;
-		}*/
 	}
 }

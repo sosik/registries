@@ -16,6 +16,13 @@
 	#content-wrapper{
 		margin-left: 0px;
 	}
+	
+	#login-form{
+		position: absolute;
+		top: 20%;
+		left: 0px;
+		right: 0px;
+	}
 }
 
 #main-wrapper{
@@ -37,10 +44,8 @@
 }
 
 #login-form{
-	position: absolute;
-	top: 20%;
-	left: 0px;
-	right: 0px;
+	position: relative;
+	
 	@include media-mobile{
 		top: 20px;
 	}

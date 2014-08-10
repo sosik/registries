@@ -49,11 +49,22 @@ input, textarea, selectbox{
 		border: 1px solid $input-border-color;
 	}
 
-		&.ng-invalid{
-		   &:not([class*="ng-pristine"]){
-			   border-color: $error-color;
-		   }
-	   }
+	&.ng-invalid{
+		&:not([class*="ng-pristine"]){
+			border-color: $error-color;
+		}
+	}
+}
+
+select{
+	background-color: $input-bg;
+	&.form-control{
+		-webkit-appearance: listbox;
+		width: 100%;
+		height: 34px;
+		border-radius: 0px;
+		padding: 0 0 1px 8px;
+	}
 }
 
 // lable
@@ -72,10 +83,15 @@ fieldset{
 		text-transform: uppercase;
 		display: block;
 		padding: $padding-large-vertical 0px;
-		margin-bottom: $content-padding / 2;
+		margin-bottom: $content-padding / 4;
 		border-bottom: 1px solid $input-border-color; 
 		font-weight: bold;
 		font-size: $font-size-base;
+		
+		 + * {
+			-webkit-margin-top-collapse : separate;
+			margin-top: $content-padding / 4;
+		 }
 	}
 }
 

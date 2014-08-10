@@ -25,18 +25,51 @@
 		color: #000;	
 		background-color: #fff;
 		@include box-shadow(none);
+		/*border: 1px solid red !important;*/
 	}
 	
 	.form-group{
-		[class*="col-"]{
+		> div,
+		> label{
 			float: left;
 		}
-		.col-sm-4 {
-			width: 33%;
+		
+		> label {
+			width: 30% !important;
+		}
+		
+		> div{
+			width: 70% !important;
 		}
 	}
 	
 	label.psui-required:after{
 		content: "";
+	}
+	
+	fieldset > legend{
+		padding: 15px 0px 2px 0px;
+		margin-bottom: 5px;
+	}
+	
+	.form-group {
+		margin-bottom: 0px;
+	}
+	
+/*	.psui-inlineedit-view{
+		padding-bottom: 4px;
+	}*/
+	.psui-inlineedit-view {
+		padding: 0px 36px 0px 12px;
+		line-height: 1.1em;
+		border: 0px  !important;;
+		&:after,
+		&:before{
+			content: "" !important;;
+		}
+	}
+	
+	.form-horizontal .control-label {
+		padding-top: 3px;
 	}
 }

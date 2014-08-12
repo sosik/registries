@@ -74,6 +74,7 @@ function parse() {
 
 			if (def.collDef.length != parts.length) {
 				console.log('line', lineN, ' does not match def.-->', def.collDef.length,parts.length ,'\n', line,'\n', parts.join('|'));
+				console.log(def);
 				return;
 			}
 
@@ -81,15 +82,21 @@ function parse() {
 
 			if (def.resolve) {
 				
-				var resovleFs=[]
+				var resovleFs=[];
 				def.resolve.map(function(toResolve){
 					resovleFs.push(function(callback){
-						resolveToObjectLink(json,toResolve,callback);
+						if (toResolve.byName){
+							resolveByNameToObjectLink(json,toResolve.attribute,callback);
+						}
+						else {
+							resolveToObjectLink(json,toResolve.attribute,callback);
+						}
 					})
 				});
 				
 				async.parallel(resovleFs, function( err ){
 					dao.save(json, function(err, data) {
+						console.log('saved', json);
 					});
 				} );
 			}
@@ -143,6 +150,41 @@ function resolveToObjectLink(json,path,callback){
 	} );
 }
 
+function resolveByNameToObjectLink(json,path,callback){
+
+	var parts=path.split('.');
+	
+	var obj = json;
+	var prev;
+	var lastPart = null;
+	parts.map(function(part) {
+		obj = obj[part];
+		lastPart = part;
+	});
+	
+	console.log(json);
+	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : obj.registry
+	});
+	console.log('>>>>> ',obj.registry);
+	
+	daoLink.list(QueryFilter.create().addCriterium('club.name', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
+		if (err) {
+			callback(err);
+			return
+		} 
+		if (data.length===0){
+			callback(null);
+			console.log('Not able to resolve',obj);
+			return;
+		}
+		obj.oid=data[0].id;
+		delete obj.unresolved;
+		callback(null);
+	} );
+}
+
+
 /**
  * default conversion
  * 
@@ -178,8 +220,16 @@ function parseDef(rawDef) {
 			if (!def.resolve) {
 				def.resolve = [];
 			}
-			def.resolve.push(items[1]);
+			def.resolve.push({attribute:items[1]});
 			break;
+		case '$resolveByName$':
+			if (!def.resolve) {
+				def.resolve = [];
+			}
+			
+			def.resolve.push({attribute:items[1],byName:true});
+			break;
+
 		default:
 
 			if (items.length == 1) {
@@ -212,9 +262,7 @@ function parseDef(rawDef) {
 
 // Calls function(s) to resolve value
 function convertValue(d, v) {
-	var tmp = v;
-	console.log(d,v);
-	
+	var tmp = v;	
 	d.convert.map(function(fun) {
 		if (typeof (fun) == 'function') {
 			tmp = fun(tmp);
@@ -269,6 +317,16 @@ function objLinkOrganization(item) {
 	return ret;
 }
 
+function objLinkPeople(item) {
+	var ret=	{
+			"registry" : "people",
+			"oid" : "",
+			unresolved : item
+	};
+	console.log(ret);
+	return ret;
+}
+
 function createJson(def, lineNr, line) {
 	var retVal = {};
 
@@ -285,8 +343,6 @@ function createJson(def, lineNr, line) {
 function upCase(item) {
 	return item.toUpperCase();
 }
-
-
 
 
 function lowerCase(item) {
@@ -384,6 +440,31 @@ function mapZaznamPlatnyNeplatny(item){
 	else {
 		return 'N';
 	}
+}
+
+function mapAktivna(item){
+	if ('Aktívna'==item){
+		return "aktívna";
+	}
+	return "neaktívna"
+}
+
+function parseDateMix(item)	{ 
+	if (!item) return null;
+
+	if (item.indexOf('/')>-1){
+		var parts=item.split('/');
+		return parts[1]+"."+parts[0]+"."+parts[2];
+	}
+	return item;
+
+}
+
+function mapPT(item){
+	if ('P'==item){
+		return  "prestup";
+	}
+		return "hosťovanie"
 }
 
 function remapPlayerPosition(item){

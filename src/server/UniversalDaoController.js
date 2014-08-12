@@ -1,4 +1,6 @@
 var log = require('./logging.js').getLogger('UniversalDaoController.js');
+var auditLog = require('./logging.js').getLogger('AUDIT');
+
 var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
 var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
 var securityServiceModule = require(process.cwd() + '/build/server/securityService.js');
@@ -23,7 +25,7 @@ var securityService= new securityServiceModule.SecurityService();
 			if (err) {
 				throw err;
 			}
-
+			auditLog.info('user oid', req.currentUser.id,'has saved/modified object',obj);
 			res.json(data);
 		});
 	};
@@ -36,10 +38,7 @@ var securityService= new securityServiceModule.SecurityService();
 			log.error('missing schemaRegistry');
 			throw 'This method requires schemaRegistry';
 		}
-
 		var schema = schemaRegistry.getSchema(schemaName);
-		
-		
 
 		if (!schema) {
 			log.error('schema %s not found', schemaName);
@@ -55,7 +54,7 @@ var securityService= new securityServiceModule.SecurityService();
 		
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.MODIFY,req.perm)){
 			res.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.MODIFY)));
-			log.verbose('Not authorized to save object ',schemaName);
+			log.verbose('Not authorized to save object',schemaName);
 			return;
 		} 
 
@@ -71,7 +70,7 @@ var securityService= new securityServiceModule.SecurityService();
 			if (err) {
 				throw err;
 			}
-
+			auditLog.info('user oid', req.currentUser.id,'has saved/modified object',obj);
 			res.json(data);
 		});
 	};

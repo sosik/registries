@@ -56,6 +56,7 @@ angular.module('registries')
 		'massmail.search.recipient':'Vyhľadáť príjemcov',
 		'massmail.send.view':'Hromadná pošta',
 		'massmailing.send':'Odeslat',
+		'massmail.selection.all':'Všetkým',
 		"header.settings": "Nastavenia",
 		"header.log.out": "Odhlásiť sa",
 		"personal.change.password.change.password": "Zmena hesla",

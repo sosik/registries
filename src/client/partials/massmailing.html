@@ -87,7 +87,9 @@
 							<table class="table">
 								<thead>
 									<tr class="list-header">
-										<th><input type="checkbox" ng-model="selectAll"></th>
+										<th>
+												<input type="checkbox" ng-model="selectAll">&nbsp;{{'massmail.selection.all' | translate}}</input>
+										</th>
 										<th ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
 										<th></th>
 									</tr>

@@ -72,6 +72,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 				});
 			}
 		});
+		retval.push({f : "contactInfo.email",v : null,op : "neq"});
 		return retval;
 	}
 
@@ -95,7 +96,6 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
 			c.push($scope.forcedCriterias[idx]);
 		}
-
 		$scope.lastCriteria=JSON.parse(JSON.stringify(c));
 		
 		genericSearchFactory.getSearch(peopleSchemaUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
@@ -126,6 +126,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
 			c.push($scope.forcedCriterias[idx]);
 		}
+		c.
 		genericSearchFactory.getSearch(peopleSchemaUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,pageSize).success(function(data) {
 			
 			data.map(function (newItems){

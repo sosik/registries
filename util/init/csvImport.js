@@ -350,7 +350,10 @@ function applyValue(o, d, v) {
 		obj = obj[part];
 		lastPart = part;
 	});
-	prev[lastPart] = convertValue(d, v);
+	var val = convertValue(d, v);
+	if (val){
+		prev[lastPart]=val;
+	}
 }
 
 function objLinkOrganization(item) {
@@ -456,6 +459,14 @@ function mapTrueFalse(item){
 	}
 
 }
+
+function mapPoDohodeStudium(item){
+	if ("1"==item){
+		return "Po dohode";
+	}
+	return "Počas štúdia";
+
+} 
 
 function fullDate(item){
 	if (!item)return null;

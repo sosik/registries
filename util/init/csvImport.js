@@ -85,6 +85,10 @@ function parse() {
 				var resovleFs=[];
 				def.resolve.map(function(toResolve){
 					resovleFs.push(function(callback){
+						if (toResolve.byBirthNumber){
+							resolveByBirthNumberToObjectLink(json,toResolve.attribute,callback);
+						}
+						else
 						if (toResolve.byName){
 							resolveByNameToObjectLink(json,toResolve.attribute,callback);
 						}
@@ -185,6 +189,42 @@ function resolveByNameToObjectLink(json,path,callback){
 }
 
 
+
+function resolveByBirthNumberToObjectLink(json,path,callback){
+
+	var parts=path.split('.');
+	
+	var obj = json;
+	var prev;
+	var lastPart = null;
+	parts.map(function(part) {
+		obj = obj[part];
+		lastPart = part;
+	});
+	
+	console.log(json);
+	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : obj.registry
+	});
+	console.log('>>>>> ',obj.registry);
+	
+	daoLink.list(QueryFilter.create().addCriterium('baseData.id', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
+		if (err) {
+			callback(err);
+			return
+		} 
+		if (data.length===0){
+			callback(null);
+			console.log('Not able to resolve',obj);
+			return;
+		}
+		obj.oid=data[0].id;
+		delete obj.unresolved;
+		callback(null);
+	} );
+}
+
+
 /**
  * default conversion
  * 
@@ -229,7 +269,13 @@ function parseDef(rawDef) {
 			
 			def.resolve.push({attribute:items[1],byName:true});
 			break;
-
+			case '$resolveByBirthNumber$':
+			if (!def.resolve) {
+				def.resolve = [];
+			}
+			
+			def.resolve.push({attribute:items[1],byBirthNumber:true});
+			break;
 		default:
 
 			if (items.length == 1) {

@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+	<title>psui-contenteditable</title>
+	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular-route/angular-route.js"></script>
+	<script src="js/psui-contenteditable.js"></script>
+	<script src="js/psui-demo2.js"></script>
+	<script src="lib/rangy/rangy-core.js"></script>
+	<script src="lib/rangy/rangy-selectionsaverestore.js"></script>
+	<script src="lib/rangy/rangy-serializer.js"></script>
+	<script src="lib/rangy/rangy-cssclassapplier.js"></script>
+	<script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
+	<script src="lib/angular-ui-ace/ui-ace.js"></script>
+	
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" type="text/css" href="css/psui-contenteditable.css">
+</head>
+<body ng-app="psui-demo2">
+<div ng-controller="psui-contenteditable-demo-simple" id="demo2">
+	<h1>contenteditable</h1>
+	<table width="100%"><tr><td width="50%">
+				<div psui-contenteditable ng-model="data"><img src="http://www.google.com/images/srpr/logo11w.png" height="71" width="202"><br>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<table><tr><td>xxx</td><td>ttt</td></tr><tr><td>xxx</td><td>ttt</td></tr></table></div>
+	</td><td style="vertical-align: top;" width="50%">
+		{{data}}
+	</td></tr></table>
+</div>
+</body>
+</html>

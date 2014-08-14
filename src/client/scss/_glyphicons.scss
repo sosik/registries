@@ -18,3 +18,13 @@
 .psui-icon-rotate{ &:before { content: "\e030"; } }
 .psui-icon-ok{ &:before { content: "\e013"; } }
 .psui-icon-search{ &:before { content: "\e003"; } }
+
+// Import the fonts
+@font-face {
+  font-family: $icon-font2-family;
+  src: url(if($psui-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font2-name}.eot'), '#{$icon-font-path}#{$icon-font2-name}.eot'));
+  src: url(if($psui-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font2-name}.eot?#iefix'), '#{$icon-font-path}#{$icon-font2-name}.eot?#iefix')) format('embedded-opentype'),
+       url(if($psui-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font2-name}.woff'), '#{$icon-font-path}#{$icon-font2-name}.woff')) format('woff'),
+       url(if($psui-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font2-name}.ttf'), '#{$icon-font-path}#{$icon-font2-name}.ttf')) format('truetype'),
+       url(if($psui-sass-asset-helper, twbs-font-path('#{$icon-font-path}#{$icon-font2-name}.svg##{$icon-font2-svg-id}'), '#{$icon-font-path}#{$icon-font2-name}.svg##{$icon-font2-svg-id}')) format('svg');
+}

@@ -1,0 +1,186 @@
+.psui-contenteditable{
+	
+	height: 600px;
+	border: silver solid 1px;
+	
+}
+
+.psui-contenteditable-buttons-holder{
+
+	background-color:$contenteditable-background-color;
+	
+	button{
+		color:$contenteditable-font-color;
+		height:22px;
+		font-size:18px;
+		border:none;
+		border-right:1px solid $contenteditable-border-color;
+		background-color:$contenteditable-background-color;
+		margin:5px 0 5px 0;
+		
+		
+		
+		&:hover{
+			color:$contenteditable-selected-color;
+		}
+		
+		&:before {
+			position: relative;
+			top: 1px;
+			display: inline-block;
+			font-family: $icon-font2-family;
+			font-style: normal;
+			font-weight: normal;
+			line-height: 1;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
+
+		&.psui-contenteditable-bold {
+			
+			&:before { 
+				content: "\e608"; 
+			}
+			
+		}
+			
+		&.psui-contenteditable-indent {
+			
+			&:before { 
+				content: "\e60f"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-outdent {
+			
+			&:before { 
+				content: "\e610"; 
+			}
+				
+		}
+		
+		&.psui-contenteditable-ol {
+			
+			&:before { 
+				content: "\e604"; 
+			}
+				
+		}
+		
+		&.psui-contenteditable-ul {
+			
+			&:before { 
+				content: "\e603"; 
+			}
+				
+		}
+		
+		&.psui-contenteditable-italic {
+			
+			&:before { 
+				content: "\e609"; 
+			}
+				
+		}
+			
+		&[class*="psui-contenteditable-"]{
+			&:before { 
+				top:0px;
+				font-size:14px;
+			}
+		}
+			
+		&.psui-contenteditable-h {
+			
+			&:before { 
+				content: "\e180"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-undo {
+			
+			&:before { 
+				content: "\e601"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-redo {
+			
+			&:before { 
+				content: "\e602"; 
+			}
+			
+		}
+			
+		&.psui-contenteditable-table {
+			
+			&:before { 
+				content: "\e60a"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-image {
+			
+			&:before { 
+				content: "\e600"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-link {
+		
+			&:before { 
+				content: "\e605"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-center {
+			
+			&:before { 
+				content: "\e60c"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-left {
+			
+			&:before { 
+				content: "\e60b"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-right {
+			
+			&:before { 
+				content: "\e60d"; 
+			}
+				
+		}
+			
+		&.psui-contenteditable-justify {
+			
+			&:before { 
+				content: "\e60e"; 
+			}	
+
+		}
+		
+		&.psui-contenteditable-remove-format {
+			
+			&:before { 
+				content: "\e606"; 
+			}	
+
+		}
+			
+		&.chosen{
+			color:$contenteditable-selected-color;
+		}
+	}
+}

@@ -1,3 +1,5 @@
+$psui-sass-asset-helper: (twbs-font-path("") != unquote('twbs-font-path("")')) !default;
+
 // Devices
 $device-min-width: 320px !default;
 $device-mobile-width: 750px !default;
@@ -9,6 +11,7 @@ $device-large-width: 1400px !default;
 $font-color-base: #333333 !default;
 $font-color-dark: #636363 !default;
 $font-color-light: #ffffff !default;
+$page-bg: #ffffff !default;
 $main-color: #fdb730 !default;
 $error-color: #ff0000 !default;
 
@@ -31,10 +34,15 @@ $font-size-h4: $font-size-base !default;
 
 
 // Iconography
+$icon-font-path: "../fonts/" !default;
 /*$icon-font-path: "../fonts/" !default;
 $icon-font-name: "font" !default;
 $icon-font-svg-id: "font" !default;*/
 $icon-font-family: "Glyphicons Halflings" !default;
+
+$icon-font2-name: "icomoon" !default;
+$icon-font2-svg-id: "icomoon" !default;
+$icon-font2-family: "Icon unionsoft" !default;
 
 // Component common
 $padding-base-vertical: 4px !default;
@@ -124,3 +132,9 @@ $footer-height: 60px !default;
 $footer-height-small: 80px !default;
 $footer-height-xs: 115px !default;
 $footer-font-size: 10px !default;
+
+// contenteditable
+$contenteditable-selected-color: $main-color !default;
+$contenteditable-background-color:#333333 !default;
+$contenteditable-border-color:#636363 !default;
+$contenteditable-font-color:#ffffff !default;

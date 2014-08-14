@@ -1,4 +1,4 @@
-input, textarea, selectbox{
+input[type="text"], selectbox{
 	@include appearance(none);
 }
 

@@ -146,15 +146,16 @@ angular.module('psui', [])
 				//this.hide();
 				return;
 			}
-
+			console.log('tututu');
 			var that = this;
 			for (var i = 0; i < _actualData.length; i++) {
 				var e = this.generateElement(_actualData[i]);
 				e.data('index', _actualData[i]);
 				e.attr('tabindex', -1);
 				e.on('mouseover', function(evt) {
+					
 					that.unselectAll();
-					var element = angular.element(evt.target);
+					var element = angular.element(evt.currentTarget);
 					var index = element.data('index');
 					if (typeof index !== 'undefined') {
 						_selected = index;
@@ -171,13 +172,14 @@ angular.module('psui', [])
 				})
 				
 				e.on('click', function(evt) {
-					var element = angular.element(evt.target);
+					var element = angular.element(evt.currentTarget);
 					var index = element.data('index');
 					if (typeof index !== 'undefined') {
 						_selected = index;
 						that.onSelected(index);
 					}
 				})
+				
 				_itemsHolder.append(e);
 			}
 		};
@@ -187,11 +189,33 @@ angular.module('psui', [])
 		 */
 		this.generateElement = function(index) {
 			var d = _data[index];
-
+			//console.log(d);
 			if (typeof d === 'string') {
 				return angular.element('<div>' + d + '</div>');
 			} else if ((typeof d === 'object') && (typeof d.k !== 'undefined') && (typeof d.v !== 'undefined')) {
 				return angular.element('<div>'+ d.v + ' - ' + d.k + '</div>');
+			} else if ((typeof d === 'object') && (typeof d.refData !== 'undefined')){
+				//console.log('jo')
+				//console.log(d.refData[0]);
+				var table,tr;
+				tr = angular.element('<tr></tr>');
+				table = angular.element('<table style="width:100%; table-layout: fixed;"></table>');
+				var count = 0;
+				for (var i in d.refData) {
+					if (typeof d.refData[i] === 'string') {		
+						++count;
+					}
+				}
+				for (var i in d.refData){
+					if (typeof d.refData[i] === 'string') {
+						var displayText = angular.element('<td style="width: '+100/count+'%;">' + d.refData[i] + '</td>');
+						tr.append(displayText);
+					}
+				}
+				table.append(tr);
+				var div = angular.element('<div></div>');
+				div.append(table);
+				return div;
 			}
 		};
 
@@ -214,6 +238,7 @@ angular.module('psui', [])
 			}
 			_data = data;
 			this.resetActualData();
+			//console.log('bhh' + _actualData);
 			_selected = -1;
 			this.redraw();
 		};

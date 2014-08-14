@@ -137,43 +137,8 @@ angular.module('psui-objectlink', [])
 				attrs.$set('tabindex', 0);
 			}
 			
-			elm.addClass('psui-datepicker');
+			elm.addClass('psui-selectbox');
 			elm.addClass('form-control');
-			
-			// handle ng-model
-			var updateViewValue = function(val) {
-				for (var i  = 0; i < dataArray.length; i++) {
-					if (dataArray[i].k === val) {
-						elm.text(dataArray[i].v);
-						return;
-					}
-				}
-
-				console.log('Key not found in data');
-				elm.text('');
-			}
-			
-			var commitChange = function(index) {
-				elm.text(dropdown.data[index]);
-			};
-
-			if (ctrls[0]) {
-				var ngModelCtrl = ctrls[0];
-				//ng-model controller is there
-				
-				var commitChange = function(index) {
-					var val = dataArray[index];
-					elm.text(val);
-					scope.$apply(function() {
-						ngModelCtrl.$setViewValue(val);
-					});
-					elm[0].focus();
-				};
-
-				ngModelCtrl.$render = function() {
-					updateViewValue(ngModelCtrl.$viewValue || '');
-				}
-			}
 			
             var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
@@ -198,7 +163,7 @@ angular.module('psui-objectlink', [])
 					}
 					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria:[{op:'starts', v: dropdown.searchInputValue(), f: qfName}]} })
 					.success(function(data, status, headers, config){
-						console.log('blabla' + data);
+						//console.log('blabla' + data);
 						for (var i = 0; i < data.length; ++i) {
 							var rData = {
 								registry: schemaFragment(scope).$objectLink.registry,
@@ -222,14 +187,19 @@ angular.module('psui-objectlink', [])
 									angular.extend(rData.refData, sData);
 								}
 							}
-
-							for (j in rData.refData) {
+							dataArray.push(rData);
+							//dataArray[i]=[];
+							/*for (j in rData.refData) {
+								
 								if (typeof rData.refData[j] === 'string') {
 									//displayText += '<td style="width: '+100/count+'%;">' + rData.refData[j] + '</td>';
-									dataArray.push(rData.refData[j]);
+									dataArray[i].push(rData.refData[j]);
+									console.log(dataArray[i]);
 								}
-							}
-
+								//console.log('ghkl');
+								//console.log(rData.refData[j]);
+							}*/
+							//console.log(dataArray);
 						}
 						callback();
 					}).error(function(err) {
@@ -306,7 +276,10 @@ angular.module('psui-objectlink', [])
 			
 			// override dropdown select functionality
 			dropdown.onSelected = function(index) {
-				commitChange(index);
+			console.log('stalacilo');
+				ngModel.$setViewValue(dataArray[index]);
+				ngModel.$render();
+				//commitChange(index);
 				this.hide();
 				elm[0].focus();
 			};

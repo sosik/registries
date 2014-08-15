@@ -453,6 +453,20 @@ function mapDochodca(item) {
 	return null;
 }
 
+function mapStavTransferu(item) {
+	if (item==="Schválila") { 
+		return 'schválený';
+	}
+	return 'neschválený';
+}
+
+function mapKrajina(item) {
+	if (item==="Slovensko") { 
+		return 'SVK';
+	}
+	return item;
+}
+
 function mapTrueFalse(item){
 	if (item.toLowerCase()=='true'){
 		return 'A';

@@ -103,36 +103,68 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 				console.log(err);
 			}
 			
-			var johndoe = {
-				"id":"53cf5c54118025ff1b88e368",
+			// var johndoe = {
+			// 	"id":"53cf5c54118025ff1b88e368",
+			// 	"systemCredentials": {
+			// 		"login": {
+			// 			"loginName" : "johndoe",
+			// 			"passwordHash" : "mcHWq0FyMluy3U3nGQJeYuR6ffSDxgtG1SaejicXJvdxyM/1NUP7X5Kx3LpvsAQ+XOq8Hs+maYLiEXDQYr3OCh2o+gtTxvhEz9Z4Bem0J09v7GyxdkD2S2zED7Obr6XzPzpaxaYfmFBHRR5iy2JDRx/lAcBM1L0qFfBnoXoGYm6jcUn6Klht9xoPnYGvDVdxtjWG9GqBrLfIJb1Aot3WCPOAG0BzlidfjdG0exJhkC0eOTwgFG4D8vP/AOblI2N+skZ3ztDb6NIxRIyd70bDooUhB7HcRnJgsrqBGg68UfBReHXYFnQYYa7Fv4/mR+4y+N+SpFXokYcKUI0e6sCPcQ==",
+			// 			"email": "root@localhost",
+			// 			"salt" : "johndoe"
+			// 		},
+			// 		"profiles" : { "53cd19d5502cd4915bd08724":true,"53cd19d5502cd4915bd08720":true}
+			// 	}
+			// };
+			var johndoe={
+				"id": "53cf5c54118025ff1b88e368",
 				"systemCredentials": {
 					"login": {
-						"loginName" : "johndoe",
-						"passwordHash" : "mcHWq0FyMluy3U3nGQJeYuR6ffSDxgtG1SaejicXJvdxyM/1NUP7X5Kx3LpvsAQ+XOq8Hs+maYLiEXDQYr3OCh2o+gtTxvhEz9Z4Bem0J09v7GyxdkD2S2zED7Obr6XzPzpaxaYfmFBHRR5iy2JDRx/lAcBM1L0qFfBnoXoGYm6jcUn6Klht9xoPnYGvDVdxtjWG9GqBrLfIJb1Aot3WCPOAG0BzlidfjdG0exJhkC0eOTwgFG4D8vP/AOblI2N+skZ3ztDb6NIxRIyd70bDooUhB7HcRnJgsrqBGg68UfBReHXYFnQYYa7Fv4/mR+4y+N+SpFXokYcKUI0e6sCPcQ==",
-						"email": "root@localhost",
-						"salt" : "johndoe"
+						"loginName": "Administrator",
+						"passwordHash": "mcHWq0FyMluy3U3nGQJeYuR6ffSDxgtG1SaejicXJvdxyM/1NUP7X5Kx3LpvsAQ+XOq8Hs+maYLiEXDQYr3OCh2o+gtTxvhEz9Z4Bem0J09v7GyxdkD2S2zED7Obr6XzPzpaxaYfmFBHRR5iy2JDRx/lAcBM1L0qFfBnoXoGYm6jcUn6Klht9xoPnYGvDVdxtjWG9GqBrLfIJb1Aot3WCPOAG0BzlidfjdG0exJhkC0eOTwgFG4D8vP/AOblI2N+skZ3ztDb6NIxRIyd70bDooUhB7HcRnJgsrqBGg68UfBReHXYFnQYYa7Fv4/mR+4y+N+SpFXokYcKUI0e6sCPcQ==",
+						"email": "websupport@unionsoft.sk",
+						"salt": "johndoe"
 					},
-					"profiles" : { "53cd19d5502cd4915bd08724":true,"53cd19d5502cd4915bd08720":true}
+					"profiles": {
+						"53cd19d5502cd4915bd08724": true
+					}
+				},
+				"baseData": {
+					"name": "Administrator",
+					"bornNumber": "771010/1010",
+					"surName": "UnionSoft s.r.o.",
+					"birthDate": "10.10.1977",
+					"nationality": "SVK",
+					"gender": "M"
+				},
+				"contactInfo": {
+					"email": "websupport@unionsoft.sk",
+					"street": "Galvaniho",
+					"houseNumber": "17/B",
+					"city": "Bratislava ",
+					"phoneNumber": "+421 2 50267 117",
+					"zipCode": "821 04",
+					"country": "SVK"
 				}
 			};
+
 
 
 
 			_dao.save(johndoe,function (err,data){ console.log ('User saved')});
 			
-			var janedoe = {
-				"id":"53cf5c54118025ff1b88e367",
-				"systemCredentials": {
-					"login": {
-						"loginName" : "janedoe",
-						"passwordHash" : "mcHWq0FyMluy3U3nGQJeYuR6ffSDxgtG1SaejicXJvdxyM/1NUP7X5Kx3LpvsAQ+XOq8Hs+maYLiEXDQYr3OCh2o+gtTxvhEz9Z4Bem0J09v7GyxdkD2S2zED7Obr6XzPzpaxaYfmFBHRR5iy2JDRx/lAcBM1L0qFfBnoXoGYm6jcUn6Klht9xoPnYGvDVdxtjWG9GqBrLfIJb1Aot3WCPOAG0BzlidfjdG0exJhkC0eOTwgFG4D8vP/AOblI2N+skZ3ztDb6NIxRIyd70bDooUhB7HcRnJgsrqBGg68UfBReHXYFnQYYa7Fv4/mR+4y+N+SpFXokYcKUI0e6sCPcQ==",
-						"email": "root@localhost",
-						"salt" : "johndoe" 
-					},
-					"profiles" : { "53cd19d5502cd4915bd08724":true}
-				}
-			};
-			_dao.save(janedoe,function (err,data){ console.log ('User saved'); process.exit(0);});
+			// var janedoe = {
+			// 	"id":"53cf5c54118025ff1b88e367",
+			// 	"systemCredentials": {
+			// 		"login": {
+			// 			"loginName" : "janedoe",
+			// 			"passwordHash" : "mcHWq0FyMluy3U3nGQJeYuR6ffSDxgtG1SaejicXJvdxyM/1NUP7X5Kx3LpvsAQ+XOq8Hs+maYLiEXDQYr3OCh2o+gtTxvhEz9Z4Bem0J09v7GyxdkD2S2zED7Obr6XzPzpaxaYfmFBHRR5iy2JDRx/lAcBM1L0qFfBnoXoGYm6jcUn6Klht9xoPnYGvDVdxtjWG9GqBrLfIJb1Aot3WCPOAG0BzlidfjdG0exJhkC0eOTwgFG4D8vP/AOblI2N+skZ3ztDb6NIxRIyd70bDooUhB7HcRnJgsrqBGg68UfBReHXYFnQYYa7Fv4/mR+4y+N+SpFXokYcKUI0e6sCPcQ==",
+			// 			"email": "root@localhost",
+			// 			"salt" : "johndoe" 
+			// 		},
+			// 		"profiles" : { "53cd19d5502cd4915bd08724":true}
+			// 	}
+			// };
+			// _dao.save(janedoe,function (err,data){ console.log ('User saved'); process.exit(0);});
 
 		});
 

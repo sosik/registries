@@ -193,8 +193,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 //
 .controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location,notificationFactory) {
 	// FIXME remove this in production
-	$scope.user = 'johndoe';
-	$scope.password = 'johndoe';
+	// $scope.user = 'johndoe';
+	// $scope.password = 'johndoe';
+	$scope.user = '';
+	$scope.password = '';
 
 	/**
 	 * Login button click

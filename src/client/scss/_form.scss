@@ -59,7 +59,7 @@ input[type="text"], selectbox{
 select{
 	background-color: $input-bg;
 	&.form-control{
-		-webkit-appearance: listbox;
+		/*-webkit-appearance: listbox;*/
 		width: 100%;
 		height: 34px;
 		border-radius: 0px;

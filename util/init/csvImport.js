@@ -353,6 +353,8 @@ function applyValue(o, d, v) {
 	var val = convertValue(d, v);
 	if (val){
 		prev[lastPart]=val;
+	} else {
+		prev[lastPart]=null;
 	}
 }
 

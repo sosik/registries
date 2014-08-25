@@ -245,7 +245,8 @@ var securityService= new securityServiceModule.SecurityService();
 		
 		log.silly('Search params ', req.body);
 		_dao.list({
-			crits : req.body.criteria
+			crits : req.body.criteria,
+			limit : req.body.limit || 20
 		}, function(err, data){
 			if (err) {
 				throw err;

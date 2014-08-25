@@ -213,7 +213,11 @@ angular.module('psui-objectlink', [])
 			
 			
 			//doSearch(function(){dropdown.setData(dataArray);});
-
+			dropdown.onSearchChanged = function() {
+				doSearch(function() {
+					dropdown.setData(dataArray);
+				});
+			};
 			
 			buttonShowDropdown.on('click', function() {
 				if (dropdown.isVisible()) {

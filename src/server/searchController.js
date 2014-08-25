@@ -1,5 +1,6 @@
 'use strict';
 
+var async = require('async');
 var extend = require('extend');
 var log = require('./logging.js').getLogger('SearchController.js');
 var safeUrlEncoder = require('./safeUrlEncoder.js');
@@ -15,6 +16,12 @@ var DEFAULT_CFG = {
 
 
 var SearchController = function(mongoDriver,schemaRegistry, options) {
+
+	var listObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver)
+	]);
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
@@ -126,8 +133,28 @@ var SearchController = function(mongoDriver,schemaRegistry, options) {
 			if (err) {
 				resp.send(500, err);
 			} else {
-				log.verbose('search',data);
-				resp.send(200, data);
+				if (data) {
+					var mangFuncs = [];
+					for (var i = 0; i < data.length; i++) {
+						mangFuncs.push((function(j) {
+							return function(callback) {
+								listObjectMangler.mangle(data[j], compiledSchema, function(err, cb) {
+									callback(err, cb);
+								});
+							};
+						}(i)));
+					}
+
+					async.parallel(mangFuncs, function(err, cb) {
+						if (err) {
+							resp.send(500, err);
+						}
+					
+						resp.send(200, data);
+					});
+				} else {
+					resp.send(200, data);
+				}
 			}
 		});
 

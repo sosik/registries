@@ -76,7 +76,7 @@
 		<div ng-show="selectedUser" class="col-md-12 col-lg-4">
 				<div  class="form form-horizontal" >
 					<fieldset>
-						<legend>{{'security.user.edit.login.data' |translate}} -{{selectedUser.systemCredentials.login.loginName}}</legend>
+						<legend>{{'security.user.edit.login.data' |translate}} - {{selectedUser.baseData.name}} {{selectedUser.baseData.surName}} </legend>
 						<div class="form-group">
 							<label for="name" class="col-sm-4 control-label">{{'security.user.edit.login' |translate}}</label>
 							<div class="col-sm-8">
@@ -107,8 +107,7 @@
 
 				<fieldset class="row">
 					<legend>
-						{{'security.user.edit.profile' |translate}} -
-							{{selectedUser.systemCredentials.login.loginName}}
+						{{'security.user.edit.profile' |translate}}
 					</legend>
 					
 					<div class="form-group">

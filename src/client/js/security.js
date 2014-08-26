@@ -355,6 +355,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 				'psui.notificationFactory', function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
 
 					var entityUri = 'uri://registries/user#security';
+					var pageSize=20;
 
 					$scope.userList = [];
 					$scope.selectedUser = null;
@@ -413,13 +414,43 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 					}
 
+
+					function convertSortBy(searchBy){
+						if (!searchBy)  {
+							return null;
+						}
+						return [{ f:searchBy.header.field, o: searchBy.direction}];
+					}
+	
 					$scope.search = function() {
-						genericSearchFactory.getSearch(entityUri, convertCriteria($scope.searchCrit)).success(function(data) {
-							$scope.userList = data;
+						var c = convertCriteria($scope.searchCrit);
+						// add forced criteria
+
+					$scope.lastCriteria=JSON.parse(JSON.stringify(c));
+		
+					genericSearchFactory.getSearch(entityUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
+						$scope.userList = data;
+					}).error(function(err) {
+						notificationFactory.error(err);
+					});
+				};	
+
+
+					$scope.searchNext = function() {
+						var c = convertCriteria($scope.searchCrit);
+		// add forced criteria
+						
+						genericSearchFactory.getSearch(entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.userList.length,pageSize).success(function(data) {
+			
+						data.map(function (newItems){
+							$scope.userList.push(newItems);
+						});
+			
+			
 						}).error(function(err) {
 							notificationFactory.error(err);
 						});
-					};
+					};	
 
 					function remove(arr, item) {
 						for (var i = arr.length; i--;) {

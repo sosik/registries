@@ -94,6 +94,10 @@ var FsCtrl = function(options) {
 						res.on('finish', function(evt) {
 							callback(null);
 						});
+						if (path.indexOf('.css')>1){
+							res.setHeader('Content-Type','text/css');
+							console.log('XXXXXXX>>>> Content-Type set to css');
+						}
 						rs.pipe(res);
 					}
 				}

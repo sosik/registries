@@ -1,5 +1,6 @@
 var log = require('./logging.js').getLogger('UniversalDaoController.js');
 var auditLog = require('./logging.js').getLogger('AUDIT');
+var async = require('async');
 
 var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
 var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
@@ -8,6 +9,12 @@ var QueryFilter = require('./QueryFilter.js');
 
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 var UniversalDaoController = function(mongoDriver, schemaRegistry) {
+
+	var listObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver)
+	]);
 
 var securityService= new securityServiceModule.SecurityService();
 	
@@ -236,6 +243,89 @@ var securityService= new securityServiceModule.SecurityService();
 			res.json(data);
 		});
 	};
+
+this.searchBySchema = function(req, resp) {
+
+		
+		log.silly('searching for', req.params);
+		var schemaName=safeUrlEncoder.decode(req.params.schema)
+		var schema = schemaRegistry.getSchema(schemaName);
+		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
+			collectionName: schema.compiled.table
+		});
+		
+		
+		var compiledSchema = schema.compiled;
+
+		if (!compiledSchema) {
+			log.error('schema %s is not compiled', schemaName);
+			throw 'Schema is not compiled';
+		}
+		
+
+		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
+		
+			log.warn('user has not rights to search in schema',schemaName);
+		
+			resp.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
+			return;
+		} 
+
+		var crits=req.body;
+		//remap to QueryFiter
+		var qf=QueryFilter.create();
+		if('sortBy' in crits && crits.sortBy){
+			qf.addSort(crits.sortBy[0].f,crits.sortBy[0].o);
+		} 
+		if ('limit' in crits){ 
+			qf.setLimit(crits.limit);
+		}
+		if ('skip' in crits){
+			qf.setSkip(crits.skip)
+		}
+		for(var c in crits.criteria){
+			qf.addCriterium(crits.criteria[c].f,crits.criteria[c].op,crits.criteria[c].v);
+		}
+
+		securityService.applySchemaForcedCrits(compiledSchema,qf);
+
+
+		if (req.profile){
+				qf=securityService.applyProfileCrits(req.profile,schemaName,qf);
+		}
+
+		log.silly('used crits', crits);
+		dao.list(qf, function(err, data) {
+			if (err) {
+				resp.send(500, err);
+			} else {
+				if (data) {
+					var mangFuncs = [];
+					for (var i = 0; i < data.length; i++) {
+						mangFuncs.push((function(j) {
+							return function(callback) {
+								listObjectMangler.mangle(data[j], compiledSchema, function(err, cb) {
+									callback(err, cb);
+								});
+							};
+						}(i)));
+					}
+
+					async.parallel(mangFuncs, function(err, cb) {
+						if (err) {
+							resp.send(500, err);
+						}
+					
+						resp.send(200, data);
+					});
+				} else {
+					resp.send(200, data);
+				}
+			}
+		});
+
+	};
+
 
 	this.search = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(

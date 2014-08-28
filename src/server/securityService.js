@@ -2,7 +2,6 @@
 
 var extend = require('extend');
 
-
 var log = require('./logging.js').getLogger('SecurityService.js');
 
 var QueryFilter = require('./QueryFilter.js');
@@ -10,9 +9,9 @@ var QueryFilter = require('./QueryFilter.js');
 var DEFAULT_CFG = {};
 
 var actions = {
-    READ : '_read',
-    MODIFY : '_modify',
-    CREATE : '_create'
+		READ : '_read',
+		MODIFY : '_modify',
+		CREATE : '_create'
 };
 
 var SecurityService = function(mongoDriver, schemaRegistry, options) {
@@ -104,6 +103,21 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		}
 		return qf;
 	};
+
+
+		/**
+		method merges schema forced criteria to specified qf
+	*/
+	this.applySchemaForcedCrits=function(schema,qf){
+
+		// query=QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName)
+		if ('forcedCriteria' in schema ){
+			schema.forcedCriteria.map(function(item){
+				qf.addCriterium(item.f,item.op,item.v);
+			});
+		}
+		return qf;
+	};
 	
 	this.hasPermFilter= function (perm){
 		var t=this;
@@ -130,10 +144,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 
 };
 
-
-
-
 module.exports = {
-    actions : actions,
-    SecurityService : SecurityService
+		actions : actions,
+		SecurityService : SecurityService
 };

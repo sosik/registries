@@ -22,7 +22,6 @@ var securityService= new securityServiceModule.SecurityService();
 
 var schemaRegistryModule = require('./schemaRegistry.js');
 
-var searchControllerModule = require('./searchController.js');
 var schemaControllerModule = require('./schemaController.js');
 var statisticsControllerModule = require('./statisticsController.js');
 var massmailingCotrollerModule = require('./massmailingController.js');
@@ -57,9 +56,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,config);
 	
-	var searchCtrl = new  searchControllerModule.SearchController(mongoDriver,schemaRegistry,{});
-	var statisticsCtrl = new  statisticsControllerModule.StatisticsController(mongoDriver,{});
-	var schemaCtrl = new  schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{
+	var statisticsCtrl = new statisticsControllerModule.StatisticsController(mongoDriver,{});
+	var schemaCtrl = new schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{
 		rootPath: config.paths.schemas
 	});
 
@@ -75,6 +73,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.list(req, res);});
 	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.listBySchema(req, res);});
 	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.search(req, res);});
+	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){udc.searchBySchema(req,res);});
+
 
 	app.post('/login', bodyParser.json(), function(req, res){securityCtrl.login(req, res);});
 	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});
@@ -95,7 +95,6 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/schema/get/*',securityService.hasPermFilter('System Admin').check,bodyParser.json(),function(req,res){schemaCtrl.schemaRead(req,res);});
 	app.put('/schema/replace/*',securityService.hasPermFilter('System Admin').check,bodyParser.json(),function(req,res){schemaCtrl.schemaReplace(req,res);});
 
-//    app.get('/user/list',function(req,res){userCtrl.getUserList(req,res)});
 	app.get('/user/permissions/:id',securityService.hasPermFilter('Security - write').check,bodyParser.json(),function(req,res){securityCtrl.getUserPermissions(req,res);});
 	app.post('/user/permissions/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateUserPermissions(req,res);});
 	app.post('/user/security/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateUserSecurity(req,res);});
@@ -103,8 +102,6 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/security/profile/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateSecurityProfile(req,res);});
 	app.get('/security/profiles',securityService.authenRequired,function(req,res){securityCtrl.getProfiles(req,res);});
 
-	app.post('/search/def',securityService.authenRequired, bodyParser.json(),function(req,res){searchCtrl.getSearchDef(req,res);});
-	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){searchCtrl.search(req,res);});
 
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));

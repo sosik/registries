@@ -112,11 +112,12 @@ fieldset{
 	@include user-select(none); 
 	@include transition(border-color .5s);
 	
-	&:before{
-		content: " ";
-		display: inline-block;
-		height: $font-size-base;
-	}
+	// &:before{
+	// 	content: " ";
+	// 	display: inline-block;
+	// 	height: $font-size-base;
+	// }
+	min-height: 34px;
 	
 	&:after{
 		opacity: 0;

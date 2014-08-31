@@ -16,7 +16,9 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 			}, mongoDriver)
 	]);
 
-var securityService= new securityServiceModule.SecurityService();
+	var that=this;
+	this.mongoDriver=mongoDriver;
+	var securityService= new securityServiceModule.SecurityService();
 	
 	
 	this.save = function(req, res) {
@@ -73,13 +75,54 @@ var securityService= new securityServiceModule.SecurityService();
 		log.verbose("data to save", req.body);
 
 		var obj = req.body;
-		_dao.save(obj, function(err, data){
-			if (err) {
-				throw err;
+		if (obj.id){
+			_dao.update(obj, function(err, data){
+				if (err) {
+					throw err;
+				}
+				auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
+				res.json(data);
+			});
+
+		}
+		else {
+			var sequences=objectTools.findSeqeunceFields(compiledSchema);
+			
+			console.log('found sequences' , sequences);
+
+			var sequencesToAssign= [];
+			
+			sequences.map(function(path){
+				console.log('sequences to assign',path);
+				var sequenceDef=objectTools.evalPath(compiledSchema,path);
+				sequencesToAssign.push( function (callback){
+						mongoDriver.nextSequence(sequenceDef.$sequence, function(err,data){console.log(err,data); objectTools.setValue(obj,objectTools.schemaPathToObjectPath(path),data.seq);callback(err);});
+						}
+				);
+				
+				console.log(obj);
+			});
+
+			if (sequencesToAssign.length>0){
+				async.parallel(sequencesToAssign,function(err){if (err) {log.err(err); return;} _dao.save(obj, function(err, data){
+					if (err) {
+						throw err;
+					}
+					auditLog.info('user oid', req.currentUser.id,'has saved object',obj);
+					res.json(data);
+				});  })
+			}else {
+				_dao.save(obj, function(err, data){
+					if (err) {
+						throw err;
+					}
+					auditLog.info('user oid', req.currentUser.id,'has saved object',obj);
+					res.json(data);
+				});	
 			}
-			auditLog.info('user oid', req.currentUser.id,'has saved/modified object',obj);
-			res.json(data);
-		});
+			
+		}
+		
 	};
 	
 	this.get = function(req, res) {

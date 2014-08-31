@@ -41,6 +41,35 @@ var ObjectTools = function() {
 	}
 
 	/**
+		Creates specified path if required and sets value to attribute
+	*/
+	this.setValue=function(o, path, v) {
+		if ('null' === path) {
+			return;
+		}
+		var parts = path.split('.');
+		var obj = o;
+		var prev;
+		var lastPart = null;
+		parts.map(function(part) {
+			if (!obj[part]) {
+				obj[part] = {}
+			}
+			;
+			prev = obj;
+			obj = obj[part];
+			lastPart = part;
+		});
+		var val = v;
+		if (val){
+			prev[lastPart]=val;
+		} else {
+			prev[lastPart]=null;
+		}
+	}
+
+
+	/**
 	 * Returns subrtree of object structure defined by path
 	 */
 	this.evalPath = function(obj, path) {
@@ -134,6 +163,17 @@ var ObjectTools = function() {
 	// FIXME FIX THIS NASTY FUNCTION
 	this.schemaPathToObjectPath = function(schemaPath) {
 		return schemaPath.replace(/properties\./g, '');
+	};
+
+
+	this.findSeqeunceFields=function(schemaObj){
+		var that = this;
+		var paths = [];
+		this.propertyVisitor(schemaObj, /.\$sequence$/, function(val, path, obj) {
+			paths.push(that.stripFromPath(path, 1));
+		});
+
+		return paths;		
 	};
 
 	/**

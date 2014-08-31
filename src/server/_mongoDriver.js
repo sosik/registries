@@ -31,6 +31,11 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 		close: function() {
 			_database.close();
 		},
+
+		nextSequence:function(sequencerName,callback){
+				var col =_database.collection('sequencers');
+				var ret = col.findAndModify({ _id: sequencerName },[],{ $inc: { seq: 1} },{new: true, upsert: true } ,callback);
+		},
 		/**
 		 * Function converts ObjectId form mongo returned object into flat
 		 * hexadecimal representation of id

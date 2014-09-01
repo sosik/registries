@@ -1,4 +1,7 @@
+'use strict';
 var fs = require('fs'), readline = require('readline');
+var extend = require('extend');
+
 var mongoDriver = require('./../../build/server/mongoDriver.js');
 var config = require('./../../build/server/config.js');
 var QueryFilter = require('./../../build/server/QueryFilter.js');
@@ -6,238 +9,219 @@ var universalDaoModule = require('./../../build/server/UniversalDao.js');
 
 var async = require('async');
 
-var path = process.cwd() + '/util/init/hockey-players.csv';
+var path = null;
 
-process.argv.forEach(function(val, index, array) {
-	console.log(index + ': ' + val);
-});
+// process.argv.forEach(function(val, index, array) {
+// 	console.log(index + ': ' + val);
+// });
 
-console.log('file to process', process.argv[2]);
+// console.log('file to process', process.argv[2]);
 
 if (process.argv[2]) {
-	path = process.cwd() + '/' + process.argv[2]
+	path = process.cwd() + '/' + process.argv[2];
 }
 
 mongoDriver.init(config.mongoDbURI, function(err) {
 	if (err) {
 		throw err;
 	}
-	parse();
+	parseLines( function(){mongoDriver.close();});
 });
 
-function parse() {
+
+var dao=null;
+
+var DataSet = function() {
+		this.lines = [];
+		var that = this;
+	this.collectLine = function(line) {
+		that.lines.push(line);
+	};
+};
+
+function parseLines(callback){
 
 	var rd = readline.createInterface({
-			input : fs.createReadStream(path),
-			output : process.stdout,
-			terminal : false
+		input : fs.createReadStream(path),
+		output : process.stdout,
+		terminal : false
 	});
 
-	var def = null;
-	var lineN = 1;
 
-	var dao = null;
+	var dataSet2=new DataSet();
+	rd.on('line', dataSet2.collectLine);
+	rd.on('close', function(){processDataset(dataSet2,callback);});
+}
 
-	rd.on('line', function(line) {
 
-		if (!def) {
-			var parts = line.split(';');
-			def = parseDef(parts);
-			if (def.save) {
+function splitLine(line){
+	return line.split(';');
+}
+
+function processDataset(dataset,callback){
+ 
+	var importDefinition=parseDef( splitLine(dataset.lines[0]));
+	var dataLines=dataset.lines.slice(1);
+	// console.log(dataLines);
+
+		if (importDefinition.save) {
 				dao = new universalDaoModule.UniversalDao(mongoDriver, {
-					collectionName : def.save
+					collectionName : importDefinition.save
 				});
 			}
-		} else {
 
-			line = line.replace(/^.*\(/, '').replace(/\);\s*$/, '').replace(/\)\,\s*$/, '');
-			line=line.replace('NULL','\'\'');
-			var re_value = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
-			
-			
-			var parts = [];// Initialize array to receive values.
-			line.replace(re_value, // "Walk" the string using replace with callback.
-						function(m0, m1, m2, m3) {
-//				console.log(m0, m1, m2, m3);
-								// Remove backslash from \' in single quoted values.
-								if      (m1 !== undefined) parts.push(m1.replace(/\\'/g, "'"));
-								// Remove backslash from \" in double quoted values.
-								else if (m2 !== undefined) parts.push(m2.replace(/\\"/g, '"'));
-								else if (m3 !== undefined) parts.push(m3);
-								return ''; // Return empty string.
-						});
-				// Handle special case of empty last value.
-//		    if (/,\s*$/.test(text)) a.push('');
-				
-			parts=line.split(';');
-			console.log('DDDDDDDD>>>',parts);
-
-			if (def.collDef.length != parts.length) {
-				console.log('line', lineN, ' does not match def.-->', def.collDef.length,parts.length ,'\n', line,'\n', parts.join('|'));
-				console.log(def);
-				return;
+			if (importDefinition.merge) {
+				dao = new universalDaoModule.UniversalDao(mongoDriver, {
+					collectionName : importDefinition.merge.registry
+				});
 			}
 
-			var json = createJson(def, lineN, parts);
+	var lineProcessors=[];
+	var lineNr=1;
+	
+	dataLines.map(function(line){	
+		lineProcessors.push( function(callback){processLine(importDefinition,line,lineNr++,callback); });
+	});
 
-			if (def.resolve) {
+	async.parallel(lineProcessors,callback);
+}
+
+
+function processLine(def,line,lineNr,callback){
+
+	var parts=splitLine(line);
+	// console.log(line);
+	var json = createJson(def, lineNr, parts);
+
+		if (def.resolve) {
 				
 				var resovleFs=[];
 				def.resolve.map(function(toResolve){
-					resovleFs.push(function(callback){
+					resovleFs.push(function(callback2){
 						if (toResolve.byBirthNumber){
-							resolveByBirthNumberToObjectLink(json,toResolve.attribute,callback);
+							resolveByBirthNumberToObjectLink(json,toResolve.attribute,callback2);
 						}
 						else
 						if (toResolve.byName){
-							resolveByNameToObjectLink(json,toResolve.attribute,callback);
+							resolveByNameToObjectLink(json,toResolve.attribute,callback2);
 						}
 						else {
-							resolveToObjectLink(json,toResolve.attribute,callback);
+							resolveToObjectLink(json,toResolve.attribute,callback2);
 						}
-					})
+					});
 				});
 				
 				async.parallel(resovleFs, function( err ){
-					dao.save(json, function(err, data) {
-						console.log('saved', json);
-					});
-				} );
-			}
-			else
-			{
-				if (json) {
-					if (def.save) {
+				
+
+				if (def.merge){
+						try {
+							eval(def.merge.searchByMethod + '(json,dao,mergeAndSave,callback)');
+						}	catch (err){
+							console.log('Not able to evaluate ', def.merge.searchByMethod);
+						}
+					}else {
 						dao.save(json, function(err, data) {
-							console.log('Object saved ', lineN);
+							console.log('line saved',lineNr,line,JSON.stringify(json));
+							callback();
 						});
-					} else {
-						console.log(json);
 					}
+
+				} );
+		}else {
+			if (def.merge){
+						try {
+							eval(def.merge.searchByMethod + '(json,dao,mergeAndSave,callback)');
+						}	catch (err){
+							console.log('Not able to evaluate ', def.merge.searchByMethod,err);
+						}
+					}else {
+						dao.save(json, function(err, data) {
+							console.log('line saved',lineNr,line, JSON.stringify(json));
+							callback();
+						});
+					}
+		}
+
+}
+
+function mergeAndSave(err,dao,entity,json,callback){
+
+	if (entity){
+		console.log('merging>>',JSON.stringify(entity));
+		entity=extend(true, {}, entity, json);
+		dao.update(entity, function(err, data) {
+			callback(err);
+		});
+	}	else {
+
+		console.log('saving', JSON.stringify(json));
+		dao.save(json, function(err, data) {
+			callback(err);
+		});
+	}
+
+}
+
+function createJson(defs, lineNr, line) {
+	var retVal = {};
+
+	var index = 0;
+	defs.collDef.map(function(def) {
+		applyValue(retVal, def, line[index++]);
+	});
+
+	return retVal;
+}
+
+function applyValue(o, d, v) {
+	// console.log(o,d,v);
+	var path = d.to;
+	if(!v) return;
+	if ('null' === path) {
+		return;
+	}
+	var parts = path.split('.');
+	var obj = o;
+	var prev;
+	var lastPart = null;
+	parts.map(function(part) {
+		if (!obj[part]) {
+			obj[part] = {};
+		}
+		
+		prev = obj;
+		obj = obj[part];
+		lastPart = part;
+	});
+	var val = convertValue(d, v);
+	if (val){
+		prev[lastPart]=val;
+	} else {
+		prev[lastPart]=null;
+	}
+}
+
+// Calls function(s) to resolve value
+function convertValue(d, v) {
+	var tmp = v;	
+	d.convert.map(function(fun) {
+		if (typeof (fun) == 'function') {
+			tmp = fun(tmp);
+		} else {
+			try {
+				if (tmp==null){
+					tmp = eval(fun + '(null)');
+				} else{
+					tmp = eval(fun + "(\'" + tmp + "\')");
 				}
+			} catch (err) {
+				console.log('Not able to evaluate ', fun, ' on ', tmp,err);
 			}
 		}
-		lineN++;
 	});
-}
 
-function resolveToObjectLink(json,path,callback){
-
-	var parts=path.split('.');
-	
-	var obj = json;
-	var prev;
-	var lastPart = null;
-	parts.map(function(part) {
-		obj = obj[part];
-		lastPart = part;
-	});
-	
-	console.log(json);
-	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
-		collectionName : obj.registry
-	});
-	
-	daoLink.list(QueryFilter.create().addCriterium('import.id', QueryFilter.operation.EQUAL,''+obj.unresolved), function(err,data){
-		if (err) {
-			callback(err);
-			return
-		} 
-		if (data.length===0){
-			callback(null);
-			console.log('Not able to resolve',obj);
-			return;
-		}
-		obj.oid=data[0].id;
-		delete obj.unresolved;
-		callback(null);
-	} );
-}
-
-function resolveByNameToObjectLink(json,path,callback){
-
-	var parts=path.split('.');
-	
-	var obj = json;
-	var prev;
-	var lastPart = null;
-	parts.map(function(part) {
-		obj = obj[part];
-		lastPart = part;
-	});
-	
-	console.log(json);
-	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
-		collectionName : obj.registry
-	});
-	console.log('>>>>> ',obj.registry);
-	
-	daoLink.list(QueryFilter.create().addCriterium('club.name', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
-		if (err) {
-			callback(err);
-			return
-		} 
-		if (data.length===0){
-			callback(null);
-			console.log('Not able to resolve',obj);
-			return;
-		}
-		obj.oid=data[0].id;
-		delete obj.unresolved;
-		callback(null);
-	} );
-}
-
-
-
-function resolveByBirthNumberToObjectLink(json,path,callback){
-
-	var parts=path.split('.');
-	
-	var obj = json;
-	var prev;
-	var lastPart = null;
-	parts.map(function(part) {
-		obj = obj[part];
-		lastPart = part;
-	});
-	
-	console.log(json);
-	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
-		collectionName : obj.registry
-	});
-	console.log('>>>>> ',obj.registry);
-	
-	daoLink.list(QueryFilter.create().addCriterium('baseData.id', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
-		if (err) {
-			callback(err);
-			return
-		} 
-		if (data.length===0){
-			callback(null);
-			console.log('Not able to resolve',obj);
-			return;
-		}
-		obj.oid=data[0].id;
-		delete obj.unresolved;
-		callback(null);
-	} );
-}
-
-
-/**
- * default conversion
- * 
- * @param item
- * @returns
- */
-function defConversion(item) {
-
-	var val= item.trim().replace(/\'/g, '');
-	if (val.length){
-		return val;
-	}
-	return null;
+	return tmp;
 }
 
 /**
@@ -255,6 +239,9 @@ function parseDef(rawDef) {
 		switch (items[0]) {
 		case '$save$':
 			def.save = items[1];
+			break;
+		case '$merge$': 
+				def.merge={	searchByMethod: items[1], registry:items[2]};
 			break;
 		case '$resolve$':
 			if (!def.resolve) {
@@ -306,88 +293,151 @@ function parseDef(rawDef) {
 	return def;
 }
 
-// Calls function(s) to resolve value
-function convertValue(d, v) {
-	var tmp = v;	
-	d.convert.map(function(fun) {
-		if (typeof (fun) == 'function') {
-			tmp = fun(tmp);
-		} else {
-			try {
-				if (tmp==null){
-					tmp = eval(fun + "(null)");
-				} else{
-					tmp = eval(fun + "(\'" + tmp + "\')");
-				}
-			} catch (err) {
-				console.log('Not able to evaluate ', fun, ' on ', tmp,err);
-			}
-		}
-	});
 
-	return tmp;
-}
-
-function separateFullstop(item){
-	return item.replace('\.','\. ');
-}
-
-function applyValue(o, d, v) {
-	var path = d.to;
-	if ('null' === path) {
-		return;
+/**
+ * default conversion
+ * 
+ * @param item
+ * @returns
+ */
+function defConversion(item) {
+	if (!item) return null;
+	var val= item.trim().replace(/\'/g, '');
+	if (val.length){
+		return val;
 	}
-	var parts = path.split('.');
-	var obj = o;
-	var prev;
-	var lastPart = null;
-	parts.map(function(part) {
-		if (!obj[part]) {
-			obj[part] = {}
-		}
-		;
-		prev = obj;
-		obj = obj[part];
-		lastPart = part;
-	});
-	var val = convertValue(d, v);
-	if (val){
-		prev[lastPart]=val;
-	} else {
-		prev[lastPart]=null;
-	}
+	return null;
 }
 
 function objLinkOrganization(item) {
+	if (!item) return null;
 	var ret=	{
-			"registry" : "organizations",
-			"oid" : "",
-			unresolved : item
+			'registry' : 'organizations',
+			'oid' : '',
+			'unresolved' : item
 	};
-	console.log(ret);
+	// console.log(ret);
 	return ret;
 }
 
 function objLinkPeople(item) {
 	var ret=	{
-			"registry" : "people",
-			"oid" : "",
-			unresolved : item
+			'registry' : 'people',
+			'oid' : '',
+			'unresolved' : item
 	};
-	console.log(ret);
+	// console.log(ret);
 	return ret;
 }
 
-function createJson(def, lineNr, line) {
-	var retVal = {};
+function resolveToObjectLink(json,path,callback){
 
-	var index = 0;
-	def.collDef.map(function(def) {
-		applyValue(retVal, def, line[index++]);
+	var parts=path.split('.');
+	
+	var obj = json;
+	var prev;
+	var lastPart = null;
+	parts.map(function(part) {
+		obj = obj[part];
+		lastPart = part;
 	});
+	
+	// console.log(json);
+	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : obj.registry
+	});
+	
+	daoLink.list(QueryFilter.create().addCriterium('import.id', QueryFilter.operation.EQUAL,''+obj.unresolved), function(err,data){
+		if (err) {
+			callback(err);
+			return
+		} 
+		if (data.length===0){
+			callback(null);
+			console.log('Not able to resolve',obj);
+			return;
+		}
+		obj.oid=data[0].id;
+		delete obj.unresolved;
+		callback(null);
+	} );
+}
 
-	return retVal;
+function resolveByNameToObjectLink(json,path,callback){
+	// console.log('resolveByNameToObjectLink',json,path);
+	var parts=path.split('.');
+	
+	var obj = json;
+	var prev;
+	var lastPart = null;
+	
+	parts.map(function(part) {
+		if (obj && part in obj){
+			obj = obj[part];
+			lastPart = part;
+		}
+		obj=null;
+	});
+	
+	if (!obj){
+		callback();
+		return;
+	}
+	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : obj.registry
+	});
+	// console.log('>>>>> ',obj.registry);
+	
+	daoLink.list(QueryFilter.create().addCriterium('club.name', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
+		if (err) {
+			callback(err);
+			return
+		} 
+		if (data.length===0){
+			callback(null);
+			console.log('Not able to resolve',obj);
+			return;
+		}
+		obj.oid=data[0].id;
+		delete obj.unresolved;
+		callback(null);
+	} );
+}
 
+
+
+function resolveByBirthNumberToObjectLink(json,path,callback){
+
+	var parts=path.split('.');
+	
+	var obj = json;
+	var prev;
+	var lastPart = null;
+	parts.map(function(part) {
+		obj = obj[part];
+		lastPart = part;
+	});
+	
+	// console.log(json);
+	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : obj.registry
+	});
+	// console.log('>>>>> ',obj.registry);
+	
+	daoLink.list(QueryFilter.create().addCriterium('baseData.id', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
+		if (err) {
+			callback(err);
+			return
+		} 
+		if (data.length===0){
+			callback(null);
+			console.log('Not able to resolve',obj);
+			return;
+		}
+		obj.oid=data[0].id;
+		delete obj.unresolved;
+		callback(null);
+	} );
 }
 
 // CONVERSIONS
@@ -477,32 +527,32 @@ function mapTrueFalse(item){
 }
 
 function mapPoDohodeStudium(item){
-	if ("1"==item){
-		return "Po dohode";
+	if ('1'==item){
+		return 'Po dohode';
 	}
-	return "Počas štúdia";
+	return 'Počas štúdia';
 
 } 
 
 function fullDate(item){
 	if (!item)return null;
 	if (item.length===4) {
-		return "1.1."+item;
+		return '1.1.'+item;
 	}
 	return item;
 }
 
 function fullDateEndYear(item){
-	if (!item||null==item)return null;
+	if (!item||null===item)return null;
 
 	if (item.length===4) {
-		return "31.12."+item;
+		return '31.12.'+item;
 	}
 	return item;
 }
 
 function mapInvalid(item){
-	if (item ==="I") return 'A'; 
+	if (item ==='I') return 'A'; 
 	return 'N'; 
 }
 
@@ -522,32 +572,62 @@ function mapAktivna(item){
 	return "neaktívna"
 }
 
+
+
 function parseDateMix(item)	{ 
 	if (!item) return null;
 
 	if (item.indexOf('/')>-1){
 		var parts=item.split('/');
-		return parts[1]+"."+parts[0]+"."+parts[2];
+		if (parts[1].length===1) {
+			parts[1]='0'+parts[1];
+		}
+		if (parts[0].length===1) {
+			parts[0]='0'+parts[0];
+		}
+		return parts[1]+'.'+parts[0]+'.'+parts[2];
 	}
-	return item;
 
+	var parts=item.split('.');
+		if (parts[0].length===1) {
+			parts[0]='0'+parts[0];
+		}
+		if (parts[1].length===1) {
+			parts[1]='0'+parts[1];
+		}
+		
+		return parts[0]+'.'+parts[1]+'.'+parts[2];
 }
 
 function mapPT(item){
 	if ('P'==item){
-		return  "prestup";
+		return 'prestup';
 	}
-		return "hosťovanie"
+		return 'hosťovanie';
+}
+
+function mapMZ(item){
+	if ('M'===item){
+		return 'Muž';
+	}
+		return 'Žena';
 }
 
 function remapPlayerPosition(item){
-	
 	var values={
 				'1': 'brankář',
 				'2': 'obránce',
 				'3': 'útočník'
 	};
-	
 	return values[item];
-	
+}
+
+function findByNameBirthDate(json,dao,mergeAndSave,callback){
+	// console.log('method called', json,dao,callback);
+		var qf=QueryFilter.create();
+		qf.addCriterium('baseData.name',QueryFilter.operation.EQUAL,json.baseData.name);
+		qf.addCriterium('baseData.bornName',QueryFilter.operation.EQUAL,json.baseData.bornName);
+		qf.addCriterium('baseData.birthDate',QueryFilter.operation.EQUAL,json.baseData.birthDate);
+		dao.list(qf,function (err,data){if (err) {callback(err);return;} mergeAndSave(err,dao,data[0],json,callback); });
+
 }

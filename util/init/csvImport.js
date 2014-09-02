@@ -7,6 +7,8 @@ var config = require('./../../build/server/config.js');
 var QueryFilter = require('./../../build/server/QueryFilter.js');
 var universalDaoModule = require('./../../build/server/UniversalDao.js');
 
+var objectTools = require('./../../build/server/ObjectTools.js');
+
 var async = require('async');
 
 var path = null;
@@ -92,6 +94,11 @@ function processLine(def,line,lineNr,callback){
 	var parts=splitLine(line);
 	// console.log(line);
 	var json = createJson(def, lineNr, parts);
+		if (def.copy){
+			def.copy.map(function(item){
+					objectTools.setValue(json,item.to,objectTools.evalPath(json,item.from));
+			});
+		}
 
 		if (def.resolve) {
 				
@@ -213,7 +220,7 @@ function convertValue(d, v) {
 				if (tmp==null){
 					tmp = eval(fun + '(null)');
 				} else{
-					tmp = eval(fun + "(\'" + tmp + "\')");
+					tmp = eval(fun + '(\'' + tmp + '\')');
 				}
 			} catch (err) {
 				console.log('Not able to evaluate ', fun, ' on ', tmp,err);
@@ -240,6 +247,12 @@ function parseDef(rawDef) {
 		case '$save$':
 			def.save = items[1];
 			break;
+		case '$copy$':
+			if (!def.copy){
+					def.copy=[];
+			}
+			def.copy.push({"from": items[1],"to":items[2]});
+		break;
 		case '$merge$': 
 				def.merge={	searchByMethod: items[1], registry:items[2]};
 			break;
@@ -350,7 +363,7 @@ function resolveToObjectLink(json,path,callback){
 	daoLink.list(QueryFilter.create().addCriterium('import.id', QueryFilter.operation.EQUAL,''+obj.unresolved), function(err,data){
 		if (err) {
 			callback(err);
-			return
+			return;
 		} 
 		if (data.length===0){
 			callback(null);
@@ -391,7 +404,7 @@ function resolveByNameToObjectLink(json,path,callback){
 	daoLink.list(QueryFilter.create().addCriterium('club.name', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
 		if (err) {
 			callback(err);
-			return
+			return;
 		} 
 		if (data.length===0){
 			callback(null);
@@ -427,7 +440,7 @@ function resolveByBirthNumberToObjectLink(json,path,callback){
 	daoLink.list(QueryFilter.create().addCriterium('baseData.id', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
 		if (err) {
 			callback(err);
-			return
+			return;
 		} 
 		if (data.length===0){
 			callback(null);
@@ -497,21 +510,21 @@ function camelCase(input) {
 }
 
 function mapDochodca(item) {
-	if (item==="D") { 
+	if (item==='D') { 
 		return 'Dôchodca';
 	}
 	return null;
 }
 
 function mapStavTransferu(item) {
-	if (item==="Schválila") { 
+	if (item==='Schválila') { 
 		return 'schválený';
 	}
 	return 'neschválený';
 }
 
 function mapKrajina(item) {
-	if (item==="Slovensko") { 
+	if (item==='Slovensko') { 
 		return 'SVK';
 	}
 	return item;
@@ -567,9 +580,9 @@ function mapZaznamPlatnyNeplatny(item){
 
 function mapAktivna(item){
 	if ('Aktívna'==item){
-		return "aktívna";
+		return 'aktívna';
 	}
-	return "neaktívna"
+	return 'neaktívna';
 }
 
 

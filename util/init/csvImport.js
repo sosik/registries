@@ -377,6 +377,7 @@ function resolveToObjectLink(json,path,callback){
 }
 
 function resolveByNameToObjectLink(json,path,callback){
+	console.log(json,path);
 	// console.log('resolveByNameToObjectLink',json,path);
 	var parts=path.split('.');
 	
@@ -388,10 +389,11 @@ function resolveByNameToObjectLink(json,path,callback){
 		if (obj && part in obj){
 			obj = obj[part];
 			lastPart = part;
+		}else{
+			obj=null;
 		}
-		obj=null;
 	});
-	
+	console.log(obj);
 	if (!obj){
 		callback();
 		return;
@@ -633,6 +635,15 @@ function remapPlayerPosition(item){
 				'3': 'útočník'
 	};
 	return values[item];
+}
+
+function removeFullstop(item) {
+	if (!item) return null;
+	var val= item.trim().replace(/\./g,'');
+	if (val.length){
+		return val;
+	}
+	return null;
 }
 
 function findByNameBirthDate(json,dao,mergeAndSave,callback){

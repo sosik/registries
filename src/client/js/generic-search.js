@@ -36,13 +36,28 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 						resultArr.push({
 							path: pathPrefix + pr+'.oid',
 							type: objectDef.properties[pr].type,
-							objectLink:objectDef.properties[pr].$objectLink,
+							render:{objectLink:objectDef.properties[pr].$objectLink},
 							schemaFragment:objectDef.properties[pr],
-							title: (objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title)+' ->'
+							title: (objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title)
 						});
 
 					continue;
 				}
+
+				//FIXME: change to datetype 
+				if ('render' in objectDef.properties[pr] && objectDef.properties[pr].render.component==='psui-datepicker' ) {
+						resultArr.push({
+							path: pathPrefix + pr,
+							type: objectDef.properties[pr].type,
+							render:{datepicker:true},
+							schemaFragment:objectDef.properties[pr],
+							title: (objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title)
+						});
+
+					continue;
+				}
+
+
 				if (objectDef.properties[pr].type === 'object') {
 					collectProperties(pr + '.', objectDef.properties[pr], resultArr);
 				} else {
@@ -153,6 +168,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 
 	var convertCriteria = function(crit) {
 
+		console.log(crit);
 		var retval = [];
 
 		crit.map(function(c) {

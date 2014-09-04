@@ -22,14 +22,19 @@
 									ng-Init="crit.operator=searchDef.operators[0]"
 									ng-options="op.title for op in searchDef.operators"></select>
 							</div>
-							<div class="col-sm-4" ng-show="!crit.attribute.objectLink">
+							
+							<div class="col-sm-4" ng-show="!crit.attribute.render">
 								<input type="text" id="name" name="name" ng-model="crit.value"
 									placeholder="" class="ng-pristine ng-valid form-control"
 									autocomplete="off">
 							</div>
 
-							<div ng-show="crit.attribute.objectLink" class="col-sm-4 form-group">
+							<div ng-show="crit.attribute.render.objectLink" class="col-sm-4 form-group">
 								<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
+							</div>
+
+							<div ng-show="crit.attribute.render.datepicker"  class="col-sm-4 form-group input-group">
+								<input psui-datepicker schema-fragment="crit.attribute.schemaFragment" ng-model="crit.value" />
 							</div>
 
 							<div class="col-sm-2">

@@ -6,6 +6,7 @@ var operation = {
 	LESS: 'lt',
 	LESS_EQUAL: 'lte',
 	NOT_EQUAL: 'neq', // field value is not equal
+	CONTAINS:'contains',
 	STARTS_WITH: 'starts' // field value starts with
 };
 
@@ -41,7 +42,24 @@ var QueryFilter = function() {
 				case operation.STARTS_WITH:
 					c = {f: field, op: operation.STARTS_WITH, v: val};
 					break;
-				default:
+			
+					case operation.LESS:
+					c = {f: field, op: operation.LESS, v: val};
+					break;
+					case operation.LESS_EQUAL:
+					c = {f: field, op: operation.LESS_EQUAL, v: val};
+					break;
+					case operation.GREATER:
+					c = {f: field, op: operation.GREATER, v: val};
+					break;
+					case operation.GREATER_EQUAL:
+					c = {f: field, op: operation.GREATER_EQUAL, v: val};
+					break;
+					case operation.CONTAINS:
+					c = {f: field, op: operation.CONTAINS, v: val};
+					break;
+
+					default:
 					throw new Error('Unknown operation: ' + op);
 			}
 		} else {

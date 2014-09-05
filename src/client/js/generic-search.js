@@ -80,16 +80,28 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		}, {
 			title: '>',
 			value: 'gt'
-		}, {
+		},
+		{
+			title: '>=',
+			value: 'gte'
+		},  {
 			title: '<',
 			value: 'lt'
-		}, {
+		},
+		 {
+			title: '<=',
+			value: 'lte'
+		},  {
 			title: '!=',
 			value: 'neq'
 		}, {
 			title: 'starts',
 			value: 'starts'
-		}, {
+		},{
+			title: 'contains',
+			value: 'contains'
+		},
+		 {
 			title: 'exists',
 			value: 'ex'
 		} ];

@@ -130,7 +130,9 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 						query = {'$lte': c.v};
 					} else if (c.op === QueryFilter.operation.STARTS_WITH) {
 						query = {'$regex': '^'+c.v+'.*' , $options: 'i'};
-					} else if (c.op === QueryFilter.operation.EXISTS) {
+					} else if (c.op === QueryFilter.operation.CONTAINS) {
+						query = {'$regex': '.*'+c.v+'.*' , $options: 'i'};
+					}  else if (c.op === QueryFilter.operation.EXISTS) {
 						query = {'$exists' : true};
 					} else {
 						throw new Error('Unsupported operation: ' + c.op);

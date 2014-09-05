@@ -155,8 +155,8 @@ function processLine(def,line,lineNr,callback){
 function mergeAndSave(err,dao,entity,json,callback){
 
 	if (entity){
-		console.log('merging>>',JSON.stringify(entity));
 		entity=extend(true, {}, entity, json);
+		console.log('merging>>',JSON.stringify(entity));
 		dao.update(entity, function(err, data) {
 			callback(err);
 		});
@@ -184,7 +184,7 @@ function createJson(defs, lineNr, line) {
 function applyValue(o, d, v) {
 	// console.log(o,d,v);
 	var path = d.to;
-	if(!v) return;
+	// if(!v) return;
 	if ('null' === path) {
 		return;
 	}
@@ -644,6 +644,19 @@ function removeFullstop(item) {
 		return val;
 	}
 	return null;
+}
+
+function ano (item){
+	return 'Áno';
+}
+
+function reverseDate(item){
+	if (!item){
+		return null;
+	}
+
+	var parts=item.split('.');
+	return parts[2]+parts[1]+parts[0];
 }
 
 function findByNameBirthDate(json,dao,mergeAndSave,callback){

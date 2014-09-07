@@ -3,7 +3,7 @@
 
 angular.module('xpsui', [])
 .constant('xpsui:constants', {
-	loggingLevel: 99
+	loggingLevel: 1
 })
 .factory('xpsui:ObjectTools', [function() {
 	function ObjectTools() {
@@ -677,7 +677,6 @@ angular.module('xpsui', [])
 				});
 
 				ngModel.$render = function() {
-					console.log('render');
 					view.text(ngModel.$viewValue || '');
 				};
 			}

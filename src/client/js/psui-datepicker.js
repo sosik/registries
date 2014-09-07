@@ -32,15 +32,11 @@ angular.module('psui-datepicker', [])
 						if (year.length === 4 && month.length === 2 && day.length === 2) {
 							var d = new Date(year, month-1, day);
 
-							console.log('----f', d);
-							
 							return d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
 						}
 
-						console.log('----f', day, month, year);
 						return value;
 					}
-					console.log('----f', value);
 					return '';
 				});
 
@@ -74,11 +70,9 @@ angular.module('psui-datepicker', [])
 									return ys.concat(ms, ds);
 								}
 							// invalid
-							console.log('----p', day, month, year);
 							return '';
 						}
 						// invalid
-						console.log('----p', s);
 						return '';
 
 					}

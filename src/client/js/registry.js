@@ -86,6 +86,42 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		
 	})
 }])
+.directive('svfSpecialNote', ['$http', function($http) {
+	return {
+		restrict: 'E',
+		require: ['ngModel'],
+		link: function(scope, elm, attrs, controller) {
+			var ngModel = controller[0];
+			var c = 0;
+			ngModel.$render = function() {
+				elm.text('Nahrávam...' + ++c);
+
+				console.log(ngModel.$viewValue);
+				var crits = [];
+				crits.push({
+					op: 'eq',
+					f: 'baseData.player.oid',
+					v: ngModel.$viewValue.oid
+				});
+				crits.push({
+					op: 'eq',
+					f: 'baseData.stateOfTransfer',
+					v: 'schválený'
+				});
+				$http({ method : 'POST',url: '/udao/search/transfers', data: {criteria: crits, limit: 20, skip:0, sortBy:[]} })
+				.success(function(data, status, headers, config){
+				if (data && angular.isArray(data) && data.length > 0) {
+					var type = ((data[0] && data[0].baseData && data[0].baseData.typeOfTransfer) || '');
+					var date = ((data[0] && data[0].baseData && data[0].baseData.dateTo) || '');
+					elm.text(type + ':' + date.substring(6,8) + '.' + date.substring(4,6) + '.' + date.substring(0,4));
+				} else {
+					elm.text('');
+				}
+				});
+			};
+		}
+	};
+}])
 /**
  * places validation mark to element
  */
@@ -112,7 +148,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
 				viewElement = angular.element($compile('<div psui-objectlink-view class="override-before" ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-ARRAY-CONTROL') {
-				viewElement = angular.element($compile('<div class="override-before"><div ng-repeat="ae in ' + attrs.ngModel + '" psui-objectlink-view ng-model="ae" schema-fragment="'+attrs.schemaFragment+'.items">x</div></div>')(scope));
+				viewElement = angular.element($compile('<div class="override-before"><div ng-repeat="ae in ' + attrs.ngModel + '"><div psui-objectlink-view ng-model="ae" schema-fragment="'+attrs.schemaFragment+'.items">x</div><svf-special-note ng-model="ae"> </svf-special-note></div></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-SELECTBOX') {
 				viewElement = angular.element($compile('<div psui-selectbox-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-UPLOADABLE-IMAGE') {

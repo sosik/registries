@@ -1,4 +1,4 @@
-angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src', 'psui-selectbox'])
+angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src', 'psui-selectbox', 'xpsui'])
 .controller('registry.newCtrl', ['$route',
 		'$scope',
 		'$routeParams',
@@ -112,14 +112,18 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			if (elm.prop('tagName') == 'PSUI-OBJECTLINK') {
 				viewElement = angular.element($compile('<div psui-objectlink-view class="override-before" ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-ARRAY-CONTROL') {
-				console.log('inlineeditscope', scope);
 				viewElement = angular.element($compile('<div class="override-before"><div ng-repeat="ae in ' + attrs.ngModel + '" psui-objectlink-view ng-model="ae" schema-fragment="'+attrs.schemaFragment+'.items">x</div></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-SELECTBOX') {
 				viewElement = angular.element($compile('<div psui-selectbox-view ng-model='+attrs.ngModel +' schema-fragment='+attrs.schemaFragment+'></div>')(scope));
 			} else if (elm.prop('tagName') == 'PSUI-UPLOADABLE-IMAGE') {
 				viewElement = angular.element($compile('<div><img ng-src="{{'+attrs.ngModel +'}}" src="" psui-default-src="/img/no_photo.jpg"></img></div>')(scope));
 			} else {
-				viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
+				elm.attr('psui-datepicker');
+				if (typeof elm.attr('psui-datepicker') !== 'undefined') {
+					viewElement = angular.element($compile('<div xpsui-datepicker-view ng-model='+attrs.ngModel +'></div>')(scope));
+				} else {
+					viewElement = angular.element($compile('<div ng-bind='+attrs.ngModel +'></div>')(scope));
+				}
 			}
 			viewElement.addClass('psui-inlineedit-view');
 			// there is ngModel, define commit and cancel

@@ -607,4 +607,90 @@ angular.module('xpsui', [])
 			log.groupEnd();
 		}
 	};
+}])
+.directive('xpsuiDatepickerView', ['xpsui:log', 'xpsui:ComponentGenerator', '$compile', function(log, componentGenerator, $compile) {
+	return {
+		restrict: 'EA',
+		require: ['?xpsuiCtrl', '?ngModel'],
+		link: function(scope, elm, attrs, ctrls) {
+			log.group('xpsui-datepicker-view Link');
+
+			var xpsuiCtrl = ctrls[0];
+			var ngModel = ctrls[1];
+
+			var view = angular.element('<span></span>');
+			elm.append(view);
+
+			if (ngModel) {
+				log.debug('ngModel defined');
+				ngModel.$formatters.push(function(value) {
+					if (value) {
+						var year = value.substring(0,4);
+						var month = value.substring(4,6);
+						var day = value.substring(6,8);
+						if (year.length === 4 && month.length === 2 && day.length === 2) {
+							var d = new Date(year, month-1, day);
+
+							return d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+						}
+
+						return value;
+					}
+					return '';
+				});
+
+				ngModel.$parsers.push(function(value) {
+					if (value) {
+						var d = new Date();
+						var s = value.split('.');
+						if (s.length === 3) {
+							var day = parseInt(s[0]);
+							var month = parseInt(s[1]);
+							var year = parseInt(s[2]);
+
+							if ((day > 0 && day < 32) &&
+								(month > 0 && month <13) &&
+								(year > 0 && year < 10000)
+							   ) {
+									d.setDate(day);
+									d.setMonth(month -1);
+									d.setYear(year);
+
+									var ys = d.getFullYear().toString(10);
+									var ms = (d.getMonth() + 1).toString(10);
+									if (ms.length < 2) {
+										ms = '0'.concat(ms);
+									}
+									var ds = d.getDate().toString();
+									if (ds.length < 2) {
+										ds = '0'.concat(ds);
+									}
+
+									return ys.concat(ms, ds);
+								}
+							// invalid
+							return '';
+						}
+						// invalid
+						return '';
+					}
+				});
+
+				ngModel.$render = function() {
+					console.log('render');
+					view.text(ngModel.$viewValue || '');
+				};
+			}
+
+			if (xpsuiCtrl) {
+				log.debug('xpsuiCtrl defined');
+				xpsuiCtrl.commit = function(value) {
+					view.text(value || '');
+				};
+			}
+
+			log.groupEnd();
+		}
+	};
 }]);
+

@@ -1,5 +1,5 @@
 'use strict';
-angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
+angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsui'])
 //
 .config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/search/:entity', {
@@ -115,7 +115,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 	return service;
 } ])
 //
-.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate ) {
+.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate', 'xpsui:ObjectTools', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate, objectTools ) {
 	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 	$scope.entityUri = entityUri;
@@ -272,7 +272,21 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate'])
 		return new TextEncoder('cp1250', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
 	}
 	
-	
+
+	$scope.getVal = function getValueXX(fieldPath, obj) {
+		if (!obj) {
+			return '';
+		}
+
+		var schemaFragment = objectTools.getSchemaFragmentByObjectPath($scope.schema, fieldPath);
+
+		if (schemaFragment && schemaFragment.render && schemaFragment.render.component === 'psui-datepicker') {
+			return obj.substring(6,8) + '.' + obj.substring(4,6) + '.' + obj.substring(0,4);
+		}
+
+		return obj;
+	};
+
 	function getValue(obj,fieldPath){
 		
 		var parts=fieldPath.split('.');

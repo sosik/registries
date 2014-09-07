@@ -165,6 +165,10 @@ angular.module('psui-objectlink', [])
 					var crits = [];
 
 					crits.push({op:'contains', v: dropdown.searchInputValue(), f: qfName});
+
+					if (schemaFragment(scope).$objectLinkForcedCriteria) {
+						crits = crits.concat(schemaFragment(scope).$objectLinkForcedCriteria);
+					}
 					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria: crits, limit: 20, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
 					.success(function(data, status, headers, config){
 						//console.log('blabla' + data);

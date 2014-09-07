@@ -185,7 +185,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 		crit.map(function(c) {
 			if (c && c.attribute && c.attribute.path) {
-				if (c.attribute.objectLink){
+				if (c.attribute.render && c.attribute.render.objectLink){
 					retval.push({
 						f : c.attribute.path,
 						v : c.obj.oid,

@@ -21,10 +21,18 @@ angular.module('psui-objectlink', [])
 								++count;
 							}
 						}
-						for (var i in ngModel.$viewValue.refData) {
-							if (typeof ngModel.$viewValue.refData[i] === 'string') {
-								displayText += '<td style="width: '+100/count+'%;">' + ngModel.$viewValue.refData[i] + '</td>';
+
+						console.log(schemaFragment(scope));
+						console.log(ngModel.$viewValue.refData);
+						for (var prop in schemaFragment(scope).$objectLink) {
+							if (prop === 'registry') {
+								continue;
 							}
+
+							if (typeof ngModel.$viewValue.refData[prop] === 'string') {
+								displayText += '<td style="width: '+100/count+'%;">' + ngModel.$viewValue.refData[prop] + '</td>';
+							}
+
 						}
 
 						elm.html('<table style="width:100%; table-layout: fixed;"><tr>' + displayText + '</tr></table>');
@@ -192,6 +200,26 @@ angular.module('psui-objectlink', [])
 									if (typeof sData[field] === 'undefined') {
 										sData[field] = '';
 									}
+
+									// FIXME dirty hack, translate all birthDates to date
+									if (field === 'birthDate') {
+										var value = sData[field];
+										if (value) {
+											var year = value.substring(0,4);
+											var month = value.substring(4,6);
+											var day = value.substring(6,8);
+											if (year.length === 4 && month.length === 2 && day.length === 2) {
+												var d = new Date(year, month-1, day);
+
+												sData[field] = d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+											} else {
+												sData[field] = ' ';
+											}
+										} else {
+											sData[field] = ' ';
+										}
+									}
+
 									angular.extend(rData.refData, sData);
 								}
 							}

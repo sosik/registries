@@ -161,7 +161,11 @@ angular.module('psui-objectlink', [])
 							break;
 						}
 					}
-					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria:[{op:'starts', v: dropdown.searchInputValue(), f: qfName}], limit: 20, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
+
+					var crits = [];
+
+					crits.push({op:'contains', v: dropdown.searchInputValue(), f: qfName});
+					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria: crits, limit: 20, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
 					.success(function(data, status, headers, config){
 						//console.log('blabla' + data);
 						for (var i = 0; i < data.length; ++i) {

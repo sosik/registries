@@ -54,9 +54,55 @@ angular.module('psui-objectlink', [])
 			var dataArray = new Array();
 			var schemaFragment = null;
 
+			var dirtyClubFilter = null;
+			var dirtyAgeFilter = null;
 			if (attrs.schemaFragment) {
 				schemaFragment = $parse(attrs.schemaFragment);
+
+				if (schemaFragment && schemaFragment(scope) && schemaFragment(scope)._$objectLinkForcedCriteria) {
+					//FIXME ditry hack
+					scope.$watch(function(scope) {
+						var x = scope.$eval('$parent.$parent.model.obj.baseData.club.oid');
+						return x;
+					}, function(ov, nv) {
+						if (nv && nv.length > 0) {
+							dirtyClubFilter = {op:'eq', v: nv, f: 'player.club.oid'};
+						}
+					});
+					scope.$watch(function(scope) {
+						var x = scope.$eval('$parent.$parent.model.obj.baseData.ageCategory.oid');
+						return x;
+					} , function(ov, nv) {
+						if (nv && nv.length > 0) {
+							$http({ method : 'GET',url: '/udao/get/ageCategories/' + nv})
+							.success(function(data, status, headers, config){
+								if (data) {
+									var now = Date();
+
+									var year = 2015 - data.computation.age;
+									var month = data.computation.month;
+									if (month.length < 2) {
+										month = '0' + month;
+									}
+									var day = data.computation.day;
+									if (day.length < 2) {
+										day = '0' + day;
+									}
+
+									var op = 'gte';
+									if (data.computation.operation === 'PRED') {
+										op = 'lte';
+									}
+
+									dirtyAgeFilter = {op: op , v: ''.concat(year,month,day), f: 'baseData.birthDate'};
+
+								}
+							});
+						}
+					});
+				}
 			}
+
 			var ngModel = ctrls[0];
 
 			ngModel.$render = function() {
@@ -174,6 +220,16 @@ angular.module('psui-objectlink', [])
 
 					crits.push({op:'contains', v: dropdown.searchInputValue(), f: qfName});
 
+					if (schemaFragment(scope)._$objectLinkForcedCriteria) {
+					//FIXME ditry hack
+						if (dirtyClubFilter) {
+							crits.push(dirtyClubFilter);
+						}
+						if (dirtyAgeFilter) {
+							crits.push(dirtyAgeFilter);
+						}
+					}
+					
 					if (schemaFragment(scope).$objectLinkForcedCriteria) {
 						crits = crits.concat(schemaFragment(scope).$objectLinkForcedCriteria);
 					}

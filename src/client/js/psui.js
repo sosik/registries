@@ -161,7 +161,6 @@ angular.module('psui', [])
 						_selected = index;
 						element.addClass('psui-selected');
 						that.onActiveChanged(index);
-						console.log(_selected);
 					}
 				});
 				

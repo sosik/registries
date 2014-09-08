@@ -1,4 +1,6 @@
+var extend = require('extend');
 var log = require('./logging.js').getLogger('_mongoDriver.js');
+
 /*
  * @module mongoDriver
  */
@@ -137,8 +139,23 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					} else {
 						throw new Error('Unsupported operation: ' + c.op);
 					}
+					if (searchCriteria[c.f]) { 
+						if (searchCriteria[c.f] instanceof Object){
+							if (query instanceof Object){
+								searchCriteria[c.f]= extend(true, {}, searchCriteria[c.f], query);
+							} else {
+								searchCriteria[c.f] = query;	
+							}
+						}
+						else {
+									// Do nothing
+								}
+						
+						}else {
+							searchCriteria[c.f] = query;	
+						}
 
-					searchCriteria[c.f] = query;
+
 					log.verbose('constructed query',c.f);
 				}
 			}

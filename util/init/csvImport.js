@@ -193,6 +193,8 @@ function applyValue(o, d, v) {
 	var prev;
 	var lastPart = null;
 	parts.map(function(part) {
+		
+		if (part=='') return;
 		if (!obj[part]) {
 			obj[part] = {};
 		}
@@ -201,6 +203,7 @@ function applyValue(o, d, v) {
 		obj = obj[part];
 		lastPart = part;
 	});
+	if(!prev) return;
 	var val = convertValue(d, v);
 	if (val){
 		prev[lastPart]=val;

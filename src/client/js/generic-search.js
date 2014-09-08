@@ -92,17 +92,17 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			title: '<=',
 			value: 'lte'
 		},  {
-			title: '!=',
+			title: 'je iné ako',
 			value: 'neq'
 		}, {
-			title: 'starts',
+			title: 'začína s',
 			value: 'starts'
 		},{
-			title: 'contains',
+			title: 'obsahuje',
 			value: 'contains'
 		},
 		 {
-			title: 'exists',
+			title: 'má vyplnené',
 			value: 'ex'
 		} ];
 

@@ -120,6 +120,14 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				if (data && angular.isArray(data) && data.length > 0) {
 					var type = ((data[0] && data[0].baseData && data[0].baseData.typeOfTransfer) || '');
 					var date = ((data[0] && data[0].baseData && data[0].baseData.dateTo) || '');
+					if (type === 'hosťovanie') {
+						type = 'H';
+					} else if (type === 'zahr. transfér') {
+						type = 'T'
+					} else {
+						elm.text('');
+						return;
+					}
 					elm.text(type + ':' + date.substring(6,8) + '.' + date.substring(4,6) + '.' + date.substring(0,4));
 				} else {
 					elm.text('');

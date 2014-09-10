@@ -60,6 +60,13 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 	$scope.save = function() {
 		$http({url: '/udao/saveBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri($scope.currentSchemaUri, 'new')), method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
+			$http({ method : 'GET',url: '/udao/getBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(schemaUri, 'view'))+'/'+ $scope.currentId})
+			.success(function(data, status, headers, config){
+				schemaUtilFactory.generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+				$scope.model.obj = data;
+			}).error(function(err) {
+				notificationFactory.error(err);
+			});
 			notificationFactory.info({translationCode:'registry.succesfully.saved', time:3000});
 		})
 		.error(function(data, status, headers, config) {

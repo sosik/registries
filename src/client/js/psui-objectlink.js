@@ -218,7 +218,7 @@ angular.module('psui-objectlink', [])
 
 					var crits = [];
 
-					crits.push({op:'contains', v: dropdown.searchInputValue(), f: qfName});
+					crits.push({op:'starts', v: dropdown.searchInputValue(), f: qfName});
 
 					if (schemaFragment(scope)._$objectLinkForcedCriteria) {
 					//FIXME ditry hack

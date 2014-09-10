@@ -347,14 +347,14 @@ this.searchBySchema = function(req, resp) {
 					for (var i = 0; i < data.length; i++) {
 						mangFuncs.push((function(j) {
 							return function(callback) {
-								listObjectMangler.mangle(data[j], compiledSchema, function(err, cb) {
+								setTimeout(listObjectMangler.mangle(data[j], compiledSchema, function(err, cb) {
 									callback(err, cb);
-								});
+								}), 0);
 							};
 						}(i)));
 					}
 
-					async.parallel(mangFuncs, function(err, cb) {
+					async.parallelLimit(mangFuncs, 3, function(err, cb) {
 						if (err) {
 							resp.send(500, err);
 						}

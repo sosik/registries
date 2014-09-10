@@ -416,7 +416,14 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					if (value.type === 'object') {
 						var fieldSet = angular.element('<fieldset></fieldset>');
 						element.append(fieldSet);
-						fieldSet.wrap('<div class="col-md-6"></div>');
+						var width = "col-md-6";
+						if (value.render && value.render.width) {
+							switch (value.render.width) {
+								case 'full': width = "col-md-12";
+								break;
+							}
+						}
+						fieldSet.wrap('<div class="'+width+'"></div>');
 						fieldSet.append('<legend>'+(value.transCode ? '{{\''+ value.transCode+'\'| translate}}' : value.title)+'</legend>');
 						angular.forEach(value.properties, function(value2, key2) {
 							var isRequired = (value2.required ? ' psui-required': '');
@@ -536,7 +543,14 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					if (value.type === 'object') {
 						var fieldSet = angular.element('<fieldset></fieldset');
 						element.append(fieldSet);
-						fieldSet.wrap('<div class="col-md-6"></div>');
+						var width = "col-md-6";
+						if (value.render && value.render.width) {
+							switch (value.render.width) {
+								case 'full': width = "col-md-12";
+								break;
+							}
+						}
+						fieldSet.wrap('<div class="'+width+'"></div>');
 						fieldSet.append('<legend>'+(value.transCode ? '{{\''+ value.transCode+'\'| translate}}' : value.title)+'</legend>');
 						angular.forEach(value.properties, function(value2, key2) {
 							var isRequired = (value2.required ? ' psui-required': '');

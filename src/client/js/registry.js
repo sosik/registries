@@ -457,6 +457,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 									input = angular.element('<psui-uploadable-image '
 									+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
 										+ '" psui-imageresizor-height="'+value2.render.height + '" psui-validity-mark ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								} else if (value2 && value2.readOnly) {
+									input = angular.element('<div style="padding: 4px 12px;" ng-bind="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 								} else {
 									input = angular.element('<input psui-validity-mark type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 								}
@@ -584,6 +586,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 									input = angular.element('<psui-uploadable-image psui-inlineedit="view"'
 										+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
 										+ '" psui-imageresizor-height="'+value2.render.height + '" ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								} else if (value2 && value2.readOnly) {
+									input = angular.element('<div style="padding: 4px 12px;" ng-bind="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 								} else {
 									input = angular.element('<input psui-validity-mark psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 								}

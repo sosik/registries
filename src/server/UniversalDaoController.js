@@ -75,6 +75,12 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 		log.verbose("data to save", req.body);
 
 		var obj = req.body;
+		// SVF DIRTY HACK
+		if (obj.baseData.lastModification) {
+			var d = new Date();
+
+			obj.baseData.lastModification = ''.concat(d.getDate(), '.', d.getMonth() + 1, '.' + d.getFullYear(), ' ', d.getHours(), ':', d.getMinutes(), '.', d.getSeconds());
+		}
 		if (obj.id){
 			_dao.update(obj, function(err, data){
 				if (err) {
@@ -103,7 +109,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 				console.log(obj);
 			});
 
-			if (sequencesToAssign.length>0){
+			if (sequencesToAssign.length>0) {
 				async.parallel(sequencesToAssign,function(err){if (err) {log.err(err); return;} _dao.save(obj, function(err, data){
 					if (err) {
 						throw err;

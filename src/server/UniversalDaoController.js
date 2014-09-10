@@ -79,7 +79,9 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 		if (obj.baseData.lastModification) {
 			var d = new Date();
 
-			obj.baseData.lastModification = ''.concat(d.getDate(), '.', d.getMonth() + 1, '.' + d.getFullYear(), ' ', d.getHours(), ':', d.getMinutes(), '.', d.getSeconds());
+			obj.baseData.lastModification = ''.concat(d.getDate(), '.', d.getMonth() + 1, '.' + d.getFullYear(), ' ', d.getHours(), ':', 
+					(''.concat(d.getMinutes()).length === 1 ? '0'+d.getMinutes():d.getMinutes()), ':',
+					 (''.concat(d.getSeconds()).length === 1 ? '0'+d.getSeconds() : d.getSeconds()));
 		}
 		if (obj.id){
 			_dao.update(obj, function(err, data){

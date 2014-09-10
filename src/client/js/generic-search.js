@@ -29,7 +29,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		
 		var retval = {};
 
-		function collectProperties(pathPrefix, objectDef, resultArr) {
+		function collectProperties(pathPrefix, objectDef,group,resultArr) {
 			for ( var pr in objectDef.properties) {
 
 					if (objectDef.properties[pr].$objectLink) {
@@ -38,6 +38,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 							type: objectDef.properties[pr].type,
 							render:{objectLink:objectDef.properties[pr].$objectLink},
 							schemaFragment:objectDef.properties[pr],
+							group:group,
 							title: (objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title)
 						});
 
@@ -51,6 +52,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 							type: objectDef.properties[pr].type,
 							render:{datepicker:true},
 							schemaFragment:objectDef.properties[pr],
+							group:group,
 							title: (objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title)
 						});
 
@@ -59,12 +61,19 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 
 				if (objectDef.properties[pr].type === 'object') {
-					collectProperties(pr + '.', objectDef.properties[pr], resultArr);
+					
+					
+
+					collectProperties(pr + '.', objectDef.properties[pr],objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) :objectDef.properties[pr].title, resultArr);
+
+
+
 				} else {
 					resultArr.push({
 						path: pathPrefix + pr,
 						type: objectDef.properties[pr].type,
-						title: objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title
+						group:group,
+						title: objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title 
 					});
 				}
 			}
@@ -106,7 +115,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			value: 'ex'
 		} ];
 
-		collectProperties('', schema, retval.attributes);
+		collectProperties('', schema,null, retval.attributes);
 
 		return retval;
 

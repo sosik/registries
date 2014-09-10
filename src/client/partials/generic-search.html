@@ -14,17 +14,20 @@
 							<div class="col-sm-4">
 								<select class="form-control" ng-change="selectedCritAttribute(crit)"
 									ng-model="crit.attribute"
-									ng-options="att.title for att in searchDef.attributes"></select>
+									ng-options="att.title group by att.group for att in searchDef.attributes"></select>
 							</div>
+							
 							<div class="col-sm-2">
 								<select class="form-control"
 									ng-model="crit.operator"
 									ng-Init="crit.operator=searchDef.operators[0]"
-									ng-options="op.title for op in searchDef.operators"></select>
+									ng-options="op.title for op in searchDef.operators" options-class='crit.attribute.class' >
+
+								</select>
 							</div>
 							
 							<div class="col-sm-4" ng-show="!crit.attribute.render">
-								<input type="text" id="name" name="name" ng-model="crit.value"
+								<input type="text" id="name" name="name" ng-model="crit.value" 
 									placeholder="" class="ng-pristine ng-valid form-control"
 									autocomplete="off">
 							</div>

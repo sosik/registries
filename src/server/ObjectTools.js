@@ -66,8 +66,39 @@ var ObjectTools = function() {
 		} else {
 			prev[lastPart]=null;
 		}
-	}
+	};
 
+
+/**
+		Removes specified path 
+	*/
+	this.remove=function(o, path) {
+		if (!path) {
+			return;
+		}
+
+		var parts = path.split('.');
+
+		var toRemove=path;
+		if (parts){
+			toRemove=parts.pop();
+		}
+
+		var obj=o;
+
+		parts.map(function(part) {
+			if (obj && obj[part]) {
+				obj=obj[part];
+			}else {
+				obj=null;
+			}
+		});
+		
+		if (obj){
+			delete obj[toRemove];
+		}
+
+	};
 
 	/**
 	 * Returns subrtree of object structure defined by path

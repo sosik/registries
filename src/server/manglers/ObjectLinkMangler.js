@@ -8,7 +8,6 @@
 	}
 
 	ObjectLinkMangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
-		log.silly('ObjectLink mangler start for %s', objPath);
 		var prop;
 
 		if (!objFragment || !schemaFragment || !schemaFragment[consts.OBJECT_LINK_KEYWORD]) {
@@ -17,6 +16,7 @@
 			return;
 		}
 
+		log.silly('ObjectLink mangler start for %s', objPath);
 		// remove all uneeded properties
 		for (prop in objFragment) {
 			if ((prop !== consts.OBJECT_LINK_REGISTRY_KEYWORD) && (prop !== consts.OBJECT_LINK_OID_KEYWORD)) {

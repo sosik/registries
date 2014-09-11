@@ -10,16 +10,14 @@
 	}
 
 	SequenceMangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
-		log.silly('ObjectLink mangler start for %s', objPath);
-		var prop;
-
-		
 
 		if (!schemaFragment || !schemaFragment[consts.SEQUENCE]) {
 			log.silly('Nothing to mangle');
 			callback(null, null);
 			return;
 		}
+
+		log.silly('SequenceMangler mangler start for %s', objPath);
 
 		var seqName=schemaFragment[consts.SEQUENCE];
 
@@ -28,11 +26,11 @@
 				callback(err);
 				return;
 			}
-			objectTools.setValue(ctx.o,objPath.substring(1+consts.ROOT_KEYWORD.lenth),data.seq);
+			objectTools.setValue(ctx.o,objPath,data.seq);
 			callback();
 		});
 		
-		log.debug('ObjectLink mangling finished for %s',  objPath);		
+		log.debug('SequenceMangler mangling finished for %s',  objPath);		
 	};
 
 	module.exports = function() {

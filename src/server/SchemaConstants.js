@@ -10,5 +10,6 @@ module.exports = {
 	PROPERTIES_KEYWORD: 'properties', // properties keyword
 	REQUIRED_KEYWORD: 'required',
 	SEQUENCE: '$sequence',
+	TIMESTAMP: '$timestamp',
 	TYPE_KEYWORD: 'type',
 };

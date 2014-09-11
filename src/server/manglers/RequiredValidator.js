@@ -14,7 +14,7 @@
 	function RequiredValidator() {
 	}
 
-	RequiredValidator.prototype.mangle = function(objFragment, schemaFragment, objPath, callback) {
+	RequiredValidator.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
 		log.silly('Required validation start for %s', objPath);
 		var localErrors = [];
 

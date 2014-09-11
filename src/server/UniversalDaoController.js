@@ -10,40 +10,42 @@ var QueryFilter = require('./QueryFilter.js');
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 
-	var saveObjectMangler = require('./ObjectMangler.js').create([
-			
-			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
-
-				return new universalDaoModule.UniversalDao(mongoDriver, options);
-			}, mongoDriver),
-
-			require('./manglers/SequenceMangler.js')(mongoDriver)
-
-	]);
-	
 	var listObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/ObjectCleanerUnmangler.js')(),
+			require('./manglers/TimestampUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver)
 	]);
 
 	var getObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/TimestampUnmangler.js')(),
+			require('./manglers/ObjectCleanerUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver)
 	]);
 
 	var updateObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/ObjectCleanerMangler.js')(),
 			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
-				return new universalDaoModule.UniversalDao(mongoDriver, options);
-			}, mongoDriver)
+						return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver),
+			require('./manglers/TimestampMangler.js')()
 	]);
 
+	var saveObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver),
+			 require('./manglers/TimestampMangler.js')(mongoDriver),
+			 require('./manglers/ObjectCleanerMangler.js')(),
+			require('./manglers/SequenceMangler.js')(mongoDriver)
+	]);
 
 	var that=this;
 	this.mongoDriver=mongoDriver;
 	var securityService= new securityServiceModule.SecurityService();
-	
 	
 	this.save = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(
@@ -99,48 +101,38 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 		log.verbose("data to save", req.body);
 
 		var obj = req.body;
-		// SVF DIRTY HACK
-		if (obj.baseData.lastModification) {
-			var d = new Date();
-
-			obj.baseData.lastModification = ''.concat(d.getDate(), '.', d.getMonth() + 1, '.' + d.getFullYear(), ' ', d.getHours(), ':', 
-					(''.concat(d.getMinutes()).length === 1 ? '0'+d.getMinutes():d.getMinutes()), ':',
-					 (''.concat(d.getSeconds()).length === 1 ? '0'+d.getSeconds() : d.getSeconds()));
-		}
-		if (obj.id){
-
-
 		
 
-
+		if (obj.id){
+			//UPDATE
 			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
-				if (err){res.send(500);}
-				res.status(200).json(200); 
-				
+				if (err){res.send(500);return;}
+
 				_dao.update(obj, function(err, data){
 					if (err) {
+						res.send(500);
 						throw err;
+
 					}
+					res.status(200).json(data);
 					auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
-					res.json(data);
 				});
 
 			}
 			), 0);
-
-			
-
 		}
 		else {
+			//CREATE
 			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
 				if (err){res.send(500);log.err(err);return;}
 				
 				_dao.save(obj, function(err, data){
 					if (err) {
+						res.send(500);
 						throw err;
 					}
-					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 					res.json(data);
+					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 				});
 
 			}
@@ -260,7 +252,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 			if (err) {
 				throw err;
 			}
-			setTimeout(listObjectMangler.mangle(data, compiledSchema, function(err, cb) {
+			setTimeout(getObjectMangler.mangle(data, compiledSchema, function(err, cb) {
 									if (err){res.send(500);}
 									res.status(200).json(data); 
 								}), 0);

@@ -14,7 +14,7 @@
 	function TypeValidator() {
 	}
 
-	TypeValidator.prototype.mangle = function(objFragment, schemaFragment, objPath, callback) {
+	TypeValidator.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
 		log.silly('Type validation start for %s', objPath);
 		var localErrors = [];
 

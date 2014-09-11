@@ -11,7 +11,6 @@
 	}
 
 	ObjectLinkUnmangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
-		log.silly('ObjectLink unmangler start for %s', objPath);
 		var props = {};
 		var prop;
 
@@ -27,6 +26,7 @@
 			return;
 		}
 
+		log.silly('ObjectLink unmangler start for %s', objPath);
 		var registry = objFragment[consts.OBJECT_LINK_REGISTRY_KEYWORD] || schemaFragment[consts.OBJECT_LINK_REGISTRY_KEYWORD];
 
 		if (!registry) {

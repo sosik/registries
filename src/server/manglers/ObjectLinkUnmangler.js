@@ -10,7 +10,7 @@
 		this.mongoDriver = mongoDriver;
 	}
 
-	ObjectLinkUnmangler.prototype.mangle = function(objFragment, schemaFragment, objPath, callback) {
+	ObjectLinkUnmangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
 		log.silly('ObjectLink unmangler start for %s', objPath);
 		var props = {};
 		var prop;

@@ -10,11 +10,35 @@ var QueryFilter = require('./QueryFilter.js');
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 
+	var saveObjectMangler = require('./ObjectMangler.js').create([
+			
+			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
+
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver),
+
+			require('./manglers/SequenceMangler.js')(mongoDriver)
+
+	]);
+	
 	var listObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver)
 	]);
+
+	var getObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver)
+	]);
+
+	var updateObjectMangler = require('./ObjectMangler.js').create([
+			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver)
+	]);
+
 
 	var that=this;
 	this.mongoDriver=mongoDriver;
@@ -84,50 +108,44 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 					 (''.concat(d.getSeconds()).length === 1 ? '0'+d.getSeconds() : d.getSeconds()));
 		}
 		if (obj.id){
-			_dao.update(obj, function(err, data){
-				if (err) {
-					throw err;
-				}
-				auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
-				res.json(data);
-			});
 
-		}
-		else {
-			var sequences=objectTools.findSeqeunceFields(compiledSchema);
-			
-			console.log('found sequences' , sequences);
 
-			var sequencesToAssign= [];
-			
-			sequences.map(function(path){
-				console.log('sequences to assign',path);
-				var sequenceDef=objectTools.evalPath(compiledSchema,path);
-				sequencesToAssign.push( function (callback){
-						mongoDriver.nextSequence(sequenceDef.$sequence, function(err,data){console.log(err,data); objectTools.setValue(obj,objectTools.schemaPathToObjectPath(path),data.seq);callback(err);});
-						}
-				);
+		
+
+
+			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
+				if (err){res.send(500);}
+				res.status(200).json(200); 
 				
-				console.log(obj);
-			});
-
-			if (sequencesToAssign.length>0) {
-				async.parallel(sequencesToAssign,function(err){if (err) {log.err(err); return;} _dao.save(obj, function(err, data){
+				_dao.update(obj, function(err, data){
 					if (err) {
 						throw err;
 					}
-					auditLog.info('user oid', req.currentUser.id,'has saved object',obj);
+					auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
 					res.json(data);
-				});  })
-			}else {
+				});
+
+			}
+			), 0);
+
+			
+
+		}
+		else {
+			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
+				if (err){res.send(500);log.err(err);return;}
+				
 				_dao.save(obj, function(err, data){
 					if (err) {
 						throw err;
 					}
-					auditLog.info('user oid', req.currentUser.id,'has saved object',obj);
+					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 					res.json(data);
-				});	
+				});
+
 			}
+			), 0);
+
 			
 		}
 
@@ -242,36 +260,11 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 			if (err) {
 				throw err;
 			}
+			setTimeout(listObjectMangler.mangle(data, compiledSchema, function(err, cb) {
+									if (err){res.send(500);}
+									res.status(200).json(data); 
+								}), 0);
 
-			var iterator = function(registry, oid, fields, callback) {
-				log.silly('Resolving objectlink %s, %s', registry, oid, fields);
-				var localDao = new universalDaoModule.UniversalDao(
-					mongoDriver,
-					{collectionName: registry}
-				);
-
-				localDao.get(oid, function(err, r) {
-					if (err) {
-						callback(err);
-					}
-
-					var result = {};
-					for (var i in fields) {
-						result[fields[i]] = objectTools.evalPath(r, fields[i]);
-					}
-
-					callback(null, result);
-				});
-			}
-
-			objectTools.resolveObjectLinks(compiledSchema, data, iterator, function(err, resolvedData) {
-				if (err) {
-					throw err;
-				}
-
-				log.silly("ObjectLink resolved as", resolvedData);
-				res.json(resolvedData);
-			});
 		});
 	};
 

@@ -9,6 +9,6 @@ module.exports = {
 	OBJECT_LINK_REGISTRY_KEYWORD: 'registry',
 	PROPERTIES_KEYWORD: 'properties', // properties keyword
 	REQUIRED_KEYWORD: 'required',
-	ROOT_KEYWORD: '__ROOT__', // idicates root of object or schema
+	SEQUENCE: '$sequence',
 	TYPE_KEYWORD: 'type',
 };

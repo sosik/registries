@@ -7,7 +7,7 @@
 	function ObjectLinkMangler() {
 	}
 
-	ObjectLinkMangler.prototype.mangle = function(objFragment, schemaFragment, objPath, callback) {
+	ObjectLinkMangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
 		log.silly('ObjectLink mangler start for %s', objPath);
 		var prop;
 

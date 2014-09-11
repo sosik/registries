@@ -19,16 +19,20 @@ function ObjectMangler(manglers) {
 }
 
 ObjectMangler.prototype.mangle = function(obj, schema, callback) {
+
 	var manglers = this.manglers;
-	function mangleInternal(objFragment, schemaFragment, objPath, localCallback) {
+	var context= {o:obj,s:schema};
+
+	function mangleInternal(ctx,objFragment, schemaFragment, objPath, localCallback) {
 		var propsToVisit = [];
 		var prop, i;
 		var propDivers = [];
 
 
-		var manglerFuncFactory = function(objFragment, schemaFragment, objPath, mangler) {
+
+		var manglerFuncFactory = function(ctx,objFragment, schemaFragment, objPath, mangler) {
 			return function(callback) {
-				mangler.mangle(objFragment, schemaFragment, objPath, function(err, localError){
+				mangler.mangle(ctx,objFragment, schemaFragment, objPath, function(err, localError){
 					callback(err, localError);
 				});
 			};
@@ -36,14 +40,14 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 
 		for (i = 0; i < manglers.length; i++) {
 			propDivers.push(
-				manglerFuncFactory(objFragment, schemaFragment, objPath, manglers[i])
+				manglerFuncFactory(ctx,objFragment, schemaFragment, objPath, manglers[i])
 			);
 
 		}
 
-		var propDiverFuncFactory = function(propFragment, schemaPropFragment, newPath) {
+		var propDiverFuncFactory = function(ctx,propFragment, schemaPropFragment, newPath) {
 			return function(callback) {
-				mangleInternal(propFragment, schemaPropFragment, newPath, function(err, localErrors) {
+				mangleInternal(ctx,propFragment, schemaPropFragment, newPath, function(err, localErrors) {
 					var j;
 
 					if (err) {
@@ -71,7 +75,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 
 		if (schemaFragment && schemaFragment[consts.TYPE_KEYWORD] === 'array' && objFragment && Array.isArray(objFragment)) {
 			for (i = 0; i < objFragment.length; i++) {
-				propDivers.push(propDiverFuncFactory(objFragment[i], schemaFragment[consts.ITEMS_KEYWORD], objPath.concat('.', i)));
+				propDivers.push(propDiverFuncFactory(ctx,objFragment[i], schemaFragment[consts.ITEMS_KEYWORD], objPath.concat('.', i)));
 			}
 		} else if (!schemaFragment || !schemaFragment[consts.OBJECT_LINK_KEYWORD]){
 			// Dive into properties and mangle them
@@ -91,7 +95,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 
 			// there are properties to dive in
 			for (i = 0; i < propsToVisit.length; i++) {
-				var newPath = objPath.concat('.', propsToVisit[i]);
+				var newPath = objPath? objPath.concat('.', propsToVisit[i]):propsToVisit[i];
 				log.silly('Investigating property %s', newPath);
 				
 				var propFragment = null;
@@ -105,7 +109,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 				}
 				
 				propDivers.push(
-					propDiverFuncFactory(propFragment, schemaPropFragment, newPath)
+					propDiverFuncFactory(ctx,propFragment, schemaPropFragment, newPath)
 				);
 			}
 		}
@@ -130,13 +134,13 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 		});
 	}
 
-	mangleInternal(obj, schema, consts.ROOT_KEYWORD, function(err, localErrors) {
+	mangleInternal(context,obj, schema, null, function(err, localErrors) {
 		callback(err, localErrors);
 	});
 };
 
 /**
- * EXPORTS
+ * 	EXPORTS
  */
 module.exports = {
 	/**

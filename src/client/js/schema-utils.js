@@ -15,6 +15,7 @@ angular.module('schema-utils', ['registries'])
 		
 		return $http({
 			method : 'GET',
+			cache: true,
 			url : '/schema/compiled/' + this.encodeUri(_schemaUri)
 		});
 

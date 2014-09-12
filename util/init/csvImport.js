@@ -92,15 +92,14 @@ function processDataset(dataset,callback){
 function processLine(def,line,lineNr,callback){
 
 	var parts=splitLine(line);
-	// console.log(line);
+	
 	var json = createJson(def, lineNr, parts);
-		
 
 		if (def.resolve) {
 				
 				var resovleFs=[];
 				def.resolve.map(function(toResolve){
-					console.log('----->',toResolve);
+					// console.log('----->',toResolve);
 					resovleFs.push(function(callback2){
 						if (toResolve.byBirthNumber){
 							resolveByBirthNumberToObjectLink(json,toResolve.attribute,callback2);
@@ -186,7 +185,9 @@ function createJson(defs, lineNr, line) {
 
 	var index = 0;
 	defs.collDef.map(function(def) {
-		applyValue(retVal, def, line[index++]);
+		// console.log (def,line[index]);
+		applyValue(retVal, def, line[index]);
+		index++;
 	});
 
 	return retVal;
@@ -422,7 +423,7 @@ function resolveToObjectLink(json,path,callback){
 }
 
 function resolveByNameToObjectLink(json,path,callback){
-	console.log(json,path);
+	// console.log(json,path);
 	// console.log('resolveByNameToObjectLink',json,path);
 	var parts=path.split('.');
 	
@@ -438,7 +439,6 @@ function resolveByNameToObjectLink(json,path,callback){
 			obj=null;
 		}
 	});
-	console.log(obj);
 	if (!obj){
 		callback();
 		return;
@@ -487,7 +487,6 @@ function resolveByPathToObjectLink(json,path,searchPath,callback){
 			obj=null;
 		}
 	});
-	console.log(obj);
 	if (!obj){
 		callback();
 		return;

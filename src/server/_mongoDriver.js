@@ -1,4 +1,5 @@
 var extend = require('extend');
+var util = require('util');
 var log = require('./logging.js').getLogger('_mongoDriver.js');
 
 /*
@@ -81,7 +82,7 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					if (key === 'id' && prefix === null) {
 						continue;
 					}
-					if (typeof obj[key] === 'object') {
+					if ((typeof obj[key] === 'object') && (!util.isArray(obj[key]))) {
 						if (obj[key] === null) {
 							unset[prefix === null ? key: prefix + "." + key] = 1;
 						} else {

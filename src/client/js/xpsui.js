@@ -628,6 +628,7 @@ angular.module('xpsui', [])
 						var year = value.substring(0,4);
 						var month = value.substring(4,6);
 						var day = value.substring(6,8);
+
 						if (year.length === 4 && month.length === 2 && day.length === 2) {
 							var d = new Date(year, month-1, day);
 
@@ -652,9 +653,9 @@ angular.module('xpsui', [])
 								(month > 0 && month <13) &&
 								(year > 0 && year < 10000)
 							   ) {
-									d.setDate(day);
-									d.setMonth(month -1);
 									d.setYear(year);
+									d.setMonth(month -1);
+									d.setDate(day);
 
 									var ys = d.getFullYear().toString(10);
 									var ms = (d.getMonth() + 1).toString(10);

@@ -53,9 +53,9 @@ angular.module('psui-datepicker', [])
 								(month > 0 && month <13) &&
 								(year > 0 && year < 10000)
 							   ) {
-									d.setDate(day);
-									d.setMonth(month -1);
 									d.setYear(year);
+									d.setMonth(month -1);
+									d.setDate(day);
 
 									var ys = d.getFullYear().toString(10);
 									var ms = (d.getMonth() + 1).toString(10);

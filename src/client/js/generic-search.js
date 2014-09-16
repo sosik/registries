@@ -360,6 +360,10 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 	};
 	
 	$scope.goView = function(i) {
-			$location.path('registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id);
+		$location.path('registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id);
+	};
+	
+	$scope.getLink = function(i) {
+		return '#/registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id;
 	};
 } ]);

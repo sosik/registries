@@ -71,13 +71,13 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="obj in data" ng-click="goView($index)"
+									<tr ng-repeat="obj in data" 
 										class="list-row">
 										<td ng-repeat="header in headers">{{getVal(header.field, $eval('obj.'+header.field))}}</td>
 										<td class="psui-actions-holder">
-											<span class="psui-btn psui-view-btn">
+											<a ng-href="{{getLink($index)}}" class="psui-btn psui-view-btn">
 												<i></i><span>{{'generic.search.view' | translate}}</span>
-											</span> 
+											</a> 
 										</td>
 									</tr>
 								</tbody>

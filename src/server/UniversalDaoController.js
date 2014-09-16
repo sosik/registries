@@ -8,7 +8,7 @@ var securityServiceModule = require(process.cwd() + '/build/server/securityServi
 var QueryFilter = require('./QueryFilter.js');
 
 var safeUrlEncoder = require('./safeUrlEncoder.js');
-var UniversalDaoController = function(mongoDriver, schemaRegistry) {
+var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry) {
 
 	var listObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/ObjectCleanerUnmangler.js')(),
@@ -115,6 +115,10 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 					}
 					res.status(200).json(data);
 					auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
+					if (compiledSchema._fireEvents && compiledSchema._fireEvents.update ){
+						log.silly('Firing event',compiledSchema._fireEvents.update);
+						eventRegistry.emitEvent(compiledSchema._fireEvents.update,{entity:obj,user:req.currentUser});
+					}
 				});
 
 			}
@@ -126,6 +130,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 
 				if (err){res.send(500);log.err(err);return;}
 				objectTools.removeNullProperties(obj);
+
 				_dao.save(obj, function(err, data){
 					if (err) {
 						res.send(500);
@@ -133,6 +138,11 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 					}
 					res.json(data);
 					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
+					if (compiledSchema._fireEvents && compiledSchema._fireEvents.create ){
+						log.silly('Firing event',compiledSchema._fireEvents.create);
+
+						eventRegistry.emitEvent(compiledSchema._fireEvents.create,{entity:data,user:req.currentUser});
+					}
 				});
 
 			}
@@ -173,14 +183,6 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 					if (data) {
 						if (!data.player) {
 							data.player = {};
-						}
-
-						if (obj.baseData.typeOfTransfer === 'hosťovanie' || obj.baseData.typeOfTransfer === 'zahr. transfér') {
-							data.player.club = obj.baseData.clubTo;
-						}
-						if (obj.baseData.typeOfTransfer === 'prestup') {
-							data.player.clubOfFirstRegistration = obj.baseData.clubTo;
-							data.player.club = obj.baseData.clubTo;
 						}
 
 						cDao.update(data, function(err, data){});
@@ -332,7 +334,7 @@ this.searchBySchema = function(req, resp) {
 
 
 		log.silly('searching for', req.params);
-		var schemaName=safeUrlEncoder.decode(req.params.schema)
+		var schemaName=safeUrlEncoder.decode(req.params.schema);
 		var schema = schemaRegistry.getSchema(schemaName);
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName: schema.compiled.table
@@ -365,7 +367,7 @@ this.searchBySchema = function(req, resp) {
 			qf.setLimit(crits.limit);
 		}
 		if ('skip' in crits){
-			qf.setSkip(crits.skip)
+			qf.setSkip(crits.skip);
 		}
 		for(var c in crits.criteria){
 			qf.addCriterium(crits.criteria[c].f,crits.criteria[c].op,crits.criteria[c].v);
@@ -398,12 +400,12 @@ this.searchBySchema = function(req, resp) {
 					async.parallelLimit(mangFuncs, 3, function(err, cb) {
 						if (err) {
 							resp.send(500, err);
+							return;
 						}
-
-						resp.send(200, data);
+						resp.status(200).json(data);
 					});
 				} else {
-					resp.send(200, data);
+					resp.status(200).json(data);
 				}
 			}
 		});
@@ -414,7 +416,7 @@ this.searchBySchema = function(req, resp) {
 this.searchBySchemaCount = function(req, resp) {
 
 		log.silly('searching for', req.params);
-		var schemaName=safeUrlEncoder.decode(req.params.schema)
+		var schemaName=safeUrlEncoder.decode(req.params.schema);
 		var schema = schemaRegistry.getSchema(schemaName);
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName: schema.compiled.table
@@ -500,8 +502,8 @@ this.searchBySchemaCount = function(req, resp) {
 			res.json(data);
 		});
 	};
-}
+};
 
 module.exports = {
 	UniversalDaoController: UniversalDaoController
-}
+};

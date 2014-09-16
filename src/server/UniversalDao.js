@@ -81,6 +81,31 @@ var UniversalDao = function(mongoDriver, options) {
 		}
 	};
 
+
+	/**
+	* Get object
+	*
+	* @param {String} id - object identifier as string
+	* @param {resultCallback} callback - async callback
+	*/
+	this.getWithTimeLock = function(entity,lockDuration, callback) {
+		var currentTs= new Date().getTime();
+		var tillTs= currentTs+lockDuration;
+		if (entity.id) {
+			entity._lockedTill=tillTs;
+			var searchKey = mongoDriver.id2_id({'id': entity.id,$or:[{_lockedTill:{$lt:currentTs}},{_lockedTill:{$exists:false}}]});
+			_collection.findAndModify(searchKey,[], entity ,{new: false, upsert: false },function(err,data){
+				console.log(err,data);
+				callback(err,data);
+			} );
+		} else {
+			log.error('Property "id" is undefined!');
+			callback(new Error('Property "id" is undefined'));
+			return;
+		}
+	};
+
+
 	/**
 	 * Update object
 	 *
@@ -139,6 +164,27 @@ var UniversalDao = function(mongoDriver, options) {
 	};
 
 	/**
+	* Remove objects matching criteria
+	*
+	* @param {Object} queryFilter - search options - use QueryFilter class
+	* @param {resultCallback} callback - async callback, result parameter contains number of removed objects
+	*/
+	this.delete=function(queryFilter,callback){
+		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
+
+		_collection.remove(_findOptions.selector, function(err, count){
+			if (err) {
+				callback(err);
+				log.error();
+				return;
+			}
+
+			callback(null, count);
+		});
+
+	};
+
+	/**
 	 * List objects by criteria
 	 *
 	 * @param {Object} queryFilter - search options - use QueryFilter class
@@ -169,6 +215,8 @@ var UniversalDao = function(mongoDriver, options) {
 			});
 		});
 	};
+
+	this.find=this.list;
 
 	/**
 	 * Counts objects queried by criteria

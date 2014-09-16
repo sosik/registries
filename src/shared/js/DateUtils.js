@@ -27,12 +27,29 @@ var DateUtils = function() {
 		return null;
 	};
 
+	this.strToTS=function(strDate){
+
+		if (!strDate) return null;
+
+		var year = strDate.substring(0,4);
+		var month = strDate.substring(4,6);
+		var day = strDate.substring(6,8);
+
+		if (year.length === 4 && month.length === 2 && day.length === 2) {
+			var d = new Date(year, month-1, day);
+
+			return d.getTime();
+		}
+		return null;
+	};
 	this.dateAddDays=function(dateDate,days){
 
 		var d = new Date(dateDate);
 		d.setDate(dateDate.getDate()+days);
 		return (d);
 	};
+
+
 
 	this.dateToStr=function(dateDate){
 		var ys = dateDate.getFullYear().toString(10);

@@ -20,6 +20,10 @@
 		// }
 	}
 
+	.no-print{
+		display: none !important;
+	}
+
 	.row,
 	.container-fluid,
 	#main-wrapper,
@@ -39,6 +43,10 @@
 	#main-menu{
 		display: none;
 		width:0;
+	}
+
+	.content-actions{
+		display: none;
 	}
 	
 	#content{

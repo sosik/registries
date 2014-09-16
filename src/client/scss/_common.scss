@@ -97,3 +97,30 @@ ul.menu {
 		@include box-shadow(0 3px 9px rgba(0,0,0,.5));
 	}
 }
+
+.content-actions{
+	text-align: right;
+	padding: 0px 20px;
+	width: 100%;
+	color: rgb(0, 0, 238);
+	a{
+		display: inline-block;
+		// margin-right: -15px;
+		color: rgb(0, 0, 238);
+		padding: 0px 10px;
+		text-decoration: underline;
+		// border: 1px solid  rgb(0, 0, 238);
+		// border-top:0px;
+		// border-bottom: 0px;
+		// + a{
+		// 	// border-left: 0px;
+		// 	position: relative;
+		// 	right: 1px;
+		// }
+
+		&:hover{
+			color: rgb(0, 0, 238);
+			text-decoration: none;
+		}
+	}
+}

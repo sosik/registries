@@ -51,6 +51,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 					var j;
 
 					if (err) {
+						log.error('Mangiling of path %s failed', newPath, err);
 						callback(err);
 					}
 

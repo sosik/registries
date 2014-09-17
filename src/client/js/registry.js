@@ -1,4 +1,16 @@
 angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src', 'psui-selectbox', 'xpsui'])
+.controller('registry.customTemplateCtrl', ['$scope', '$routeParams', '$http', 'schema-utils.SchemaUtilFactory',
+		'psui.notificationFactory', function($scope, $routeParams, $http, schemaUtilFactory, notificationFactory) {
+		$scope.model = {};
+		$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
+
+		$http({ method : 'GET',url: '/udao/getBySchema/'+$routeParams.schema+'/'+ $routeParams.id})
+		.success(function(data, status, headers, config){
+			$scope.model = data;
+		}).error(function(err) {
+			notificationFactory.error(err);
+		});
+}])
 .controller('registry.newCtrl', ['$route',
 		'$scope',
 		'$routeParams',
@@ -27,7 +39,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		$http({url: '/udao/saveBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri($scope.currentSchemaUri , 'new')), method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
 			notificationFactory.clear();
-			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
+			$location.path('/#/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
 		}).error(function(err) {
 			notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
 		});
@@ -394,6 +406,25 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		}
 	}
 }])
+.directive('psuiFormActionLink', ['schema-utils.SchemaUtilFactory',
+		function(schemaUtilFactory) {
+	return {
+		restrict: 'A',
+		link: function(scope, elm, attrs, ctrls) {
+			var options = scope.$eval(attrs.psuiOptions);
+			var modelPath = scope.$eval(attrs.psuiModel);
+
+			elm.append('<span>'+(options.title)+'</span>');
+			
+			scope.$watch(attrs.psuiModel+'.id', function(nv, ov) {
+				if (nv) {
+					attrs.$set('href', '/#/registry/custom/' + options.template + '/' + schemaUtilFactory.encodeUri(options.schema) + '/' +nv);
+				}
+			});
+
+		}
+	}
+}])
 .directive('psuiSchemaForm', ['$compile', function($compile) {
 	return {
 		restrict: 'A',
@@ -412,6 +443,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					element.append(registryTitle);
 				}
 				console.log(properties);
+
+
 				angular.forEach(properties, function(value, key) {
 					if (value.type === 'object') {
 						var fieldSet = angular.element('<fieldset></fieldset>');
@@ -541,6 +574,24 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				}
 				var properties = options.schema.properties;
 				console.log(properties);
+
+				// ACTIONS
+				if (options.schema.clientActions) {
+					var contentActionsHolder = angular.element('<div class="content-actions"></div>');
+					element.append(contentActionsHolder);
+
+					for (var actionIndex in options.schema.clientActions) {
+						var action = options.schema.clientActions[actionIndex];
+
+						var actionElm;
+						if (action.__DIRECTIVE__) {
+							actionElm = angular.element('<a psui-form-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+options.modelPath+'"></a>');
+							$compile(actionElm)(scope);
+							contentActionsHolder.append(actionElm);
+						}
+					}
+				}
+
 				angular.forEach(properties, function(value, key) {
 					if (value.type === 'object') {
 						var fieldSet = angular.element('<fieldset></fieldset');

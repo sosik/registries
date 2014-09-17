@@ -30,6 +30,9 @@ angular.module('registries', [
 	$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/security-profile-edit.html', controller: 'security.profileEditCtrl',permissions:['Security - read']});	
 	$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/registry-new.html', controller: 'registry.newCtrl',permissions:['Registry - write']});
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl',permissions:['Registry - read']});
+	$routeProvider.when('/registry/custom/:template/:schema/:id', {templateUrl: function(params) {
+		return '/dataset/get/partials/' + params.template;
+	}, controller: 'registry.customTemplateCtrl',permissions:['Registry - read']});
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 }])
 .config(['$httpProvider', function ($httpProvider) {

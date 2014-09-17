@@ -12,4 +12,5 @@ module.exports = {
 	SEQUENCE: '$sequence',
 	TIMESTAMP: '$timestamp',
 	TYPE_KEYWORD: 'type',
+	CLIENT_ACTIONS: 'clientActions', // array of client actions
 };

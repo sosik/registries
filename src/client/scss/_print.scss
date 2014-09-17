@@ -1,12 +1,12 @@
 @include media-print {
 	body{
 		font-size: 12px;
-		margin: 20mm 15mm 20mm 20mm;
+		// margin: 20mm 15mm 20mm 20mm;
 	}
 
 	@page {
 		size: auto;
-		margin: 0px;
+		margin: 20mm 15mm 20mm 20mm;
 		// margin: 20mm 15mm 20mm 20mm;
 		// counter-increment: page;
 

@@ -51,7 +51,7 @@ angular.module('schema-editor', ['psui-notification'])
 	$scope.selectSchema=function(schema){
 		$scope.selectedSchema=schema;
 		schemaService.getFileContent(schema.name).success(function(data) {
-			$scope.aceModel = JSON.stringify(data, null, 4);
+			$scope.aceModel = JSON.stringify(data, null, '\t');
 		}).error(function(err){$scope.alert=err;});
 	}
 
@@ -68,10 +68,7 @@ angular.module('schema-editor', ['psui-notification'])
 	
 	$scope.postData = function(data) {
 		try{
-		 
-			JSON.parse(data);
-
-			schemaService.getPostContent($scope.selectedSchema.name, data).success(function(data) {
+			schemaService.getPostContent($scope.selectedSchema.name, JSON.stringify(JSON.parse(data), null, '\t')).success(function(data) {
 				$scope.selectedSchema=null;
 			}).error(function(err){$scope.alert=err;});
 			

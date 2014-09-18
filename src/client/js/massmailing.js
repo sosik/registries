@@ -1,5 +1,5 @@
 'use strict';
-angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-utils','generic-search'])
+angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-utils','generic-search','psui-contenteditable'])
 //
 .factory('massmailing.MassmailingFactory', [ '$http', function($http) {
 	var service = {};

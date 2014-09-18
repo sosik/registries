@@ -22,12 +22,9 @@
 							<label for="name" class="control-label">{{'massmail.plaintext.template' | translate}}</label>
 							<textarea class="form-control"  cols="80" rows="7" ng-model="selectedTemplate.baseData.textTemplate"></textarea>
 						</div>
-						<div class="form-group">
-							<label for="name" class="control-label">{{'massmail.html.template' | translate}}</label>
-							<textarea class="form-control"  cols="80" rows="7" ng-model="selectedTemplate.baseData.htmlTemplate"></textarea>
-						</div>
+							<div psui-contenteditable ng-model="selectedTemplate.baseData.htmlTemplate" />
 					</fieldset>
-				</div>
+									</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-8 psui-search">
@@ -48,8 +45,9 @@
 									ng-Init="crit.operator=searchDef.operators[0]"
 									ng-options="op.title for op in searchDef.operators"></select>
 							</div>
+							
 							<div class="col-sm-4">
-								<input type="text" id="name" name="name" ng-model="crit.value"
+								<input  type="text" id="name" name="name" ng-model="crit.value"
 									placeholder="" class="ng-pristine ng-valid form-control"
 									autocomplete="off">
 							</div>

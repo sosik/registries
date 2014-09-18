@@ -23,6 +23,7 @@ angular.module('registries')
 		"menu.age.category.title": "Veková kategória",
 		"menu.roster.title": "Súpisky",
 		"menu.competition.title": "Súťaž",
+		"menu.company.title": "Organizácia",
 		"menu.my.profile.title": "Môj profil",
 		"menu.permissions.title": "Oprávnenia",
 		"menu.schemas.title": "Schémy",
@@ -129,7 +130,6 @@ angular.module('registries')
 		"schema.editor.actions": "Akcie",
 		"schema.editor.size": "Veľkosť",
 		"schema.editor.list.of.schemas.for.editation": "Zoznam schém na editáciu",
-		"schema.person.title": "Nová osoba",
 		"schema.org.title": "Nová organizácia",
 		"schema.stadium.title": "Nový štadión",
 		"personal.change.password.passwords.not.equal": "Nové a kontrolné heslo sa nerovnajú!",
@@ -568,7 +568,6 @@ angular.module('registries')
 		"security.user.edit.added.profiles":"Pridelené profily",
 		"security.user.edit.available.profiles":"Dostupné profily",
 
-		"schema.person.title": "Nová osoba",
 		"schema.editor.save": "Uložit",
 		"schema.editor.edit": "Upravit",
 		"schema.editor.id": "ID ",

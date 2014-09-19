@@ -39,7 +39,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		$http({url: '/udao/saveBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri($scope.currentSchemaUri , 'new')), method: 'PUT',data: $scope.model.obj})
 		.success(function(data, status, headers, config){
 			notificationFactory.clear();
-			$location.path('/#/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
+			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
 		}).error(function(err) {
 			notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
 		});

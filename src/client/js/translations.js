@@ -11,6 +11,7 @@ angular.module('registries')
 		"login.profile":"Profil",
 		
 		"menu.member.title": "Člen",
+		"menu.fees.title": "Poplatok",
 		"menu.player.title": "Hráč",
 		"menu.referee.title": "Rozhodca",
 		"menu.coach.title": "Tréner",

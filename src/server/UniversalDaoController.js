@@ -144,7 +144,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 		// SVF dirty hack
 		if (obj.baseData
 				&& obj.baseData.typeOfTransfer
-				&& (obj.baseData.typeOfTransfer === 'hosťovanie' || obj.baseData.typeOfTransfer === 'prestup') 
+				&& (obj.baseData.typeOfTransfer === 'hosťovanie' || obj.baseData.typeOfTransfer === 'prestup' || obj.baseData.typeOfTransfer === 'zahr. transfér') 
 				&& obj.baseData.dateFrom
 				&& obj.baseData.clubTo
 				&& obj.baseData.clubTo.oid
@@ -175,7 +175,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry) {
 							data.player = {};
 						}
 
-						if (obj.baseData.typeOfTransfer === 'hosťovanie') {
+						if (obj.baseData.typeOfTransfer === 'hosťovanie' || obj.baseData.typeOfTransfer === 'zahr. transfér') {
 							data.player.club = obj.baseData.clubTo;
 						}
 						if (obj.baseData.typeOfTransfer === 'prestup') {

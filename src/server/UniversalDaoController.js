@@ -411,6 +411,77 @@ this.searchBySchema = function(req, resp) {
 	};
 
 
+this.searchBySchemaCount = function(req, resp) {
+
+		log.silly('searching for', req.params);
+		var schemaName=safeUrlEncoder.decode(req.params.schema)
+		var schema = schemaRegistry.getSchema(schemaName);
+		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
+			collectionName: schema.compiled.table
+		});
+		
+		var compiledSchema = schema.compiled;
+
+		if (!compiledSchema) {
+			log.error('schema %s is not compiled', schemaName);
+			throw 'Schema is not compiled';
+		}
+
+		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
+			log.warn('user has not rights to search in schema',schemaName);
+		
+			resp.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
+			return;
+		} 
+
+		var crits=req.body;
+		//remap to QueryFiter
+		var qf=QueryFilter.create();
+		
+		for(var c in crits.criteria){
+			qf.addCriterium(crits.criteria[c].f,crits.criteria[c].op,crits.criteria[c].v);
+		}
+
+		securityService.applySchemaForcedCrits(compiledSchema,qf);
+
+		if (req.profile){
+				qf=securityService.applyProfileCrits(req.profile,schemaName,qf);
+		}
+
+		log.silly('used crits', crits);
+		dao.count(qf, function(err, data) {
+			if (err) {
+				resp.send(500, err);
+			} else {
+				if (data) {
+					var mangFuncs = [];
+					for (var i = 0; i < data.length; i++) {
+						mangFuncs.push((function(j) {
+							return function(callback) {
+								setTimeout(listObjectMangler.mangle(data[j], compiledSchema, function(err, cb) {
+									callback(err, cb);
+								}), 0);
+							};
+						}(i)));
+					}
+
+					async.parallelLimit(mangFuncs, 3, function(err, cb) {
+						if (err) {
+							resp.send(500, err);
+						}
+					
+						resp.send(200, data);
+					});
+				} else {
+					resp.send(200, data);
+				}
+			}
+		});
+
+	};
+
+
+
 	this.search = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,

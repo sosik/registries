@@ -1,5 +1,6 @@
 'use strict';
 
+require('look').start();
 var log = require('./logging.js').getLogger('server.js');
 var express = require('express');
 var fs = require('fs');
@@ -73,8 +74,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.list(req, res);});
 	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.listBySchema(req, res);});
 	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.search(req, res);});
+	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){udc.searchBySchemaCount(req,res);});
 	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){udc.searchBySchema(req,res);});
-
 
 	app.post('/login', bodyParser.json(), function(req, res){securityCtrl.login(req, res);});
 	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});

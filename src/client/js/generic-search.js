@@ -25,6 +25,18 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		});
 	};
 
+
+	service.getSearchCount = function(searchSchema, criteria) {
+		
+		return $http({
+			method : 'POST',
+			url : '/search/count/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
+			data : {
+				criteria : criteria
+			}
+		});
+	};
+
 	service.parseSearchDef = function(schema) {
 		
 		var retval = {};

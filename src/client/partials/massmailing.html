@@ -78,7 +78,7 @@
 								<thead>
 									<tr class="list-header">
 										<th>
-												<input type="checkbox" ng-model="selectAll">&nbsp;{{'massmail.selection.all' | translate}}</input>
+												<input type="checkbox" ng-model="selectAll">&nbsp;{{'massmail.selection.all' | translate}} ({{recipientCount()}})</input>
 										</th>
 										<th ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
 										<th></th>
@@ -102,7 +102,7 @@
 						</div>
 						
 						<div class="col-xs-12">
-							<button confirmed-click="sendMail()" ng-confirm-click="Realy want to send?" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'massmailing.send' | translate}}</button>
+							<button ng-disabled="recipientCount()<1" confirmed-click="sendMail()" ng-confirm-click="Realy want to send ?" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'massmailing.send' | translate}} ({{recipientCount()}}x)</button>
 						</div>
 					</div>
 				</div>

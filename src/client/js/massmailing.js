@@ -100,11 +100,33 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		
 		genericSearchFactory.getSearch(peopleSchemaUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
 			$scope.data = data;
+			genericSearchFactory.getSearchCount(peopleSchemaUri,c).success(function(data) {
+				$scope.dataSize = data;
+			}).error(function(err) {
+				notificationFactory.error(err);
+			});
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
 	};	
 	
+
+	$scope.recipientCount=function(){
+		if ($scope.selectAll){ 
+			return $scope.dataSize;
+		}
+		else {
+			var count = 0 ;
+			for(var index in $scope.data){
+				if( $scope.data[index].selected){
+					count++;
+				}
+			}
+			return count;
+		}
+		return 0;
+	}
+
 	$scope.setSortBy=function (header){
 		if ($scope.sortBy && $scope.sortBy.header===header){
 			if ( 'asc'===$scope.sortBy.direction) {
@@ -139,6 +161,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		});
 	};
 	
+
 	$scope.sendMail=function(){
 		var userIds=null;
 		var criteria=null;

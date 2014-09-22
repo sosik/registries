@@ -11,7 +11,6 @@ angular.module('registries')
 		"login.profile":"Profil",
 		
 		"menu.member.title": "Člen",
-		"menu.fees.title": "Poplatok",
 		"menu.player.title": "Hráč",
 		"menu.fees.title": "Poplatok",
 		"menu.referee.title": "Rozhodca",
@@ -642,7 +641,8 @@ angular.module('registries')
 		"schema.statistics.baseData":"Základní",
 		"schema.statistics.member.count":"Počet členov",
 		"schema.statistics.women.count":"Počet žien",
-		"schemas.countries.enum.AFG": "Afganistan", 
+		"schemas.countries.enum.AFG": "Afganistan",
+		"schemas.countries.enum.ALA": "Alandy", 
 		"schemas.countries.enum.ALB":"Albánie",
 		"schemas.countries.enum.DZA":"Alžírsko",
 		"schemas.countries.enum.ASM":"Americká Samoa",

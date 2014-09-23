@@ -393,6 +393,8 @@ function resolveToObjectLink(json,path,callback){
 
 	var parts=path.split('.');
 	
+	console.log(json,path);
+
 	var obj = json;
 	var prev;
 	var lastPart = null;
@@ -400,7 +402,8 @@ function resolveToObjectLink(json,path,callback){
 		obj = obj[part];
 		lastPart = part;
 	});
-	
+	if (!obj) return;
+	console.log(obj);
 	// console.log(json);
 	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : obj.registry
@@ -691,6 +694,17 @@ function parseDateMix(item)	{
 			parts[0]='0'+parts[0];
 		}
 		return parts[1]+'.'+parts[0]+'.'+parts[2];
+	}
+
+		if (item.indexOf('-')>-1){
+		var parts=item.split('-');
+		if (parts[1].length===1) {
+			parts[1]='0'+parts[1];
+		}
+		if (parts[0].length===1) {
+			parts[0]='0'+parts[0];
+		}
+		return parts[2]+'.'+parts[1]+'.'+parts[0];
 	}
 
 	var parts=item.split('.');

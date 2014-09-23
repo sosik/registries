@@ -732,6 +732,12 @@ function mapMZ(item){
 		return 'Žena';
 }
 
+
+function Muz(item){
+		return 'Muž';
+}
+
+
 function remapPlayerPosition(item){
 	var values={
 				'1': 'brankář',
@@ -753,6 +759,22 @@ function removeFullstop(item) {
 function ano (item){
 	return 'Áno';
 }
+
+
+function remapExtraliga23(item){
+	if (!item ) return null;
+	if (Number(item)<0){
+		return {membershipType:"Extraliga do 23r.",paymentFrequency:"12xročne",membershipFee:"500" };
+	}
+	else {
+		return {membershipType:"Extraliga nad 23r.",paymentFrequency:"12xročne",membershipFee:"800" };;
+	}
+}
+
+function remapCompetition (item) { 
+
+}
+
 
 function reverseDate(item){
 	if (!item){

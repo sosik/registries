@@ -1,6 +1,6 @@
 'use strict';
 
-require('look').start();
+// require('look').start();
 var log = require('./logging.js').getLogger('server.js');
 var express = require('express');
 var fs = require('fs');

@@ -639,6 +639,12 @@ this.updateSecurityProfile = function(req, resp) {
 				callback(new Error('Failed to hash password'));
 				return;
 			}
+			
+			if(!hashPass){
+				log.error('Failed to hash password for',user, passwordSample);
+				callback(new Error('Failed to hash password'));
+				return;
+			}
 
 			if (user.systemCredentials.login.passwordHash === hashPass.toString('base64')) {
 				callback(null);
@@ -657,13 +663,13 @@ this.updateSecurityProfile = function(req, resp) {
 
 		var now = new Date().getTime();
 		var token = {
-		    tokenId : tokenId,
-		    userId : userId,
-		    user : user,
-		    ip : ip,
-		    created : now,
-		    valid : true,
-		    touched : now
+				tokenId : tokenId,
+				userId : userId,
+				user : user,
+				ip : ip,
+				created : now,
+				valid : true,
+				touched : now
 		};
 
 		log.verbose('Storing security token', token);
@@ -674,8 +680,8 @@ this.updateSecurityProfile = function(req, resp) {
 	this.setCookies = function(resp, token, loginName) {
 
 		resp.cookie(cfg.securityTokenCookie, token, {
-		    httpOnly : true,
-		    secure : true
+				httpOnly : true,
+				secure : true
 		});
 		resp.cookie(cfg.loginNameCookie, loginName, {
 			httpOnly : false
@@ -686,8 +692,8 @@ this.updateSecurityProfile = function(req, resp) {
 	this.setProfileCookie = function(resp, profile) {
 
 		resp.cookie(cfg.profileCookie, profile, {
-		    httpOnly : true,
-		    secure : true
+				httpOnly : true,
+				secure : true
 		});
 		
 		log.verbose('setProfileCookie',profile );
@@ -702,9 +708,9 @@ this.updateSecurityProfile = function(req, resp) {
 
 			tokenDao.list({
 				crits : [ {
-				    op : 'eq',
-				    v : tokenId,
-				    f : cfg.tokenIdColumnName
+						op : 'eq',
+						v : tokenId,
+						f : cfg.tokenIdColumnName
 				} ]
 			}, function(err, tokens) {
 

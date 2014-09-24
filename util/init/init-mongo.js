@@ -150,7 +150,12 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 
 
-			_dao.save(johndoe,function (err,data){ console.log ('User saved')});
+			_dao.save(johndoe,function (err,data){ 
+
+				console.log ('User saved')
+
+				mongoDriver.close();
+				});
 			
 			// var janedoe = {
 			// 	"id":"53cf5c54118025ff1b88e367",

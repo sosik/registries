@@ -187,6 +187,7 @@ angular.module('registries')
 		"psui-objectlink.btn.cancel": "Zrušiť",
 		
 		"errors.validation.required": "Povinné pole",
+		"errors.validation.psuiUnique": "Hodnota už v systéme existuje",
 		"schema.editor.schema.editing":"Úprava schémy",
 		"security.group.edit.parent.group":"Rodičovská skupina",
 		"schemas.group.base.data":"Základné údaje",
@@ -627,6 +628,7 @@ angular.module('registries')
 		"security.user.edit.reset.password":"Resetovat heslo",
 		"security.user.missing.permissions":"Nedostatečná práva {{data}}",
 		"errors.validation.required": "Povinné pole",
+		"errors.validation.psuiUnique": "Hodnota už v systéme existuje",
 		"security.user.edit.login.data":"Přihlašovací údaje",
 		"security.user.edit.login":"Login",
 		"security.user.edit.email":"E-mail",

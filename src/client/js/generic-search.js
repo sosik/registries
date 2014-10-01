@@ -290,7 +290,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			retVal+='\r\n';
 		}
 
-		return new TextEncoder('cp1250', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
+		return new TextEncoder('utf-8', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
 	}
 	
 

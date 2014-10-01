@@ -233,7 +233,7 @@ angular.module('psui-objectlink', [])
 					if (schemaFragment(scope).$objectLinkForcedCriteria) {
 						crits = crits.concat(schemaFragment(scope).$objectLinkForcedCriteria);
 					}
-					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria: crits, limit: 20, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
+					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria: crits, limit: 40, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
 					.success(function(data, status, headers, config){
 						//console.log('blabla' + data);
 						for (var i = 0; i < data.length; ++i) {

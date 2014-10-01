@@ -43,7 +43,11 @@ angular.module('schema-utils', ['registries'])
 			} else if (value.type === 'array') {
 				_obj[key] = [];
 			} else {
-				_obj[key] = '';
+				if (value.default) {
+					_obj[key] = value.default;
+				} else {
+					_obj[key] = '';
+				}
 			}
 		});
 	};

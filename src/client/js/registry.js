@@ -534,6 +534,10 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 									input.attr('required', true);
 								}
 
+								if (value2.unique) {
+									input.attr('psui-unique', attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'.unique');
+									input.attr('psui-unique-id', options.modelPath+'.id');
+								}
 							}
 
 							fieldHolderInner.append(input);
@@ -586,6 +590,57 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				scope.ngModel.push({});
 			}
 
+		}
+	}
+}])
+.directive('psuiUnique', ['$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
+	var latestId = 0;
+
+
+	return {
+		restrict: 'A',
+		require: ['?ngModel'],
+		link: function(scope, element, attrs, controllers) {
+			var ngModel = controllers[0];
+
+			var options = scope.$eval(attrs.psuiUnique);
+			if (ngModel) {
+				ngModel.$parsers.push(
+					function(value) {
+						var selfId = scope.$eval(attrs.psuiUniqueId);
+						var crits = [];
+						crits.push({f:options.field, op: 'eq', v: value});
+						var conf = {
+							method : 'POST',
+							url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(options.schema,'search')),
+							data : {
+								criteria : crits,
+								limit: 1
+							}
+						};
+
+						
+						function factory(ver) {
+							return function(data) {
+									if (ver !== latestId) {
+										// another validation in progress
+										return;
+									}
+
+									if (data.data && data.data.length && data.data.length > 0 && data.data[0].id !== selfId) {
+										ngModel.$setValidity('psuiUnique', false);
+									} else {
+										ngModel.$setValidity('psuiUnique', true);
+									}
+								};
+						};
+
+						$http(conf).then(factory(++latestId));
+
+						return value;
+					}
+				);
+			}
 		}
 	}
 }])
@@ -681,6 +736,11 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 								input.attr('required', true);
 							}
 	
+							if (value2.unique) {
+								input.attr('psui-unique', attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'.unique');
+								input.attr('psui-unique-id', options.modelPath+'.id');
+							}
+
 							fieldHolderInner.append(input);
 							fieldSet.append(formGroup);
 						});

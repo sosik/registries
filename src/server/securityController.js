@@ -32,17 +32,17 @@ var transport = nodemailer.createTransport('Sendmail');
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
-	
+
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.userCollection
 	});
-	
+
 	var profileDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.profileCollection
 	});
 
 	var renderService = new renderModule.RenderService();
-	
+
 
 	var tokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.tokenCollection
@@ -62,7 +62,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			result.push(pro);
 		}
 
-		resp.send(200, result);
+		resp.status(200).json(result);
 	};
 
 
@@ -70,10 +70,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 		profileDao.list({},function(err,data){
 			if (err){
-				resp.send(500,err);
+				resp.status(500).send(err);
 				return;
 			}
-			resp.send(200, data);
+			resp.status(200).json(data);
 		});
 	};
 
@@ -84,7 +84,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		userDao.get(userId, function(err, user) {
 
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 				log.warn('getUserPermissions',userId,err);
 			} else {
 				var userRes = {};
@@ -98,7 +98,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 				userRes.permissions = permissions;
 				log.verbose('getUserPermissions result',userId,permissions);
-				resp.send(200, userRes);
+				resp.status(200).json(userRes);
 			}
 
 		});
@@ -123,7 +123,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					groups.push(gr);
 				}
 				userRes.groups = groups;
-				resp.send(200, userRes);
+				resp.status(200).json(userRes);
 			}
 
 		});
@@ -142,48 +142,41 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	};
 
 	this.updateUserSecurity = function(req, resp) {
-		
+
 		var userId = req.body.userId;
 		userDao.get(userId, function(err, user) {
 
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 				log.warn('updateUserSecurity',userId,err);
 			} else {
 
 				if (!user.systemCredentials) {
 					user.systemCredentials = {};
 				}
-				
+
 
 				if (!user.systemCredentials.login) {
 					user.systemCredentials.login = {};
 				}
-				
+
 				if (!('profiles' in user.systemCredentials)) {
 					user.systemCredentials.profiles = {};
 				}
-				
+
 
 				if ('profiles' in req.body){
-					//clear curent
-					for(var prof in user.systemCredentials.profiles ) {
-						user.systemCredentials.profiles[prof]=null;
-					}
-					//set new
-					req.body.profiles.map(function(profile) {
-						user.systemCredentials.profiles[profile.id]=true;
-					});
+					user.systemCredentials.profiles=req.body.profiles;
 				}
 
 				log.verbose('updating users security of', user.systemCredentials.login.loginName);
-				
+
 				user.systemCredentials.login.loginName=req.body.loginName;
 				user.systemCredentials.login.email=req.body.email;
 
 				userDao.update(user, function(err) {
 					if (err) {
-						resp.send(500, err);
+						resp.status(500).send(err);
 						log.warn('updateUserSecurity',userId,err);
 					} else {
 						log.info('updateUserSecurity updated',userId);
@@ -199,12 +192,12 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	};
 
 this.updateSecurityProfile = function(req, resp) {
-		
+
 		var profileId = req.body.profileId;
 		profileDao.get(profileId, function(err, profile) {
 
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 				log.warn('updateProfileSecurity',profileId,err);
 			} else {
 
@@ -213,7 +206,7 @@ this.updateSecurityProfile = function(req, resp) {
 				if (!('security' in profile)) {
 					profile.security = {};
 				}
-				
+
 				if (!('permissions' in profile.security)) {
 					profile.security.permissions = {};
 				}
@@ -239,53 +232,29 @@ this.updateSecurityProfile = function(req, resp) {
 				}
 
 				log.verbose('updating profiles security of', profile.baseData.name);
-				
+
 				profile.baseData={};
 				profile.baseData.name=req.body.profileName;
 
 
-				//merge&clean 
-				if ('forcedCriteria' in profile ) { 
-
-					for(var sch in profile.forcedCriteria ){
-						if (checkPresentSchemaCrits(req.body.criteria,sch)){
-							for (var i in profile.forcedCriteria[sch].criteria){
-								profile.forcedCriteria[sch].criteria[i]=null;
-							}
-
-						} else {
-							profile.forcedCriteria[sch]=null;
-						}
-					}
-
-				}else {
-					profile.forcedCriteria={};
-				}
+				profile.security.forcedCriteria=[];
 
 				if ('criteria' in req.body){
-					var i = 0 ;
-					for (var cc in req.body.criteria){
-						cc=req.body.criteria[cc];
-						var forced;
-						if (!(cc.schema in profile.forcedCriteria) || !(cc.schema in  profile.forcedCriteria) ){
-							profile.forcedCriteria[cc.schema]={criteria:[]};
-						}
-
-						forced=profile.forcedCriteria[cc.schema];
-						forced.criteria[i++]={f:cc.f,op:cc.op,v:cc.v,obj:cc.obj};
-						
-					}
+					req.body.criteria.map(function(cc){
+						var schemaCrit= getSchemaCrit(profile.security.forcedCriteria,cc.schema);
+						schemaCrit.criteria.push({f:cc.f,op:cc.op,v:cc.v,obj:cc.obj});
+					});
 				}
+
 				log.verbose('updating profile',profile);
 				profileDao.update(profile, function(err) {
 					if (err) {
-						resp.send(500, err);
+						resp.status(500).send(err);
 						log.warn('updateprofileSecurity',profileId,err);
 					} else {
 						log.info('updateprofileSecurity updated',profileId);
 						resp.send(200);
 					}
-
 				});
 
 			}
@@ -293,7 +262,21 @@ this.updateSecurityProfile = function(req, resp) {
 		});
 
 	};
+	function getSchemaCrit (forced,schema){
+		var found= null;
 
+		forced.map(function(f){
+			if (f.applySchema==schema){
+				found = f;
+			}
+		});
+
+		if (!found){
+			found={applySchema:schema, criteria:[]};
+			forced.push(found);
+		}
+		return found;
+	}
 	function checkPresentSchemaCrits(criteria,schema){
 		for(var crit in criteria){
 			if (criteria[crit].schema===schema){
@@ -304,7 +287,7 @@ this.updateSecurityProfile = function(req, resp) {
 	}
 
 	this.getSearchSchemas=function(req,resp){
-		resp.send(200, schemaRegistry.getSchemaNamesBySuffix('search'));
+		resp.status(200).json(schemaRegistry.getSchemaNamesBySuffix('search'));
 	};
 
 	this.updateGroupSecurity = function(req, resp) {
@@ -313,7 +296,7 @@ this.updateSecurityProfile = function(req, resp) {
 		groupDao.get(groupId, function(err, group) {
 
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 				log.warn('updateGroupSecurity',groupId,err);
 			} else {
 
@@ -341,7 +324,7 @@ this.updateSecurityProfile = function(req, resp) {
 				log.info('updating groups security of', group);
 				groupDao.update(group, function(err) {
 					if (err) {
-						resp.send(500, err);
+						resp.status(500).send(err);
 						log.warn('Group update failed',groupId,err);
 					} else {
 						resp.send(200);
@@ -372,7 +355,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 			if (data.length !== 1) {
 				log.warn('Found more or less then 1 user with provided credentials', data.length);
-				resp.send(500, 'users found ' + data.length);
+				resp.status(500).send( 'users found ' + data.length);
 				return;
 			}
 
@@ -382,15 +365,15 @@ this.updateSecurityProfile = function(req, resp) {
 			t.verifyUserPassword(user, req.body.password, function(err) {
 				if (err) {
 					log.debug('Password verification failed', err);
-					resp.send(500, 'Not authenticated.');
+					resp.status(500).send('Not authenticated.');
 					return;
 				}
-				
+
 				t.resolvePermissions(user,req.selectedProfileId,function (err,permissions){
-					
+
 					if (err) {
 						log.warn('Failed to resolvePermissions permissions', err);
-						resp.send(500, 'Internal Error');
+						resp.status(500).send('Internal Error');
 						return;
 					}
 					// if ('System User' in  permissions&&permissions['System User'] ){
@@ -398,67 +381,67 @@ this.updateSecurityProfile = function(req, resp) {
 							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
-									resp.send(500, 'Internal Error');
+									resp.status(500).send('Internal Error');
 									return;
 								}
 								t.setCookies(resp, token, user.systemCredentials.login.loginName);
 								log.info('user logged in',user.id);
-								
+
 								t.resolveProfiles(user,function(err,u){
 									if (err) {
 										resp.send(500,err);
 										return;
 									}
 
-									resp.send(200, deflateUser(u,permissions));
+									resp.status(200).json(deflateUser(u,permissions));
 								});
 
 								return;
 							});
 						});
-						
+
 					// }
 					// else {
 					// 	log.warn('Not system user ',user.systemCredentials.login.loginName);
 					// 	resp.send(403, securityService.missingPermissionMessage('System User'));
 					// }
-				}); 
-				
+				});
+
 			});
 		});
 	};
-	
+
 	this.selectProfile=function(req,resp){
-		
-		log.silly('Selecting profile or user', req.loginName);
+
+		log.silly('Selecting profile or user', req.loginName,req.body.profileId);
 		if (!req.loginName) {
-			resp.send(500, 'User must be logged in for password change');
+			resp.status(500).send('User must be logged in for password change');
 			throw 'User must be logged in for password change';
 		}
-	
+
 		var t = this;
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, users) {
 
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 				log.debug('selectProfile',err);
 				return;
 			}
 
 			if (users.length != 1) {
-				resp.send(500, 'user not found');
+				resp.status(500).send('user not found');
 				log.debug('selectProfile', 'user not found');
 				return;
 			}
 
 			var user= users[0];
 			if (!('profiles' in user.systemCredentials)){
-				resp.send(500, 'user has no profiles');
+				resp.status(500).send( 'user has no profiles');
 				return;
 			}
-			
-			if (user.systemCredentials.profiles[req.body.profileId]!==true){
-				resp.send(500, 'user has no profiles');	
+
+			if (user.systemCredentials.profiles.indexOf(req.body.profileId)<0){
+				resp.status(500).send( 'user has no profiles');
 				return;
 			}
 
@@ -470,22 +453,24 @@ this.updateSecurityProfile = function(req, resp) {
 	};
 
 	this.resolveProfiles=function (user,callback){
-		
+
 		profileDao.list({},function(err,data){
-			
+
 			if (err){
 				callback(err);
 				return;
 			}
 
 			var profiles=[];
-			for (var profileId in user.systemCredentials.profiles){
+
+
+			user.systemCredentials.profiles.map(function(profileId){
 				data.map(function(pr){
 					if (pr.id===profileId){
 						profiles.push({id:profileId,name:pr.baseData.name});
 					}
-				});	
-			}
+				});
+			});
 
 			user.systemCredentials.profiles=profiles;
 			callback(null,user);
@@ -496,6 +481,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 	//Traverses groups and collects permission, finally user permissions added.
 	this.resolvePermissions = function(user,selectedProfileId, callback) {
+
 		if (!user){
 			callback(null,[]);
 			return;
@@ -512,19 +498,20 @@ this.updateSecurityProfile = function(req, resp) {
 				log.error('resolvePermissions',err);
 					return;
 			}
+			console.log('profile found',profile);
 			if (!profile){
 				callback(null,{});
 				return;
 			}
 			log.silly('profile to resolve security',profile);
-			
+
 			if (!('security' in profile)) {
 					callback(null,{});
 				return;
 			}
 			var permissions = {};
-				
-				// if has no groups 
+
+				// if has no groups
 			if (!profile.security.groups || profile.security.groups.length === 0) {
 				if (profile.security.permissions) {
 					for ( var per in profile.security.permissions) {
@@ -559,7 +546,7 @@ this.updateSecurityProfile = function(req, resp) {
 					log.verbose('profile permissions resolved',permissions);
 					callback(null, permissions,profile);
 				});
-			
+
 		});
 
 
@@ -598,24 +585,24 @@ this.updateSecurityProfile = function(req, resp) {
 		//FIXME use userId
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 				log.warn('getCurrentUser', err);
 				return;
 			}
 
 			if (data.length !== 1) {
 				log.verbose('Found more or less then 1 user with provided credentials', data.length);
-				resp.send(500, 'users found ' + data.length);
+				resp.status(500).send('users found ' + data.length);
 				return;
 			}
 			var user = data[0];
 			t.resolvePermissions(user,req.selectedProfileId, function(err, permissions) {
 				if (err) {
-					resp.send(500, err);
+					resp.status(500).send(err);
 					return;
 				}
 				log.verbose('getCurrentUser result',deflateUser(user,permissions));
-				resp.send(200, deflateUser(user,permissions));
+				resp.status(200).send(deflateUser(user,permissions));
 			});
 		});
 	};
@@ -639,7 +626,7 @@ this.updateSecurityProfile = function(req, resp) {
 				callback(new Error('Failed to hash password'));
 				return;
 			}
-			
+
 			if(!hashPass){
 				log.error('Failed to hash password for',user, passwordSample);
 				callback(new Error('Failed to hash password'));
@@ -695,7 +682,7 @@ this.updateSecurityProfile = function(req, resp) {
 				httpOnly : true,
 				secure : true
 		});
-		
+
 		log.verbose('setProfileCookie',profile );
 	};
 
@@ -715,7 +702,7 @@ this.updateSecurityProfile = function(req, resp) {
 			}, function(err, tokens) {
 
 				if (err) {
-					resp.send(500, err);
+					resp.status(500).send(err);
 
 				} else {
 
@@ -726,7 +713,7 @@ this.updateSecurityProfile = function(req, resp) {
 						tokenDao.update(token, function(err) {
 							if (err) {
 								log.error('Failed to update security token', err);
-								resp.send(500, err);
+								resp.status(500).send( err);
 								return;
 							}
 
@@ -737,7 +724,7 @@ this.updateSecurityProfile = function(req, resp) {
 						});
 
 					} else {
-						resp.send(500, 'Token does not exist.');
+						resp.status(500).send('Token does not exist.');
 						log.debug('logout','Token does not exist.',tokenId);
 						return;
 					}
@@ -746,7 +733,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 			});
 		} else {
-			resp.send(500, 'SecurityToken missings.');
+			resp.status(500).send('SecurityToken missings.');
 			log.debug('logout','SecurityToken missings.',tokenId);
 			return;
 		}
@@ -758,13 +745,13 @@ this.updateSecurityProfile = function(req, resp) {
 	 * be used by authorized person ( no 'accidental' password resets)
 	 */
 	this.resetPassword = function(req, resp) {
-		
+
 		// FIXME construct criteria bt QueryFilter
 		var t = this;
 		userDao.get(req.body.userId, function(err, data) {
 
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 				log.error('resetPassword',err);
 				throw err;
 			}
@@ -774,7 +761,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 			var user = data;
 			if (user.systemCredentials.login.email) {
-				
+
 				t.hashPassword(newsalt, randomPass, function(err, passwordHash) {
 
 					user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
@@ -783,7 +770,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 					userDao.update(user, function(err) {
 						if (err) {
-							resp.send(500, err);
+							resp.status(500).send(err);
 						}
 
 						log.info('User password reset',user.systemCredentials.login);
@@ -791,13 +778,13 @@ this.updateSecurityProfile = function(req, resp) {
 						// parameter
 						t.sendResetPasswordMail(user.systemCredentials.login.email,randomPass,user,cfg.webserverPublicUrl);
 
-						resp.send(200,{email:user.systemCredentials.login.email});
+						resp.status(200).json({email:user.systemCredentials.login.email});
 					});
 				});
 
 			} else {
 				log.debug('resetPassword',  'User mail not specified',user.systemCredentials.login );
-				resp.send(500, 'User mail not specified.');
+				resp.status(500).send('User mail not specified.');
 			}
 
 		});
@@ -805,9 +792,9 @@ this.updateSecurityProfile = function(req, resp) {
 	};
 
 	this.sendResetPasswordMail = function(email, newPass,user,serviceUrl) {
-		
+
 		var userName=user.systemCredentials.login.loginName;
-		
+
 		var mailOptions = {
 			from : 'websupport@unionsoft.sk',
 			to : email,
@@ -819,7 +806,7 @@ this.updateSecurityProfile = function(req, resp) {
 		log.verbose('Sending mail ', mailOptions);
 
 		transport.sendMail(mailOptions);
-		
+
 	};
 
 	/**
@@ -829,7 +816,7 @@ this.updateSecurityProfile = function(req, resp) {
 	this.changePassword = function(req, resp) {
 		log.silly('Changing password for user', req.loginName);
 		if (!req.loginName) {
-			resp.send(500, 'User must be logged in for password change');
+			resp.status(500).send('User must be logged in for password change');
 			throw 'User must be logged in for password change';
 		}
 
@@ -837,18 +824,18 @@ this.updateSecurityProfile = function(req, resp) {
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 
 			if (err) {
-				resp.send(500, err);
+				resp.status(500).send(err);
 			} else {
 
 				if (data.length != 1) {
-					resp.send(500, 'user not found');
+					resp.status(500).send('user not found');
 					return;
 				} else {
 					var user = data[0];
 					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
 						if (err) {
 							log.debug('Old passwrod does not match!');
-							resp.send(500, 'Old password does not match!');
+							resp.status(500).send('Old password does not match!');
 							return;
 						} else {
 
@@ -860,7 +847,7 @@ this.updateSecurityProfile = function(req, resp) {
 								user.systemCredentials.login.salt = newsalt;
 								userDao.update(user, function(err) {
 									if (err) {
-										resp.send(500, err);
+										resp.status(500).send(err);
 										return;
 									} else {
 										log.info('Password successfully changed',user.systemCredentials.login.loginName);
@@ -898,10 +885,9 @@ this.updateSecurityProfile = function(req, resp) {
 		req.loginName = 'Anonymous';
 		req.perm={};
 		var tokenId = req.cookies[cfg.securityTokenCookie];
-		var selectedProfile = req.cookies[cfg.profileCookie];
-		
-		log.silly('Cookies received', tokenId,selectedProfile);
-		
+
+		log.silly('Cookies received', req.cookies);
+
 		if (tokenId !== null) {
 			log.debug('security token found', tokenId);
 			tokenDao.list({
@@ -940,16 +926,16 @@ this.updateSecurityProfile = function(req, resp) {
 								return;
 							}
 							req.currentUser=user;
-								// log.silly(user.systemCredentials.profiles);
-							if ( 'profiles' in user.systemCredentials) {
-								for(var profileId in user.systemCredentials.profiles){
-									if ( profileId===req.cookies[cfg.profileCookie]){
-										req.selectedProfileId = profileId;
-										log.debug('profile set to' , profileId);
-									}
+
+							user.systemCredentials.profiles.map(function(profileId){
+								if (profileId==req.cookies[cfg.profileCookie]) {
+									req.selectedProfileId = profileId;
 								}
-							}
-							
+								log.debug('profile set to' , profileId);
+							});
+
+
+
 
 							t.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
 								if (err) {

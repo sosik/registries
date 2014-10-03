@@ -4,7 +4,7 @@
 			<form class="form form-horizontal">
 				<fieldset>
 				<legend>{{'security.profile.edit.searching' |translate}} ({{entity}})</legend>
-				
+
 					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
 						<div class="col-sm-5">
@@ -49,7 +49,7 @@
 					</div>
 				</fieldset>
 			</form>
-			
+
 			<div ng-show='profileList'>
 				<fieldset>
 				<legend>{{'security.profile.edit.result' |translate}} ({{entity}})</legend>
@@ -78,7 +78,7 @@
 					</div>
 				</fieldset>
 			</div>
-			
+
 		</div>
 	</div>
 	<div class="row">
@@ -95,18 +95,18 @@
 							</div>
 						</div>
 						<div class="form-group">
-							
+
 						</div>
-						
+
 					</fieldset>
 				</div>
-		
+
 			<div  class="form form-horizontal" >
 				<fieldset>
 					<legend>
 						{{'security.profile.edit.groups' |translate}} - {{selectedProfile.baseData.name}}
 					</legend>
-					
+
 					<div class="form-group">
 						<div class="col-md-12">
 							<div class="row psui-multiselect-box">
@@ -138,7 +138,7 @@
 						{{'security.profile.edit.permissions' |translate}} -
 							{{selectedProfile.baseData.name}}
 					</legend>
-					
+
 					<div class="form-group">
 						<div class="col-md-12">
 							<div class="row psui-multiselect-box">
@@ -164,10 +164,10 @@
 				</fieldset>
 
 
-			
+
 				<fieldset>
 				<legend>{{'security.profile.edit.data.criteria' |translate}} - {{selectedProfile.baseData.name}}</legend>
-				
+
 					<div class="row form-group psui-search-condition" ng-repeat="crit in profileCrit">
 						<div class="col-sm-3">
 							<select class="form-control" ng-model="crit.schema"
@@ -182,14 +182,14 @@
 								class="form-control" ng-model="crit.operator"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="col-sm-2" ng-show="!crit.attribute.objectLink">
+						<div class="col-sm-2" ng-show="!crit.attribute.render">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid form-control"
 								autocomplete="off">
 						</div>
 
-						<div ng-show="crit.attribute.objectLink" class="col-sm-2">
+						<div ng-show="crit.attribute.render.objectLink" class="col-sm-2">
 							<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
 						</div>
 
@@ -205,7 +205,7 @@
 						</div>
 					</div>
 				</fieldset>
-							
+
 				<div class="form-group">
 					<div class="col-md-12">
 						<div class="btn-group pull-right">
@@ -216,10 +216,9 @@
 					</div>
 				</div>
 			</div>
-			
-		
+
+
 		</div>
 	</div>
 
 </div>
-

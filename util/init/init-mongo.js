@@ -13,7 +13,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	console.log(mongoDriver.getDb);
 
-	
+
 	var _daoProfiles = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : "securityProfiles"
 	});
@@ -36,7 +36,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 					"System Admin": true
 				},
 				"groups": {
-					
+
 				}
 			}
 		};
@@ -70,7 +70,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 					"Registry - write": true
 				},
 				"groups": {
-					
+
 				}
 			}
 		};
@@ -99,10 +99,10 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 			unique : true,
 			sparse : true
 		},function(err) {
-			if (err){ 
+			if (err){
 				console.log(err);
 			}
-			
+
 			// var johndoe = {
 			// 	"id":"53cf5c54118025ff1b88e368",
 			// 	"systemCredentials": {
@@ -124,9 +124,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 						"email": "websupport@unionsoft.sk",
 						"salt": "johndoe"
 					},
-					"profiles": {
-						"53cd19d5502cd4915bd08724": true
-					}
+					"profiles": ["53cd19d5502cd4915bd08724"]
 				},
 				"baseData": {
 					"name": "Administrator",
@@ -150,13 +148,13 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 
 
-			_dao.save(johndoe,function (err,data){ 
+			_dao.save(johndoe,function (err,data){
 
-				console.log ('User saved')
+				console.log ('User saved');
 
 				mongoDriver.close();
 				});
-			
+
 			// var janedoe = {
 			// 	"id":"53cf5c54118025ff1b88e367",
 			// 	"systemCredentials": {
@@ -164,7 +162,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 			// 			"loginName" : "janedoe",
 			// 			"passwordHash" : "mcHWq0FyMluy3U3nGQJeYuR6ffSDxgtG1SaejicXJvdxyM/1NUP7X5Kx3LpvsAQ+XOq8Hs+maYLiEXDQYr3OCh2o+gtTxvhEz9Z4Bem0J09v7GyxdkD2S2zED7Obr6XzPzpaxaYfmFBHRR5iy2JDRx/lAcBM1L0qFfBnoXoGYm6jcUn6Klht9xoPnYGvDVdxtjWG9GqBrLfIJb1Aot3WCPOAG0BzlidfjdG0exJhkC0eOTwgFG4D8vP/AOblI2N+skZ3ztDb6NIxRIyd70bDooUhB7HcRnJgsrqBGg68UfBReHXYFnQYYa7Fv4/mR+4y+N+SpFXokYcKUI0e6sCPcQ==",
 			// 			"email": "root@localhost",
-			// 			"salt" : "johndoe" 
+			// 			"salt" : "johndoe"
 			// 		},
 			// 		"profiles" : { "53cd19d5502cd4915bd08724":true}
 			// 	}
@@ -173,7 +171,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 		});
 
-		
+
 	});
 
 

@@ -19,9 +19,9 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
 	this.hasRightForAction = function(schema, action, avaliablePerm) {
-		
+
 		log.verbose('checking permision on schema:action',schema,action);
-		
+
 		var missingPerm=null
 		if ('_security' in schema) {
 			if (action in schema['_security']) {
@@ -30,7 +30,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 					 requiredPerms.map(function(required) {
 						if ( !(required in avaliablePerm)  ||  !(avaliablePerm[required]) ){
 							missingPerm=required;
-						}	
+						}
 					});
 				}
 			}else {
@@ -47,32 +47,32 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		return missingPerm===null;
 
 	};
-	
+
 
 	this.requiredPermissions = function(schema, action) {
 		return schema['_security'][action]['_static'].join(' ');
 	};
-	
-	
+
+
 /**
  * Method verifies if current user (req.perm) contains required permission
  */
-	this.userHasPermissions = function (req,perm) { 
-		
+	this.userHasPermissions = function (req,perm) {
+
 		log.verbose('check user has perm ', perm);
-		
+
 		if (!req.perm || (perm && hasPermission(req.perm,perm))){
 			return true;
 		}
 		return false;
-	}
-	
+	};
+
 	this.missingPermissionMessage=function(perm){
 		return {missingPerm:perm};
-	}
+	};
 
 	function hasPermission(coll, perm) {
-		
+
 		for(var per in coll){
 			if (coll[per]  &&  per===perm) {
 				return true;
@@ -82,27 +82,42 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	}
 
 	this.authenRequired= function (req,res,next){
-		if (!req.authenticated ) { 
+		if (!req.authenticated ) {
 			res.send(401);
-		}else { 
+		}else {
 			next();
 		}
 	};
-	
+
 	/**
 		method merges profile criteria to specified qf
 	*/
 	this.applyProfileCrits=function(profile,schemaName,qf){
 
 		// query=QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName)
-		if ('forcedCriteria' in profile && schemaName in profile.forcedCriteria){
-			for (var crit in profile.forcedCriteria[schemaName].criteria){
-				var c=profile.forcedCriteria[schemaName].criteria[crit];
+		if ( profile.security && profile.security.forcedCriteria ){
+			var schemaCrit=getSchemaCrit(profile.security.forcedCriteria,schemaName);
+			if (schemaCrit){
+				schemaCrit.criteria.map(function(c){
 				qf.addCriterium(c.f,c.op,c.v);
+				});
 			}
 		}
 		return qf;
 	};
+
+	function getSchemaCrit (forced,schema){
+		var found= null;
+
+		forced.map(function(f){
+			if (f.applySchema==schema){
+				found = f;
+			}
+		});
+
+
+		return found;
+	}
 
 
 		/**
@@ -125,18 +140,18 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 				var xperm=perm;
 				this.check=function(req,res,next){
 					 log.verbose('checking for perm',xperm);
-						if (!req.authenticated ) { 
+						if (!req.authenticated ) {
 							res.send(401);
 						}else
 							if (!hasPermission(req.perm,xperm)) {
 								res.send(403,t.missingPermissionMessage(xperm));
 							}
-							else { 
+							else {
 								next();
 							}
-						
+
 					};
-			
+
 				};
 			log.verbose('created checker for perm',perm);
 		return new f(perm);

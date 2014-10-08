@@ -57,15 +57,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						});
 					};
 
-					service.getUserList = function() {
-
-						return $http({
-							method : 'GET',
-							url : '/user/list',
-						});
-
-					};
-
 					service.getSecurityGroups = function() {
 						var entityUri='uri://registries/security#groupmaster/new';
 						return $http({
@@ -124,7 +115,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							url : '/user/security/update',
 							data : {
 								userId : userId,
-								loginName: loginName, 
+								loginName: loginName,
 								email: email,
 								profiles : profiles
 							}
@@ -207,9 +198,8 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 				$scope.profiles=user.systemCredentials.profiles;
 			}
 			else {
-
 				SecurityService.selectProfile(user.systemCredentials.profiles[0].id).success(function(){
-					$rootScope.security.currentUser =SecurityService.getCurrentUser().success(function(data){
+					SecurityService.getCurrentUser().success(function(data){
 					$rootScope.security.currentUser=data;
 					$location.path('/personal-page');
 					});
@@ -242,7 +232,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 //
 .controller(
 		'security.logoutCtrl',
-		[ '$scope', 'security.SecurityService', '$location', 
+		[ '$scope', 'security.SecurityService', '$location',
 				function($scope, SecurityService, $location) {
 					$scope.logout = function() {
 						SecurityService.getLogout().then(function() {
@@ -250,9 +240,9 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							$location.path('/login');
 						});
 					};
-				} 
+				}
 		])
-//                
+//
 .controller(
 		'security.groupEditCtrl',
 		[
@@ -287,7 +277,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					};
 
 					function fillGroupPerm(group, perms) {
-					  
+
 						var retval = [];
 						if (!group.security) {
 							group.security = {
@@ -332,7 +322,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							 SecurityService.getSecurityGroups().success(function(data) {
 								$scope.groups = data;
 							});
-						   
+
 						}, 500);
 					};
 
@@ -361,7 +351,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					$scope.selectedUser = null;
 
 					$scope.user = {};
-					
+
 					$scope.headers = {};
 
 					$scope.profiles=[];
@@ -390,7 +380,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						$scope.headers = data.listFields;
 					}).error(function(err) {
 						notificationFactory.error(err);
-
 					});
 
 					function convertCriteria(crit) {
@@ -421,36 +410,36 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						}
 						return [{ f:searchBy.header.field, o: searchBy.direction}];
 					}
-	
+
 					$scope.search = function() {
 						var c = convertCriteria($scope.searchCrit);
 						// add forced criteria
 
 					$scope.lastCriteria=JSON.parse(JSON.stringify(c));
-		
+
 					genericSearchFactory.getSearch(entityUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
 						$scope.userList = data;
 					}).error(function(err) {
 						notificationFactory.error(err);
 					});
-				};	
+				};
 
 
 					$scope.searchNext = function() {
 						var c = convertCriteria($scope.searchCrit);
 		// add forced criteria
-						
+
 						genericSearchFactory.getSearch(entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.userList.length,pageSize).success(function(data) {
-			
+
 						data.map(function (newItems){
 							$scope.userList.push(newItems);
 						});
-			
-			
+
+
 						}).error(function(err) {
 							notificationFactory.error(err);
 						});
-					};	
+					};
 
 					function remove(arr, item) {
 						for (var i = arr.length; i--;) {
@@ -459,9 +448,6 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							}
 						}
 					}
-
-					
-
 
 					$scope.addProfile = function(value) {
 						$scope.user.profiles.push(value);
@@ -482,14 +468,14 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							user.systemCredentials.profiles = [];
 						}
 
-						for ( var ug in user.systemCredentials.profiles) {
+						user.systemCredentials.profiles.map(function(pr){
 							groups.map(function(item) {
-								if (ug === item.id) {
+								if (pr === item.id) {
 									retval.push(item);
 									remove(groups, item);
 								}
 							});
-						}
+						});
 
 						return retval;
 					}
@@ -507,19 +493,19 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							if ('contactInfo' in user && 'email' in user.contactInfo){
 								user.systemCredentials.login={loginName:user.contactInfo.email,email:user.contactInfo.email};
 								setTimeout( $scope.updateUserSecurity(),2000);
-								} else {
+							} else {
 									user.systemCredentials={};
 									user.systemCredentials.login={loginName:''};
-								}
+							}
 						}
-						
+
 					};
 
 					function convertProfiles(profiles){
 						var retval=[];
-						
+
 						for (var profile in profiles){
-							retval.push({id:profiles[profile].id});
+							retval.push(profiles[profile].id);
 						}
 
 						return retval;
@@ -533,16 +519,16 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							console.log(err);
 							notificationFactory.error(err)});
 					};
-					
+
 					$scope.resetPassword= function (){
 						 securityService.updateUserSecurity($scope.selectedUser.id, $scope.selectedUser.systemCredentials.login.loginName,$scope.selectedUser.systemCredentials.login.email, $scope.user.permissions, $scope.user.groups,$scope.user.profiles).success(function() {
 							 securityService.getResetPassword($scope.selectedUser.id).success(function (){
-								 notificationFactory.info({type:'info',text:'Nové heslo bolo zaslané na: ' +$scope.selectedUser.systemCredentials.login.email,deletable : true, time:5000, timeout: null}); 
+								 notificationFactory.info({type:'info',text:'Nové heslo bolo zaslané na: ' +$scope.selectedUser.systemCredentials.login.email,deletable : true, time:5000, timeout: null});
 								 }).error(function (err){
 									 console.log(err);
 									 notificationFactory.error(err);
 									 });
-							
+
 						 }).error(function (err){
 							 console.log(err);
 							 notificationFactory.error(err);
@@ -571,7 +557,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					$scope.removeCrit = function(index) {
 						$scope.searchCrit.splice(index, 1);
 					};
-					
+
 					$scope.searchCrit = [];
 					$scope.profileCrit=[];
 
@@ -595,7 +581,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					$scope.schemaChange=function(crit,done) {
 						schemaUtilFactory.getCompiledSchema(crit.schema).success(function(data) {
 						crit.attDef = genericSearchFactory.parseSearchDef(data);
-						
+
 						if (done) done(crit);
 
 					}).error(function(err) {
@@ -634,7 +620,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						for(var att in attributes){
 							if (attributes[att].path===attribute){
 							return attributes[att];
-							} 
+							}
 						}
 					}
 
@@ -670,7 +656,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 						crit.map(function(c) {
 							if (c && c.attribute && c.attribute.path) {
-								if (c.attribute.objectLink){
+								if (c.attribute.render.objectLink){
 									retval.push({
 										schema: c.schema,
 										f : c.attribute.path,
@@ -742,7 +728,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 								}
 							}
 						}
-						
+
 						return retval;
 					}
 
@@ -784,23 +770,24 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						if ( !('groups' in profile.security)) {
 							profile.security.groups = [];
 						}
-						if ('forcedCriteria' in profile){
-							for(var schema in profile.forcedCriteria){
-								for(var critIter in profile.forcedCriteria[schema].criteria){
-									var crit=profile.forcedCriteria[schema].criteria[critIter];
-									var modelCrit={schema:schema,operator:mapOperator(crit.op),attribute:crit.f,value:crit.v};
-									$scope.schemaChange(modelCrit,function(c){
-										c.attribute=mapAttribute( c.attDef.attributes,c.attribute);
-										c.obj=crit.obj;
-										$scope.profileCrit.push(c);
-									});
-								}
-							}
+						if ('forcedCriteria' in profile.security){
+							profile.security.forcedCriteria.map(function(schemaCrit){
+								schemaCrit.criteria.map(function(crit){
+									var modelCrit={schema:schemaCrit.applySchema,operator:mapOperator(crit.op),attribute:crit.f,value:crit.v};
+										$scope.schemaChange(modelCrit,function(c){
+												c.attribute=mapAttribute( c.attDef.attributes,c.attribute);
+												c.obj=crit.obj;
+												$scope.profileCrit.push(c);
+										});
+
+								});
+
+							});
 						}
 						securityService.getSecurityPermissions().success(function(data) {
 							$scope.permissions = data;
 							$scope.profile.permissions = fillProfilePerm($scope.selectedProfile, data);
-							
+
 						}).error(function(err){ notificationFactory.error(err);});
 
 						securityService.getSecurityGroups().success(function(data) {
@@ -820,7 +807,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							console.log(err);
 							notificationFactory.error(err)});
 					};
-					
+
 				} ])
 //
 .controller(

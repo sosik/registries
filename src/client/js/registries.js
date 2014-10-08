@@ -27,7 +27,7 @@ angular.module('registries', [
 	$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
 	$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/security-group-edit.html', controller: 'security.groupEditCtrl', permissions:['Security - read']});
 	$routeProvider.when('/security/user/edit', {templateUrl: 'partials/security-user-edit.html', controller: 'security.userEditCtrl',permissions:['Security - read']});
-	$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/security-profile-edit.html', controller: 'security.profileEditCtrl',permissions:['Security - read']});	
+	$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/security-profile-edit.html', controller: 'security.profileEditCtrl',permissions:['Security - read']});
 	$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/registry-new.html', controller: 'registry.newCtrl',permissions:['Registry - write']});
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl',permissions:['Registry - read']});
 	$routeProvider.when('/registry/custom/:template/:schema/:id', {templateUrl: function(params) {
@@ -49,7 +49,7 @@ angular.module('registries', [
                     $injector.get ('$location').url('/login');
                     $injector.get ('psui.notificationFactory').warn({translationCode:'security.user.session.expired',time:5000} );
                 }else
-                
+
                 if(rejection.status === 403) {
                   $injector.get ('$location').url('/login');
                   $injector.get('psui.notificationFactory').warn({translationCode:'security.user.missing.permissions',translationData:rejection.data.missingPerm,time:5000});
@@ -68,9 +68,9 @@ angular.module('registries', [
 .run(["$rootScope", '$location', 'security.SecurityService', '$cookies','psui.notificationFactory', function($rootScope, $location, SecurityService,$cookies,notificationFactory) {
 	$rootScope.security = $rootScope.security || {};
 	// by default, current user is undefined, as there is noone logged in
-	
+
 	var changeRouteRuleActive=false;
-	
+
 	if ($cookies.loginName){
 		SecurityService.getCurrentUser()
 		.success(function(data, status, headers, config) {
@@ -83,17 +83,17 @@ angular.module('registries', [
 			changeRouteRuleActive=true;
 			$location.path('/login');
 		});
-		
+
 	}
 	else {
 		$rootScope.security.currentUser = undefined;
 		changeRouteRuleActive=true;
 	}
-	
+
 	$rootScope.$on('$routeChangeStart', function() {
-		notificationFactory.clear()
+		notificationFactory.clear();
 	});
-	
+
 	// hang on route change, so we can check if user meets security criteria
 	$rootScope.$on('$routeChangeStart', function(evt, nextRoute, currentRoute) {
 		if (nextRoute && nextRoute.permissions) {

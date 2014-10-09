@@ -18,7 +18,7 @@ var UniversalDao = function(mongoDriver, options) {
 	if (!_options.collectionName) {
 		throw new Error('Parameter options.collectionName is mandatory!');
 	}
-	
+
 	var _collection = mongoDriver.getDb().collection(_options.collectionName);
 
 
@@ -40,7 +40,7 @@ var UniversalDao = function(mongoDriver, options) {
 			if (err) {
 				callback(err);
 				return;
-			} 
+			}
 
 			mongoDriver._id2id(result);
 			callback(null, result);
@@ -71,6 +71,31 @@ var UniversalDao = function(mongoDriver, options) {
 		}
 	};
 
+
+	/**
+	* Get object
+	*
+	* @param {String} id - object identifier as string
+	* @param {resultCallback} callback - async callback
+	*/
+	this.getWithTimeLock = function(entity,lockDuration, callback) {
+		var currentTs= new Date().getTime();
+		var tillTs= currentTs+lockDuration;
+		if (entity.id) {
+			entity._lockedTill=tillTs;
+			var searchKey = mongoDriver.id2_id({'id': entity.id,$or:[{_lockedTill:{$lt:currentTs}},{_lockedTill:{$exists:false}}]});
+			_collection.findAndModify(searchKey,[], entity ,{new: false, upsert: false },function(err,data){
+				console.log(err,data);
+				callback(err,data);
+			} );
+		} else {
+			log.error('Property "id" is undefined!');
+			callback(new Error('Property "id" is undefined'));
+			return;
+		}
+	};
+
+
 	/**
 	 * Update object
 	 *
@@ -97,7 +122,7 @@ var UniversalDao = function(mongoDriver, options) {
 				callback(err);
 				return;
 			}
-			
+
 			if (!result.updatedExisting || result.n !== 1) {
 				callback(new Error('Neither object with id ' + obj.id + ' not found or updated more documents'));
 				return;
@@ -129,6 +154,27 @@ var UniversalDao = function(mongoDriver, options) {
 	};
 
 	/**
+	* Remove objects matching criteria
+	*
+	* @param {Object} queryFilter - search options - use QueryFilter class
+	* @param {resultCallback} callback - async callback, result parameter contains number of removed objects
+	*/
+	this.delete=function(queryFilter,callback){
+		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
+
+		_collection.remove(_findOptions.selector, function(err, count){
+			if (err) {
+				callback(err);
+				log.error();
+				return;
+			}
+
+			callback(null, count);
+		});
+
+	};
+
+	/**
 	 * List objects by criteria
 	 *
 	 * @param {Object} queryFilter - search options - use QueryFilter class
@@ -136,7 +182,7 @@ var UniversalDao = function(mongoDriver, options) {
 	 */
 	this.list = function(queryFilter, callback) {
 		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
-		
+
 			log.silly(_findOptions);
 		_collection.find(_findOptions.selector, _findOptions, function(err, cursor){
 			if (err) {
@@ -149,7 +195,7 @@ var UniversalDao = function(mongoDriver, options) {
 					callback(err);
 					return;
 				}
-				
+
 				var result = [];
 				for (var i = 0; i < data.length; i++) {
 					result.push(mongoDriver._id2id(data[i]));
@@ -159,6 +205,11 @@ var UniversalDao = function(mongoDriver, options) {
 			});
 		});
 	};
+
+	this.find=this.list;
+
+
+
 	/**
 	 * Counts objects queried by criteria
 	 *
@@ -168,7 +219,7 @@ var UniversalDao = function(mongoDriver, options) {
 	this.count = function(queryFilter, callback) {
 		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
 			delete _findOptions.limit;
-		
+
 			log.silly(_findOptions);
 		_collection.find(_findOptions.selector, _findOptions, function(err, cursor){
 			if (err) {
@@ -182,7 +233,7 @@ var UniversalDao = function(mongoDriver, options) {
 	/**
 	 * Get actual dao options
 	 *
-	 * @returns clone of actual options object 
+	 * @returns clone of actual options object
 	 */
 	this.options = function() {
 		return extend({}, _options);

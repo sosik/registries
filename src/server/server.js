@@ -27,6 +27,10 @@ var schemaControllerModule = require('./schemaController.js');
 var statisticsControllerModule = require('./statisticsController.js');
 var massmailingCotrollerModule = require('./massmailingController.js');
 
+var eventRegistryModule=require('./eventRegistry.js');
+
+var eventSchedulerModule=require('./eventScheduler.js');
+
 var app = express();
 
 // setup request logging
@@ -51,22 +55,36 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		.map(function(item) {
 			return path.join(config.paths.schemas, item);
 	});
+
+
+	var eventHandlers = path.join(config.paths.schemas, '_event_handlers.json');
+
 	var schemaRegistry = new schemaRegistryModule.SchemaRegistry({schemasList:schemasListPaths});
-	
-	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
-	
+
+	var eventScheduler=new eventSchedulerModule.EventScheduler(mongoDriver);
+
+	var eventRegistry=new eventRegistryModule.EventRegistry({eventHandlersPath:eventHandlers,mongoDriver:mongoDriver,eventScheduler:eventScheduler,config:config});
+
+	eventScheduler.setEventRegistry(eventRegistry);
+
+	// process.nextTick(function(){
+	//  eventRegistry.emit('test-event',{data:'data'});
+	// });
+
+	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry,eventRegistry);
+
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,config);
-	
+
 	var statisticsCtrl = new statisticsControllerModule.StatisticsController(mongoDriver,{});
-	var schemaCtrl = new schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,{
+	var schemaCtrl = new schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,eventRegistry,{
 		rootPath: config.paths.schemas
 	});
 
 	var massmailingCtr= new massmailingCotrollerModule.MassmailingController(mongoDriver,{});
-	
+
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter);
-	
+
 	app.put('/udao/save/:table',  securityService.authenRequired,bodyParser.json(), function(req, res){udc.save(req, res);});
 	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.saveBySchema(req, res);});
 	app.get('/udao/get/:table/:id',securityService.authenRequired, bodyParser.json(), function(req, res){udc.get(req, res);});
@@ -81,7 +99,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});
 	app.get('/user/current',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.getCurrentUser(req, res);});
 	app.post('/user/profile',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.selectProfile(req, res);});
-	
+
 	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req, res){securityCtrl.resetPassword(req, res);});
 	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(),function(req, res){securityCtrl.changePassword(req, res);});
 
@@ -108,10 +126,10 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));
 
 //	app.all('/my*',fsCtrl2.handle);
-	
+
 	app.use(express.static(__dirname + '/public'));
 	app.use(errorhandler({ dumpExceptions: true, showStack: true }));
-	
+
 	log.verbose('Configuring photos sub applicaction');
 	var photosRepoApp = fsController.create({rootPath: config.paths.photos ,fileFilter: null});
 	app.use('/photos',photosRepoApp);
@@ -122,11 +140,11 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 			allowedOperations: ['get'],
 			fileFilter: null});
 	app.use('/dataset',datasetRepoApp);
-	
+
 //	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
 //		log.info("Http server listening at %j", server.address(), {});
 //	});
-	
+
 
 	if (process.env.REGISTRIES_PRODUCTION) {
 		// We are in production environment, use only http port
@@ -160,5 +178,5 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 			log.info('Https (secure) server listening at %s:%s', host, port);
 		});
 	}
-	
+
 });

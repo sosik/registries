@@ -498,7 +498,6 @@ this.updateSecurityProfile = function(req, resp) {
 				log.error('resolvePermissions',err);
 					return;
 			}
-			console.log('profile found',profile);
 			if (!profile){
 				callback(null,{});
 				return;

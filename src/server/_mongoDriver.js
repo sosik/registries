@@ -39,6 +39,50 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 				var col =_database.collection('sequencers');
 				var ret = col.findAndModify({ _id: sequencerName },[],{ $inc: { seq: 1} },{new: true, upsert: true } ,callback);
 		},
+
+		max:function(table,path,callback){
+
+			var col =_database.collection(table);
+			var q = {};
+			// q[path]={$exists:true};
+			q['$or'] = [];
+
+			var q1={};
+			q1[path]={$type:16};
+			var q2={};
+			q2[path]={$type:16};
+			q['$or'].push(q1);
+			q['$or'].push(q2);
+
+			var params={
+				sort: {},
+				limit: 1
+			};
+			params.sort[path]=-1;
+
+
+			var ret = col.find( q,params,function(err,cursor){
+
+				if (err){
+					callback(err);
+					return;
+				}
+				cursor.toArray(function(err, data) {
+					if (err) {
+						callback(err);
+						return;
+					}
+
+					if (data.length>0){
+						callback(null, data[0]);
+					}	else {
+						callback(null,null);
+					}
+				});
+
+			});
+		},
+
 		/**
 		 * Function converts ObjectId form mongo returned object into flat
 		 * hexadecimal representation of id
@@ -72,7 +116,7 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			}
 
 			var set = {};
-			
+
 			var unset = {};
 			// TODO handle arrays, functions, etc.
 			var propIterator = function(prefix, obj) {
@@ -95,12 +139,12 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			};
 
 			propIterator(null, obj);
-			
-			if ( Object.keys(unset).length === 0 ) { 
+
+			if ( Object.keys(unset).length === 0 ) {
 				return {$set: set};
 			}
-			
-			
+
+
 
 			return {$set: set, $unset: unset};
 		},
@@ -140,20 +184,20 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					} else {
 						throw new Error('Unsupported operation: ' + c.op);
 					}
-					if (searchCriteria[c.f]) { 
+					if (searchCriteria[c.f]) {
 						if (searchCriteria[c.f] instanceof Object){
 							if (query instanceof Object){
 								searchCriteria[c.f]= extend(true, {}, searchCriteria[c.f], query);
 							} else {
-								searchCriteria[c.f] = query;	
+								searchCriteria[c.f] = query;
 							}
 						}
 						else {
 									// Do nothing
 								}
-						
+
 						}else {
-							searchCriteria[c.f] = query;	
+							searchCriteria[c.f] = query;
 						}
 
 
@@ -161,7 +205,7 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 				}
 			}
 			log.verbose('constructed query',searchCriteria);
-			
+
 			var fields = {};
 			if (queryFilter.fields) {
 				for (var i = 0; i < queryFilter.fields.length; i++) {
@@ -180,9 +224,9 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					}
 				}
 			}
-		
+
 			log.verbose(searchCriteria,fields,sorts);
-				
+
 			return {
 				selector: searchCriteria,
 				fields: fields,

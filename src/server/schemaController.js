@@ -23,7 +23,7 @@ var DEFAULT_CFG = {
 };
 
 
-var SchemaController = function(mongoDriver,schemaRegistry, options) {
+var SchemaController = function(mongoDriver,schemaRegistry,eventRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
@@ -62,6 +62,7 @@ var SchemaController = function(mongoDriver,schemaRegistry, options) {
 				resp.send(err.code || 500, err);
 			}
 			schemaRegistry.load();
+			eventRegistry.load();
 			
 		});
 	};

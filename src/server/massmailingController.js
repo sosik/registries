@@ -19,7 +19,7 @@ var MassmailingController = function(mongoDriver, options) {
 	var transport = nodemailer.createTransport('Sendmail');
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
-	
+
 	var self = this;
 
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
@@ -33,7 +33,7 @@ var MassmailingController = function(mongoDriver, options) {
 	var renderService = new renderServiceModule.RenderService();
 
 	this.resolveAndSend=function(subjectTemplate,textTemplate,htmlTemplate,user,sender,mailId){
-		
+
 		if (!('contactInfo' in user) || !(user.contactInfo.email)){
 			log.warn('user has no mail',user);
 			return;
@@ -52,11 +52,11 @@ var MassmailingController = function(mongoDriver, options) {
 			}
 
 			if (!htmlTemplate){
-				htmlTemplate=template;
+				htmlTemplate=textTemplate;
 			}
 
 			if(htmlTemplate){
-				htmlTemplate='<img src="{{mailId}}">'+htmlTemplate
+				htmlTemplate='<img src="{{mailId}}">'+htmlTemplate;
 				resolvedHtml=renderService.renderInstant(htmlTemplate,{locals:{'recipient':user,'sender':sender,mailId:mailId}});
 			}
 
@@ -79,9 +79,9 @@ var MassmailingController = function(mongoDriver, options) {
 	this.createMailLog=function(subjectTemplate,textTemplate,htmlTemplate,sender,recipient,callback){
 		var mailLog = {baseData:{subject:subjectTemplate, text:textTemplate, htmlTemplate:htmlTemplate,sender:{'registry' : 'people',
 			'oid' : sender.id},recipient:{'registry' : 'people',
-			'oid' : recipient.id,},sentOn:new Date().getTime()}}; 
+			'oid' : recipient.id,},sentOn:new Date().getTime()}};
 		mailLogDao.save(mailLog, callback);
-	}
+	};
 	/**
 	*	Sends mails asynchronuosly,
 	*	Async user/recipient query --> paralel send mail.
@@ -103,7 +103,7 @@ var MassmailingController = function(mongoDriver, options) {
 							return;
 						}
 						var mailId=self.createMailLog(req.body.template.baseData.subjectTemplate,req.body.template.baseData.textTemplate,req.body.template.baseData.htmlTemplate,req.currentUser,user,function(err,data){
-							if (err) { 
+							if (err) {
 								res.status(500).json(err);
 								log.err(err);
 								return;
@@ -115,28 +115,28 @@ var MassmailingController = function(mongoDriver, options) {
 						);
 					});
 				}
-		} else { 
+		} else {
 			log.verbose('Sending mail to users matching criteria',req.body.criteria);
-		
+
 
 		var qf=QueryFilter.create();
-		
+
 		for(var c in req.body.criteria){
 			qf.addCriterium(req.body.criteria[c].f,req.body.criteria[c].op,req.body.criteria[c].v);
 		}
 
 
 			userDao.list(qf,function(err,data){
-							if (err) { 
+							if (err) {
 								res.status(500).json(err);
 								log.err(err);
 								return;
 							}
-					
+
 						data.map(function(user){
 
 							var mailId=self.createMailLog(req.body.template.baseData.subjectTemplate,req.body.template.baseData.textTemplate,req.body.template.baseData.htmlTemplate,req.currentUser,user,function(err,data){
-							if (err) { 
+							if (err) {
 								res.status(500).json(err);
 								log.err(err);
 								return;
@@ -145,13 +145,13 @@ var MassmailingController = function(mongoDriver, options) {
 						});
 				});
 		});
-		
+
 		}
 		res.send(200,'');
 
 	};
 
-};	
+};
 
 module.exports = {
 	MassmailingController : MassmailingController

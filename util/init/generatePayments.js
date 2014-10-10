@@ -122,26 +122,26 @@ function createVS(createdOnReverse, index){
 
 
 function createMail(renderService,index,user,bill){
-	var template='From: caihp@unionsoft.sk\n'+
-	'To: {{email}}\n'+
-	'Return-Path: websupport@unionsoft.sk\n'+
-	'MIME-Version: 1.0\n'+
-	'Content-Type: multipart/alternative;\n'+
-	'boundary=\'PAA08673.1018277622/unionsoft.sk\'\n'+
-	'Subject: Test HTML e-mail.\n'+
+	var template=
+'From: caihp@unionsoft.sk\n'+
+'To: {{email}}\n'+
+'Return-Path: websupport@unionsoft.sk\n'+
+'MIME-Version: 1.0\n'+
+'Subject: Test HTML e-mail.\n'+
+'Content-Type: multipart/alternative;\n'+
+' boundary="PAA08673.1018277622/unionsoft.sk"\n\n'+
 
-	'This is a MIME-encapsulated message\n'+
+'This is a multipart message in MIME format.\n\n'+
 
-	'--PAA08673.1018277622/unionsoft.sk\n'+
-	'Content-type: text/plain; charset=iso-8859-1\n'+
-
-	'Ahoj {{name}},\n'+
-	'Dovol mi oznámit ti výši členského příspěvku za členství v České asociaci hokejistů a to {{fee}} Kč ročně.\n\n\n'+
-	'Platbu můžeš uskutečnit následním způsobem: \n\n'+
-    '\tbankovním převodem na účet asociace 2110167935/2700, var. symbol {{variableSymbol}}, do poznámky (popisu platby) napiš pro jistotu své jméno a příjmení\n\n'+
-	'Díky\n\n'+
-	'Marek Černošek\n'+
-	'Předseda';
+'--PAA08673.1018277622/unionsoft.sk\n'+
+'Content-type: text/plain; charset="UTF-8"\n'+
+'Ahoj {{name}},\n'+
+'Dovol mi oznámit ti výši členského příspěvku za členství v České asociaci hokejistů a to {{fee}} Kč ročně.\n\n\n'+
+'Platbu můžeš uskutečnit následním způsobem: \n\n'+
+'\tbankovním převodem na účet asociace 2110167935/2700, var. symbol {{variableSymbol}}, do poznámky (popisu platby) napiš pro jistotu své jméno a příjmení\n\n'+
+'Díky\n\n'+
+'Marek Černošek\n'+
+'Předseda';
 
 
 // '--PAA08673.1018277622/server.xyz.com\n'+

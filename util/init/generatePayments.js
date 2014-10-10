@@ -27,7 +27,7 @@ process.argv.forEach(function(val, index, array) {
 
 console.log('file to process', process.argv[2]);
 
-var schema='uri://registries/member#search';
+var schema='uri://registries/member#new';
 
 mongoDriver.init(config.mongoDbURI, function(err) {
 	if (err) {
@@ -55,7 +55,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 				//debug
 				console.log(e);
 			}
-			var uid=uuid.v4()
+			var uid=uuid.v4();
 			go(udc,feeDao,renderService,schema,uid,function(err){if (err) console.log(err); mongoDriver.close(); console.log('import.id',uid) });
 	});
 
@@ -91,9 +91,11 @@ function iterateData(uid,data,udc,feeDao,renderService,createdOn,cb){
 	var index=1;
 	var toCall=data.map(function (item){
 		return function(callback){
-			saveItem(uid,item,udc,feeDao,renderService,index++,createdOn,callback);
-		}
-	})
+			mongoDriver.nextSequence('feeIndex',function(err,data){
+				saveItem(uid,item,udc,feeDao,renderService,data.seq%1000000,createdOn,callback);
+			});
+		};
+	});
 
 	async.parallel(toCall,cb);
 }
@@ -132,12 +134,15 @@ function createMail(renderService,index,user,bill){
 
 	'--PAA08673.1018277622/unionsoft.sk\n'+
 	'Content-type: text/plain; charset=iso-8859-1\n'+
-	'Vážený {{name}} {{surname}},\n'+
 
-	'Dovoľte mi zaslať Vám informáciu o výške členského príspevku v českej asociácii hráčov hokeja. Mesačný príspevok činí {{fee}}.CZK.\n'+
-	'Prosím poukážte uvedenú čiastku na bankový účet asociácie č. 2110167935 / 2700. Pri uhrade  uvedte nasledovny variabilný symbol {{variableSymbol}}.\n'+
-	'Ďakujeme,\n'+
-	'--PAA08673.1018277622/unionsoft.sk\n';
+	'Ahoj {{name}},\n'+
+	'Dovol mi oznámit ti výši členského příspěvku za členství v České asociaci hokejistů a to {{fee}} Kč ročně.\n\n\n'+
+	'Platbu můžeš uskutečnit následním způsobem: \n\n'+
+    '\tbankovním převodem na účet asociace 2110167935/2700, var. symbol {{variableSymbol}}, do poznámky (popisu platby) napiš pro jistotu své jméno a příjmení\n\n'+
+	'Díky\n\n'+
+	'Marek Černošek\n'+
+	'Předseda';
+
 
 // '--PAA08673.1018277622/server.xyz.com\n'+
 // 'Content-Type: text/html\n'+

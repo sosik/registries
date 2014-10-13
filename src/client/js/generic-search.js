@@ -189,7 +189,6 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			}
 			$scope.headers.push(field);
 		});
-		$scope.headers = data.listFields;
 		$scope.sortBy={header: data.listFields[0] , direction : 'asc' };
 		$scope.forcedCriterias = data.forcedCriterias || [];
 	}).error(function(err) {

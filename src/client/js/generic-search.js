@@ -301,26 +301,6 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		return retVal;
 	}
 
-		function toCsv(schema,data){
-			var retVal='';
-			var separator=';';
-
-			for (var li in schema.listFields){
-				var lisDef=schema.listFields[li];
-				retVal+=lisDef.title;
-				retVal+=separator;
-			}
-			retVal+='\r\n';
-
-			for(var item in data){
-				for ( li in schema.listFields){
-					retVal+=getValue(data[item],schema.listFields[li].field)+separator;
-				}
-				retVal+='\r\n';
-			}
-
-			return new TextEncoder('utf-8', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
-		}
 
 	$scope.getVal = function getValueXX(fieldPath, obj) {
 		if (!obj) {

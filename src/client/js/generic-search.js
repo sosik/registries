@@ -322,6 +322,8 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			}
 		});
 		
+		if (!iter) return '';
+
 		if (iter.constructor === String){
 			if (iter.indexOf(',')>-1){
 				iter='"'+iter+'"';

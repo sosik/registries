@@ -12,13 +12,13 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 	var service = {};
 
 	service.getSearch = function(searchSchema, criteria,sortBy,skip,limit) {
-		
+
 		return $http({
 			method : 'POST',
 			url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
 			data : {
 				criteria : criteria,
-				sortBy: sortBy, 
+				sortBy: sortBy,
 				limit: limit,
 				skip: skip
 			}
@@ -27,7 +27,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 
 	service.getSearchCount = function(searchSchema, criteria) {
-		
+
 		return $http({
 			method : 'POST',
 			url : '/search/count/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
@@ -38,7 +38,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 	};
 
 	service.parseSearchDef = function(schema) {
-		
+
 		var retval = {};
 
 		function collectProperties(pathPrefix, objectDef,group,resultArr) {
@@ -57,7 +57,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 					continue;
 				}
 
-				//FIXME: change to datetype 
+				//FIXME: change to datetype
 				if ('render' in objectDef.properties[pr] && objectDef.properties[pr].render.component==='psui-datepicker' ) {
 						resultArr.push({
 							path: pathPrefix + pr,
@@ -73,8 +73,8 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 
 				if (objectDef.properties[pr].type === 'object') {
-					
-					
+
+
 
 					collectProperties(pr + '.', objectDef.properties[pr],objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) :objectDef.properties[pr].title, resultArr);
 
@@ -85,13 +85,13 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 						path: pathPrefix + pr,
 						type: objectDef.properties[pr].type,
 						group:group,
-						title: objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title 
+						title: objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title
 					});
 				}
 			}
 
 		}
-		
+
 
 		retval.schema = schema.url;
 		retval.attributes = [];
@@ -146,19 +146,19 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 	$scope.searchCrit = [];
 
 	$scope.data = [];
-	
+
 	$scope.headers = {};
 	$scope.forcedCriterias = [];
-	
+
 	$scope.lastCriteria={};
-	
-	
+
+
 	$scope.addCrit = function() {
 		$scope.searchCrit.push({});
 	};
-	
+
 	var pageSize=20;
-	
+
 	var generateObjectFromSchema = function(schema, obj) {
 		var _obj = obj;
 		angular.forEach(schema.properties, function(value, key){
@@ -179,9 +179,16 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		$scope.entity = data.title;
 
 		$scope.entity = $translate.instant( data.transCode || data.title);
-		
-		$scope.addCrit(); 
-		$scope.headers = data.listFields;
+
+		$scope.addCrit();
+
+		$scope.headers =[];
+		 data.listFields.map(function(field){
+			if (field.transCode) {
+				field.title = $translate.instant(field.transCode);
+			}
+			$scope.headers.push(field);
+		});
 		$scope.sortBy={header: data.listFields[0] , direction : 'asc' };
 		$scope.forcedCriterias = data.forcedCriterias || [];
 	}).error(function(err) {
@@ -211,16 +218,16 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 						f : c.attribute.path,
 						v : c.obj.oid,
 						op : c.operator.value
-					});	
+					});
 				}
 				else {
 					retval.push({
 						f : c.attribute.path,
 						v : c.value,
 						op : c.operator.value
-					});	
+					});
 				}
-				
+
 			}
 		});
 
@@ -234,7 +241,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		}
 		return [{ f:searchBy.header.field, o: searchBy.direction}];
 	}
-	
+
 	$scope.search = function() {
 		var c = convertCriteria($scope.searchCrit);
 		// add forced criteria
@@ -243,15 +250,15 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		}
 
 		$scope.lastCriteria=JSON.parse(JSON.stringify(c));
-		
+
 		genericSearchFactory.getSearch($scope.entityUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
 			$scope.data = data;
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
-	};	
-	
-	
+	};
+
+
 	$scope.searchNext = function() {
 		var c = convertCriteria($scope.searchCrit);
 		// add forced criteria
@@ -259,30 +266,30 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			c.push($scope.forcedCriterias[idx]);
 		}
 		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,pageSize).success(function(data) {
-			
+
 			data.map(function (newItems){
 				$scope.data.push(newItems);
 			});
-			
-			
+
+
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
-	};	
-	
-	
-		
-	function toCsv(schema,data){ 
+	};
+
+
+
+	function toCsv(schema,data){
 		var retVal='';
 		var separator=';';
-		
+
 		for (var li in schema.listFields){
 			var lisDef=schema.listFields[li];
 			retVal+=lisDef.title;
 			retVal+=separator;
 		}
 		retVal+='\r\n';
-		
+
 		for(var item in data){
 			for ( li in schema.listFields){
 				retVal+=getValue(data[item],schema.listFields[li].field)+separator;
@@ -292,7 +299,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 		return new TextEncoder('utf-8', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
 	}
-	
+
 
 	$scope.getVal = function getValueXX(fieldPath, obj) {
 		if (!obj) {
@@ -309,16 +316,16 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 	};
 
 	function getValue(obj,fieldPath){
-		
+
 		var parts=fieldPath.split('.');
 		var iter=obj;
 		parts.map(function(part) {
-			
+
 			if (part in iter){
 				iter = iter[part];
 			}
 			else {
-				iter={};
+				iter=null;
 			}
 		});
 		
@@ -330,9 +337,9 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			}
 		}
 		return iter;
-		
-	}	
-	
+
+	}
+
 	$scope.exportCsv = function() {
 		var c = convertCriteria($scope.searchCrit);
 		// add forced criteria
@@ -342,7 +349,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),0,1000).success(function(data) {
 
 			data=toCsv($scope.schema,data);
-			
+
 			var blob = new Blob([data], {type: 'text/csv;charset=cp1250'});
 			var url  = window.URL || window.webkitURL;
 			var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
@@ -351,13 +358,13 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 			var event = document.createEvent('MouseEvents');
 			event.initEvent('click', true, false);
-			link.dispatchEvent(event); 
-			
+			link.dispatchEvent(event);
+
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
 	};
-	
+
 	$scope.setSortBy=function (header){
 		if ($scope.sortBy && $scope.sortBy.header===header){
 			if ( 'asc'===$scope.sortBy.direction) {
@@ -365,18 +372,18 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			}
 			else {
 				$scope.sortBy={header: header , direction : 'asc' };
-			} 
+			}
 		}
 		else {
 			$scope.sortBy={header: header , direction : 'desc' };
 		}
 		$scope.search();
 	};
-	
+
 	$scope.goView = function(i) {
 		$location.path('registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id);
 	};
-	
+
 	$scope.getLink = function(i) {
 		return '#/registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id;
 	};

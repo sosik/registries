@@ -32,9 +32,11 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 
 		var manglerFuncFactory = function(ctx,objFragment, schemaFragment, objPath, mangler) {
 			return function(callback) {
-				mangler.mangle(ctx,objFragment, schemaFragment, objPath, function(err, localError){
-					callback(err, localError);
-				});
+				setTimeout(function(){
+					mangler.mangle(ctx,objFragment, schemaFragment, objPath, function(err, localError){
+						callback(err, localError);
+					})
+				;},0);
 			};
 		};
 
@@ -98,7 +100,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 			for (i = 0; i < propsToVisit.length; i++) {
 				var newPath = objPath? objPath.concat('.', propsToVisit[i]):propsToVisit[i];
 				log.silly('Investigating property %s', newPath);
-				
+
 				var propFragment = null;
 				var schemaPropFragment = null;
 				if (objFragment && objFragment[propsToVisit[i]]) {
@@ -108,13 +110,13 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 				if (schemaFragment && schemaFragment[consts.PROPERTIES_KEYWORD] && schemaFragment[consts.PROPERTIES_KEYWORD][propsToVisit[i]]) {
 					schemaPropFragment = schemaFragment[consts.PROPERTIES_KEYWORD][propsToVisit[i]];
 				}
-				
+
 				propDivers.push(
 					propDiverFuncFactory(ctx,propFragment, schemaPropFragment, newPath)
 				);
 			}
 		}
-		async.parallel(propDivers, function(err, localErrors) {
+		async.parallelLimit(propDivers, -1,function(err, localErrors) {
 			log.silly('Final callback of %s', objPath);
 			// flatten localErrors
 			var flatErrors = [];
@@ -130,14 +132,19 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 					}
 				}
 			}
-			localCallback(err, flatErrors);
+				localCallback(err, flatErrors);
+			// setTimeout(function(){
+			// },0);
 			return;
 		});
 	}
 
+	setTimeout(function(){
 	mangleInternal(context,obj, schema, null, function(err, localErrors) {
 		callback(err, localErrors);
 	});
+
+	},0);
 };
 
 /**

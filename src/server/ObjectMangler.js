@@ -33,10 +33,15 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 		var manglerFuncFactory = function(ctx,objFragment, schemaFragment, objPath, mangler) {
 			return function(callback) {
 				setTimeout(function(){
-					mangler.mangle(ctx,objFragment, schemaFragment, objPath, function(err, localError){
-						callback(err, localError);
-					})
-				;},0);
+					try{
+						mangler.mangle(ctx,objFragment, schemaFragment, objPath, function(err, localError){
+							callback(err, localError);
+						});
+					} catch (err) {
+						log.error(err.stack);
+					}
+
+				},0);
 			};
 		};
 
@@ -116,7 +121,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 				);
 			}
 		}
-		async.parallelLimit(propDivers, 10, function(err, localErrors) {
+		async.parallelLimit(propDivers,10,function(err, localErrors) {
 			log.silly('Final callback of %s', objPath);
 			// flatten localErrors
 			var flatErrors = [];

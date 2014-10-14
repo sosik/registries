@@ -7,8 +7,8 @@
 
 					<fieldset>
 						<legend>{{'generic.search.searching' | translate}} ({{entity}})</legend>
-					
-						
+
+
 						<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
 							<div class="col-sm-4">
@@ -16,7 +16,7 @@
 									ng-model="crit.attribute"
 									ng-options="att.title group by att.group for att in searchDef.attributes"></select>
 							</div>
-							
+
 							<div class="col-sm-2">
 								<select class="form-control"
 									ng-model="crit.operator"
@@ -25,9 +25,9 @@
 
 								</select>
 							</div>
-							
+
 							<div class="col-sm-4" ng-show="!crit.attribute.render">
-								<input type="text" id="name" name="name" ng-model="crit.value" 
+								<input type="text" id="name" name="name" ng-model="crit.value"
 									placeholder="" class="ng-pristine ng-valid form-control"
 									autocomplete="off">
 							</div>
@@ -58,7 +58,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div ng-show="data" class="col-md-10 col-lg-8 col-md-offset-0">
+				<div ng-show="data!=null" class="col-md-10 col-lg-8 col-md-offset-0">
 
 					<fieldset>
 						<legend>{{'generic.search.result.of.searching' | translate}}</legend>
@@ -71,20 +71,29 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="obj in data" 
+									<tr ng-show="data.length>0" ng-repeat="obj in data"
 										class="list-row">
 										<td ng-repeat="header in headers">{{getVal(header.field, $eval('obj.'+header.field))}}</td>
 										<td class="psui-actions-holder">
 											<a ng-href="{{getLink($index)}}" class="psui-btn psui-view-btn">
 												<i></i><span>{{'generic.search.view' | translate}}</span>
-											</a> 
+											</a>
+										</td>
+									</tr>
+									<tr ng-show="data.length==0"
+										class="list-row">
+										<td colspan="headers.length" >
+											{{'generic.search.nodata.found'|translate}}
 										</td>
 									</tr>
 								</tbody>
 							</table>
+						</div>&nbsp;
+						<div/>
+						<div class="row form-group">
+							<button class="btn btn-secundary "  ng-show="data" ng-click='exportCsv()'> {{'generic.search.export.csv' | translate}} </button>
+							<button class="btn btn-secundary pull-right" ng-show="data" ng-click='searchNext()'> >>> </button>
 						</div>
-						<button class="btn btn-secundary " ng-click='exportCsv()'> {{'generic.search.export.csv' | translate}} </button>
-						<button class="btn btn-secundary pull-right" ng-click='searchNext()'> >>> </button>
 					</fieldset>
 				</div>
 			</div>

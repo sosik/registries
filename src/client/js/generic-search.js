@@ -145,7 +145,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 	$scope.searchCrit = [];
 
-	$scope.data = [];
+	$scope.data = null;
 
 	$scope.headers = {};
 	$scope.forcedCriterias = [];
@@ -328,7 +328,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 				iter=null;
 			}
 		});
-		
+
 		if (!iter) return '';
 
 		if (iter.constructor === String){

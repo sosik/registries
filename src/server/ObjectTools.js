@@ -70,7 +70,7 @@ var ObjectTools = function() {
 
 
 /**
-		Removes specified path 
+		Removes specified path
 	*/
 	this.remove=function(o, path) {
 		if (!path) {
@@ -93,7 +93,7 @@ var ObjectTools = function() {
 				obj=null;
 			}
 		});
-		
+
 		if (obj){
 			delete obj[toRemove];
 		}
@@ -126,9 +126,9 @@ var ObjectTools = function() {
 				}
 			} else {
 				// there has to be exactly one path fragment left
-				return localObj[pathArr[0]]
+				return localObj[pathArr[0]];
 			}
-		}
+		};
 
 		// parse path into array
 		var pathArr = new Array();
@@ -168,7 +168,7 @@ var ObjectTools = function() {
 		}
 
 		return evalPathInternal(obj, pathArr);
-	}
+	};
 
 	/**
 	 * Strippes number of segments from end of path
@@ -186,9 +186,9 @@ var ObjectTools = function() {
 				throw new Error('There is not enought segments in path to strip');
 			}
 		}
-		
+
 		return path.substr(0, lastDot);
-	}
+	};
 
 	// this is VERY but VERY nasty function, IT HAS TO BE FIXED. it do not handle lot of corner cases
 	// FIXME FIX THIS NASTY FUNCTION
@@ -204,7 +204,17 @@ var ObjectTools = function() {
 			paths.push(that.stripFromPath(path, 1));
 		});
 
-		return paths;		
+		return paths;
+	};
+
+
+	this.removeNullProperties=function(_obj){
+		var that = this;
+		this.propertyVisitor(_obj, /.*/ , function(val, path, obj) {
+			if (val===null){
+				that.remove(obj,path);
+			}
+		});
 	};
 
 	/**
@@ -253,19 +263,19 @@ var ObjectTools = function() {
 							objectFragment.refData[prop] = data[schemaFragment.$objectLink[prop]];
 						}
 					}
-				
+
 					callback(null, object);
 				});
 			} else {
 				// not enought params to call iterator
 				callback(null, object);
 			}
-		}
+		};
 
 		async.map(linkSchemaPaths, objectLinkResolver, function(err, data) {
 			callback(err, object);
 		});
-	}
-}
+	};
+};
 
 module.exports = new ObjectTools();

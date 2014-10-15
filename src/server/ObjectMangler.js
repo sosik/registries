@@ -33,10 +33,16 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 		var manglerFuncFactory = function(ctx,objFragment, schemaFragment, objPath, mangler) {
 			return function(callback) {
 				setTimeout(function(){
-					mangler.mangle(ctx,objFragment, schemaFragment, objPath, function(err, localError){
-						callback(err, localError);
-					})
-				;},0);
+					try{
+						mangler.mangle(ctx,objFragment, schemaFragment, objPath, function(err, localError){
+							callback(err, localError);
+						});
+					} catch (err) {
+						log.error(err.stack);
+						callback(err);
+					}
+
+				},0);
 			};
 		};
 

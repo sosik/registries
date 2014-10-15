@@ -35,7 +35,8 @@
     "winston": "^0.7.3"
   },
   "devDependencies": {
-    "grunt-contrib-sass": "^0.7.3"
+    "grunt-contrib-sass": "^0.7.3",
+    "grunt-mocha-istanbul": "^2.1.0"
   },
   "scripts": {
     "test": "grunt test",

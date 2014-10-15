@@ -6,6 +6,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-mocha-test');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-env');
+	grunt.loadNpmTasks('grunt-mocha-istanbul');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
 	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:templates','copy:ssl', 'copy:sharedJsServer']);
@@ -15,10 +16,11 @@ module.exports = function(grunt) {
 	grunt.registerTask('test', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
 	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
+	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);
 
 	grunt.renameTask('clean', '_clean');
 	grunt.registerTask('clean', ['_clean:build']);
-	grunt.registerTask('mrpropper', ['clean', '_clean:node_modules', '_clean:bower_components']);
+	grunt.registerTask('mrpropper', ['clean', '_clean:node_modules', '_clean:bower_components', '_clean:coverage']);
 
 	grunt.registerTask('default', ['build', 'unitTest']);
 
@@ -112,6 +114,14 @@ module.exports = function(grunt) {
 				src: ['tests/integration/**/*']
 			}
 		},
+		mocha_istanbul: {
+			coverage_unit: {
+				src: 'tests/unit/server/',
+					options: {
+					mask: '*.js'
+				}
+			}
+		},
 		watch: {
 			server: {
 				files: ['src/server/**'],
@@ -138,7 +148,8 @@ module.exports = function(grunt) {
 		_clean: {
 			build: ['build/'],
 			node_modules: ['node_modules/'],
-			bower_components: ['bower_components/']
+			bower_components: ['bower_components/'],
+			coverage: ['coverage/']
 		},
 		sass: {
 			compile: {

@@ -3,6 +3,7 @@ data
 data/
 build/
 bower_components/
+coverage/
 .project
 .sass-cache/
 .settings

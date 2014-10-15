@@ -39,6 +39,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 						});
 					} catch (err) {
 						log.error(err.stack);
+						callback(err);
 					}
 
 				},0);
@@ -121,7 +122,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 				);
 			}
 		}
-		async.parallelLimit(propDivers,10,function(err, localErrors) {
+		async.parallelLimit(propDivers, 10, function(err, localErrors) {
 			log.silly('Final callback of %s', objPath);
 			// flatten localErrors
 			var flatErrors = [];

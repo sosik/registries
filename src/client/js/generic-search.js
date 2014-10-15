@@ -189,6 +189,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 			}
 			$scope.headers.push(field);
 		});
+		$scope.headers = data.listFields;
 		$scope.sortBy={header: data.listFields[0] , direction : 'asc' };
 		$scope.forcedCriterias = data.forcedCriterias || [];
 	}).error(function(err) {
@@ -279,27 +280,48 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 
 
 
-	function toCsv(schema,data){
-		var retVal='';
-		var separator=';';
-
+	function toHtml(schema,data){
+		var retVal='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table id="tblExport" style="border:1px solid black; "><thead><tr>';
 		for (var li in schema.listFields){
 			var lisDef=schema.listFields[li];
-			retVal+=lisDef.title;
-			retVal+=separator;
+			retVal+='<th>'+lisDef.title+'</th>';
 		}
-		retVal+='\r\n';
+		retVal+='<tr></thead><tbody>';
 
 		for(var item in data){
+			console.log(item);
+			retVal+='<tr>';
 			for ( li in schema.listFields){
-				retVal+=getValue(data[item],schema.listFields[li].field)+separator;
+				retVal+='<td>'+getValue(data[item],schema.listFields[li].field)+'</td>';
 			}
-			retVal+='\r\n';
+			retVal+='</tr>';
 		}
+			retVal+='</tbody></table></body></html>';
 
-		return new TextEncoder('utf-8', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
+
+		return retVal;
 	}
 
+		function toCsv(schema,data){
+			var retVal='';
+			var separator=';';
+
+			for (var li in schema.listFields){
+				var lisDef=schema.listFields[li];
+				retVal+=lisDef.title;
+				retVal+=separator;
+			}
+			retVal+='\r\n';
+
+			for(var item in data){
+				for ( li in schema.listFields){
+					retVal+=getValue(data[item],schema.listFields[li].field)+separator;
+				}
+				retVal+='\r\n';
+			}
+
+			return new TextEncoder('utf-8', { NONSTANDARD_allowLegacyEncoding: true }).encode(retVal);
+		}
 
 	$scope.getVal = function getValueXX(fieldPath, obj) {
 		if (!obj) {
@@ -321,7 +343,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		var iter=obj;
 		parts.map(function(part) {
 
-			if (part in iter){
+			if (iter && part in iter){
 				iter = iter[part];
 			}
 			else {
@@ -348,13 +370,13 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		}
 		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),0,1000).success(function(data) {
 
-			data=toCsv($scope.schema,data);
+			data=toHtml($scope.schema,data);
 
-			var blob = new Blob([data], {type: 'text/csv;charset=cp1250'});
-			var url  = window.URL || window.webkitURL;
+			var blob = new Blob([data], {type: 'application/vnd.ms-excel;charset=utf-8'});
+			var url  =  window.webkitURL||window.URL;
 			var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
 			link.href = url.createObjectURL(blob);
-			link.download = 'search-export.csv'; // whatever file name you want :)
+			link.download = 'search-export.xls'; // whatever file name you want :)
 
 			var event = document.createEvent('MouseEvents');
 			event.initEvent('click', true, false);

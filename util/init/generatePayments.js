@@ -130,9 +130,7 @@ function createMail(renderService,index,user,bill){
 'Subject: Test HTML e-mail.\n'+
 'Content-Type: multipart/alternative;\n'+
 ' boundary="PAA08673.1018277622/unionsoft.sk"\n\n'+
-
 'This is a multipart message in MIME format.\n\n'+
-
 '--PAA08673.1018277622/unionsoft.sk\n'+
 'Content-type: text/plain; charset="UTF-8"\n'+
 'Ahoj {{name}},\n'+
@@ -142,7 +140,6 @@ function createMail(renderService,index,user,bill){
 'Díky\n\n'+
 'Marek Černošek\n'+
 'Předseda';
-
 
 // '--PAA08673.1018277622/server.xyz.com\n'+
 // 'Content-Type: text/html\n'+
@@ -157,6 +154,5 @@ function createMail(renderService,index,user,bill){
 				console.log(err);
 		}
 	});
-
 
 }

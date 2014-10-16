@@ -13,4 +13,5 @@ module.exports = {
 	TIMESTAMP: '$timestamp',
 	TYPE_KEYWORD: 'type',
 	CLIENT_ACTIONS: 'clientActions', // array of client actions
+	REF_KEYWORD: '$ref',
 };

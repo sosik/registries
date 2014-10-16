@@ -306,6 +306,7 @@ describe('SchemaTools', function() {
 				},
 				"club": {
 					"$objectLink": {
+						"registry": "xxx",
 						"name": "name",
 						"city": "address.city"
 					}
@@ -324,8 +325,6 @@ describe('SchemaTools', function() {
 
 		expect(r.compiled.properties.club).to.have.property('$objectLink');
 		expect(r.compiled.properties.club.$objectLink).to.have.property('city');
-		expect(r.compiled.properties.club.properties).to.have.property('registry');
-		expect(r.compiled.properties.club.properties).to.have.property('oid');
 		done();
 	});
 
@@ -366,6 +365,145 @@ describe('SchemaTools', function() {
 
 		expect(schemaTools.getSchema('uri://registries/common#user').compiled).to.exist;
 
+		done();
+	});
+
+	/**
+	 * $ref keyword should compile as referenced object. It should replace original object in which
+	 * regerence is defined by referenced one.
+	 */
+	it('Keyword $ref', function(done) {
+
+		var schema = {
+			"$schema": "http://json-schema.org/schema#",
+			"id": "uri://registries/common#",
+			siblings: {
+				properties: {
+					$ref: 'uri://registries/common#person'
+				}
+			},
+			"user": {
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"surName": {
+						type: "number"
+					},
+					"address": {
+						$ref: 'uri://registries/common#address'
+					},
+					occupation: {
+						type: 'string',
+						enum: {
+							$ref: 'uri://registries/common#occupations'
+						}
+					},
+					father: {
+						$ref: 'uri://registries/common#person'
+					},
+					dummy: [
+						{ $ref: 'uri://registries/common#address' },
+						{ $ref: 'uri://registries/common#person' }
+					]
+				}
+			},
+			"address": {
+				"properties": {
+					"street": {
+						"type": "string",
+					},
+					"city": {
+						"type": "string"
+					}
+				}
+			},
+			occupations: [
+				'player',
+				'actor',
+				'lumberjack'
+			],
+			person: {
+				properties: {
+					firstName: {
+						type: "string"
+					},
+					surName: {
+						type: "number"
+					},
+					address: {
+						$ref: 'uri://registries/common#address'
+					},
+
+				}
+			}
+		};
+
+		var schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, schema);
+
+		schemaTools.parse();
+		schemaTools.compile();
+
+		var userSchema = schemaTools.getSchema('uri://registries/common#');
+
+		//console.log(require('util').inspect(userSchema, {depth: null}));
+		expect(userSchema).to.exist;
+		expect(userSchema.compiled.address.properties.street.type).to.be.equal('string');
+		expect(userSchema.compiled.address.properties.city.type).to.be.equal('string');
+		expect(userSchema.compiled.user.properties.address.properties.street.type).to.be.equal('string');
+		expect(userSchema.compiled.user.properties.address.properties.city.type).to.be.equal('string');
+
+		//array
+		expect(userSchema.compiled.user.properties.occupation.enum).to.be.instanceof(Array);
+		expect(userSchema.compiled.user.properties.occupation.enum).to.have.members(schema.occupations);
+
+		// Negative cases
+
+		var wrongSchemaRefNotOnlyProp = {
+			"$schema": "http://json-schema.org/schema#",
+			"id": "uri://registries/common#",
+			fff: {
+				properties: {
+					name: {
+						type: 'string',
+					}
+				}
+			},
+			ggg: {
+				properties: {
+					name: 'aa',
+					$ref: 'uri://registries/common#fff'
+				}
+			},
+		};
+
+		schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, wrongSchemaRefNotOnlyProp);
+
+		schemaTools.parse();
+		expect(function() {schemaTools.compile();}).to.throw(Error, /has to be only/);
+
+		wrongSchemaRefNotOnlyProp = {
+			"$schema": "http://json-schema.org/schema#",
+			"id": "uri://registries/common#",
+			ggg: {
+				properties: {
+					$ref: 'uri://registries/common#fff'
+				}
+			}
+		};
+
+		schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, wrongSchemaRefNotOnlyProp);
+
+		schemaTools.parse();
+		expect(function() {schemaTools.compile();}).to.throw(Error, /schema not found/);
+
+		done();
+	});
+
+	it('Keyword $ref nonexisting', function(done) {
 		done();
 	});
 });

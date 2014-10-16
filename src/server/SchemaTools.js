@@ -5,6 +5,7 @@ var URL = require('url');
 var path = require('path');
 var extend = require('extend');
 var util = require('util');
+var schemaConstants = require('./SchemaConstants.js');
 
 //TODO honor JSON pointer reference
 //TODO honor JSON reference reference
@@ -121,7 +122,7 @@ var SchemaTools = function() {
 	this.getSchema = function(uri) {
 		//TODO do traversing in schema structure URI and fragment information
 		var url = URL.parse(normalizeURL(URL.parse(uri)));
-		return schemasCache[URL.format(url)];
+		return schemasCache[URL.format(url)] || null;
 	};
 
 
@@ -174,62 +175,96 @@ var SchemaTools = function() {
 					}
 			}
 		}
-	}
+	};
 
 	this.parse = function() {
 		// TODO consider property ID only if it is defined in main structure not in "properties"
 		for (var schemaUri in schemasCache) {
 			parseInternal(schemaUri, schemasCache[schemaUri], schemasCache[schemaUri].url.hash);
 		}
-	}
+	};
 
-	var that = this;
+	/**
+	 * Internal schema compilation function, Recursively traverses aobject and does
+	 * compilation of schema.
+	 * This function directly modifies obj parameter. It does not check obj parameter for
+	 * validity.
+	 *
+	 * @param {object} obj parsed definition of schema
+	 * @return {object} in form of {done: true/false, val: computed value}
+	 * @throws exceptions
+	 */
+	var self = this;
 	var compileInternal = function(obj) {
-		for (var prop in obj) {
-			if (('object' === typeof obj[prop]) && ("$ref" in obj[prop])) {
-				//TODO text if it is only property (check RFC)
-				//TODO support for local references
-				var refSchema = that.getSchema(obj[prop].$ref);
-				
-				if (!refSchema) {
-					log.error('Failed to get referenced schema prop: %s, ref: ', prop, obj[prop].$ref);
-					throw new Error('Failed to get referenced schema');
+		var p, compiled, refSchema, compiledSchema, errMessage, res, props, propName;
+
+		if ('object' === typeof obj) {
+			// obj is object or array
+			if (Array.isArray(obj)) {
+				// obj is array
+				for (p in obj) {
+					res = compileInternal(obj[p]);
+					if (res.done) {
+						obj[p] = res.val;
+					} else {
+						return {done: false, val: null};
+					}
+				}
+				return {done: true, val: obj};
+			} else {
+				// $ref
+				if (obj.hasOwnProperty(schemaConstants.REF_KEYWORD)) {
+					if (Object.getOwnPropertyNames(obj).length > 1) {
+						// there is more properties but $ref has to be
+						// only property
+						errMessage = util.format('%s has to be only property', schemaConstants.REF_KEYWORD);
+						log.silly(errMessage);
+						throw new Error(errMessage);
+					}
+
+					refSchema = self.getSchema(obj[schemaConstants.REF_KEYWORD]);
+					if (refSchema === null) {
+						// there is no such schema registered
+						errMessage = util.format('Referenced schema not found %s', obj[schemaConstants.REF_KEYWORD]);
+						log.silly(errMessage);
+						throw new Error(errMessage);
+					}
+
+					compiledSchema = refSchema.compiled;
+
+					if (typeof compiledSchema === 'undefined' || compiledSchema === null) {
+						// ref schema is not compiled
+						log.silly('Referenced schema not compiled %s', obj[schemaConstants.REF_KEYWORD]);
+						return {done:false, val: null};
+					}
+
+					// we are done with whole object as $ref can be only property
+					return {done: true, val: compiledSchema};
 				}
 
-				var compiled = refSchema.compiled;
-				if (compiled) {
-					obj[prop] = compiled;
-				} else {
-					// there is still work to do
-					return false;
+				props = Object.getOwnPropertyNames(obj);
+				for (p in props) {
+					propName = props[p];
+					if (propName === schemaConstants.OBJECT_LINK_KEYWORD) {
+						// do not dive into objectLink
+					} else {
+						res = compileInternal(obj[propName]);
+						log.silly(res);
+						if (res.done) {
+							obj[propName] = res.val;
+						} else {
+							return {done: false, val: null};
+						}
+					}
 				}
-			} else if (('object' === typeof obj[prop]) && ('$objectLink' in obj[prop])) {
-				//TODO text if it is only property (same as $ref)
-				//TODO support for local reference
-				var compiled = extend(obj[prop], objectLinkSchema);
-				return compiled;
-			} else if (prop === '$ref') {
-				//TODO check if it os only property
-				var compiled = that.getSchema(obj.$ref).compiled;
-				if (compiled) {
-					return compiled;	
-				} else {
-					// there is still work to do
-					return false;
-				}
-			} else if ('object' === typeof obj[prop]) {
-				// dive deeper, it is not $ref
-				if (!compileInternal(obj[prop])) {
-					// there is still work to do in lower level
-					return false;
-				}
-				// lower level is ok, lets continue with next porperty
+
+				return {done: true, val: obj};
 			}
+		} else {
+			// whole obj is primitive type, return it as is
+			return {done: true, val: obj};
 		}
-
-		// we iterated deeply whole object and it seams ok
-		return obj;
-	}
+	};
 
 	/**
 	 * Compiles all registered schemas into one uberSchema and
@@ -248,15 +283,22 @@ var SchemaTools = function() {
 			allDone = true;
 			for (var schemaUrl in schemasCache) {
 				//TODO implement support for local references
-				var res = compileInternal(extend(true, {}, schemasCache[schemaUrl].def));
-				if (res) {
-					schemasCache[schemaUrl].compiled = res;
-				} else {
-					allDone = false;
+
+				try {
+					var res = compileInternal(extend(true, (Array.isArray(schemasCache[schemaUrl].def) ? [] : {}), schemasCache[schemaUrl].def));
+					if (res.done) {
+						schemasCache[schemaUrl].compiled = res.val;
+					} else {
+						log.silly("Schema not parsed completely, next round needed");
+						allDone = false;
+					}
+				} catch (e) {
+					log.silly('Failed to compile schemas', e.stack);
+					throw e;
 				}
 			}
 		}
-	}
+	};
 
 	this.createDefaultObject = function(uri) {
 		var compiledSchema = schemasCache[uri];
@@ -293,7 +335,7 @@ var SchemaTools = function() {
 		};
 
 		return iterateSchema(compiledSchema.compiled);
-	}
+	};
 };
 
 module.exports = {

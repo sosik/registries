@@ -24,5 +24,5 @@ git log $LAST_DEPL..HEAD|egrep -i '\[FINIS|FIX.* #[0-9]*\]'|sed -e 's/^.*\[\(FIN
 
 cat $TMPFILE
 git commit --allow-empty -F $TMPFILE
-DATE=`date -Iseconds`
-git tag -a -f -m "Deploy $DATE $INSTANCE" "$INSTANCE"
+DATE=`date +%Y%m%d%H%M%S`
+git tag -a -f -m "Deploy $DATE $INSTANCE" "$INSTANCE-$DATE"

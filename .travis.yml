@@ -4,4 +4,4 @@ nodejs:
   - "0.10"
 before_install:
     - "npm install -g grunt-cli"
-    - "gem install sass"
+    - "gem install sass --version 3.4.0"

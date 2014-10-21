@@ -102,9 +102,9 @@ function iterateData(uid,data,udc,feeDao,renderService,createdOn,cb){
 
 function saveItem(uid,item,udc,feeDao,renderService,index,createdOn,callback){
 
-		var bill = {"import":{id:uid}, baseData:{member:{registry:'people',oid:item.id},membershipFee:item.membershipFeeInfo.membershipFee,
+		var bill = {"import":{id:uid}, baseData:{member:{registry:'people',oid:item.id},membershipFee:Number(item.membershipFeeInfo.membershipFee),
 							setupDate:dateUtils.dateToReverse(createdOn),
-							dueDate:dateUtils.dateToReverse(dateUtils.dateAddDays(createdOn,15)),feePaymentStatus:'Nezaplatené',variableSymbol:createVS(dateUtils.dateToReverse(createdOn),index)}};
+							dueDate:dateUtils.dateToReverse(dateUtils.dateAddDays(createdOn,15)),feePaymentStatus:'Vystavené',variableSymbol:createVS(dateUtils.dateToReverse(createdOn),index)}};
 
 		createMail(renderService,index,item,bill);
 		feeDao.save(bill,callback);

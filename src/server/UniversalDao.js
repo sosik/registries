@@ -27,7 +27,7 @@ var UniversalDao = function(mongoDriver, options) {
 	if (!_options.collectionName) {
 		throw new Error('Parameter options.collectionName is mandatory!');
 	}
-	
+
 	var _collection = mongoDriver.getDb().collection(_options.collectionName);
 
 
@@ -50,7 +50,7 @@ var UniversalDao = function(mongoDriver, options) {
 			if (err) {
 				callback(err);
 				return;
-			} 
+			}
 
 			mongoDriver._id2id(result);
 			callback(null, result);
@@ -107,7 +107,7 @@ var UniversalDao = function(mongoDriver, options) {
 				callback(err);
 				return;
 			}
-			
+
 			if (!result.updatedExisting || result.n !== 1) {
 				callback(new Error('Neither object with id ' + obj.id + ' not found or updated more documents'));
 				return;
@@ -146,7 +146,7 @@ var UniversalDao = function(mongoDriver, options) {
 	 */
 	this.list = function(queryFilter, callback) {
 		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
-		
+
 			log.silly(_findOptions);
 		_collection.find(_findOptions.selector, _findOptions, function(err, cursor){
 			if (err) {
@@ -159,7 +159,7 @@ var UniversalDao = function(mongoDriver, options) {
 					callback(err);
 					return;
 				}
-				
+
 				var result = [];
 				for (var i = 0; i < data.length; i++) {
 					result.push(mongoDriver._id2id(data[i]));
@@ -169,6 +169,7 @@ var UniversalDao = function(mongoDriver, options) {
 			});
 		});
 	};
+
 	/**
 	 * Counts objects queried by criteria
 	 *
@@ -178,7 +179,7 @@ var UniversalDao = function(mongoDriver, options) {
 	this.count = function(queryFilter, callback) {
 		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
 			delete _findOptions.limit;
-		
+
 			log.silly(_findOptions);
 		_collection.find(_findOptions.selector, _findOptions, function(err, cursor){
 			if (err) {
@@ -190,9 +191,27 @@ var UniversalDao = function(mongoDriver, options) {
 	};
 
 	/**
+	* Aggregate
+	*
+	* @param {Object} queryFilter - search options - use QueryFilter class
+	* @param {resultCallback} callback - async callback, result parameter contains count
+	*/
+	this.aggregate = function(aggquery, callback) {
+
+		_collection.aggregate(aggquery, function(err, cursor){
+			if (err) {
+				callback(err);
+				return;
+			}
+			console.log(cursor);
+			callback(null,cursor);
+		});
+	};
+
+	/**
 	 * Get actual dao options
 	 *
-	 * @returns clone of actual options object 
+	 * @returns clone of actual options object
 	 */
 	this.options = function() {
 		return extend({}, _options);

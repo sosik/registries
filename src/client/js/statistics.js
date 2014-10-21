@@ -32,7 +32,7 @@ angular.module('statistics', [])
 
 	$scope.model = {};
 	$scope.model.obj = {};
-	
+
 	$scope.schemaFormOptions = {
 		modelPath: 'model.obj',
 		schema: {}
@@ -43,15 +43,15 @@ angular.module('statistics', [])
 	schemaUtilFactory.getCompiledSchema(schemaUri, 'view')
 	.success(function(data) {
 		$scope.schemaFormOptions.schema = data;
-		
+
 		StatisticsServiceFactory.getStatisticsData.success(function(data, status, headers, config){
 			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 			$scope.model.obj = data;
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
-		
-	})
+
+	});
 }])
 .controller('statistics.viewCtrl', ['$scope', '$routeParams', '$http', '$location','schema-utils.SchemaUtilFactory','psui.notificationFactory','statistics.StatisticsServiceFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory,StatisticsServiceFactory) {
 	var generateObjectFromSchema = function(schema, obj) {
@@ -72,7 +72,7 @@ angular.module('statistics', [])
 
 	$scope.model = {};
 	$scope.model.obj = {};
-	
+
 	$scope.schemaFormOptions = {
 		modelPath: 'model.obj',
 		schema: {}
@@ -86,7 +86,7 @@ angular.module('statistics', [])
 		// .error(function(data, status, headers, config) {
 		// 	notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
 		// });
-	}
+	};
 
 	// $scope.$on('psui:model_changed', function() {
 	// 	$scope.save();
@@ -100,10 +100,9 @@ angular.module('statistics', [])
 		StatisticsServiceFactory.getStatisticsData().success(function(data, status, headers, config){
 			generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
 			$scope.model.obj = data;
-			console.log(data);
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
-		
-	})
+
+	});
 }]);

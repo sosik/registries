@@ -13,7 +13,7 @@ var remove = function(originalArray, removeArray){
 		var index = originalArray.indexOf(removeArray[i]);
 		originalArray.splice(index, 1);
 		i++;
-	};
+	}
 };
 var insert = function(originalArray, insertArray){
 	var i = 0;
@@ -21,7 +21,7 @@ var insert = function(originalArray, insertArray){
 		var index = originalArray.indexOf(insertArray[i][1]);
 		originalArray.splice(index + 1, 0, insertArray[i][0]);
 		i++;
-	};
+	}
 };
 
 var finalCollation = generalCollation.collation;
@@ -39,9 +39,9 @@ var findDoubleChars = function(finColl){
 			j++;
 		}
 		i++;
-	}	
+	}
 	return specialChars;
-}
+};
 
 var specialChars = findDoubleChars(finalCollation);
 

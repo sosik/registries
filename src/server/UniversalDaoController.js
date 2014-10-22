@@ -10,10 +10,12 @@ var QueryFilter = require('./QueryFilter.js');
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry) {
 
+
 	var listObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/ObjectCleanerUnmangler.js')(),
 
 			require('./manglers/TimestampUnmangler.js')(),
+			require('./manglers/CollationUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver)
@@ -22,6 +24,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 	var getObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/TimestampUnmangler.js')(),
 			require('./manglers/ObjectCleanerUnmangler.js')(),
+			require('./manglers/CollationUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver)
@@ -30,6 +33,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 	var updateObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/ObjectCleanerMangler.js')(),
 			require('./manglers/NumberMangler.js')(),
+			require('./manglers/CollationMangler.js')(mongoDriver),
 			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
 						return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver),
@@ -44,7 +48,8 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			require('./manglers/TimestampMangler.js')(mongoDriver),
 			require('./manglers/ObjectCleanerMangler.js')(),
 			require('./manglers/SequenceMangler.js')(mongoDriver),
-			require('./manglers/NextMangler.js')(mongoDriver)
+			require('./manglers/NextMangler.js')(mongoDriver),
+			require('./manglers/CollationMangler.js')(mongoDriver)
 	]);
 
 	var that=this;
@@ -109,6 +114,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		if (obj.id){
 			//UPDATE
+			auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
 			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
 				if (err){res.send(500);return;}
 
@@ -118,7 +124,6 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 						throw err;
 					}
 					res.status(200).json(data);
-					auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
 					if (compiledSchema._fireEvents && compiledSchema._fireEvents.update ){
 						log.silly('Firing event',compiledSchema._fireEvents.update);
 						eventRegistry.emitEvent(compiledSchema._fireEvents.update,{entity:obj,user:req.currentUser});
@@ -130,6 +135,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		else {
 			//CREATE
+			auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
 
 				if (err){res.send(500);log.err(err);return;}
@@ -334,6 +340,53 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		});
 	};
 
+	function enhanceQuery(qf,schema,schemaName,profile){
+		securityService.applySchemaForcedCrits(schema,qf);
+
+		if (profile){
+				qf=securityService.applyProfileCrits(profile,schemaName,qf);
+		}
+
+
+		var sorts=qf.sorts.map(function(sortBy){
+			 var newF= translateCollate(schema,sortBy.f,'c');
+			if (newF!==sortBy.f){
+				return {f:newF,o:sortBy.o};
+			}
+			return sortBy;
+		});
+
+		qf.sorts=sorts;
+
+		var crits=qf.crits.map(function(c){
+			var newF= translateCollate(schema,c.f,'v');
+			if (newF!==c.f){
+				return {f:newF,op:c.op,v:c.v};
+			}
+			return c;
+		});
+
+		qf.crits=crits;
+
+	}
+
+	function translateCollate(schema,field,suffix){
+		var schemaPath=objectTools.objecPathToSchemaPath(field);
+		if (schemaPath){
+			var schemaFragment=objectTools.evalPath(schema,schemaPath);
+			if (schemaFragment && schemaFragment.$collate){
+				return field+"."+suffix;
+			}
+			else {
+				return field;
+			}
+		}else
+			return field;
+
+	}
+
+
+
 this.searchBySchema = function(req, resp) {
 
 
@@ -377,14 +430,9 @@ this.searchBySchema = function(req, resp) {
 			qf.addCriterium(crits.criteria[c].f,crits.criteria[c].op,crits.criteria[c].v);
 		}
 
-		securityService.applySchemaForcedCrits(compiledSchema,qf);
+		enhanceQuery(qf,compiledSchema,schemaName,req.profile);
 
-
-		if (req.profile){
-				qf=securityService.applyProfileCrits(req.profile,schemaName,qf);
-		}
-
-		log.silly('used crits', crits);
+		log.silly('used crits', qf);
 		dao.list(qf, function(err, data) {
 			if (err) {
 				resp.send(500, err);

@@ -251,7 +251,6 @@ var UniversalDao = function(mongoDriver, options) {
 				callback(err);
 				return;
 			}
-			console.log(cursor);
 			callback(null,cursor);
 		});
 	};

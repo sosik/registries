@@ -15,4 +15,5 @@ module.exports = {
 	TYPE_NUMBER:'number',
 	CLIENT_ACTIONS: 'clientActions', // array of client actions
 	REF_KEYWORD: '$ref',
+	COLLATE: '$collate'
 };

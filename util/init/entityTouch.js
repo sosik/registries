@@ -39,10 +39,10 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		.map(function(item) {
 			return path.join(config.paths.schemas, item);
 	});
-	
+
 	var schemaRegistry = new schemaRegistryModule.SchemaRegistry({schemasList:schemasListPaths});
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
-	
+
 	go(udc,schema);
 
 });
@@ -52,15 +52,21 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 function go(udc,schema) {
 
 	var req={params:{schema:schema},body:{}};
+	req.perm={'Registry - read':true};
+
 	var res=function (){
 		this.send=function (code ,data){
 			console.log(code,data);
 		};
+		this.status=function (status){
+			console.log(status);
+			return this;
+		};
 		this.json=function(data){
 			iterateData(data,udc);
 		};
-	}; 
-	
+	};
+
 	util.inherits(res, require('stream').Writable);
 	res= new res();
 	udc.searchBySchema(req,res);
@@ -69,12 +75,12 @@ function go(udc,schema) {
 
 
 function iterateData(data,udc){
-	
+
 	data.map(function (item){
 
 		saveItem(item,udc);
 
-	})
+	});
 
 }
 
@@ -82,20 +88,26 @@ function saveItem(item,udc){
 
 		var req={currentUser:{id:-1},params:{schema:schema},body:item};
 			var res=function (){
-			
+
 			this.send=function (code ,data){
 			console.log("save res",code,data);
 			};
 
-			this.json=function(data){
-				console.log(data);
+			this.status=function (status){
+				console.log(status);
+				return this;
 			};
-			
-	}; 
-	
+
+			this.json=function(data){
+				console.log('.');
+			};
+
+	};
+
 	util.inherits(res, require('stream').Writable);
 	res= new res();
 
+	req.perm={'Registry - write':true};
 	udc.saveBySchema(req,res);
 
 

@@ -1,8 +1,8 @@
 var config = require('./config.js');
 var collationMaker = require('./collationMaker.js');
 
-var valueOfString =	function(s){
-	var arrOfVals = new Array();
+function getCollationKey(s){
+	var arrOfVals = [];
 	var border = config.collation.numberOfChars;
 	var index = 0;
 	for(i = 0; i < border; i++){
@@ -19,9 +19,9 @@ var valueOfString =	function(s){
 			j++;
 		}
 		index++;
-	};
-	
-	return arrOfVals;
-};
+	}
 
-module.exports.collationValueOfString = valueOfString;
+	return arrOfVals;
+}
+
+module.exports.getCollationKey = getCollationKey;

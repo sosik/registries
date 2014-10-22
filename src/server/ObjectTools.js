@@ -38,7 +38,7 @@ var ObjectTools = function() {
 				this.propertyVisitor(obj, propertyPathRegexp, visitor, nextLocalPath + '.', nextLocalObj);
 			}
 		}
-	}
+	};
 
 	/**
 		Creates specified path if required and sets value to attribute
@@ -53,9 +53,9 @@ var ObjectTools = function() {
 		var lastPart = null;
 		parts.map(function(part) {
 			if (!obj[part]) {
-				obj[part] = {}
+				obj[part] = {};
 			}
-			;
+
 			prev = obj;
 			obj = obj[part];
 			lastPart = part;
@@ -131,7 +131,7 @@ var ObjectTools = function() {
 		};
 
 		// parse path into array
-		var pathArr = new Array();
+		var pathArr = [];
 		var frag = null;
 		var inQuotas = false;
 		for (var i = 0; i < path.length; i++) {
@@ -156,7 +156,7 @@ var ObjectTools = function() {
 					break;
 				default:
 					frag = (frag ? frag + path.charAt(i) : path.charAt(i));
-			};
+			}
 		}
 
 		// final cleanup at the end of iteration
@@ -169,6 +169,7 @@ var ObjectTools = function() {
 
 		return evalPathInternal(obj, pathArr);
 	};
+	this.getValue=this.evalPath;
 
 	/**
 	 * Strippes number of segments from end of path
@@ -194,6 +195,10 @@ var ObjectTools = function() {
 	// FIXME FIX THIS NASTY FUNCTION
 	this.schemaPathToObjectPath = function(schemaPath) {
 		return schemaPath.replace(/properties\./g, '');
+	};
+
+	this.objecPathToSchemaPath = function(objPath) {
+		return 'properties.'+objPath.replace(/\./g, '.properties.');
 	};
 
 

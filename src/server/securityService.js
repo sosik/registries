@@ -22,7 +22,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 
 		log.verbose('checking permision on schema:action',schema,action);
 
-		var missingPerm=null
+		var missingPerm=null;
 		if ('_security' in schema) {
 			if (action in schema['_security']) {
 				if ('_static' in schema['_security'][action]) {
@@ -133,7 +133,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		}
 		return qf;
 	};
-	
+
 	this.hasPermFilter= function (perm){
 		var t=this;
 		var f= function (perm){

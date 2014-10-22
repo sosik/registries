@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * Tools for schemas parsing, compilation and management.
+ *
+ * @module server
+ * @submodule SchemaTools
+ */
 var log = require('./logging.js').getLogger('SchemaTools.js');
 var URL = require('url');
 var path = require('path');
@@ -7,6 +13,12 @@ var extend = require('extend');
 var util = require('util');
 var schemaConstants = require('./SchemaConstants.js');
 
+/**
+ * SchemaTools class. Used as main schemas manipulation class.
+ *
+ * @class SchemaTools
+ * @constructor
+ */
 //TODO honor JSON pointer reference
 //TODO honor JSON reference reference
 //TODO honor URI reference for URI validation
@@ -65,6 +77,7 @@ var SchemaTools = function() {
 	 * If URI does not contain fragment (#) identification, # is appended to
 	 * the end of URI.
 	 *
+	 * @method registerSchema
 	 * @param {string} uri - resolution uri
 	 * @param {string|object} schema - schema as string or json object
 	 * @param {boolean} override - true if new schema should override old one
@@ -118,6 +131,10 @@ var SchemaTools = function() {
 	 * Get registered schema. If there is no schema with coresponding uri,
 	 * it returns null. It does deep uri identification and traversing so it
 	 * can return subschema of larger schema registered by registerSchema method.
+	 *
+	 * @method getSchema
+	 * @param {String} uri uri of schema
+	 * @return {Object} schema object or null it there no such schema registered
 	 */
 	this.getSchema = function(uri) {
 		//TODO do traversing in schema structure URI and fragment information
@@ -127,7 +144,10 @@ var SchemaTools = function() {
 
 
 	/**
-	 * finds schema-fragments that ends with specified suffix 
+	 * finds schema-fragments that ends with specified suffix
+	 *
+	 * @method getSchemaNamesBySuffix
+	 * @param {String} suffix suffix to look for
 	 */
 	this.getSchemaNamesBySuffix = function(suffix) {
 		//TODO do traversing in schema structure URI and fragment information
@@ -177,6 +197,11 @@ var SchemaTools = function() {
 		}
 	};
 
+	/**
+	 * Parses all registred schema
+	 *
+	 * @method parse
+	 */
 	this.parse = function() {
 		// TODO consider property ID only if it is defined in main structure not in "properties"
 		for (var schemaUri in schemasCache) {
@@ -271,6 +296,8 @@ var SchemaTools = function() {
 	 * each schema individually.
 	 * Schema compilation means replacing of all $ref objects by instance
 	 * of full schema definitioin registered by related uri.
+	 *
+	 * @method compile
 	 */
 	this.compile = function() {
 		for (var schemaUrl in schemasCache) {
@@ -300,6 +327,13 @@ var SchemaTools = function() {
 		}
 	};
 
+	/**
+	 * Creates empty object by schema definition
+	 *
+	 * @method createDefaultObject
+	 * @param {String} uri uri of schema to use as object definition
+	 * @return {Object} empty object definded by schema
+	 */
 	this.createDefaultObject = function(uri) {
 		var compiledSchema = schemasCache[uri];
 		
@@ -340,4 +374,4 @@ var SchemaTools = function() {
 
 module.exports = {
 	SchemaTools: SchemaTools
-}
+};

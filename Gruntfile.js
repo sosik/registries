@@ -7,6 +7,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-env');
 	grunt.loadNpmTasks('grunt-mocha-istanbul');
+	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
 	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:templates','copy:ssl', 'copy:sharedJsServer']);
@@ -22,6 +23,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('clean', ['_clean:build']);
 	grunt.registerTask('mrpropper', ['clean', '_clean:node_modules', '_clean:bower_components', '_clean:coverage']);
 
+	grunt.registerTask('doc', 'yuidoc');
 	grunt.registerTask('default', ['build', 'unitTest']);
 
 	grunt.initConfig({
@@ -177,6 +179,14 @@ module.exports = function(grunt) {
 					dest: 'build/client/css/',
 					ext: '.css'
 				}]
+			}
+		},
+		yuidoc: {
+			compile: {
+				options: {
+					paths: 'src/server/',
+					outdir: 'doc'
+				}
 			}
 		},
 		env: {

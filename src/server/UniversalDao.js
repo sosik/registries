@@ -1,3 +1,10 @@
+'use strict';
+/**
+ * Universal database access wrapper.
+ *
+ * @module server
+ * @submodule UniversalDao
+ */
 var log = require('./logging.js').getLogger('UniversalDao.js');
 var extend = require('extend');
 var mongoDriver = require('./mongoDriver');
@@ -6,8 +13,10 @@ var DEFAULT_OPTIONS = {
 };
 
 /**
- * @class
  * Configurable universal dao used to access data in mongoDB
+ *
+ * @class UniversalDao
+ * @constructor
  */
 var UniversalDao = function(mongoDriver, options) {
 	if (!mongoDriver) {
@@ -31,6 +40,7 @@ var UniversalDao = function(mongoDriver, options) {
 	/**
 	 * Save object
 	 *
+	 * @method
 	 * @param {Object} obj - object to save
 	 * @param {resultCallback} callback - async callback
 	 */

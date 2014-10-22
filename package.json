@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "grunt-contrib-sass": "^0.7.3",
+    "grunt-contrib-yuidoc": "^0.5.2",
     "grunt-mocha-istanbul": "^2.1.0"
   },
   "scripts": {

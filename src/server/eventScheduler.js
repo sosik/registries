@@ -7,7 +7,7 @@ var universalDaoModule = require('./UniversalDao.js');
 var QueryFilter = require('./QueryFilter.js');
 
 var DEFAULT_CFG = {
-	pollingPeriod : 5000,
+	pollingPeriod : 2000,
 	batchSize : 20,
 	eventCollection: 'events'
 };
@@ -33,7 +33,6 @@ var EventScheduler = function(mongoDriver,cfg) {
 		};
 
 		this.pollForEvents=function(){
-			console.log('.');
 			log.debug('events polled');
 			var qf=QueryFilter.create();
 
@@ -94,7 +93,9 @@ var EventScheduler = function(mongoDriver,cfg) {
 			eventDao.delete(toRemove,function(err,data){if (err) {log.error(err);cb(err); return;} log.verbose('event unscheduled',data);cb(err,data);});
 		};
 
-		setInterval(this.pollForEvents,prop.pollingPeriod);
+		this.start=function (){
+			setInterval(this.pollForEvents,prop.pollingPeriod);
+		};
 
 };
 

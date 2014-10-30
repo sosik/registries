@@ -12,6 +12,7 @@ var errorhandler = require('errorhandler');
 var path = require('path');
 var fsController=require('./fsController.js');
 
+
 var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js'));
 var config = require(path.join(process.cwd(), '/build/server/config.js'));
 
@@ -22,6 +23,7 @@ var securityServiceModule = require('./securityService.js');
 var securityService= new securityServiceModule.SecurityService();
 
 var schemaRegistryModule = require('./schemaRegistry.js');
+var csvImportModule = require('./csvImportService.js');
 
 var schemaControllerModule = require('./schemaController.js');
 var statisticsControllerModule = require('./statisticsController.js');
@@ -59,19 +61,19 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	var eventHandlers = path.join(config.paths.schemas, '_event_handlers.json');
 
+
 	var schemaRegistry = new schemaRegistryModule.SchemaRegistry({schemasList:schemasListPaths});
 
 	var eventScheduler=new eventSchedulerModule.EventScheduler(mongoDriver);
 
-	var eventRegistry=new eventRegistryModule.EventRegistry({eventHandlersPath:eventHandlers,mongoDriver:mongoDriver,eventScheduler:eventScheduler,config:config});
+	var importService = new csvImportModule.CsvImportService(config,mongoDriver,JSON.parse(fs.readFileSync(path.join(config.paths.schemas, '_importDefs.json'))));
+
+	var eventRegistry=new eventRegistryModule.EventRegistry({eventHandlersPath:eventHandlers,mongoDriver:mongoDriver,eventScheduler:eventScheduler,config:config,importService:importService});
 
 	eventScheduler.setEventRegistry(eventRegistry);
 
-	// process.nextTick(function(){
-	//  eventRegistry.emit('test-event',{data:'data'});
-	// });
-
 	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry,eventRegistry);
+	importService.setUdc(udc);
 
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,config);
 
@@ -133,6 +135,10 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	log.verbose('Configuring photos sub applicaction');
 	var photosRepoApp = fsController.create({rootPath: config.paths.photos ,fileFilter: null});
 	app.use('/photos',photosRepoApp);
+
+	var uploadsRepoApp = fsController.create({rootPath: config.paths.uploads ,fileFilter: null});
+	app.use('/uploads',uploadsRepoApp);
+
 
 	log.verbose('Configuring dataset sub applicaction');
 	var datasetRepoApp = fsController.create({

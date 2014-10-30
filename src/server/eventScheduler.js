@@ -50,17 +50,17 @@ var EventScheduler = function(mongoDriver,cfg) {
 			events.map(function(event){
 				setTimeout(function(){
 					eventDao.getWithTimeLock(event,3000,function (err, event){
-						if (err) {log.error(err); return;}
+						if (err) {log.error('getWithTimeLock',err); return;}
 						if (!event){
 							return;
 						}
 						log.verbose('firing event',event);
-						self.eventRegistry.emitEvent(event.eventType,event.eventData);
-
 						//should be called when handling of atleast started.
 						event.eventData.done=function(){
-							eventDao.remove(event.id,function(err,data){if (err) {log.error(err); return;} log.verbose('event removed',data);});
+							eventDao.remove(event.id,function(err,data){if (err) {log.error('done',err); return;} log.verbose('event removed',data);});
 						};
+						self.eventRegistry.emitEvent(event.eventType,event.eventData);
+
 					});
 				},0);
 			});
@@ -80,7 +80,7 @@ var EventScheduler = function(mongoDriver,cfg) {
 		};
 
 		this.unscheduleEvent=function(eventId){
-			eventDao.remove(eventId,function(err,data){if (err) {log.error(err); return;} log.verbose('event unscheduled',data);});
+			eventDao.remove(eventId,function(err,data){if (err) {log.error('unscheduleEvent',err); return;} log.verbose('event unscheduled',data);});
 		};
 
 
@@ -90,7 +90,7 @@ var EventScheduler = function(mongoDriver,cfg) {
 			if (eventTypes && eventTypes.length>0){
 				toRemove.eventType = {$in:eventTypes};
 			}
-			eventDao.delete(toRemove,function(err,data){if (err) {log.error(err);cb(err); return;} log.verbose('event unscheduled',data);cb(err,data);});
+			eventDao.delete(toRemove,function(err,data){if (err) {log.error('unscheduleEvents',err);cb(err); return;} log.verbose('event unscheduled',data);cb(err,data);});
 		};
 
 		this.start=function (){

@@ -12,6 +12,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 	var listObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/ObjectCleanerUnmangler.js')(),
+
 			require('./manglers/TimestampUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
@@ -28,6 +29,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 	var updateObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/ObjectCleanerMangler.js')(),
+			require('./manglers/NumberMangler.js')(),
 			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
 						return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver),
@@ -38,9 +40,11 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver),
-			 require('./manglers/TimestampMangler.js')(mongoDriver),
-			 require('./manglers/ObjectCleanerMangler.js')(),
-			require('./manglers/SequenceMangler.js')(mongoDriver)
+			require('./manglers/NumberMangler.js')(),
+			require('./manglers/TimestampMangler.js')(mongoDriver),
+			require('./manglers/ObjectCleanerMangler.js')(),
+			require('./manglers/SequenceMangler.js')(mongoDriver),
+			require('./manglers/NextMangler.js')(mongoDriver)
 	]);
 
 	var that=this;

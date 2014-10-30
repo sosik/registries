@@ -32,7 +32,8 @@
     "readline": "0.0.3",
     "supervisor": "^0.6.0",
     "swig": "^1.4.1",
-    "winston": "^0.7.3"
+    "winston": "^0.7.3",
+    "object-hash": "~0.3.0"
   },
   "devDependencies": {
     "grunt-contrib-sass": "^0.7.3",

@@ -3,12 +3,24 @@ var DateUtils = function() {
 	var self=this;
 	this.reverseToStr=function(strReverseDate){
 
-		var year = strReversDate.substring(0,4);
-		var month = strReversDate.substring(4,6);
-		var day = strReversDate.substring(6,8);
+		var year = strReverseDate.substring(0,4);
+		var month = strReverseDate.substring(4,6);
+		var day = strReverseDate.substring(6,8);
 		if (year.length === 4 && month.length === 2 && day.length === 2) {
 			var d = new Date(year, month-1, day);
 			return d.getDate() + '.' + (d.getMonth()+1) + '.' + d.getFullYear();
+		}
+		return null;
+	};
+
+	this.reverseToDate=function(strReverseDate){
+
+		var year = strReverseDate.substring(0,4);
+		var month = strReverseDate.substring(4,6);
+		var day = strReverseDate.substring(6,8);
+		if (year.length === 4 && month.length === 2 && day.length === 2) {
+			var d = new Date(year, month-1, day);
+			return d;
 		}
 		return null;
 	};
@@ -49,7 +61,18 @@ var DateUtils = function() {
 		return (d);
 	};
 
+	this.nowToReverse=function (){
 
+		return self.dateToReverse(new Date());
+	};
+
+	this.isReverseAfterNow=function(reversDate){
+		var nowRevers =  self.nowToReverse();
+		if (reversDate>nowRevers){
+			return true;
+		}
+		return false;
+	};
 
 	this.dateToStr=function(dateDate){
 		var ys = dateDate.getFullYear().toString(10);

@@ -3,6 +3,7 @@
 // require('look').start();
 var log = require('./logging.js').getLogger('EventProcessor.js');
 var path = require('path');
+var fs = require('fs');
 var fsController=require('./fsController.js');
 
 var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js'));

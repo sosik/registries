@@ -41,17 +41,16 @@ var StatisticsController = function(mongoDriver, options) {
 				},
 				function(callback){
 					t.getYearPaymentsStats(function(err,data){
-						console.log(data);
 							if (data){
 								data.map(function(item){
-									if (item._id.isNew==true){
-										if ('Vystavené'==item._id.status){
+									if (item._id.isNew===true){
+										if ('created'==item._id.status){
 											responseToSend.fees.expectedCount=item.count;
 											responseToSend.fees.expectedSum=item.sum;
-										} else if ('Zaplatené'==item._id.status){
+										} else if ('refunded'==item._id.status){
 											responseToSend.fees.paidCount=item.count;
 											responseToSend.fees.paidSum=item.sum;
-										} else if ('Nezaplatené'==item._id.status){
+										} else if ('overdue'==item._id.status){
 											responseToSend.fees.overdueCount=item.count;
 											responseToSend.fees.overdueSum=item.sum;
 										}

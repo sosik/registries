@@ -23,7 +23,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 	$scope.model = {};
 	$scope.model.obj = {};
-	
+
 	$scope.schemaFormOptions = {
 		modelPath: 'model.obj',
 		schema: {}
@@ -63,7 +63,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 	$scope.model = {};
 	$scope.model.obj = {};
-	
+
 	$scope.schemaFormOptions = {
 		modelPath: 'model.obj',
 		schema: {}
@@ -94,7 +94,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 	schemaUtilFactory.getCompiledSchema(schemaUri, 'view')
 	.success(function(data) {
 		$scope.schemaFormOptions.schema = data;
-		
+
 		$http({ method : 'GET',url: '/udao/getBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(schemaUri, 'view'))+'/'+ $scope.currentId})
 		.success(function(data, status, headers, config){
 			schemaUtilFactory.generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
@@ -102,7 +102,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
-		
+
 	})
 }])
 .filter('dateToString', function() {
@@ -448,7 +448,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			var modelPath = scope.$eval(attrs.psuiModel);
 
 			elm.append('<span>'+(options.title)+'</span>');
-			
+
 			scope.$watch(attrs.psuiModel+'.id', function(nv, ov) {
 				if (nv) {
 					attrs.$set('href', '/#/registry/custom/' + options.template + '/' + schemaUtilFactory.encodeUri(options.schema) + '/' +nv);
@@ -498,7 +498,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 							var fieldHolder = angular.element('<div class="col-sm-8"></div>');
 							var fieldHolderInner = angular.element('<div class="input-group"></div>');
 							fieldHolder.append(fieldHolderInner);
-							
+
 							var label = angular.element('<label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>');
 
 							formGroup.append(label);
@@ -523,6 +523,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 									input = angular.element('<psui-uploadable-image '
 									+ 'psui-imageresizor psui-imageresizor-width="' +value2.render.width
 										+ '" psui-imageresizor-height="'+value2.render.height + '" psui-validity-mark ng-model="'+options.modelPath+'.'+key+'.'+key2+'" style="'+(value2.render.width ? 'width:'+value2.render.width+'px !important;':'')+(value2.render.height ? 'height:'+value2.render.height+'px !important;':'')+'"/></psui-uploadable-image>');
+								}else if (value2.render && value2.render.component === 'psui-uploadable-file') {
+									input = angular.element('<psui-uploadable-file ng-model="'+options.modelPath+'.'+key+'.'+key2+'"  />');
 								} else if (value2 && value2.readOnly) {
 									input = angular.element('<div style="padding: 4px 12px;" ng-bind="'+options.modelPath+'.'+key+'.'+key2+'"/>');
 								} else {
@@ -546,7 +548,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 						//var tableElm = generateTableElement(value.title);
 						$compile(fieldSet)(scope);
-						
+
 						//generateTableRows(tableElm, properties[key], 'formObject.'+key);
 					} else {
 					}
@@ -619,7 +621,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 							}
 						};
 
-						
+
 						function factory(ver) {
 							return function(data) {
 									if (ver !== latestId) {
@@ -698,7 +700,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 							var formGroup = angular.element('<div class="form-group"></div>');
 							var label = angular.element('<label class="col-sm-4 control-label'+isRequired+'">'+(value2.transCode ? '{{\''+ value2.transCode+'\'| translate}}' : value2.title)+'</label>');
-							
+
 							var fieldHolder = angular.element('<div class="col-sm-8"></div>');
 							var fieldHolderInner = angular.element('<div class="input-group"></div>');
 							fieldHolder.append(fieldHolderInner);
@@ -735,7 +737,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 							if (value2.required) {
 								input.attr('required', true);
 							}
-	
+
 							if (value2.unique) {
 								input.attr('psui-unique', attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'.unique');
 								input.attr('psui-unique-id', options.modelPath+'.id');
@@ -747,7 +749,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 						//var tableElm = generateTableElement(value.title);
 						$compile(fieldSet)(scope);
-						
+
 						//generateTableRows(tableElm, properties[key], 'formObject.'+key);
 					} else {
 					}
@@ -801,7 +803,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 						var tableElm = generateTableElement(value.title);
 						$compile(tableElm)(scope);
 						element.append(tableElm);
-						
+
 						generateTableRows(tableElm, properties[key], 'formObject.'+key);
 					} else {
 					}
@@ -815,4 +817,3 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		}
 	};
 }]);
-

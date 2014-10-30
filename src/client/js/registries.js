@@ -11,6 +11,7 @@ angular.module('registries', [
 		'ui.ace',
 		'psui',
 		'psui-uploadable-image',
+		'psui-uploadable-file',
 		'psui-imageresizor',
 		'psui-datepicker',
 		'psui-notification',

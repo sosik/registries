@@ -72,6 +72,9 @@ function go(udc,feeDao,renderService,schema,uid,callback) {
 		this.send=function (code ,data){
 			iterateData(uid,data,udc,feeDao,renderService,createdOn,callback);
 		};
+		this.status=function(status){
+			return this;
+		};
 		this.json=function(data){
 			iterateData(uid,data,udc,feeDao,renderService,createdOn,callback);
 		};
@@ -104,7 +107,7 @@ function saveItem(uid,item,udc,feeDao,renderService,index,createdOn,callback){
 
 		var bill = {"import":{id:uid}, baseData:{member:{registry:'people',oid:item.id},membershipFee:Number(item.membershipFeeInfo.membershipFee),
 							setupDate:dateUtils.dateToReverse(createdOn),
-							dueDate:dateUtils.dateToReverse(dateUtils.dateAddDays(createdOn,15)),feePaymentStatus:'Vystavené',variableSymbol:createVS(dateUtils.dateToReverse(createdOn),index)}};
+							dueDate:dateUtils.dateToReverse(dateUtils.dateAddDays(createdOn,15)),feePaymentStatus:'created',variableSymbol:createVS(dateUtils.dateToReverse(createdOn),index)}};
 
 		createMail(renderService,index,item,bill);
 		feeDao.save(bill,callback);

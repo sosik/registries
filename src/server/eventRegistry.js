@@ -48,7 +48,7 @@ var EventRegistry = function(ctx) {
 						}
 					}
 					catch(err){
-						log.error('Error during event processing ',handler,err);
+						log.error('Error during event processing ',handler,err.stack);
 					}
 				});
 			});

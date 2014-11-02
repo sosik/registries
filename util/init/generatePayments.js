@@ -66,7 +66,7 @@ function go(udc,feeDao,renderService,schema,uid,callback) {
 
 	var createdOn=new Date();
 
-	var req={params:{schema:schema},body:{'criteria':[{'f':'membershipFeeInfo.paymentFrequency','v':'12xročne','op':'eq'}]}};
+	var req={params:{schema:schema},body:{'criteria':[{'f':'membershipFeeInfo.paymentFrequency','v':'12xročne','op':'eq'},{'f':'hockeyPlayerInfo.isActivePlayer','v':'Áno','op':'eq'}]}};
 
 	var res=function (){
 		this.send=function (code ,data){
@@ -126,11 +126,11 @@ function createVS(createdOnReverse, index){
 
 function createMail(renderService,index,user,bill){
 	var template=
-'From: caihp@unionsoft.sk\n'+
+'From: websupport@caihp.unionsoft.eu\n'+
 'To: {{email}}\n'+
 'Return-Path: websupport@unionsoft.sk\n'+
 'MIME-Version: 1.0\n'+
-'Subject: Test HTML e-mail.\n'+
+'Subject: Členský příspěvek.\n'+
 'Content-Type: multipart/alternative;\n'+
 ' boundary="PAA08673.1018277622/unionsoft.sk"\n\n'+
 
@@ -138,8 +138,8 @@ function createMail(renderService,index,user,bill){
 
 '--PAA08673.1018277622/unionsoft.sk\n'+
 'Content-type: text/plain; charset="UTF-8"\n'+
-'Ahoj {{name}},\n'+
-'Dovol mi oznámit ti výši členského příspěvku za členství v České asociaci hokejistů a to {{fee}} Kč ročně.\n\n\n'+
+'Ahoj {{name}},\n\n'+
+'Dovol mi oznámit ti výši členského příspěvku za členství v České asociaci hokejistů a to {{fee}} Kč měsíčně.\n\n\n'+
 'Platbu můžeš uskutečnit následním způsobem: \n\n'+
 '\tbankovním převodem na účet asociace 2110167935/2700, var. symbol {{variableSymbol}}, do poznámky (popisu platby) napiš pro jistotu své jméno a příjmení\n\n'+
 'Díky\n\n'+

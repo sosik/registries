@@ -1,9 +1,17 @@
 <html ng-app="xpsuiFormDemo">
 	<head>
+		
+		<link rel="stylesheet" href="css/xpsui.css" />
+		
 		<script src="lib/angular/angular.js"></script>
+		
+		<!-- translate -->
+		<script src="lib/angular-translate/angular-translate.js"></script>
+		<script src="lib/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
+		
 		<script src="js/xpsui.js"></script>
 		<script src="js/psui-form-demo.js"></script>
-		
+
 	</head>
 	<body ng-controller="xpsuiFormDemoController">
 		<table>
@@ -11,6 +19,13 @@
 			<tr><td style="background-color: #ffffee;"><pre>{{model|json}}</pre></td>
 				<td style="background-color: #ffffee;"><pre>{{schema|json}}</pre></td></tr>
 		</table>
-		<div xpsui-form xpsui-model="model" xpsui-schema="schema" />
+		<div xpsui-form xpsui-model="model" xpsui-schema="schema"></div>
+		
+		<div class="xpsui-menu">
+			<div class="xpsui-menu-toggle">Otvorit</div>
+			<div class="xpsui-menu-content">
+				menu
+			</div>
+		</div>
 	</body>
 </html>

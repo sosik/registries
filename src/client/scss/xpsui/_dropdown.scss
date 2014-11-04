@@ -1,0 +1,24 @@
+.xpsui-dropdown{
+	position: relative;
+	
+	&.x-open{
+		.xpsui-dropdown-content{
+			display: block;
+		}
+	}
+	
+	.xpsui-dropdown-content{
+		display: none;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		margin-top: 20px;
+		background-color: #ffffff;
+	}
+	
+	.xpsui-dropdown-action{
+		position: absolute;
+		right: 0px;
+		top: 0px;
+	}
+}

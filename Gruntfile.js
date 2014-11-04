@@ -144,7 +144,7 @@ module.exports = function(grunt) {
 			},
 			sass: {
 				files: ['src/client/scss/**'],
-				tasks: ['sass:compile']
+				tasks: ['sass']
 			}
 		},
 		_clean: {
@@ -163,6 +163,19 @@ module.exports = function(grunt) {
 					expand: true,
 					cwd: 'src/client/scss/',
 					src: ['main.scss'],
+					dest: 'build/client/css/',
+					ext: '.css'
+				}]
+			},
+			xpsui: {
+				options: {
+					unixNewlines: true,
+					sourcemap: true
+				},
+				files: [{
+					expand: true,
+					cwd: 'src/client/scss/xpsui',
+					src: ['xpsui.scss'],
 					dest: 'build/client/css/',
 					ext: '.css'
 				}]

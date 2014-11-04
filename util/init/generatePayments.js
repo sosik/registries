@@ -66,7 +66,7 @@ function go(udc,feeDao,renderService,schema,uid,callback) {
 
 	var createdOn=new Date();
 
-	var req={params:{schema:schema},body:{'criteria':[{'f':'membershipFeeInfo.paymentFrequency','v':'12xročne','op':'eq'},{'f':'hockeyPlayerInfo.isActivePlayer','v':'Áno','op':'eq'}]}};
+	var req={params:{schema:schema},body:{'criteria':[{'f':'membershipFeeInfo.paymentFrequency','v':'12xročne','op':'eq'},{'f':'contactInfo.email','v':'','op':'ex'},{'f':'hockeyPlayerInfo.isActivePlayer','v':'Áno','op':'eq'}]}};
 
 	var res=function (){
 		this.send=function (code ,data){
@@ -126,7 +126,7 @@ function createVS(createdOnReverse, index){
 
 function createMail(renderService,index,user,bill){
 	var template=
-'From: websupport@caihp.unionsoft.eu\n'+
+'From: caihp@unionsoft.sk\n'+
 'To: {{email}}\n'+
 'Return-Path: websupport@unionsoft.sk\n'+
 'MIME-Version: 1.0\n'+

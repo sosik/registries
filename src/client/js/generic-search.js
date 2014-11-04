@@ -220,12 +220,21 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 						op : c.operator.value
 					});
 				}
+				
 				else {
-					retval.push({
-						f : c.attribute.path,
-						v : c.value,
-						op : c.operator.value
-					});
+					if (c.attribute.type=='number' ){
+						retval.push({
+							f : c.attribute.path,
+							v : Number(c.value),
+							op : c.operator.value
+						});
+					}else {
+						retval.push({
+							f : c.attribute.path,
+							v : c.value,
+							op : c.operator.value
+						});
+					}
 				}
 
 			}

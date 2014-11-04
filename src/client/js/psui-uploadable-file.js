@@ -27,7 +27,7 @@ angular.module('psui-uploadable-file', ['psui-uploadable-image'])
 				if (file) {
 					if (file.type !== 'text/csv') {
 						//TODO do something clever
-						notificationFactory.error({translationCode:'psui.uploadable.image.unsupported.image.type'});
+						notificationFactory.error({translationCode:'psui.uploadable.file.unsupported.file.type'});
 					} else {
 						var uploader = new psFileUploadFactory.FileUploader(scope, file, file.type, '/uploads/putgetpath/');
 						uploader.upload(function(err, path) {

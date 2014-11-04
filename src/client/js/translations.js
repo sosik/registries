@@ -143,6 +143,7 @@ angular.module('registries')
 		"psui.uploadable.image.unsupported.image.type":"Nepodporovaný formát obrázku",
 		"psui.imageresizor.rotate":"otočiť",
 		"psui.imageresizor.ok":"ok",
+		"psui.uploadable.file.unsupported.file.type":"Nepodporovaný formát súboru",
 		"date.monday":"Po",
 		"date.tuesday":"Ut",
 		"date.wednesday":"St",
@@ -598,7 +599,9 @@ angular.module('registries')
 		"psui.uploadable.image.unsupported.image.type": "Nepodporovaný formát obrázku",
 		"psui.imageresizor.rotate": "otočit",
 		"psui.imageresizor.ok": "ok",
+		"psui.uploadable.file.unsupported.file.type":"Nepodporovaný formát souboru",
 		"date.monday": "Po",
+
 		"date.tuesday": "Út",
 		"date.wednesday": "St",
 		"date.thursday": "Čt",

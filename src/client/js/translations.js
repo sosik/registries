@@ -56,6 +56,7 @@ angular.module('registries')
 		"menu.profiles.lower.level":"Hľadať bezpečnostný profil",
 		"menu.statistics.title":"Štatistiky",
 		"menu.statistics.show.title":"Zobraziť",
+
 		"menu.massmailing.title":"Hromadná pošta",
 		"menu.massmailing.new.lower.level":"Nový vzor",
 		"menu.massmailing.search.lower.level":"Vyhľadáť",
@@ -67,7 +68,8 @@ angular.module('registries')
 		"massmail.html.template":"Html verzia správy",
 		"massmail.search.recipient":"Vyhľadáť príjemcov",
 		"massmail.send.view":"Hromadná pošta",
-		"massmail.selection.all":"Všetkým",
+		"massmail.selection.all":"Podľa filtra",
+
 		"header.settings": "Nastavenia",
 		"header.log.out": "Odhlásiť sa",
 		"personal.change.password.change.password": "Zmena hesla",
@@ -526,6 +528,7 @@ angular.module('registries')
 		"massmail.search.recipient":"Vyhledat příjemce",
 		"massmail.send.view":"Hromadní pošta",
 		"massmailing.send":"Odeslat",
+		"massmail.selection.all":"Podle filtra",
 		"header.settings": "Nastavení",
 		"header.log.out": "Odhlásit se",
 		"personal.change.password.change.password": "Změna hesla",

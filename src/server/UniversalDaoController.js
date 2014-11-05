@@ -6,6 +6,7 @@ var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js'
 var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
 var securityServiceModule = require(process.cwd() + '/build/server/securityService.js');
 var QueryFilter = require('./QueryFilter.js');
+var consts = require(process.cwd() + '/build/server/SchemaConstants.js');
 
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry) {
@@ -45,8 +46,8 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			require('./manglers/TimestampMangler.js')(mongoDriver),
 			require('./manglers/ObjectCleanerMangler.js')(),
 			require('./manglers/SequenceMangler.js')(mongoDriver),
-			require('./manglers/GenerateVSMangler.js')(mongoDriver),
-			require('./manglers/NextMangler.js')(mongoDriver)
+			require('./manglers/NextMangler.js')(mongoDriver),
+			require('./manglers/GenerateVSMangler.js')(mongoDriver)
 	]);
 
 	var that=this;
@@ -81,6 +82,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		var schema = schemaRegistry.getSchema(schemaName);
 
+
 		if (!schema) {
 			log.error('schema %s not found', schemaName);
 			throw 'Schema not found';
@@ -91,6 +93,15 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
 			throw 'Schema is not compiled';
+		}
+
+		if (compiledSchema[consts.SAVE_BY_SCHEMA]){
+			schemaName=compiledSchema[consts.SAVE_BY_SCHEMA];
+			compiledSchema = schemaRegistry.getSchema(schemaName).compiled;
+			if (!compiledSchema) {
+				log.error('saveByschema %s is not compiled', schemaName);
+				throw 'Schema is not compiled';
+			}
 		}
 
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.MODIFY,req.perm)){

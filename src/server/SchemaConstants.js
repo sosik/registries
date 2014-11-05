@@ -16,4 +16,6 @@ module.exports = {
 	TYPE_NUMBER:'number',
 	CLIENT_ACTIONS: 'clientActions', // array of client actions
 	REF_KEYWORD: '$ref',
+	SAVE_BY_SCHEMA: "_saveBySchema",
+	VARIABLE_SYMBOL:"$VariableSymbol"
 };

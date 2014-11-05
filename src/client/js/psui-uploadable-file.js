@@ -13,6 +13,8 @@ angular.module('psui-uploadable-file', ['psui-uploadable-image'])
 		link: function(scope, elm, attrs, ctrls) {
 			var fileButton = angular.element('<input type="file"/></input>');
 
+			var suffix='.csv';
+
 			elm.append(fileButton);
 			// fileButton.addClass('psui-uploadable-file-fbutton');
 
@@ -25,7 +27,7 @@ angular.module('psui-uploadable-file', ['psui-uploadable-image'])
 				var file = fileButton[0].files[0];
 
 				if (file) {
-					if (file.type !== 'text/csv') {
+					if (file.name.indexOf(suffix, this.length - suffix.length)==-1 ) {
 						//TODO do something clever
 						notificationFactory.error({translationCode:'psui.uploadable.file.unsupported.file.type'});
 					} else {

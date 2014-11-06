@@ -35,11 +35,17 @@
 		<ng-view></ng-view>
 	</div>
 -->
-<div class="x-fixed-header">a</div>
-<div class="x-main-menu">
+<div class="x-fixed-header">
+	<div class="x-logo">
+		<img src="img/logo.svg">
+	</div>
+</div>
+<div xpsui-menu class="x-main-menu">
+	<div class="x-main-menu-toggle"></div>
 	<a href="#/view/a/a">a</a>
 </div>
-<div class="x-main-content">
+
+<div class="x-main-content" xpsui-menu>
 	<ng-view></ng-view>
 </div>
 </body>

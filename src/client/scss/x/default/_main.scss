@@ -1,0 +1,56 @@
+
+// common
+
+
+.x-fixed-header {
+	background-color: $color1;
+	box-shadow: 0 0 5px gray;
+}
+
+.x-main-menu {
+	background-color: $color5;
+}
+
+.x-main-content {
+	background-color: white;
+}
+
+.x-string-edit {
+
+	INPUT {
+		border: 0px solid white;
+		background-color: rgb(237, 237, 237);
+	}
+}
+
+.x-inlineedit {
+	border: 1px solid white;
+
+	.x-inlineedit-content {
+		border: 1px solid white;
+	}
+
+	.x-inlineedit-buttons {
+		border-bottom: 0px solid white;
+		border-top: 1px solid $color4;
+		border-left: 1px solid $color4;
+		border-right: 1px solid $color4;
+		background-color: white;
+
+		.x-component-button {
+			background-color: white;
+		}	
+	}
+}
+
+
+.x-inlineedit-edit-mode {
+	.x-inlineedit-content {
+		border: 1px solid $color5;
+	}
+}
+
+.x-component-button {
+	background-color: $color1;
+	border: 1px solid white;
+}

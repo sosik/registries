@@ -226,7 +226,9 @@ module.exports = function(grunt) {
 					sourcemap: 'inline'
 				},
 				files: {
-					'build/client/css/x-main.css': 'src/client/scss/x-main.scss'
+					'build/client/css/x-main.css': 'src/client/scss/x-main.scss',
+					'build/client/css/x.css': 'src/client/scss/x/x.scss',
+					'build/client/css/x-default.css': 'src/client/scss/x/default/default.scss'
 				}
 			}
 		},

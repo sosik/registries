@@ -2,6 +2,14 @@
 	'use strict';
 
 	angular.module('xpsui:services')
+	/**
+	 *
+	 * Factory used for generation of forms by schema definitions.
+	 *
+	 * @class FormGenerator
+	 * @module client
+	 * @submodule services
+	 */
 	.factory('xpsui:FormGenerator', ['xpsui:logging', '$compile', 'xpsui:ComponentGenerator', '$timeout', function(log, $compile, componentGenerator, $timeout) {
 		function FormGenerator() {
 		}
@@ -51,6 +59,13 @@
 
 		/**
 		 * Generates form defined by schema
+		 * @method generateForm
+		 * @param scope used angular scope
+		 * @param elm element to geneerate form elements in
+		 * @param schemaFragment {Object} fragment of schema used as form definition
+		 * @param schemaPath 
+		 * @param modelPath
+		 * @param mode
 		 */
 		FormGenerator.prototype.generateForm = function(scope, elm, schemaFragment, schemaPath, modelPath, mode) {
 			var p, localSchemaPath, localModelPath, localFragment, component, labelComponent, fieldComponent;
@@ -75,7 +90,7 @@
 							// localFragment has explicitly defined type
 							if (localFragment.type === 'object') {
 								component = angular.element('<div></div>');
-								component.attr('xpsui-schema', localSchemaPath);
+								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
 								component.attr('xpsui-fieldset', mode);
 							} else if (localFragment.type === 'string') {

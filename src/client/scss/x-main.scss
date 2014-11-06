@@ -1,0 +1,233 @@
+$fixed-header-height: 40px;
+$menu-width: 100px;
+$color1: #FFCE0D;
+$color2: #E8A50C;
+$color3: #FF9800;
+$color4: #E8700C;
+$color5: #FF580D;
+
+// common
+BODY, HTML {
+	margin: 0 0 0 0;
+	overflow: hidden;
+}
+
+@mixin not-selectable() {
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+
+@mixin text-selectable() {
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+}
+
+* {
+	box-sizing: border-box;
+	font-family: "Arial";
+	font-size: 14px;
+	line-height: 16px;
+	@include not-selectable();
+}
+
+.x-hidden {
+	display: none;
+}
+
+@media screen and (max-width: 900px) and (min-width: 501px) {
+	.x-fieldset {
+		width: 100%;
+		min-width: 100%;
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.x-fieldset {
+		width: 100%;
+		min-width: 100%;
+	}
+
+	.x-fieldset-label {
+		display: block !important;
+	}
+
+	.x-fieldset-value {
+		display: block !important;
+	}
+
+	.x-fieldset-content {
+		.display: block;
+	}
+}
+
+.x-fixed-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: $fixed-header-height;
+	background-color: $color1;
+	box-shadow: 0 0 5px gray;
+	z-index: 1000;
+}
+
+.x-main-menu {
+	position: fixed;
+	top: $fixed-header-height;
+	left: 0;
+	width: $menu-width;
+	bottom: 0;
+	background-color: $color5;
+}
+
+.x-main-content {
+	position: fixed;
+	top: $fixed-header-height;
+	right:0;
+	bottom:0;
+	left: $menu-width;
+	background-color: white;
+	padding: 5px 5px 5px 5px;
+	overflow-x: auto;
+}
+
+.x-form {
+}
+
+.x-form-title {
+	font-size: 200%;
+	font-weight: bold;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.x-fieldset {
+	display: table;
+	width: 50%;
+	float: left;
+	padding: 3px 3px 3px 3px;
+}
+
+.x-fieldset-title {
+	display: block;
+	font-weight: bold;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid black;
+}
+
+.x-fieldset-content {
+	display: table;
+	width: 100%;
+}
+
+.x-fieldset-row {
+	display: table-row;
+	box-sizing: border-box;
+}
+
+.x-fieldset-label {
+	display: table-cell;
+	box-sizing: border-box;
+	min-width: 150px;
+	font-style: oblique;
+
+}
+.x-fieldset-value {
+	display: table-cell;
+	width: 100%;
+}
+
+.x-string-view {
+	width: 100%;
+	padding: 6px 6px 6px 6px;
+
+	DIV {
+		width: 100%;
+		@include text-selectable();
+	}
+}
+
+.x-string-edit {
+	width: 100%;
+	padding: 3px 3px 3px 3px;
+
+	INPUT {
+		position: relative;
+		width: 100%;
+		border: 0px solid white;
+		padding: 3px 3px 3px 3px;
+		background-color: rgb(237, 237, 237);
+	}
+}
+
+.x-inlineedit {
+	display: table;
+	width: 100%;
+	border: 1px solid white;
+	position: relative;
+
+	.x-inlineedit-content {
+		display: table-cell;
+		width: 100%;
+		border: 1px solid white;
+	}
+
+	.x-inlineedit-buttons {
+		position: absolute;
+		right: 1px;
+		bottom: 100%;
+		white-space: nowrap;
+		vertical-align: middle;
+		border-bottom: 0px solid white;
+		border-top: 1px solid $color4;
+		border-left: 1px solid $color4;
+		border-right: 1px solid $color4;
+		margin-bottom: -2px;
+		background-color: white;
+
+		.x-component-button {
+			background-color: white;
+			margin: 2px 2px 2px 2px;
+		}	
+	}
+}
+
+.x-inlineedit-active {
+	border: 1px dashed black;
+	transition: border .5s;
+	cursor: pointer;
+}
+.x-inlineedit-active:AFTER {
+	content: '\f040';
+	display: inline-block;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: 18px;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	padding-top: 5px;
+	padding-right: 2px;
+	position: absolute;
+	right: 0;
+	top: 0;
+
+}
+
+.x-inlineedit-edit-mode {
+	.x-inlineedit-content {
+		border: 1px solid $color5;
+	}
+}
+
+.x-component-button {
+	background-color: $color1;
+	border: 1px solid white;
+	cursor: pointer;
+
+	SPAN {
+		padding-left: 3px;
+	}
+}

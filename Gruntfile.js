@@ -8,6 +8,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-env');
 	grunt.loadNpmTasks('grunt-mocha-istanbul');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
 	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:templates','copy:ssl', 'copy:sharedJsServer']);
@@ -24,6 +25,8 @@ module.exports = function(grunt) {
 	grunt.registerTask('mrpropper', ['clean', '_clean:node_modules', '_clean:bower_components', '_clean:coverage']);
 
 	grunt.registerTask('doc', 'yuidoc');
+
+	grunt.registerTask('x', ['uglify', 'copy:xparts', 'copy:xhtml', 'sass:x']);
 	grunt.registerTask('default', ['build', 'unitTest']);
 
 	grunt.initConfig({
@@ -94,6 +97,39 @@ module.exports = function(grunt) {
 				files: [
 					{expand: true, cwd: 'src/shared/js', src: ['**'], dest: 'build/server'}
 				]
+			},
+			xparts: {
+				files: [
+					{expand: true, cwd: 'src/client/partials', src: ['**/x-*'], dest: 'build/client/partials'}
+				]
+			},
+			xhtml: {
+				files: [
+					{expand: true, cwd: 'src/client/html', src: ['**/x-*'], dest: 'build/client/'}
+				]
+			}
+		},
+		uglify: {
+			xpsui: {
+				options: {
+					sourceMap: true,
+					sourceMapIncludeSources: true
+				},
+				files: {
+					'build/client/js/xpsui.min.js': [
+						'src/client/js/xpsui/services-module.js', 'src/client/js/xpsui/services/*.js',
+						'src/client/js/xpsui/directives-module.js', 'src/client/js/xpsui/directives/*.js'
+					]
+				}
+			},
+			main: {
+				options: {
+					sourceMap: true,
+					sourceMapIncludeSources: true
+				},
+				files: {
+					'build/client/js/x-main.min.js': ['src/client/js/x-main.min.js', 'src/client/js/x-*.js']
+				}
 			}
 		},
 		mochaTest: {
@@ -145,6 +181,10 @@ module.exports = function(grunt) {
 			sass: {
 				files: ['src/client/scss/**'],
 				tasks: ['sass:compile']
+			},
+			x: {
+				files: ['src/client/**'],
+				tasks: ['x']
 			}
 		},
 		_clean: {
@@ -179,6 +219,15 @@ module.exports = function(grunt) {
 					dest: 'build/client/css/',
 					ext: '.css'
 				}]
+			},
+			x: {
+				options: {
+					unixNewlines: true,
+					sourcemap: 'inline'
+				},
+				files: {
+					'build/client/css/x-main.css': 'src/client/scss/x-main.scss'
+				}
 			}
 		},
 		yuidoc: {

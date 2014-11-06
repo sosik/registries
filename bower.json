@@ -18,14 +18,14 @@
   ],
   "dependencies": {
     "angular": "*",
-    "angular-route": "1.2.x",
-    "angular-loader": "1.2.x",
-    "angular-mocks": "~1.2.x",
+    "angular-route": "*",
+    "angular-loader": "*",
+    "angular-mocks": "*",
     "ngRangy": "*",
-    "angular-cookies": "~1.2.x",
-    "angular-ui-ace": "~0.1.1",
-    "angular-translate": "~2.2.0",
-    "angular-translate-handler-log": "~2.0.0",
-    "text-encoding": "~0.1.0"
+    "angular-cookies": "*",
+    "angular-ui-ace": "*",
+    "angular-translate": "*",
+    "angular-translate-handler-log": "*",
+    "components-font-awesome": "~4.2.0"
   }
 }

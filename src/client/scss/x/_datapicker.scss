@@ -1,0 +1,10 @@
+.x-datepicker {
+	.x-controlls{
+		.x-controlls-header {
+			display: table;
+			> div {
+				display: table-cell;
+			}
+		}
+	}
+}

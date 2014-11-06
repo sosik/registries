@@ -1,0 +1,24 @@
+.x-dropdown{
+	position: relative;
+	
+	&.x-open{
+		.x-dropdown-content{
+			display: block;
+		}
+	}
+	
+	.x-dropdown-content{
+		display: none;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		margin-top: 20px;
+		background-color: #ffffff;
+	}
+	
+	.x-dropdown-action{
+		position: absolute;
+		right: 0px;
+		top: 0px;
+	}
+}

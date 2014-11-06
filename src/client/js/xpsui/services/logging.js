@@ -44,37 +44,37 @@
 		};
 
 		Logger.prototype.group = function() {
-			if (this.level >= this.LOG) {
+			if (this.level >= this.INFO) {
 				console.groupCollapsed.apply(console, arguments);
 			}
 		};
 
 		Logger.prototype.groupEnd = function() {
-			if (this.level >= this.LOG) {
+			if (this.level >= this.INFO) {
 				console.groupEnd.apply(console, arguments);
 			}
 		};
 
 		Logger.prototype.profile = function() {
-			if (this.level >= this.LOG) {
+			if (this.level >= this.INFO) {
 				console.profile.apply(console, arguments);
 			}
 		};
 
 		Logger.prototype.profileEnd = function() {
-			if (this.level >= this.LOG) {
+			if (this.level >= this.INFO) {
 				console.profileEnd.apply(console, arguments);
 			}
 		};
 
 		Logger.prototype.time = function() {
-			if (this.level >= this.LOG) {
+			if (this.level >= this.INFO) {
 				console.time.apply(console, arguments);
 			}
 		};
 
 		Logger.prototype.timeEnd = function() {
-			if (this.level >= this.LOG) {
+			if (this.level >= this.INFO) {
 				console.timeEnd.apply(console, arguments);
 			}
 		};

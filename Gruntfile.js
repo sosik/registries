@@ -36,13 +36,13 @@ module.exports = function(grunt) {
 					{expand: true, cwd: 'src/client/html', src: ['**'], dest: 'build/client/'}
 				]
 			},
-			
+
 			htmlpartials: {
 				files: [
 					{expand: true, cwd: 'src/client/partials', src: ['**'], dest: 'build/client/partials'}
 				]
 			},
-			
+
 			css: {
 				files: [
 					{expand: true, cwd: 'src/client/css', src: ['**'], dest: 'build/client/css/'}
@@ -169,7 +169,7 @@ module.exports = function(grunt) {
 				files: ['src/client/html/**', 'src/client/css/**', 'src/client/js/**', 'src/client/img/**','src/client/partials/**', 'src/client/fonts/**'],
 				tasks: ['build:client']
 			},
-			
+
 			schemas: {
 				files: ['src/shared/schemas/**'],
 				tasks: ['build:schemas']
@@ -233,7 +233,7 @@ module.exports = function(grunt) {
 		yuidoc: {
 			compile: {
 				options: {
-					paths: 'src/server/',
+					paths: ['src/server/', 'src/client/js/'],
 					outdir: 'doc'
 				}
 			}

@@ -4,6 +4,11 @@ BODY, HTML {
 	overflow: hidden;
 }
 
+body{
+	font-size: 100%;
+	line-height: 1;
+}
+
 @mixin not-selectable() {
 	user-select: none;
 	-webkit-user-select: none;
@@ -16,13 +21,13 @@ BODY, HTML {
 	-moz-user-select: text;
 }
 
-* {
-	box-sizing: border-box;
-	font-family: "Arial";
-	font-size: 14px;
-	line-height: 16px;
-	@include not-selectable();
-}
+// * {
+// 	box-sizing: border-box;
+// 	font-family: "Arial";
+// 	font-size: 14px;
+// 	line-height: 16px;
+// 	@include not-selectable();
+// }
 
 .x-hidden {
 	display: none;
@@ -60,23 +65,28 @@ BODY, HTML {
 	left: 0;
 	width: 100%;
 	height: $fixed-header-height;
-	z-index: 1000;
+	z-index: 1;
 }
 
-.x-main-menu {
-	position: fixed;
-	top: $fixed-header-height;
-	left: 0;
-	width: $menu-width;
-	bottom: 0;
-}
+// .x-main-menu {
+// 	position: fixed;
+// 	top: $fixed-header-height;
+// 	left: 0;
+// 	width: $menu-width;
+// 	bottom: 0;
+// }
 
 .x-main-content {
 	position: fixed;
 	top: $fixed-header-height;
 	right:0;
 	bottom:0;
-	left: $menu-width;
+	left: 0;
+	
+	@media (min-width: $screen-md-min){
+		left: $menu-width;
+	}
+
 	padding: 5px 5px 5px 5px;
 	overflow-x: auto;
 }
@@ -202,5 +212,23 @@ BODY, HTML {
 
 	SPAN {
 		padding-left: 3px;
+	}
+}
+
+
+.x-logo{
+	line-height: $fixed-header-height;
+	float: left;
+	margin-left: $fixed-header-height;
+	padding-left: 16px;
+	@media (min-width: $screen-md-min){
+		margin-left: 0px;
+	}
+
+	img{
+		height: 24px;
+		vertical-align: middle;
+		position: relative;
+		top: -2px;
 	}
 }

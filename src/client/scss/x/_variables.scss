@@ -11,6 +11,9 @@ $screen-sm-min: $screen-xs + 1 !default;
 //middle devices
 $screen-md-min: $screen-sm + 1 !default;
 
+// font
+// ----------------------------------------
+$icon-font: FontAwesome;
 
 // layout
 // ----------------------------------------

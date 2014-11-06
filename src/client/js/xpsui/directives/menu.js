@@ -2,16 +2,15 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiMenu', ['xpsui:log',  function(log) {		
+	.directive('xpsuiMenu', ['xpsui:logging',  function(log) {		
 		return {
 			restrict: 'A',
 			//require: [],
 			controller: function($scope, $element){
 			},
 			link: function(scope, elm, attrs, ctrls) {
-				var button = angular.element(elm[0].querySelector('.xpsui-menu-toggle'));
+				var button = angular.element(elm[0].querySelector('.x-main-menu-toggle'));
 				
-				elm.addClass('x-menu');
 				button.on('click',function(){
 					elm.toggleClass('x-open');
 				});

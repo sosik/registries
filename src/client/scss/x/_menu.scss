@@ -1,22 +1,32 @@
-.x-menu{
+.x-main-menu {
 	position: fixed;
-	left: 0px;
-	top: 0px;
-	bottom: 0px;
-	background-color: yellow;
+	top: $fixed-header-height;
+	left: 0;
+	width: $menu-width;
+	bottom: 0;
 	width: $menu-width;
 	margin-left: -$menu-width;
 	@include transition(margin-left .5s linear);
+	z-index: 2;
 	
 	@media (min-width: $screen-md-min){
 		margin-left: 0px;
 	}
 	
-	.xpsui-menu-toggle{
+	.x-main-menu-toggle{
+		cursor: pointer;
 		position: fixed;
-		line-height: 40px;
-		background-color: red;
-		right: 0px;
+		left: 0px;
+		top: 0px;
+		width: $fixed-header-height;
+		text-align: center;
+
+		&:before{
+			@include icon-font();
+			content: $icon-align-justify;
+			font-size: 18px;
+			line-height: $fixed-header-height;
+		}
 		
 		@media (min-width: $screen-md-min){
 			display: none;

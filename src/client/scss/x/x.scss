@@ -1,5 +1,10 @@
 @import "variables";
-@import "../mixins";
+@import "mixins";
+
+@import "../../../../bower_components/components-font-awesome/scss/variables";
+// @import "../../../../bower_components/components-font-awesome/scss/icons";
+
+@import "font";
 
 @import "main";
 @import "menu";

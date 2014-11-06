@@ -5,6 +5,7 @@ angular.module('xpsui', [])
 .constant('xpsui:constants', {
 	loggingLevel: 1
 })
+
 .factory('xpsui:ObjectTools', [function() {
 	function ObjectTools() {
 	}
@@ -689,6 +690,60 @@ angular.module('xpsui', [])
 				};
 			}
 
+			log.groupEnd();
+		}
+	};
+}])
+/**
+ * 
+ * Data (accessed by ngModel) should look like
+ * {
+ *		schema: 'uri://....', // name of used schema
+ *		oid: 'abcdfee12354' // id of referenced object
+ * }
+ */
+.directive('xpsuiObjectlink2View', ['xpsui:log', 'xpsui:ComponentGenerator', 'xpsui:HttpHandlerFactory', '$compile', function(log, componentGenerator, httpHandlerFactory, $compile) {
+	return {
+		restrict: 'EA',
+		require: ['?xpsuiCtrl', 'ngModel'],
+		link: function(scope, elm, attrs, ctrls) {
+			log.group('xpsui-objectlink2-view Link');
+
+			var httpHandler = httpHandlerFactory.newHandler();
+
+			var xpsuiCtrl = ctrls[0];
+			var ngModel = ctrls[1];
+
+			var view = angular.element('<span></span>');
+			elm.append(view);
+
+			if (ngModel) {
+				log.debug('ngModel defined');
+
+				ngModel.$render = function() {
+					view.text(ngModel.$viewValue || '');
+				};
+			}
+
+			if (xpsuiCtrl) {
+				log.debug('xpsuiCtrl defined');
+				xpsuiCtrl.commit = function(value) {
+					view.text(value || '');
+				};
+			}
+
+			/**
+			 * Function asynchronously fetches new data defined by ngModel
+			 */
+			function fetchData() {
+				if (ngModel && ngModel.$modelValue) {
+					var schema = ngModel.$modelValue.schema;
+					var oid = ngModel.$modelValue.oid;
+				} else {
+					// if there is no ngModel of viewValue, render empty
+					view.empty();
+				}
+			}
 			log.groupEnd();
 		}
 	};

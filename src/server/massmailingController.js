@@ -61,7 +61,7 @@ var MassmailingController = function(mongoDriver, options) {
 			}
 
 			var mailOptions = {
-				from : 'websupport@unionsoft.sk',
+				from : cfg.mails.massmailSenderAddress,
 				to : email,
 				subject :  resolvedSubject,
 				text : resolvedText,

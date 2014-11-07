@@ -82,7 +82,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 		rootPath: config.paths.schemas
 	});
 
-	var massmailingCtr= new massmailingCotrollerModule.MassmailingController(mongoDriver,{});
+	var massmailingCtr= new massmailingCotrollerModule.MassmailingController(mongoDriver,config);
 
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter);

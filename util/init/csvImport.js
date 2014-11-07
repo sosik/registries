@@ -61,7 +61,7 @@ function splitLine(line){
 }
 
 function processDataset(dataset,callback){
- 
+
 	var importDefinition=parseDef( splitLine(dataset.lines[0]));
 	var dataLines=dataset.lines.slice(1);
 	// console.log(dataLines);
@@ -80,8 +80,8 @@ function processDataset(dataset,callback){
 
 	var lineProcessors=[];
 	var lineNr=1;
-	
-	dataLines.map(function(line){	
+
+	dataLines.map(function(line){
 		lineProcessors.push( function(callback){processLine(importDefinition,line,lineNr++,callback); });
 	});
 
@@ -92,11 +92,11 @@ function processDataset(dataset,callback){
 function processLine(def,line,lineNr,callback){
 
 	var parts=splitLine(line);
-	
+
 	var json = createJson(def, lineNr, parts);
 
 		if (def.resolve) {
-				
+
 				var resovleFs=[];
 				def.resolve.map(function(toResolve){
 					// console.log('----->',toResolve);
@@ -116,9 +116,9 @@ function processLine(def,line,lineNr,callback){
 						}
 					});
 				});
-				
+
 				async.parallel(resovleFs, function( err ){
-				
+
 				if (def.copy){
 						def.copy.map(function(item){
 						objectTools.setValue(json,item.to,objectTools.evalPath(json,item.from));
@@ -145,7 +145,7 @@ function processLine(def,line,lineNr,callback){
 						objectTools.setValue(json,item.to,objectTools.evalPath(json,item.from));
 					});
 				}
-			
+
 			if (def.merge){
 						try {
 							eval(def.merge.searchByMethod + '(json,dao,mergeAndSave,callback)');
@@ -205,12 +205,12 @@ function applyValue(o, d, v) {
 	var prev;
 	var lastPart = null;
 	parts.map(function(part) {
-		
+
 		if (part=='') return;
 		if (!obj[part]) {
 			obj[part] = {};
 		}
-		
+
 		prev = obj;
 		obj = obj[part];
 		lastPart = part;
@@ -226,7 +226,7 @@ function applyValue(o, d, v) {
 
 // Calls function(s) to resolve value
 function convertValue(d, v) {
-	var tmp = v;	
+	var tmp = v;
 	d.convert.map(function(fun) {
 		if (typeof (fun) == 'function') {
 			tmp = fun(tmp);
@@ -248,7 +248,7 @@ function convertValue(d, v) {
 
 /**
  * creates definitions from form below ->[fn1->...->fnX]->dst_field
- * 
+ *
  */
 function parseDef(rawDef) {
 	var def = {};
@@ -268,7 +268,7 @@ function parseDef(rawDef) {
 			}
 			def.copy.push({"from": items[1],"to":items[2]});
 		break;
-		case '$merge$': 
+		case '$merge$':
 				def.merge={	searchByMethod: items[1], registry:items[2]};
 			break;
 		case '$resolve$':
@@ -281,7 +281,7 @@ function parseDef(rawDef) {
 			if (!def.resolve) {
 				def.resolve = [];
 			}
-			
+
 			def.resolve.push({attribute:items[1],byName:true});
 			break;
 
@@ -289,7 +289,7 @@ function parseDef(rawDef) {
 			if (!def.resolve) {
 				def.resolve = [];
 			}
-			
+
 			def.resolve.push({attribute:items[1],path:items[2]});
 			break;
 
@@ -298,7 +298,7 @@ function parseDef(rawDef) {
 			if (!def.resolve) {
 				def.resolve = [];
 			}
-			
+
 			def.resolve.push({attribute:items[1],byBirthNumber:true});
 			break;
 		default:
@@ -334,7 +334,7 @@ function parseDef(rawDef) {
 
 /**
  * default conversion
- * 
+ *
  * @param item
  * @returns
  */
@@ -392,7 +392,7 @@ function objLinkSeason(item) {
 function resolveToObjectLink(json,path,callback){
 
 	var parts=path.split('.');
-	
+
 	console.log(json,path);
 
 	var obj = json;
@@ -408,12 +408,12 @@ function resolveToObjectLink(json,path,callback){
 	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : obj.registry
 	});
-	
+
 	daoLink.list(QueryFilter.create().addCriterium('import.id', QueryFilter.operation.EQUAL,''+obj.unresolved), function(err,data){
 		if (err) {
 			callback(err);
 			return;
-		} 
+		}
 		if (data.length===0){
 			callback(null);
 			console.log('Not able to resolve',obj);
@@ -429,11 +429,11 @@ function resolveByNameToObjectLink(json,path,callback){
 	// console.log(json,path);
 	// console.log('resolveByNameToObjectLink',json,path);
 	var parts=path.split('.');
-	
+
 	var obj = json;
 	var prev;
 	var lastPart = null;
-	
+
 	parts.map(function(part) {
 		if (obj && part in obj){
 			obj = obj[part];
@@ -454,12 +454,12 @@ function resolveByNameToObjectLink(json,path,callback){
 
 
 	// console.log('>>>>> ',obj.registry);
-	
+
 	daoLink.list(QueryFilter.create().addCriterium('club.name', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
 		if (err) {
 			callback(err);
 			return;
-		} 
+		}
 		if (data.length===0){
 			callback(null);
 			console.log('Not able to resolve',obj);
@@ -477,11 +477,11 @@ function resolveByPathToObjectLink(json,path,searchPath,callback){
 	console.log(json,path,searchPath);
 	// console.log('resolveByNameToObjectLink',json,path);
 	var parts=path.split('.');
-	
+
 	var obj = json;
 	var prev;
 	var lastPart = null;
-	
+
 	parts.map(function(part) {
 		if (obj && part in obj){
 			obj = obj[part];
@@ -502,7 +502,7 @@ function resolveByPathToObjectLink(json,path,searchPath,callback){
 		if (err) {
 			callback(err);
 			return;
-		} 
+		}
 		if (data.length===0){
 			callback(null);
 			console.log('Not able to resolve',obj);
@@ -517,7 +517,7 @@ function resolveByPathToObjectLink(json,path,searchPath,callback){
 function resolveByBirthNumberToObjectLink(json,path,callback){
 
 	var parts=path.split('.');
-	
+
 	var obj = json;
 	var prev;
 	var lastPart = null;
@@ -525,18 +525,18 @@ function resolveByBirthNumberToObjectLink(json,path,callback){
 		obj = obj[part];
 		lastPart = part;
 	});
-	
+
 	// console.log(json);
 	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : obj.registry
 	});
 	// console.log('>>>>> ',obj.registry);
-	
+
 	daoLink.list(QueryFilter.create().addCriterium('baseData.id', QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
 		if (err) {
 			callback(err);
 			return;
-		} 
+		}
 		if (data.length===0){
 			callback(null);
 			console.log('Not able to resolve',obj);
@@ -585,41 +585,41 @@ function part1(str){
 
 function part2(str){
 	if (!str) return null;
-	
+
 	return str.split(' ')[1];
 }
 
 function mapGenderTrueFalse(item){
-	if (item == 'TRUE') { 
+	if (item == 'TRUE') {
 		return 'M';
 	}
-	if (item == 'FALSE') { 
+	if (item == 'FALSE') {
 		return 'Z';
 	}
 	return null;
 }
 
-function camelCase(input) { 
+function camelCase(input) {
 		return input.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 		// return input.toLowerCase();
 }
 
 function mapDochodca(item) {
-	if (item==='D') { 
+	if (item==='D') {
 		return 'Dôchodca';
 	}
 	return null;
 }
 
 function mapStavTransferu(item) {
-	if (item==='Schválila') { 
+	if (item==='Schválila') {
 		return 'schválený';
 	}
 	return 'neschválený';
 }
 
 function mapKrajina(item) {
-	if (item==='Slovensko') { 
+	if (item==='Slovensko') {
 		return 'SVK';
 	}
 	return item;
@@ -640,7 +640,7 @@ function mapPoDohodeStudium(item){
 	}
 	return 'Počas štúdia';
 
-} 
+}
 
 function fullDate(item){
 	if (!item)return null;
@@ -660,8 +660,8 @@ function fullDateEndYear(item){
 }
 
 function mapInvalid(item){
-	if (item ==='I') return 'A'; 
-	return 'N'; 
+	if (item ==='I') return 'A';
+	return 'N';
 }
 
 function mapZaznamPlatnyNeplatny(item){
@@ -682,7 +682,7 @@ function mapAktivna(item){
 
 
 
-function parseDateMix(item)	{ 
+function parseDateMix(item)	{
 	if (!item) return null;
 
 	if (item.indexOf('/')>-1){
@@ -714,7 +714,7 @@ function parseDateMix(item)	{
 		if (parts[1].length===1) {
 			parts[1]='0'+parts[1];
 		}
-		
+
 		return parts[0]+'.'+parts[1]+'.'+parts[2];
 }
 
@@ -732,6 +732,12 @@ function mapMZ(item){
 		return 'Žena';
 }
 
+function remapAktivity(item){
+	if ('A'===item){
+		return 'aktivní';
+	}
+		return 'neaktivní';
+}
 
 function Muz(item){
 		return 'Muž';
@@ -767,11 +773,11 @@ function remapExtraliga23(item){
 		return {membershipType:"Extraliga do 23r.",paymentFrequency:"12xročne",membershipFee:"500" };
 	}
 	else {
-		return {membershipType:"Extraliga nad 23r.",paymentFrequency:"12xročne",membershipFee:"800" };;
+		return {membershipType:"Extraliga nad 23r.",paymentFrequency:"12xročne",membershipFee:"800" };
 	}
 }
 
-function remapCompetition (item) { 
+function remapCompetition (item) {
 
 }
 
@@ -791,6 +797,14 @@ function findByNameBirthDate(json,dao,mergeAndSave,callback){
 		qf.addCriterium('baseData.name',QueryFilter.operation.EQUAL,json.baseData.name);
 		qf.addCriterium('baseData.bornName',QueryFilter.operation.EQUAL,json.baseData.bornName);
 		qf.addCriterium('baseData.birthDate',QueryFilter.operation.EQUAL,json.baseData.birthDate);
+		dao.list(qf,function (err,data){if (err) {callback(err);return;} mergeAndSave(err,dao,data[0],json,callback); });
+
+}
+
+function findImportId(json,dao,mergeAndSave,callback){
+	// console.log('method called', json,dao,callback);
+		var qf=QueryFilter.create();
+		qf.addCriterium('import.id',QueryFilter.operation.EQUAL,json.import.id);
 		dao.list(qf,function (err,data){if (err) {callback(err);return;} mergeAndSave(err,dao,data[0],json,callback); });
 
 }

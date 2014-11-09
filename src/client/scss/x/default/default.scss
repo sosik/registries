@@ -1,5 +1,8 @@
+@import "../variables";
 @import "variables";
 @import "../../mixins";
 
+// components
 @import "main";
 @import "menu";
+@import "modalview";

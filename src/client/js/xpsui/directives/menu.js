@@ -9,7 +9,7 @@
 			controller: function($scope, $element){
 			},
 			link: function(scope, elm, attrs, ctrls) {
-				var button = angular.element(elm[0].querySelector('.x-main-menu-toggle'));
+				var button = angular.element(elm[0].querySelectorAll('.x-main-menu-toggle'));
 				
 				button.on('click',function(){
 					elm.toggleClass('x-open');

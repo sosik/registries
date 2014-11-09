@@ -11,7 +11,6 @@
 		var prop;
 
 		if (!objFragment || !schemaFragment || !schemaFragment[consts.OBJECT_LINK_KEYWORD]) {
-			log.silly('Nothing to mangle');
 			callback(null, null);
 			return;
 		}
@@ -33,5 +32,3 @@
 		return new ObjectLinkMangler();
 	};
 }());
-
-

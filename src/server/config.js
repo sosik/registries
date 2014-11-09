@@ -68,7 +68,7 @@ var config = {
 			}
 		}()),
 	collation : {
-		numberOfChars: 5,
+		numberOfChars: 32,
 		language: 'sk'
 	}
 };

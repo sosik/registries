@@ -19,7 +19,6 @@
 		var localErrors = [];
 
 		if (!objFragment || !schemaFragment) {
-			log.silly('Nothing to validate');
 			callback(null, null);
 			return;
 		}

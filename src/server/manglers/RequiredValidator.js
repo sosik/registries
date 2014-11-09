@@ -19,13 +19,11 @@
 		var localErrors = [];
 
 		if (!schemaFragment) {
-			log.silly('Nothing to validate');
 			callback(null, null);
 			return;
 		}
 
 		if (!schemaFragment[consts.REQUIRED_KEYWORD]) {
-			log.silly('Nothing to validate');
 			callback(null, null);
 			return;
 		}
@@ -44,4 +42,3 @@
 		return new RequiredValidator();
 	};
 }());
-

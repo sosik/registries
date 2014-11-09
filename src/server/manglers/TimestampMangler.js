@@ -11,16 +11,15 @@
 	TimestampMangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
 
 		if (!schemaFragment || !schemaFragment[consts.TIMESTAMP]) {
-			log.silly('Nothing to mangle');
 			callback(null, null);
 			return;
 		}
-		
+
 		log.silly('TimestampMangler mangler start for %s', objPath);
-		
+
 		objectTools.setValue(ctx.o,objPath,new Date().getTime());
 		callback();
-		
+
 		log.debug('TimestampMangler mangling finished for %s',  objPath);
 	};
 
@@ -29,5 +28,3 @@
 		return new TimestampMangler();
 	};
 }());
-
-

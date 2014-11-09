@@ -12,7 +12,6 @@
 	SequenceMangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
 
 		if (!schemaFragment || !schemaFragment[consts.SEQUENCE]) {
-			log.silly('Nothing to mangle');
 			callback(null, null);
 			return;
 		}
@@ -29,17 +28,15 @@
 			objectTools.setValue(ctx.o,objPath,data.seq);
 			callback();
 		});
-		
-		log.debug('SequenceMangler mangling finished for %s',  objPath);		
+
+		log.debug('SequenceMangler mangling finished for %s',  objPath);
 	};
 
 	module.exports = function() {
-		return new ObjectLinkMangler();
+		return new SequenceMangler();
 	};
 
 	module.exports = function(daoFactory, mongoDriver) {
 		return new SequenceMangler(daoFactory, mongoDriver);
 	};
 }());
-
-

@@ -12,7 +12,6 @@
 		log.silly('ObjectCleanerMangler mangler start for %s', objPath);
 
 		if (!objFragment|| 'id'===objPath || objFragment && schemaFragment) {
-			log.silly('Nothing to mangle');
 			callback(null, null);
 			return;
 		}
@@ -28,5 +27,3 @@
 		return new ObjectCleaner();
 	};
 }());
-
-

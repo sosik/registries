@@ -5,6 +5,8 @@ var async = require('async');
 var log = require('./logging.js').getLogger('ObjectMangler.js');
 var consts = require('./SchemaConstants.js');
 
+var bson = require('mongodb').BSONPure;
+
 function ObjectManglerError (message) {
 	this.message = message;
 }
@@ -90,7 +92,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 			// Dive into properties and mangle them
 			if (objFragment && (typeof objFragment === 'object')) {
 				for (prop in objFragment) {
-					propsToVisit.push(prop);
+					if(! objFragment instanceof bson.Binary ) propsToVisit.push(prop);
 				}
 			}
 

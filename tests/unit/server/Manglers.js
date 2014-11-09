@@ -7,6 +7,10 @@ var ObjectManglerModule = require(process.cwd() + '/build/server/ObjectMangler.j
 var typeValidator = require(process.cwd() + '/build/server/manglers/TypeValidator.js')();
 var requiredValidator = require(process.cwd() + '/build/server/manglers/RequiredValidator.js')();
 var objectLinkMangler = require(process.cwd() + '/build/server/manglers/ObjectLinkMangler.js')();
+var collationMangler = require(process.cwd() + '/build/server/manglers/CollationMangler.js')();
+var collationUnmangler = require(process.cwd() + '/build/server/manglers/CollationUnmangler.js')();
+
+
 var objectLinkUnmangler = require(process.cwd() + '/build/server/manglers/ObjectLinkUnmangler.js')(function() {
 	return {
 		get: function(oid, callback) {
@@ -92,6 +96,22 @@ describe('Manglers', function() {
 		}
 	};
 
+
+	var testSchema03 = {
+		properties: {
+			baseData: {
+				properties: {
+					name: {
+						type: 'string',
+						required: true,
+						$collate:true
+					}
+				}
+			}
+		}
+	};
+
+
 	it('Type validation positive', function(done) {
 		var resultPaths = [];
 
@@ -102,7 +122,7 @@ describe('Manglers', function() {
 
 		om.mangle(to, ts, function(err, localErrors) {
 			expect(err).to.not.exist;
-			expect(localErrors).to.be.empty;	
+			expect(localErrors).to.be.empty;
 			done();
 		});
 	});
@@ -115,7 +135,7 @@ describe('Manglers', function() {
 
 		to.baseData.age = "xxx";
 		to.baseData.name = 1;
-		
+
 		om.mangle(to, ts, function(err, localErrors) {
 			expect(err).to.not.exist;
 			expect(localErrors).to.have.length(2);
@@ -169,4 +189,46 @@ describe('Manglers', function() {
 			done();
 		});
 	});
+
+	it('Collate mangler should enhace object', function(done) {
+		var om = ObjectManglerModule.create([collationMangler]);
+
+		var to = extend(true, {}, testObject01);
+		var ts = extend(true, {}, testSchema03);
+
+		to.baseData.address.city.refData = {
+			name: 'xxx'
+		};
+
+		om.mangle(to, ts, function(err, localErrors) {
+			expect(err).to.not.exist;
+			expect(localErrors).to.have.length(0);
+			expect(to.baseData.name).to.have.keys('v', 'c');
+			expect(to.baseData.name.v).to.be.equal('TestName');
+			expect(to.baseData.name.c).to.be.not.empty;
+			done();
+		});
+	});
+
+
+	it('Collate unmangler should narrow object', function(done) {
+		var om = ObjectManglerModule.create([collationUnmangler]);
+
+		var to = extend(true, {}, testObject01);
+		var ts = extend(true, {}, testSchema03);
+
+		to.baseData.name = {
+			v:"testValue",c:"collation"
+		};
+
+		om.mangle(to, ts, function(err, localErrors) {
+			expect(err).to.not.exist;
+			expect(localErrors).to.have.length(0);
+			expect(to.baseData.name).to.be.equal('testValue');
+			expect(to.baseData.name.v).to.not.exist;
+			expect(to.baseData.name.c).to.not.exist;
+			done();
+		});
+	});
+
 });

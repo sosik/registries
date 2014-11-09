@@ -3,7 +3,7 @@ var expect = require('chai').expect;
 
 describe('value making', function(){
 	it('should calculate collation value of string to array',function(done){
-		
+
 		var string11 = "dzaaaa";
 		var string8 = "ďzabc";
 		var string6 = "čchḅas";
@@ -24,28 +24,28 @@ describe('value making', function(){
 		var string18 = "šťWzcb";
 		var string19 = "šťďaWzcb";
 		var string20 = "šťdzDWz";
-		
-		var valStr1 = collation.collationValueOfString(string1);
-		var valStr2 = collation.collationValueOfString(string2);
-		var valStr3 = collation.collationValueOfString(string3);
-		var valStr4 = collation.collationValueOfString(string4);
-		var valStr5 = collation.collationValueOfString(string5);
-		var valStr6 = collation.collationValueOfString(string6);
-		var valStr7 = collation.collationValueOfString(string7);
-		var valStr8 = collation.collationValueOfString(string8);
-		var valStr9 = collation.collationValueOfString(string9);
-		var valStr10 = collation.collationValueOfString(string10);
-		var valStr11 = collation.collationValueOfString(string11);
-		var valStr12 = collation.collationValueOfString(string12);
-		var valStr13 = collation.collationValueOfString(string13);
-		var valStr14 = collation.collationValueOfString(string14);
-		var valStr15 = collation.collationValueOfString(string15);
-		var valStr16 = collation.collationValueOfString(string16);
-		var valStr17 = collation.collationValueOfString(string17);
-		var valStr18 = collation.collationValueOfString(string18);
-		var valStr19 = collation.collationValueOfString(string19);
-		var valStr20 = collation.collationValueOfString(string20);
-		
+
+		var valStr1 = collation.getCollationKey(string1);
+		var valStr2 = collation.getCollationKey(string2);
+		var valStr3 = collation.getCollationKey(string3);
+		var valStr4 = collation.getCollationKey(string4);
+		var valStr5 = collation.getCollationKey(string5);
+		var valStr6 = collation.getCollationKey(string6);
+		var valStr7 = collation.getCollationKey(string7);
+		var valStr8 = collation.getCollationKey(string8);
+		var valStr9 = collation.getCollationKey(string9);
+		var valStr10 = collation.getCollationKey(string10);
+		var valStr11 = collation.getCollationKey(string11);
+		var valStr12 = collation.getCollationKey(string12);
+		var valStr13 = collation.getCollationKey(string13);
+		var valStr14 = collation.getCollationKey(string14);
+		var valStr15 = collation.getCollationKey(string15);
+		var valStr16 = collation.getCollationKey(string16);
+		var valStr17 = collation.getCollationKey(string17);
+		var valStr18 = collation.getCollationKey(string18);
+		var valStr19 = collation.getCollationKey(string19);
+		var valStr20 = collation.getCollationKey(string20);
+
 		var compare = function(arr1,arr2){
 			var result = 0;
 			for (i = 0;i<5;i++){
@@ -57,10 +57,10 @@ describe('value making', function(){
 					break;
 				}
 			}
-			
+
 			return result;
-		}
-		
+		};
+
 		expect(compare(valStr1,valStr2)).to.be.equal(1);
 		expect(compare(valStr2,valStr3)).to.be.equal(1);
 		expect(compare(valStr3,valStr4)).to.be.equal(1);

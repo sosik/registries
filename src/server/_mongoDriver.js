@@ -1,6 +1,7 @@
 var extend = require('extend');
 var util = require('util');
 var log = require('./logging.js').getLogger('_mongoDriver.js');
+var bson = require('mongodb').BSONPure;
 
 /*
  * @module mongoDriver
@@ -120,21 +121,34 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			var unset = {};
 			// TODO handle arrays, functions, etc.
 			var propIterator = function(prefix, obj) {
-				var key;
-				for (key in obj) {
-					// skip id key of object
-					if (key === 'id' && prefix === null) {
-						continue;
+
+				//Collations need to be stored wrapped
+				if (obj.c && (obj.c instanceof bson.Binary)){
+					if (obj.v){
+						set[prefix] = {c: obj.c,v:obj.v};
 					}
-					if ((typeof obj[key] === 'object') && (!util.isArray(obj[key]))) {
-						if (obj[key] === null) {
-							unset[prefix === null ? key: prefix + "." + key] = 1;
-						} else {
-							propIterator(prefix === null ? key: prefix + "." + key, obj[key]);
+					else {
+						unset[prefix]=1;
+					}
+				} else {
+					var key;
+					for (key in obj) {
+						// skip id key of object
+						if (key === 'id' && prefix === null) {
+							continue;
 						}
-					} else {
-						set[prefix === null ? key: prefix + "." + key] = obj[key];
+
+						if ((typeof obj[key] === 'object') && (!util.isArray(obj[key]))&& (!(obj[key] instanceof bson.Binary))) {
+							if (obj[key] === null) {
+								unset[prefix === null ? key: prefix + "." + key] = 1;
+							} else {
+								propIterator(prefix === null ? key: prefix + "." + key, obj[key]);
+							}
+						} else {
+							set[prefix === null ? key: prefix + "." + key] = obj[key];
+						}
 					}
+
 				}
 			};
 
@@ -142,11 +156,10 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 
 			if ( Object.keys(unset).length === 0 ) {
 				return {$set: set};
+			}else {
+				return {$set: set, $unset: unset};
 			}
 
-
-
-			return {$set: set, $unset: unset};
 		},
 		/**
 		 *

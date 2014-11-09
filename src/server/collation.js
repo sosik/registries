@@ -1526,7 +1526,7 @@ var collation = [
 "\ufb03",
 "\ufb04",
 "\ufb05",
-"\ufb06",
+"\ufb06"
 ];
 
 module.exports.collation = collation;

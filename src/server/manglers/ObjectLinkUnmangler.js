@@ -15,7 +15,6 @@
 		var prop;
 
 		if (!schemaFragment || !schemaFragment[consts.OBJECT_LINK_KEYWORD]) {
-			log.silly('Nothing to unmangle - schema');
 			callback(null, null);
 			return;
 		}
@@ -59,7 +58,13 @@
 
 				objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD] = {};
 				for (prop in props) {
-					objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD][prop] = objectTools.evalPath(data, props[prop]);
+					var val=objectTools.evalPath(data, props[prop]);
+					if (val.v) {
+						 objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD][prop] = val.v;
+					}
+					else{
+						objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD][prop] = val;	
+					}
 				}
 			}
 			log.debug('ObjectLink unmangling finished for %s',  objPath);
@@ -71,5 +76,3 @@
 		return new ObjectLinkUnmangler(daoFactory, mongoDriver);
 	};
 }());
-
-

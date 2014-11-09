@@ -777,10 +777,58 @@ function remapExtraliga23(item){
 	}
 }
 
-function remapCompetition (item) {
-
+function objLinkJury(item) {
+	var ret=	{
+			'registry' : 'juries',
+			'oid' : '',
+			'unresolved' : item
+	};
+	// console.log(ret);
+	return ret;
 }
 
+function objLinkCompetition(item) {
+	var ret=	{
+			'registry' : 'competitions',
+			'oid' : '',
+			'unresolved' : item
+	};
+	// console.log(ret);
+	return ret;
+}
+
+function objLinkActionCode(item) {
+	var ret=	{
+			'registry' : 'actionCodes',
+			'oid' : '',
+			'unresolved' : item
+	};
+	// console.log(ret);
+	return ret;
+}
+
+function mapIsActive(item){
+	if ('1'==item){
+		return 'Áno';
+	}
+	return 'Nie';
+}
+function mapMZ2(item){
+	if ('1'===item){
+		return 'M';
+	}
+		return 'Z';
+}
+
+function objLinkActionList(item) {
+	var ret=	{
+			'registry' : 'actionList',
+			'oid' : '',
+			'unresolved' : item
+	};
+	// console.log(ret);
+	return ret;
+}
 
 function reverseDate(item){
 	if (!item){

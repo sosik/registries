@@ -1,0 +1,17 @@
+.x-modalview{
+
+	&.x-open{
+		@media (max-width: $screen-sm-max) {
+			background-color: $modlaview-bg-color;
+
+			.x-modalview-body{
+				background-color: $modalview-body-bg-color;
+				
+				&, a {
+					color: $modalview-color;
+				}
+			}
+		}
+
+	}
+}

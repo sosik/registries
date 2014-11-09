@@ -5,13 +5,7 @@
 	width: $menu-width;
 	bottom: 0;
 	width: $menu-width;
-	margin-left: -$menu-width;
-	@include transition(margin-left .5s linear);
 	z-index: 2;
-	
-	@media (min-width: $screen-md-min){
-		margin-left: 0px;
-	}
 	
 	.x-main-menu-toggle{
 		cursor: pointer;
@@ -22,10 +16,10 @@
 		text-align: center;
 
 		&:before{
-			@include icon-font();
-			content: $icon-align-justify;
-			font-size: 18px;
-			line-height: $fixed-header-height;
+			@include icon-font($icon-align-justify);
+			// content: $icon-align-justify;
+			font-size: em(18px);
+			line-height: em($fixed-header-height, 18px);
 		}
 		
 		@media (min-width: $screen-md-min){

@@ -1,0 +1,90 @@
+.x-modalview{
+	.x-modalview-header{
+		display: none;
+	}
+
+	.x-modalview-close{
+		display: none;
+	}
+
+	@media (max-width: $screen-sm-max) {
+		height: 0px;
+
+		.x-modalview-body{
+			visibility: hidden;
+		}
+	}
+
+	&.x-open{
+		@media (max-width: $screen-sm-max) {
+			position: fixed;
+			z-index: 100;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			background-color: rgba(0,0,0,0.5);
+			height: auto;
+			width: auto;
+
+			> :not([class*="modalview"]) {
+				display: none;
+				// z-index: 2
+			}
+
+			$modalview-body-offset: 10px;
+			.x-modalview-body{
+				visibility: visible;
+				position: fixed;
+				width: 90%;
+				height: 90%;
+				top: 5%;
+				left: 5%;
+				background-color: #333333;
+				padding: 0px $modalview-body-offset $modalview-body-offset $modalview-body-offset;
+				box-sizing: border-box;
+				
+				&, a {
+					color: #ffffff;
+				}
+			}
+
+			.x-modalview-header{
+				display: block;
+				font-size: em(16px);
+				line-height: em($fixed-header-height, 16px);
+				height: $fixed-header-height;
+				font-weight: bold;
+
+				padding-right: $fixed-header-height;
+				box-sizing: border-box;
+				margin-bottom: $modalview-body-offset;
+			}
+
+			.x-modalview-close{
+				display: block;
+				position: absolute;
+				right: 0px;
+				top: 0px;
+				left: initial;
+				bottom: initial;
+
+				&:before{
+					@include icon-font($icon-remove);
+					font-size: em(18px);
+					line-height: em($fixed-header-height, 18px);
+				}
+			}
+		}
+
+		@media (max-width: $screen-xs-max) {
+			.x-modalview-body{
+				width: 100%;
+				height: 100%;
+				top: 0%;
+				left: 0%;
+			}
+		}
+	}
+	
+}

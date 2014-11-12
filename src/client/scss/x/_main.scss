@@ -7,6 +7,7 @@ BODY, HTML {
 body{
 	font-size: 100%;
 	line-height: 1;
+	font-family: "Arial";
 }
 
 @mixin not-selectable() {
@@ -21,13 +22,10 @@ body{
 	-moz-user-select: text;
 }
 
-// * {
-// 	box-sizing: border-box;
-// 	font-family: "Arial";
-// 	font-size: 14px;
-// 	line-height: 16px;
-// 	@include not-selectable();
-// }
+* {
+	box-sizing: border-box;
+	@include not-selectable();
+}
 
 .x-hidden {
 	display: none;

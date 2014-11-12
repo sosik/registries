@@ -1,0 +1,64 @@
+.x-fixed-header{	
+	nav{
+		float: right;
+
+		ul{
+			margin: 0px;
+			padding: 0px;
+		}
+		
+		li{
+			display: block;
+			float: left;
+			height: 100%;
+			position: relative;
+
+			.text-block, a span{
+				@media (max-width: $screen-xs-max) {
+					display: none;
+				}
+			}
+
+			> span, a{
+				line-height: em($fixed-header-height);
+				font-size: em($base-font-size);
+				padding: 0px 15px;
+				display: block;
+				height:100%;
+				text-decoration: none;
+
+				i{
+					+ span{
+						margin-left: 10px;
+						@media (max-width: $screen-xs-max) {
+							margin-left: 0px;
+						}
+					}
+				}
+				
+				span{
+					text-transform: uppercase;
+					position: relative;
+
+					+ i{
+						margin-left: 10px;
+						@media (max-width: $screen-xs-max) {
+							margin-left: 0px;
+						}
+					}
+				}
+			}
+			
+			
+			a {
+				@include transition(all .5s);
+
+				&:hover{
+					// background-color: $header-light-bg;
+					@include transition(all .5s);
+				}
+			}
+		}
+
+	}
+}

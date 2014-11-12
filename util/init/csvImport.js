@@ -424,6 +424,9 @@ function resolveToObjectLink(json,path,callback){
 		callback(null);
 	} );
 }
+function hostovanie(item){
+	return 'hosťovanie';
+}
 
 function resolveByNameToObjectLink(json,path,callback){
 	// console.log(json,path);
@@ -640,6 +643,75 @@ function mapPoDohodeStudium(item){
 	}
 	return 'Počas štúdia';
 
+}
+
+function mapHodnotenie(item){
+	if (item=='1'){
+		return 'Výborne';
+	}
+	if (item=='2'){
+		return 'Dobre';
+	}
+	if (item=='3'){
+		return 'Vyhovel';
+	}
+	if (item=='4'){
+		return 'Nevyhovel';
+	}
+	return null;
+}
+
+function mapSposobUhrady(item){
+	if (item=='1'){
+		return 'Hotovosť';
+	}
+	if (item=='2'){
+		return 'Bankový prevod';
+	}
+	if (item=='3'){
+		return 'Zostatok z h.o.';
+	}
+	if (item=='4'){
+		return 'Dobierka';
+	}
+	if (item=='5'){
+		return 'Premlčané';
+	}
+	if (item=='6'){
+		return 'Vrátená platba';
+	}
+	return null;
+}
+
+function mapTypPoplatku(item){
+	if (item=='1'){
+		return 'Vklad do súťaže';
+	}
+	if (item=='2'){
+		return 'Pokuta';
+	}
+	if (item=='3'){
+		return 'Hráčska licencia';
+	}
+	if (item=='4'){
+		return 'Prestupy hráčov';
+	}
+	if (item=='5'){
+		return 'Tlačivá';
+	}
+	if (item=='6'){
+		return 'Iné';
+	}
+	if (item=='7'){
+		return 'Odvolanie';
+	}
+	if (item=='8'){
+		return 'Predohrávka';
+	}
+	if (item=='9'){
+		return 'Trénerské poplatky';
+	}
+	return null;
 }
 
 function fullDate(item){

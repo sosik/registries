@@ -22,6 +22,7 @@
 			return control;
 		}
 
+		// @todo add datapicker
 		function generatePrimitiveEditControl(schemaFragment, schemaPath, modelPath) {
 			var control = angular.element('<div xpsui-string-edit></div>');
 			control.attr('ng-model', modelPath);

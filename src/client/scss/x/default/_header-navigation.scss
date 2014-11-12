@@ -1,0 +1,14 @@
+.x-fixed-header{	
+	nav{
+		.text-block, a{
+			color: $header-navigation-color;
+		}
+
+		a{
+
+			&:hover{
+				background-color: $header-navigation-link-active;
+			}
+		}
+	}
+}

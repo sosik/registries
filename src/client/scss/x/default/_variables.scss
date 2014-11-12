@@ -8,8 +8,23 @@ $color2: #E8A50C;
 $color3: #FF9800;
 $color4: #E8700C;
 $color5: #FF580D;
+$color-black: #333333;
+$color-white: #ffffff;
 
 // modalview
 $modlaview-bg-color: rgba(0,0,0,0.5);
-$modalview-body-bg-color: #333333;
-$modalview-color: #ffffff;
+$modalview-body-bg-color: $color-black;
+$modalview-color: $color-white;
+$modalview-header-bg: $color1;
+
+// header
+$header-bg: $color1;
+
+// header navigation
+$header-navigation-color: $color-black;
+$header-navigation-link-active: lighten($header-bg, 30%);
+
+// main menu
+$main-menu-bg: $color-black;
+$main-menu-color: $color-white;
+$main-item-hover-color: $color1;

@@ -4,9 +4,16 @@
   @include icon-font();
 }
 
-
-// Icons
+// variables
 // -------------------------
 $icon-align-justify: $fa-var-align-justify !default;
 $icon-pencil: $fa-var-pencil !default;
 $icon-remove: $fa-var-remove !default;
+$icon-user: $fa-var-user!default;
+$icon-power-off: $fa-var-power-off !default;
+
+// icons
+// -------------------------
+.icon-glass:before { content: $icon-remove; }
+.icon-user:before { content: $icon-user; }
+.icon-power-off:before { content: $icon-power-off; }

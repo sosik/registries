@@ -3,7 +3,7 @@
 
 
 .x-fixed-header {
-	background-color: $color1;
+	background-color: $header-bg;
 	box-shadow: 0 0 5px gray;
 }
 
@@ -47,6 +47,6 @@
 }
 
 .x-component-button {
-	background-color: $color1;
+	background-color: $header-bg;
 	border: 1px solid white;
 }

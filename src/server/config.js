@@ -21,7 +21,7 @@ var config = {
 		dataset: process.env.REGISTRIES_PATH_DATASET || process.cwd() + '/data/'
 	},
 	mails:{
-		eventProcessingError: 'pladanyi@unionsoft.sk',
+		eventProcessingError: 'peter.ladanyi@unionsoft.sk',
 		massmailSenderAddress:'caihp@unionsoft.eu'
 	},
 	schemaRegistry:{

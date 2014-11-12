@@ -59,11 +59,11 @@
 				objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD] = {};
 				for (prop in props) {
 					var val=objectTools.evalPath(data, props[prop]);
-					if (val.v) {
+					if (val&&val.v) {
 						 objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD][prop] = val.v;
 					}
 					else{
-						objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD][prop] = val;	
+						objFragment[consts.OBJECT_LINK_REFDATA_KEYWORD][prop] = val;
 					}
 				}
 			}

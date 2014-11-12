@@ -84,7 +84,7 @@ var SchemaTools = function() {
 	 */
 	this.registerSchema = function(uri, schema, override) {
 		var schemaObj = null;
-		
+
 		log.silly("registering object",uri);
 
 		if (typeof schema === 'string') {
@@ -101,8 +101,8 @@ var SchemaTools = function() {
 		if (!schemaObj) {
 			throw new Error('Failed to parse schema object');
 		}
-		
-		
+
+
 		// if there is no uri provided, extract one from schema itself
 		var url;
 		if (uri) {
@@ -111,7 +111,7 @@ var SchemaTools = function() {
 			// extract id from schema
 			if (schemaObj.id) {
 				url = normalizeURL(URL.parse(schemaObj.id));
-				
+
 			} else {
 				throw new Error('Neither uri or schema.id defined');
 			}
@@ -168,8 +168,8 @@ var SchemaTools = function() {
 			switch (prop) {
 				case '$schema':
 				case 'id' :
-				case 'type' : 
-				case '$ref' : 
+				case 'type' :
+				case '$ref' :
 					// skip schema keywords;
 					break;
 				default:
@@ -274,7 +274,7 @@ var SchemaTools = function() {
 						// do not dive into objectLink
 					} else {
 						res = compileInternal(obj[propName]);
-						log.silly(res);
+						// log.silly(res);
 						if (res.done) {
 							obj[propName] = res.val;
 						} else {
@@ -336,14 +336,14 @@ var SchemaTools = function() {
 	 */
 	this.createDefaultObject = function(uri) {
 		var compiledSchema = schemasCache[uri];
-		
+
 
 		if (!compiledSchema) {
 			return false;
 		}
 
 		var iterateSchema = function(schemaFragment) {
-			
+
 			if ('default' in schemaFragment) {
 				// there is default so lets use it
 				if ('object' === schemaFragment.default) {

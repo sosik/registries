@@ -184,7 +184,12 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 						query = {'$gt': c.v};
 					} else if (c.op === QueryFilter.operation.GREATER_EQUAL) {
 						query = {'$gte': c.v};
-					} else if (c.op === QueryFilter.operation.LESS) {
+					} else if (c.op === QueryFilter.operation.NOT_IN) {
+						query = {'$nin': c.v};
+					}  else if (c.op === QueryFilter.operation.LESS) {
+					} else if (c.op === QueryFilter.operation.IN) {
+						query = {'$in': c.v};
+					}  else if (c.op === QueryFilter.operation.LESS) {
 						query = {'$lt': c.v};
 					} else if (c.op === QueryFilter.operation.LESS_EQUAL) {
 						query = {'$lte': c.v};

@@ -5,6 +5,8 @@ var operation = {
 	GREATER_EQUAL: 'gte',
 	LESS: 'lt',
 	LESS_EQUAL: 'lte',
+	NOT_IN: 'nin',
+	IN: 'in',
 	NOT_EQUAL: 'neq', // field value is not equal
 	CONTAINS:'contains',
 	STARTS_WITH: 'starts' // field value starts with
@@ -42,25 +44,31 @@ var QueryFilter = function() {
 				case operation.STARTS_WITH:
 					c = {f: field, op: operation.STARTS_WITH, v: val};
 					break;
-			
-					case operation.LESS:
-					c = {f: field, op: operation.LESS, v: val};
+				case operation.NOT_IN:
+					c = {f: field, op: operation.NOT_IN, v: val};
 					break;
-					case operation.LESS_EQUAL:
-					c = {f: field, op: operation.LESS_EQUAL, v: val};
-					break;
-					case operation.GREATER:
-					c = {f: field, op: operation.GREATER, v: val};
-					break;
-					case operation.GREATER_EQUAL:
-					c = {f: field, op: operation.GREATER_EQUAL, v: val};
-					break;
-					case operation.CONTAINS:
-					c = {f: field, op: operation.CONTAINS, v: val};
+				case operation.IN:
+					c = {f: field, op: operation.IN, v: val};
 					break;
 
-					default:
-					throw new Error('Unknown operation: ' + op);
+				case operation.LESS:
+				c = {f: field, op: operation.LESS, v: val};
+				break;
+				case operation.LESS_EQUAL:
+				c = {f: field, op: operation.LESS_EQUAL, v: val};
+				break;
+				case operation.GREATER:
+				c = {f: field, op: operation.GREATER, v: val};
+				break;
+				case operation.GREATER_EQUAL:
+				c = {f: field, op: operation.GREATER_EQUAL, v: val};
+				break;
+				case operation.CONTAINS:
+				c = {f: field, op: operation.CONTAINS, v: val};
+				break;
+
+				default:
+				throw new Error('Unknown operation: ' + op);
 			}
 		} else {
 			// operation is not defined, using default
@@ -107,15 +115,15 @@ var QueryFilter = function() {
 
 		return this;
 	};
-	
+
 	this.setLimit= function (limit){
-		this.limit=limit;	
+		this.limit=limit;
 	};
-	
+
 	this.setSkip= function (skip){
-		this.skip=skip;	
+		this.skip=skip;
 	};
-	
+
 };
 
 module.exports = {

@@ -1,0 +1,30 @@
+
+.x-string-view {
+	width: 100%;
+	padding: $string-offset;
+
+	DIV {
+		width: 100%;
+		@include text-selectable();
+		&:after{
+			content: '\0000A0';
+			visibility: hidden;
+		}
+	}
+}
+
+.x-string-edit {
+	width: 100%;
+	// padding: 3px 3px 3px 3px;
+
+	INPUT {
+		position: relative;
+		width: 100%;
+		// border: 0px solid white;
+		// font-size: em($string-font-size);
+		font-size: em($base-font-size);
+
+		padding: $string-offset;
+		outline: none;
+	}
+}

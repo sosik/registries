@@ -1,3 +1,15 @@
+@mixin not-selectable() {
+	user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+
+@mixin text-selectable() {
+	user-select: text;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+}
+
 // Transition
 @mixin transition($args...) {
 	-webkit-transition: $args;

@@ -1,0 +1,77 @@
+.x-inlineedit {
+	display: table;
+	width: 100%;
+	position: relative;
+	// min-height: $inlineedit-min-height;
+
+	.x-inlineedit-content {
+		display: table-cell;
+		width: 100%;
+
+		> :first-child{
+			line-height: em($line-height);
+		}
+	}
+
+	.x-inlineedit-buttons {
+		position: absolute;
+		right: 1px;
+		bottom: 100%;
+		white-space: nowrap;
+		vertical-align: middle;
+		// margin-bottom: -2px;
+		background-color: white;
+
+		.x-component-button {
+			margin: 2px 2px 2px 2px;
+		}	
+	}
+
+}
+
+.x-inlineedit {
+	border: 1px solid transparent;
+
+	.x-inlineedit-content {
+		// border: 1px solid white;
+	}
+
+	.x-inlineedit-buttons {
+		// border-bottom: 0px solid white;
+		// border-top: 1px solid $color4;
+		// border-left: 1px solid $color4;
+		// border-right: 1px solid $color4;
+		background-color: white;
+
+		.x-component-button {
+			background-color: white;
+		}	
+	}
+}
+
+
+.x-inlineedit-edit-mode {
+	.x-inlineedit-content {
+		// border: 1px solid #aaaaaa;
+	}
+}
+
+.x-inlineedit-active {
+	border: 1px dashed black;
+	@include transition(border .5s);
+	// transition: border .5s;
+	cursor: pointer;
+}
+.x-inlineedit-active:AFTER {
+	@include icon-font($icon-pencil);
+
+	padding-top: 8px;
+	padding-right: 2px;
+	padding-left: 2px;
+	position: absolute;
+	right: 0;
+	top: 0px;
+	bottom: 0px;
+	background-color: rgba(200,200,200,0.5);
+}
+

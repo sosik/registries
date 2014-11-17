@@ -10,51 +10,17 @@ body{
 	font-family: "Arial";
 }
 
-@mixin not-selectable() {
-	user-select: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-}
-
-@mixin text-selectable() {
-	user-select: text;
-	-webkit-user-select: text;
-	-moz-user-select: text;
-}
-
 * {
 	box-sizing: border-box;
 	@include not-selectable();
 }
 
+input, textarea, keygen, select, button {
+	margin: 0px;
+}
+
 .x-hidden {
 	display: none;
-}
-
-@media screen and (max-width: 900px) and (min-width: 501px) {
-	.x-fieldset {
-		width: 100%;
-		min-width: 100%;
-	}
-}
-
-@media screen and (max-width: 500px) {
-	.x-fieldset {
-		width: 100%;
-		min-width: 100%;
-	}
-
-	.x-fieldset-label {
-		display: block !important;
-	}
-
-	.x-fieldset-value {
-		display: block !important;
-	}
-
-	.x-fieldset-content {
-		.display: block;
-	}
 }
 
 .x-fixed-header {
@@ -98,112 +64,6 @@ body{
 	padding-top: 10px;
 	padding-bottom: 10px;
 }
-
-.x-fieldset {
-	display: table;
-	width: 50%;
-	float: left;
-	padding: 3px 3px 3px 3px;
-}
-
-.x-fieldset-title {
-	display: block;
-	font-weight: bold;
-	padding-top: 10px;
-	padding-bottom: 5px;
-	border-bottom: 1px solid black;
-}
-
-.x-fieldset-content {
-	display: table;
-	width: 100%;
-}
-
-.x-fieldset-row {
-	display: table-row;
-	box-sizing: border-box;
-}
-
-.x-fieldset-label {
-	display: table-cell;
-	box-sizing: border-box;
-	min-width: 150px;
-	font-style: oblique;
-
-}
-.x-fieldset-value {
-	display: table-cell;
-	width: 100%;
-}
-
-.x-string-view {
-	width: 100%;
-	padding: 6px 6px 6px 6px;
-
-	DIV {
-		width: 100%;
-		@include text-selectable();
-	}
-}
-
-.x-string-edit {
-	width: 100%;
-	padding: 3px 3px 3px 3px;
-
-	INPUT {
-		position: relative;
-		width: 100%;
-		border: 0px solid white;
-		padding: 3px 3px 3px 3px;
-	}
-}
-
-.x-inlineedit {
-	display: table;
-	width: 100%;
-	position: relative;
-
-	.x-inlineedit-content {
-		display: table-cell;
-		width: 100%;
-	}
-
-	.x-inlineedit-buttons {
-		position: absolute;
-		right: 1px;
-		bottom: 100%;
-		white-space: nowrap;
-		vertical-align: middle;
-		margin-bottom: -2px;
-		background-color: white;
-
-		.x-component-button {
-			margin: 2px 2px 2px 2px;
-		}	
-	}
-}
-
-.x-inlineedit-active {
-	border: 1px dashed black;
-	transition: border .5s;
-	cursor: pointer;
-}
-.x-inlineedit-active:AFTER {
-	content: '\f040';
-	display: inline-block;
-	font: normal normal normal 14px/1 FontAwesome;
-	font-size: 18px;
-	text-rendering: auto;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	padding-top: 5px;
-	padding-right: 2px;
-	position: absolute;
-	right: 0;
-	top: 0;
-
-}
-
 
 .x-component-button {
 	cursor: pointer;

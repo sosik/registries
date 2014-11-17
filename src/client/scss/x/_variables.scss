@@ -17,9 +17,11 @@ $screen-sm-max: $screen-md - 1 !default;
 
 // font
 // ----------------------------------------
-$icon-font: FontAwesome;
+$icon-font: FontAwesome !default;
 
-$base-font-size: 16px;
+$base-font-size: 16px !default;
+$font-size-input: 14px !default;
+$line-height: 20px !default;
 
 // layout
 // ----------------------------------------
@@ -32,10 +34,24 @@ $menu-width-sm: 400px !default;
 $menu-item-font-size: 16px !default;
 $menu-item-height: 40px !default;
 $menu-item-icon-height: 50px !default;
-$menu-item-icon-width: 40px;
-$menu-item-icon-offset: 10px;
-$menu-item-bottom-offset: 20px;
+$menu-item-icon-width: 40px !default;
+$menu-item-icon-offset: 10px !default;
+$menu-item-bottom-offset: 20px !default;
 
 // modalview
 // ----------------------------------------
-$modalview-body-offset: 10px;
+$modalview-body-offset: 10px !default;
+
+// fieldset
+// ----------------------------------------
+$fieldset-item-min-height: 34px !default;
+$fieldset-offset: 6px !default;
+
+// inlineedit
+// ----------------------------------------
+$inlineedit-min-height: $fieldset-item-min-height !default;
+
+// string component
+// ----------------------------------------
+$string-font-size: $font-size-input !default;
+$string-offset: $fieldset-offset !default;

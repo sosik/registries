@@ -1,0 +1,67 @@
+.x-fieldset {
+	display: table;
+	width: 50%;
+	float: left;
+	padding: 3px 3px 3px 3px;
+}
+
+.x-fieldset-title {
+	display: block;
+	font-weight: bold;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid black;
+	margin-bottom: $fieldset-offset;
+}
+
+.x-fieldset-content {
+	display: table;
+	width: 100%;
+}
+
+.x-fieldset-row {
+	display: table-row;
+	box-sizing: border-box;
+}
+
+.x-fieldset-label {
+	display: table-cell;
+	box-sizing: border-box;
+	min-width: 150px;
+	font-style: oblique;
+	line-height: em($line-height);
+	padding: $fieldset-offset 0px;
+	// min-height: $fieldset-lebel-min-width;
+
+}
+.x-fieldset-value {
+	display: table-cell;
+	width: 100%;
+	// min-height: $fieldset-lebel-min-width;
+}
+
+@media screen and (max-width: $screen-sm-max) and (min-width: $screen-sm) {
+	.x-fieldset {
+		width: 100%;
+		min-width: 100%;
+	}
+}
+
+@media screen and (max-width: $screen-xs-max) {
+	.x-fieldset {
+		width: 100%;
+		min-width: 100%;
+	}
+
+	.x-fieldset-label {
+		display: block !important;
+	}
+
+	.x-fieldset-value {
+		display: block !important;
+	}
+
+	.x-fieldset-content {
+		.display: block;
+	}
+}

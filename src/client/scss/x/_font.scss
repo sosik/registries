@@ -11,9 +11,11 @@ $icon-pencil: $fa-var-pencil !default;
 $icon-remove: $fa-var-remove !default;
 $icon-user: $fa-var-user!default;
 $icon-power-off: $fa-var-power-off !default;
+$icon-pencil: $fa-var-pencil !default;
 
 // icons
 // -------------------------
 .icon-glass:before { content: $icon-remove; }
 .icon-user:before { content: $icon-user; }
 .icon-power-off:before { content: $icon-power-off; }
+.icon-pencil{ content: $icon-pencil; }

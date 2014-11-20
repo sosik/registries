@@ -35,11 +35,26 @@
 				field.attr('xpsui-model', modelPath);
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
-				field = angular.element('<div xpsui-string-edit></div>');
+				if(schemaFragment.type === "string"){
+					field = angular.element('<div xpsui-string-edit></div>');
+				}
+				if(schemaFragment.type === "date"){
+					field = angular.element('<div xpsui-date-edit xpsui-dropdown xpsui-calendar ></div>'); //  
+				}
+				
 				field.attr('ng-model', modelPath);
+				
+
 			} else {
-				field = angular.element('<div xpsui-string-view></div>');
+				if(schemaFragment.type === "string"){
+					field = angular.element('<div xpsui-string-view></div>');
+				}
+				if(schemaFragment.type === "date"){
+					field = angular.element('<div xpsui-date-view></div>');
+				}
+
 				field.attr('ng-model', modelPath);
+				
 			}
 
 			return field;
@@ -93,7 +108,7 @@
 								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
 								component.attr('xpsui-fieldset', mode);
-							} else if (localFragment.type === 'string') {
+							} else if (localFragment.type === 'string' || localFragment.type === 'date') {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {
 								log.warn('Local fragment type %s not implemented yet', localFragment.type);

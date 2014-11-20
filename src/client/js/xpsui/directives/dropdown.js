@@ -2,34 +2,27 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiDropdown', ['xpsui:log', 'xpsui:ComponentGenerator', '$timeout', '$translate',  function(log, componentGenerator, $timeout, $translate) {		
+	.directive('xpsuiDropdown', ['xpsui:logging', '$timeout', '$translate',  function(log, $timeout, $translate) {		
 		return {
 			restrict: 'A',
-			require: ['?xpsuiCtrl', '?ngModel','xpsuiDropdown','xpsuiTextInput'],
-			controller: function($scope, $element){
+			require: ['?ngModel','xpsuiDropdown','xpsuiDateEdit'],
+			controller: function(){
 				
-				function dropdown($element){
+				this.setElement = function($element){
 					this.$element = $element;
-					
-					this.options = dropdown.DEFAULTS;
-					
-					this.closeTimeout = null;
+
+					return this;
 				};
-				
-				dropdown.DEFAULTS = {
-					closingTime: 150,
-					clsOpen: 'x-open'
-				};
-				
-				dropdown.prototype.getElement =  function(){
+
+				this.getElement =  function(){
 					return this.$element;
 				};
 				
-				dropdown.prototype.getContentElement =  function(){
+				this.getContentElement =  function(){
 					return this.$contentEl;
 				};
 				
-				dropdown.prototype.setInput = function(input){
+				this.setInput = function(input){
 					var self = this;
 					this.$inputElement = input;
 					
@@ -44,7 +37,7 @@
 					return this;
 				};
 				
-				dropdown.prototype.renderInit = function(){
+				this.renderInit = function(){
 					var self = this;
 					if(!this.$actionEl){
 						this.$actionEl = angular.element('<div class="x-dropdown-action"><span>' + $translate.instant('dropdown.toggle') + '</span></div>');
@@ -63,11 +56,11 @@
 					}
 				};
 				
-				dropdown.prototype.setOptions = function(options){
+				this.setOptions = function(options){
 					angular.extend(this.options, options || {});
 				};
 				
-				dropdown.prototype.toggle = function(){
+				this.toggle = function(){
 					if(this.$element.hasClass(this.options.clsOpen)){
 						this.close();
 					} else {
@@ -75,7 +68,7 @@
 					}
 				};
 				
-				dropdown.prototype.close = function(waiting){
+				this.close = function(waiting){
 					var self = this;
 					
 					if (waiting === undefined ) {
@@ -94,33 +87,41 @@
 					this.afterClose();
 				};
 				
-				dropdown.prototype.afterClose =  function(){};
+				this.afterClose =  function(){};
 				
-				dropdown.prototype.open = function(){
+				this.open = function(){
 					this.$element.addClass(this.options.clsOpen);
 					this.afterOpen();
 				};
 				
-				dropdown.prototype.afterOpen = function(){};
+				this.afterOpen = function(){};
 				
-				dropdown.prototype.cancelClosing = function(){
+				this.cancelClosing = function(){
 					this.closeTimeout && $timeout.cancel(this.closeTimeout);
 				};
 					
-				dropdown.prototype.render = function(){
+				this.render = function(){
 					this.renderInit();
 				};
+
+				// this.$element = $element;
+				this.$element = null;
 				
-				return new dropdown($element);
+				this.options = {
+					closingTime: 150,
+					clsOpen: 'x-open'
+				};
+				
+				this.closeTimeout = null;
 			},
 			link: function(scope, elm, attrs, ctrls) {
-				var self = ctrls[2],
-					xpsuiTextInputCtrl = ctrls[3]
+				var self = ctrls[1],
+					xpsuiTextInputCtrl = ctrls[2]
 				;
 				
 				elm.addClass('x-dropdown');
 
-				self.setInput(xpsuiTextInputCtrl.getInput())
+				self.setElement(elm).setInput(xpsuiTextInputCtrl.getInput())
 					.render()
 				;
 			}

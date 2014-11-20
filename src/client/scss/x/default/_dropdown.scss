@@ -1,0 +1,4 @@
+.x-dropdown-content{
+	@include box-shadow($dropdown-shadow-color);
+	border-color: $dropdown-border-color;
+}

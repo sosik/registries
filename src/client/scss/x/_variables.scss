@@ -20,7 +20,10 @@ $screen-sm-max: $screen-md - 1 !default;
 $icon-font: FontAwesome !default;
 
 $base-font-size: 16px !default;
-$font-size-input: 14px !default;
+$font-size-middle: 14px !default;
+$font-size-small: 12px !default;
+$font-size-input: $font-size-middle !default;
+
 $line-height: 20px !default;
 
 // layout
@@ -55,3 +58,17 @@ $inlineedit-min-height: $fieldset-item-min-height !default;
 // ----------------------------------------
 $string-font-size: $font-size-input !default;
 $string-offset: $fieldset-offset !default;
+$string-height: 32px !default;
+
+// dropdown component
+// ----------------------------------------
+$dropdown-offset:  $fieldset-offset !default;
+$dropdown-height: $string-height !default;
+
+// calendar component
+// ----------------------------------------
+$calendar-action-offset: 4px 10px;
+
+// date component
+// ----------------------------------------
+$date-dropdown-width: 260px;

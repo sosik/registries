@@ -1,0 +1,30 @@
+.x-calendar{
+	.x-controlls{
+		background-color: $calendar-controll-background-color;
+	}
+	table th{
+		background-color: $calendar-controll-background-color;
+	}
+
+	.x-other{
+		color: $calendar-other-color;
+	}
+
+	[tabindex]{
+		outline: none;
+		&:hover, &:focus{
+			background-color: $calendar-hover-color;
+		}
+	}
+
+	.x-selected{
+		background-color: $calendar-selected-background-color;
+		color: $calendar-selected-color;
+	}
+	
+	.x-current{
+		background-color: $calendar-current-background-color;
+		color: $calendar-current-color;
+	}
+	
+}

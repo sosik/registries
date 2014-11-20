@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:services')
-	.factory('xpsui:DateUtil',['xpsui:log', '$translate', function(log, $translate) {
+	.factory('xpsui:DateUtil',['xpsui:logging', '$translate', function(log, $translate) {
 		
 		function getDateFromYYYYMMDD(value){
 			var year = value.substring(0,4),

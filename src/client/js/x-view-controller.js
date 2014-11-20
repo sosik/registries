@@ -21,7 +21,7 @@
 							title: 'Priezvisko'
 						},
 						birthDate: {
-							type: 'string',
+							type: 'date',
 							title: 'Dátum narodenia'
 						}
 						
@@ -50,7 +50,7 @@
 			baseData: {
 				name: 'meno',
 				surName: 'priezvisko',
-				birthDate: '21.12.2014'
+				birthDate: '20141212'
 			}
 		};
 

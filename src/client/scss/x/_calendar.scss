@@ -1,0 +1,72 @@
+.x-calendar {
+	font-size: em($font-size-small);
+	outline: none;
+
+	.x-controlls{
+		.x-controlls-header {
+			width: 100%;
+			display: table;
+			> div {
+				display: table-cell;
+			}
+		}
+		.x-action-previous, .x-action-next{
+			text-align: center;
+			span{
+				display: none;
+			}
+		}
+
+		.x-action-previous{
+			&:after{
+				@include icon-font($icon-chevron-left);
+			}
+		}
+		.x-action-next{
+			
+			&:after{
+				@include icon-font($icon-chevron-right);
+			}
+		}
+		.x-action-header{
+			text-align: center;
+		}
+	}
+
+	.x-action-current-day{
+		text-align: center;
+	}
+
+	[tabindex]{
+		outline: none;
+		cursor: pointer;
+		&:hover{
+			background-color: #ddd;
+		}
+		padding: $calendar-action-offset;
+	}
+
+	table{
+		border-collapse: collapse;
+		border-spacing: 0;
+
+		td,th{
+			padding: $calendar-action-offset;
+		}
+		th{
+			font-weight: normal;
+		}
+		td{
+			text-align: right;
+		}
+		width: 100%;
+	}
+
+	.x-month{
+		text-align: center;
+	}
+	.x-year{
+		text-align: center;
+	}
+}
+

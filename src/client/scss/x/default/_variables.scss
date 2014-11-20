@@ -10,6 +10,8 @@ $color4: #E8700C;
 $color5: #FF580D;
 $color-black: #333333;
 $color-white: #ffffff;
+$color-grey: #dddddd;
+$color-grey-light: #eeeeee;
 
 // modalview
 $modlaview-bg-color: rgba(0,0,0,0.5);
@@ -28,3 +30,20 @@ $header-navigation-link-active: lighten($header-bg, 30%);
 $main-menu-bg: $color-black;
 $main-menu-color: $color-white;
 $main-item-hover-color: $color1;
+
+// string menu
+$string-border-color: $color-grey; 
+$string-background-color: $color-grey-light; 
+
+//dropdown
+$dropdown-border-color: $color-grey; 
+$dropdown-shadow-color: 0 5px 10px rgba(0,0,0,.3);
+
+//calendar
+$calendar-controll-background-color: $color-grey;
+$calendar-other-color: $color-grey;
+$calendar-hover-color: $color1;
+$calendar-selected-background-color: $color-black;
+$calendar-selected-color: $color-white;
+$calendar-current-color: $color-white;
+$calendar-current-background-color: $color4;

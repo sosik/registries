@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiDateView', ['xpsui:logging', function(log) {
+	.directive('xpsuiDateView', ['xpsui:logging','xpsui:DateUtil', function(log, dateUtil) {
 		return {
 			restrict: 'A',
 			require: ['ngModel'],
@@ -16,7 +16,7 @@
 				elm.addClass('x-date-view');
 
 				ngModel.$render = function() {
-					view.text(ngModel.$viewValue || ' ');	
+					view.text(dateUtil.formatter(ngModel.$viewValue) || ' ');	
 				};
 
 				elm.append(view);

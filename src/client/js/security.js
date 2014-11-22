@@ -656,7 +656,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 						crit.map(function(c) {
 							if (c && c.attribute && c.attribute.path) {
-								if (c.attribute.render.objectLink){
+								if (c.attribute.render && c.attribute.render.objectLink){
 									retval.push({
 										schema: c.schema,
 										f : c.attribute.path,

@@ -1,0 +1,17 @@
+// screens
+// ----------------------------------------
+$screen-min: 320px;
+//extra small devices
+$screen-xs: 768px; 
+$screen-xs-max: $screen-xs;
+//small devices
+$screen-sm: 1024px; 
+$screen-sm-max: $screen-sm;
+$screen-sm-min: $screen-xs + 1;
+//middle devices
+$screen-md-min: $screen-sm + 1;
+
+
+// menu
+// ----------------------------------------
+$menu-width: 100px;

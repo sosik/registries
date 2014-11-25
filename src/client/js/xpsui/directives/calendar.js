@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiCalendar',['xpsui:logging', 'xpsui:DateUtil', '$translate', function(log, dateUtil, $translate) {
+	.directive('xpsuiCalendar',['xpsui:logging', 'xpsui:DateUtil', '$translate', 'xpsui:DropdownFactory', function(log, dateUtil, $translate, dropdownFactory) {
 		var keys = {
 	            tab:      9,
 	            enter:    13,
@@ -38,7 +38,7 @@
 		component.prototype.setInput = function(element){
 			var self = this;
 			this.$inputElement = element;
-
+			
 			this.$inputElement.on('change',function(){
 				var value = dateUtil.parser(
 					angular.element(this).val()
@@ -149,17 +149,17 @@
 		
 		component.prototype._handleKeyDown = function($el, event){
 			switch (event.keyCode) {
-				case keys.left:
+				case keys.up:
 					this.previousAction();
 					this.setFocus(this.$element);
 					event.stopPropagation();
 					break;
-				case keys.right:
+				case keys.down: //keys.down
 					this.nextAction();
 					this.setFocus(this.$element);
 					event.stopPropagation();
 					break;
-				case keys.down:
+				case keys.right: //keys.right
 					if(!this.$focusElement){
 						this.setFocus(
 							angular.element(this.getTabElements()[0])
@@ -179,7 +179,7 @@
 					}
 					event.stopPropagation();
 					break;
-				case keys.up:
+				case keys.left://keys.left
 					if(!this.$focusElement){
 						this.setFocus(
 							angular.element(this.getTabElements()[0])
@@ -583,28 +583,26 @@
 		
 		return {
 			restrict: 'A',
-			require: ['?ngModel','xpsuiCalendar','xpsuiDateEdit','?xpsuiDropdown'],
-			// controller: function($scope, $element) {
-			// 	var datapicker = new component();
-			// 	datapicker.setRootElement($element);
-				
-			// 	return datapicker;
-			// },
+			require: ['?ngModel','xpsuiCalendar','xpsuiDateEdit'],
 			controller: component,
 			link: function(scope, elm, attrs, ctrls) {
 				// var xpsuiCtrl = ctrls[0];
 				var ngModel = ctrls[0];
 				var xpsuiDatapickerCtrl = ctrls[1];
 				var xpsuiTextInputCtrl = ctrls[2];
-				var xpsuiDropdownCtrl = ctrls[3];
+				var dropdown = dropdownFactory.create(elm);
+
+				dropdown.setInput(xpsuiTextInputCtrl.getInput())
+					.render()
+				;
 
 				elm.addClass('x-calendar-wrapper');
 
 				xpsuiDatapickerCtrl.setRootElement(elm);
 				xpsuiDatapickerCtrl.setInput(xpsuiTextInputCtrl.getInput());
 				
-				if(xpsuiDropdownCtrl){
-					xpsuiDatapickerCtrl.setDropdown(xpsuiDropdownCtrl);
+				if(dropdown){
+					xpsuiDatapickerCtrl.setDropdown(dropdown);
 				} else {
 					xpsuiDatapickerCtrl.render();
 				}

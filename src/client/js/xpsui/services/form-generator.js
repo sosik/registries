@@ -36,10 +36,15 @@
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
 				if(schemaFragment.type === "string"){
-					field = angular.element('<div xpsui-string-edit></div>');
-				}
-				if(schemaFragment.type === "date"){
-					field = angular.element('<div xpsui-date-edit xpsui-dropdown xpsui-calendar ></div>'); //  
+					if(schemaFragment.enum){
+						field = angular.element('<div xpsui-select-edit></div>');
+						field.data('enum', schemaFragment.enum);
+						field.data('enumTransCodes', schemaFragment.enumTransCodes);
+					} else {
+						field = angular.element('<div xpsui-string-edit></div>');
+					}
+				} else if(schemaFragment.type === "date"){
+					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>'); //  xpsui-dropdown  
 				}
 				
 				field.attr('ng-model', modelPath);
@@ -47,7 +52,11 @@
 
 			} else {
 				if(schemaFragment.type === "string"){
-					field = angular.element('<div xpsui-string-view></div>');
+					//if(schemaFragment.enum){
+					//	field = angular.element('<div xpsui-select-view></div>');
+					//} else {
+						field = angular.element('<div xpsui-string-view></div>');
+					//}
 				}
 				if(schemaFragment.type === "date"){
 					field = angular.element('<div xpsui-date-view></div>');

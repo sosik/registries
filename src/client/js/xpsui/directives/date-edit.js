@@ -26,8 +26,6 @@
 				var formControl = ctrls[1] || {};
 				var selfControl = ctrls[2];
 
-				console.log(ctrls);
-
 				var input = selfControl.getInput();
 
 				elm.addClass('x-control');

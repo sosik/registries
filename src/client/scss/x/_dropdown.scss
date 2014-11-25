@@ -6,6 +6,10 @@
 			display: block;
 		}
 	}
+
+	&.x-control input{
+		padding-right: $dropdown-action-button-width;
+	}
 	
 	.x-dropdown-content{
 		display: none;
@@ -17,6 +21,7 @@
 		border-width: 1px;
 		border-style: solid;
 		border-color: #ddd;
+		z-index: 1;
 	}
 	
 	.x-dropdown-action{

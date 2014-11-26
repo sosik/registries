@@ -1,4 +1,4 @@
-angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src', 'psui-selectbox', 'xpsui'])
+angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-objectlink', 'psui-default-src', 'psui-selectbox', 'xpsui','generators'])
 .controller('registry.customTemplateCtrl', ['$scope', '$routeParams', '$http', 'schema-utils.SchemaUtilFactory',
 		'psui.notificationFactory', function($scope, $routeParams, $http, schemaUtilFactory, notificationFactory) {
 		$scope.model = {};
@@ -7,6 +7,34 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		$http({ method : 'GET',url: '/udao/getBySchema/'+$routeParams.schema+'/'+ $routeParams.id})
 		.success(function(data, status, headers, config){
 			$scope.model = data;
+		}).error(function(err) {
+			notificationFactory.error(err);
+		});
+}])
+.controller('registry.customGenerateToTemplateCtrl', ['$scope', '$routeParams', '$http','generators.Generator', 'schema-utils.SchemaUtilFactory',
+		'psui.notificationFactory', function($scope, $routeParams, $http, generator,schemaUtilFactory, notificationFactory) {
+		$scope.model = {};
+		// $scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
+
+		$scope.save=function(){
+			generator.save($scope.model,$routeParams.generateBy,function(err,progess){
+				if(err){
+					notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+				} else
+				notificationFactory.info({translationCode:'registry.succesfully.saved', time:3000});
+			});
+		};
+		// /registry/generated/:schemaFrom/:idFrom/:generateBy/:template
+		$http({ method : 'GET',url: '/udao/getBySchema/'+$routeParams.schemaFrom+'/'+ $routeParams.idFrom})
+		.success(function(data, status, headers, config){
+			$scope.model = data;
+			generator.generate(data,$routeParams.generateBy,function(err,progess){
+				if(err){
+					notificationFactory.error({translationCode:'registry.unsuccesfully.generated', time:3000});
+				} else
+				notificationFactory.info({translationCode:'registry.succesfully.generated', time:3000});
+			});
+
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
@@ -84,7 +112,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		.error(function(data, status, headers, config) {
 			notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
 		});
-	}
+	};
 
 	$scope.$on('psui:model_changed', function() {
 		$scope.save();
@@ -103,7 +131,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			notificationFactory.error(err);
 		});
 
-	})
+	});
 }])
 .filter('dateToString', function() {
 	return function(value) {
@@ -120,7 +148,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			return value;
 		}
 		return '';
-	}
+	};
 })
 .directive('svfSpecialNote', ['$http', function($http) {
 	return {
@@ -130,7 +158,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			var ngModel = controller[0];
 			var c = 0;
 			ngModel.$render = function() {
-				elm.text('Nahrávam...' + ++c);
+				elm.text('Nahrávam...' +c);
 
 				console.log(ngModel.$viewValue);
 				var crits = [];
@@ -152,7 +180,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					if (type === 'hosťovanie') {
 						type = 'H';
 					} else if (type === 'zahr. transfér') {
-						type = 'T'
+						type = 'T';
 					} else {
 						elm.text('');
 						return;
@@ -175,7 +203,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				var clickAction = attr.confirmedClick;
 				element.bind('click',function (event) {
 					if ( window.confirm(msg) ) {
-						scope.$eval(clickAction)
+						scope.$eval(clickAction);
 					}
 				});
 			}
@@ -195,10 +223,10 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			var oldValue = '';
 
 			var commit = function() {
-			}
+			};
 
 			var cancel = function() {
-			}
+			};
 
 			var ngModel = null;
 			if (controller[0]) {
@@ -239,7 +267,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					});
 */					changeMode('view');
 					scope.$emit('psui:model_changed');
-				}
+				};
 
 				cancel = function() {
 /*					elm.val(oldValue);
@@ -249,13 +277,13 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					$parse(attrs.ngModel).assign(scope, oldValue);
 					console.log(oldValue);
 					changeMode('view');
-				}
+				};
 
 			}
 
 			var psuiFormCtrl;
 			if (controller[1]) {
-				var psuiFormCtrl = controller[1];
+				 psuiFormCtrl = controller[1];
 
 				scope.$watch(
 					psuiFormCtrl.getActiveControl,
@@ -350,7 +378,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 						psuiFormCtrl.setActiveControl(elm);
 					});
 				}
-			}
+			};
 
 			commitBtn.on('click', function(evt) {
 				commit();
@@ -417,7 +445,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 			changeMode(mode);
 		}
-	}
+	};
 }])
 .directive('psuiAppendToArray', ['$parse', 'psui.notificationFactory', function($parse, notifications) {
 	return {
@@ -437,7 +465,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				evt.preventDefault();
 			});
 		}
-	}
+	};
 }])
 .directive('psuiFormActionLink', ['schema-utils.SchemaUtilFactory',
 		function(schemaUtilFactory) {
@@ -456,7 +484,27 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			});
 
 		}
-	}
+	};
+}])
+
+.directive('psuiFormGenerateActionLink', ['schema-utils.SchemaUtilFactory',
+		function(schemaUtilFactory) {
+	return {
+		restrict: 'A',
+		link: function(scope, elm, attrs, ctrls) {
+			var options = scope.$eval(attrs.psuiOptions);
+			var modelPath = scope.$eval(attrs.psuiModel);
+
+			elm.append('<span>'+(options.title)+'</span>');
+
+			scope.$watch(attrs.psuiModel+'.id', function(nv, ov) {
+				if (nv) {
+					attrs.$set('href', '/#/registry/generated/' + schemaUtilFactory.encodeUri(options.schemaFrom)+ '/' +nv+ '/' +options.generateBy+'/'+options.template);
+				}
+			});
+
+		}
+	};
 }])
 .directive('psuiSchemaForm', ['$compile', function($compile) {
 	return {
@@ -561,7 +609,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				render();
 			});
 		}
-	}
+	};
 }])
 .directive('psuiArrayControl', ['$compile', function($compile) {
 	return {
@@ -580,20 +628,20 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 
 			var modelChanged = function() {
 				console.log('model changed', scope.ngModel);
-			}
+			};
 
 			scope.$watchCollection('ngModel', modelChanged);
 
 			scope.removeByIndex = function(idx) {
 				scope.ngModel.splice(idx,1);
-			}
+			};
 
 			scope.appendNew = function() {
 				scope.ngModel.push({});
-			}
+			};
 
 		}
-	}
+	};
 }])
 .directive('psuiUnique', ['$http', 'schema-utils.SchemaUtilFactory', function($http, schemaUtilFactory) {
 	var latestId = 0;
@@ -635,7 +683,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 										ngModel.$setValidity('psuiUnique', true);
 									}
 								};
-						};
+						}
 
 						$http(conf).then(factory(++latestId));
 
@@ -644,7 +692,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				);
 			}
 		}
-	}
+	};
 }])
 .directive('psuiSchemaForm2', ['$compile', function($compile) {
 	return {
@@ -674,11 +722,23 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 						var action = options.schema.clientActions[actionIndex];
 
 						var actionElm;
-						if (action.__DIRECTIVE__) {
-							actionElm = angular.element('<a psui-form-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+options.modelPath+'"></a>');
-							$compile(actionElm)(scope);
-							contentActionsHolder.append(actionElm);
+						console.log('xxxxxxx'+action.__DIRECTIVE__);
+						switch (action.__DIRECTIVE__){
+							case 'action-link':
+								actionElm = angular.element('<a psui-form-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+options.modelPath+'"></a>');
+								$compile(actionElm)(scope);
+								contentActionsHolder.append(actionElm);
+							break;
+							case 'generate-action-link':
+								actionElm = angular.element('<a psui-form-generate-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+options.modelPath+'"></a>');
+								$compile(actionElm)(scope);
+								contentActionsHolder.append(actionElm);
+							break;
+							default:
+							console.error('Unknown directive value',action.__DIRECTIVE__);
+							break;
 						}
+
 					}
 				}
 
@@ -762,7 +822,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				render();
 			});
 		}
-	}
+	};
 }])
 .directive('psSchemaForm', ['$compile', function($compile){
 	return {
@@ -781,7 +841,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				var tableElm = angular.element('<table class="ps-schema-form-table"></table>');
 				var headerElm = angular.element('<tr class="ps-schema-form-header"><td colspan=2>'+title+'</td></tr>');
 				return tableElm.append(headerElm);
-			}
+			};
 
 			var generateTableRows = function(tableElm, schemaPart, modelPath) {
 				angular.forEach(schemaPart.properties, function(value, key){
@@ -789,9 +849,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					$compile(rowElm)(scope);
 					tableElm.append(rowElm);
 				});
-
-
-			}
+			};
 
 			var doLink = function() {
 				if (!scope || !scope.formSchema) {
@@ -809,7 +867,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 					}
 					//element.append('<div class="ps-table-row"><div class="ps-table-label">Priezvisko:</div><div class="ps-table-value"><ps-gui-clickedit-text show-buttons="false" ng-model="tezt">Stárek</ps-gui-clickedit-text></div></div>');
 				});
-			}
+			};
 
 			scope.$watch(function() {return scope.formSchema}, function() {
 				doLink();

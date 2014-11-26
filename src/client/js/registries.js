@@ -34,6 +34,11 @@ angular.module('registries', [
 	$routeProvider.when('/registry/custom/:template/:schema/:id', {templateUrl: function(params) {
 		return '/dataset/get/partials/' + params.template;
 	}, controller: 'registry.customTemplateCtrl',permissions:['Registry - read']});
+
+	$routeProvider.when('/registry/generated/:schemaFrom/:idFrom/:generateBy/:template', {templateUrl: function(params) {
+		return '/dataset/get/partials/' + params.template;
+	}, controller: 'registry.customGenerateToTemplateCtrl',permissions:['Registry - read']});
+
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 }])
 .config(['$httpProvider', function ($httpProvider) {

@@ -150,7 +150,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
 
-				if (err){res.send(500);log.err(err);return;}
+				if (err){res.send(500);log.error(err);return;}
 				objectTools.removeNullProperties(obj);
 
 				_dao.save(obj, function(err, data){

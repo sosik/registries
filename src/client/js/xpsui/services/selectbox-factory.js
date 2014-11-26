@@ -27,7 +27,6 @@
 			this.dataset = null;
 			this.isRendered = false;
 			this.$searchInput = null;
-			this.itemsIndex = [];
 			this.selected = null;
 
 			this.options = angular.extend({}, Selectbox.DEFAULTS, options || {} );
@@ -37,9 +36,15 @@
 			// show search input
 			useSearchInput: true,
 			// shearch input keydown - waiting time
-			filterTimeout: 20,
+			filterTimeout: 300,
+			// info line:
+			showInfo: true,
 			// callback
-			onSelected: function(index, key, value){}
+			onSelected: function(index, key, value){},
+			// onBlur close
+			closeOnBlur: true,
+			// scroll bufer
+			scrollBuffer: 40
 		};
 		
 		Selectbox.prototype.getElement =  function(){
@@ -77,8 +82,25 @@
 
 		Selectbox.prototype.setDataset = function(dataset){
 			this.dataset = dataset;
-			this.resetItems();
 
+			return this;
+		}
+
+		Selectbox.prototype.setStore = function(store){
+			var self = this;
+
+			this.setDataset( new DataSet(store, {
+				beforeLoad: function(dataSet){
+					self.onBeforeLoad();
+				},
+				loaded: function(dataSet, newData){
+					self.onLoaded(newData);
+				},
+				reset: function(){
+					self.onReset();
+				}
+			}));
+			
 			return this;
 		}
 
@@ -103,9 +125,8 @@
 
 			if(this.options.useSearchInput && this.$searchInput.val()){
 				this.$searchInput.val('');
-				this.resetItems();
-				this.renderItems();
-
+				this.doReset();
+				this.doLoad();
 			}
 
 			if(this.options.useSearchInput){
@@ -119,12 +140,15 @@
 			this.unselectItem();
 		};
 
+		Selectbox.prototype.loading = function(){
+			this.dataset.getData();
+		};
+
+
 		Selectbox.prototype.unselectItem = function(){
 			angular.element(
 				this.$element[0].querySelector('.x-selected')
 			).removeClass('x-selected');
-
-			this.selected = null;
 		};
 
 		Selectbox.prototype.selectItem = function($el){
@@ -132,13 +156,6 @@
 			this.selected = $el.data('index');
 			$el.addClass('x-selected');
 		};
-
-
-		Selectbox.prototype.resetItems = function(){
-			this.itemsIndex = Array.apply(null, {length: this.dataset.data.length})
-				.map(Number.call, Number)
-			;
-		}
 
 		// container where selectbox is rendered. 
 		// e.g. dropdown popup
@@ -164,10 +181,49 @@
 
 				this.$itemsElement = angular.element('<div class="x-selectbox-items"></section>');
 				this.$selectboxElement.append(this.$itemsElement);
+				this._handleScrollEvent();
 
-				this.renderItems();
+				this.renderInfo();
 
 				this.getRootElement().append(this.$selectboxElement);
+
+				this.doLoad();
+			}
+		};
+
+		Selectbox.prototype._handleScrollEvent = function(){
+			var self = this;
+			this.$itemsElement.on('scroll',function(){
+				if (this.scrollHeight - this.scrollTop <= this.offsetHeight + self.options.scrollBuffer) {
+		    		self.doLoad();
+		  		}
+			});
+		}
+
+		Selectbox.prototype.doLoad = function(){
+			this.dataset.load();
+		};
+
+		Selectbox.prototype.doReset = function(){
+			this.dataset.reset();
+		};
+
+		Selectbox.prototype.onBeforeLoad = function(){
+			this.setInfoText($translate.instant('Loading...'));
+			this.setInfoNumFromText('');
+			this.$element.addClass('x-loading');
+		};
+
+		Selectbox.prototype.onLoaded = function(newData){
+			this.renderItems(newData);
+			this.$element.removeClass('x-loading');
+			this.setInfoNum();
+		};
+
+		Selectbox.prototype.onReset = function(){
+			this.selected = null;
+			if( this.$itemsElement.length ){
+				this.$itemsElement.empty();
 			}
 		};
 
@@ -183,35 +239,58 @@
 			}
 		};
 
-		Selectbox.prototype.renderItems = function(){
-			this.$itemsElement.empty();
-			this.unselectItem();
+		Selectbox.prototype.renderInfo = function(){
+			if(this.options.showInfo){
+				var $footer= angular.element('<footer></footer>');
 
-			if (this.itemsIndex.length < 1) {
-				return;
+				this.$infoTextElement = angular.element('<span></span>');
+				$footer.append(this.$infoTextElement);
+				this.$infoElement = angular.element('<span></span>');
+				$footer.append(this.$infoElement);
+				this.$selectboxElement.append($footer);
 			}
-			
+		};
+
+		Selectbox.prototype.setInfoText = function(text){
+			if (this.$infoTextElement) {
+				this.$infoTextElement.text(text);
+			}
+		};
+
+		Selectbox.prototype.setInfoNumFromText = function(value){
+			if (this.$infoElement) {
+				this.$infoElement.text(value);
+			}
+		};
+		
+		Selectbox.prototype.setInfoNum = function(){
+			if (this.$infoElement) {
+				this.setInfoText($translate.instant('Rows'));
+				this.$infoElement.text(this.dataset.data.length + 
+					(!this.dataset.loadDone ? "+" : "")
+				);
+			}
+		};
+
+		Selectbox.prototype.renderItems = function(data){
 			var self = this;
-			
-			for (var i = 0; i < this.itemsIndex.length; i++) {
-				var $item = this.generateElement(this.itemsIndex[i]);
+			var offset = this.dataset.getOffset();
+			for (var i = 0; i < data.length; i++) {
+				var $item = this.generateElement(data[i]);
 				$item.addClass('x-item');
-				$item.data('index', i);
+				$item.data('index', offset++);
 				$item.attr('tabindex', -1);
 				
 				this.$itemsElement.append($item);
 				this._bindEventHandlers($item);
 			}
-
 		};
 
-		Selectbox.prototype.generateElement = function(index) {
-			var itemData = this.dataset.data[index];
-
-			if (typeof itemData === 'string') {
-				return angular.element('<div>' + itemData + '</div>');
-			} else if ((typeof itemData === 'object') && (typeof itemData.k !== 'undefined') && (typeof itemData.v !== 'undefined')) {
-				return angular.element('<div>'+ itemData.v + ' - ' + itemData.k + '</div>');
+		Selectbox.prototype.generateElement = function(item) {
+			if (typeof item === 'string') {
+				return angular.element('<div>' + item + '</div>');
+			} else if ((typeof item === 'object') && (typeof item.k !== 'undefined') && (typeof item.v !== 'undefined')) {
+				return angular.element('<div>'+ item.v + '</div>');
 			}
 		};
 
@@ -253,7 +332,9 @@
 		};
 		
 		Selectbox.prototype._handleBlur = function($el, event){
-			this.dropdown && this.dropdown.close();
+			if(this.options.closeOnBlur){
+				this.dropdown && this.dropdown.close();	
+			}
 		};
 
 		Selectbox.prototype._handleMouseover = function($el, event){
@@ -297,7 +378,7 @@
 					event.preventDefault();
 
 					if(this.selected === null) {
-						this.selected = this.itemsIndex.length;
+						this.selected = this.dataset.data.length;
 					} else if(this.selected <= 0 ){
 						return "";
 					}
@@ -313,7 +394,7 @@
 
 					if(this.selected === null) {
 						this.selected = -1;
-					} else if(this.selected + 1 >= this.itemsIndex.length ){
+					} else if(this.selected + 1 >= this.dataset.data.length ){
 						return "";
 					}
 
@@ -339,36 +420,20 @@
 							self.actionFilter(self.$searchInput.val());
 						}, this.options.filterTimeout);
 						event.stopPropagation();
-						//event.preventDefault();
 					}
 			}
 		};
 
 		Selectbox.prototype.actionFilter = function(value){
-			this.itemsIndex = [];
-			var regExp = new RegExp('^' + value,'i');
-			for (var i = 0; i < this.dataset.data.length; ++i) {
-				if (typeof this.dataset.data[i] === 'string') {
-					if (regExp.test(this.dataset.data[i]))	 {
-						this.itemsIndex.push(i);
-					}
-				} else if (typeof this.dataset.data[i] === 'object' && this.dataset.data[i].k && this.dataset.data[i].v) {
-					if (regExp.test(this.dataset.data[i].v)) {
-						this.itemsIndex.push(i);
-					}
-				} else {
-					this.itemsIndex.push(i);
-				}
-			}
-
-			this.renderItems();
+			this.dataset.setSearchValue(value);
+			this.doLoad();
 		}
 
 
 		// the item is selected
 		Selectbox.prototype.actionSelected = function(){
 			if(this.selected !== null){
-				var val = this.dataset.data[this.itemsIndex[this.selected]];
+				var val = this.dataset.data[this.selected];
 				this.options.onSelected(this.selected, val.v, val.k);
 			}
 			
@@ -385,14 +450,92 @@
 		};
 
 		/**
-		 * Dataset
+		 * DataSet
 		 */
+		function DataSet(store, options){
+			this.store = store;
+			this.options = angular.extend({}, DataSet.DEFAULTS, options || {} );
 
-		function Dataset(){
 			this.data = [];
+
+			// offset of paging  
+			// e.g. n * this.option.limit
+			this.offset = 0;
+			// serach value
+			this.serachValue = null;
+			// load paging
+			this.loadDone = false;
+		};
+
+		DataSet.DEFAULTS = {
+			limit: 100,
+			beforeLoad: function(dataSet){},
+			loaded: function(dataSet, newData){},
+			reset: function(){},
+		};
+
+		// get limit plus one
+		DataSet.prototype.getLimit = function(value){
+			return this.options.limit + 1;
+		};
+
+		DataSet.prototype.getOffset = function(value){
+			return this.offset * this.options.limit;
+		};
+
+		DataSet.prototype.getSearchValue = function(){
+			return this.serachValue;
+		};
+
+		DataSet.prototype.setSearchValue = function(value){
+			this.reset();
+			this.serachValue = value;
+			return this;
+		};
+
+		DataSet.prototype.reset = function(){
+			this.data = [];
+			this.loadDone = false;
+			this.offset = 0;
+			this.serachValue = null;
+			this.options.reset();
+			return this;
+		};
+
+		DataSet.prototype.load = function(){
+			var self = this;
+			if (!this.loadDone) {
+				
+				this.options.beforeLoad(this);
+
+				this.store.load(this, function(data){
+					self.loaded(data);
+				});
+			}
+		};
+
+		DataSet.prototype.loaded = function(data){
+			if(data.length <= this.options.limit){
+				this.loadDone = true;
+			} else {
+				// remove limit plus one element
+				data.pop();
+			}
+			
+			this.data = this.data.concat(data);
+			this.options.loaded(this,data);
+			this.offset++;
 		}
 
-		Dataset.prototype.setData = function(data, translateCode){
+		/**
+		 * ArrayStore
+		 */
+
+		function ArrayStore(){
+			this.data = [];
+		};
+
+		ArrayStore.prototype.setData = function(data, translateCode){
 			if (translateCode) {
 				// there are transCodes
 				for (var i = 0; i < data.length; i++) {
@@ -409,15 +552,35 @@
 					})
 				}
 			}
-		}
+		};
 
+		ArrayStore.prototype.load = function(dataset, callback){
+			var self = this;
+
+			this.timeout && $timeout.cancel(this.timeout);
+
+			this.timeout = $timeout(function(){
+				var data = [];
+
+				var regExp = new RegExp('^' + (dataset.getSearchValue() || '') ,'i');
+				for (var i = 0; i < self.data.length; ++i) {
+					if (regExp.test(self.data[i].v)) {
+						data.push(self.data[i]);
+					}
+				}
+
+				callback(
+					data.slice(dataset.getOffset(), dataset.getLimit() + dataset.getOffset())
+				);
+			}, 0);
+		};
 
 		return {
 			create : function(element, options) {
 				return new Selectbox(element, options);
 			},
-			createDataset: function(){
-				return new Dataset();
+			createArrayStore: function(){
+				return new ArrayStore();
 			}
 		}
 	

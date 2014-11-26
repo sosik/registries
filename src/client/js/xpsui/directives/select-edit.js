@@ -55,7 +55,7 @@
 				// selectobx
 				var selectbox = selectboxFactory.create(elm, {
 					onSelected: function(index, key, value){
-						input.val(key + ' - ' + value);
+						input.val(value);
 						console.log('onSelected');
 						console.log(arguments);
 					}
@@ -64,9 +64,9 @@
 				selectbox.setDropdown(dropdown);
 
 				// store
-				var dataset = selectboxFactory.createDataset();
-				dataset.setData(elm.data('enum'), elm.data('enumTransCodes'));
-				selectbox.setDataset(dataset);
+				var store = selectboxFactory.createArrayStore();
+				store.setData(elm.data('enum'), elm.data('enumTransCodes'));
+				selectbox.setStore(store);
 
 
 				log.groupEnd();

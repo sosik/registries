@@ -35,11 +35,15 @@ $main-item-hover-color: $color1;
 
 // string menu
 $string-border-color: $color-grey; 
-$string-background-color: $color-grey-light; 
+$string-background-color: transparent; 
+
+// inline edit
+$inlineedit-background: $string-border-color;
+$inlineedit-penic-background: rgba(red($string-border-color),green($string-border-color),blue($string-border-color),.3);
 
 //dropdown
 $dropdown-border-color: $color-grey; 
-$dropdown-shadow-color: 0 5px 10px rgba(0,0,0,.3);
+$dropdown-shadow-color: 0 5px 10px rgba(red($string-border-color),green($string-border-color),blue($string-border-color),.8);
 
 //calendar
 $calendar-controll-background-color: $color-grey;
@@ -49,3 +53,6 @@ $calendar-selected-background-color: $color-black;
 $calendar-selected-color: $color-white;
 $calendar-current-color: $color-white;
 $calendar-current-background-color: $color4;
+
+// selectbox
+$selectbox-background-color: $string-border-color;

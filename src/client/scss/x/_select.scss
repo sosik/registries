@@ -32,6 +32,10 @@
 		 margin-top: 0px;
 	}
 
+	&.x-loading .x-selectbox header:after {
+		@include spin();
+	}
+
 	.x-selectbox{
 		outline: none;
 		
@@ -44,6 +48,7 @@
 				z-index: 1;
 				line-height: $dropdown-height;
 				padding: 0px $dropdown-offset;
+				// @include spin();
 			}
 		}
 
@@ -61,6 +66,18 @@
 			outline: none;
 			cursor: pointer;
 
+		}
+		footer{
+			@include clearfix();
+			
+			font-size: em($font-size-small);
+			span{
+				display: inline-block;
+				padding: $string-offset;
+				&:last-child{
+					float: right;
+				}
+			}
 		}
 	}
 

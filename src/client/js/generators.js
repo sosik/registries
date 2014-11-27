@@ -12,6 +12,11 @@ function bergerTable (teams,terms) {
 	var floatTable = [];
 	var n, i, increment=1, atype=1, minmove=0, flipcolors=0;
 
+
+	if (teams.length%2===1){
+		teams.push({complement:true});
+	}
+
 	n = teams.length;
 
 
@@ -68,7 +73,14 @@ function bergerTable (teams,terms) {
 			if (i===0){
 					match={home:match.visitors,visitors:match.home,board:i};
 			}
-			outRound.matches.push(match);
+
+			if (match.home.complement){
+				outRound.notPlaying=match.visitors;
+			} else if (match.visitors.complement){
+				outRound.notPlaying=match.home;
+			} else {
+				outRound.matches.push(match);
+			}
 
 				if (minmove && (i===0) && (r % 2)===0)
 							 i = 1;
@@ -91,17 +103,25 @@ function bergerTable (teams,terms) {
 	return outRounds;
 }
 	function saveBerger(entity,callback){
+
 		var saveSchema= schemaUtilFactory.encodeUri("uri://registries/refereeReport#new");
 		var saved=0;
 		var all=[];
+
+
+		entity.saving=true;
+
 		entity.generated.map(function(round){
 			round.matches.map(function(match){
 				var toSave={};
 				toSave.baseData={};
 				toSave.baseData.homeClub=match.home;
 				toSave.baseData.awayClub=match.visitors;
-				toSave.baseData.matchDate={registry:"schedules",oid:round.term.id};
-				// toSave.baseData.competitionPart={registry:"competitionParts",oid:entity.id};
+				toSave.baseData.matchRound={registry:"schedules",oid:round.term.id};
+				toSave.baseData.competition=entity.baseData.competition;
+				toSave.baseData.competitionPart={registry:"competitionParts",oid:entity.id};
+				toSave.baseData.matchDate=round.term.baseData.date;
+				toSave.baseData.state='Otvorený';
 				all.push( $http({url: '/udao/saveBySchema/'+saveSchema, method: 'PUT',data: toSave}));
 			});
 		});
@@ -125,7 +145,9 @@ function bergerTable (teams,terms) {
 				sortBy: [ { f:"baseData.date", o: "asc"}]
 			}
 		}).success(function(terms){
-			entity.generated=bergerTable(entity.listOfTeam.team,terms);
+			var teams=entity.listOfTeam.team;
+
+			entity.generated=bergerTable(teams,terms);
 			callback();
 		}).error(function(err){
 			callback(err);

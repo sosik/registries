@@ -60,7 +60,7 @@ var EventRegistry = function(ctx) {
 		eventData.eventType=eventType;
 		eventData.emitedOn = new Date().getTime();
 		self.emit(eventType,eventData);
-		log.verbose('event emited',eventData);
+		log.verbose('event emited',eventType,eventData.id);
 	};
 
 	this.emitProcesingError=function(error,causeEvent){

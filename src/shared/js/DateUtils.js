@@ -13,6 +13,10 @@ var DateUtils = function() {
 		return null;
 	};
 
+	this.ageOnDate=function(refDate,bornDate){
+		return Math.floor((refDate-bornDate)/1000/(60*60*24)/365.25);
+	};
+
 	this.reverseToDate=function(strReverseDate){
 
 		var year = strReverseDate.substring(0,4);
@@ -127,9 +131,9 @@ var DateUtils = function() {
 						// invalid
 						return null;
 
-					};
-				};
+	};
+};
 
-				module.exports = {
-					DateUtils: new DateUtils()
-				};
+module.exports = {
+	DateUtils: new DateUtils()
+};

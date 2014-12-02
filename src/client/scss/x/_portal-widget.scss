@@ -1,0 +1,22 @@
+.x-portal-widget-edit {
+	border: 1px #FFFBA9 dotted;
+	
+	.xpsui-portal-widget-title-bar {
+		color: gray;
+		background-color: #FFFBA9;
+		padding: 2px 2px 2px 2px;
+		height: 29px;
+	}
+
+	.action-button {
+		border: 1px gray solid;
+		padding: 4px;
+		margin-right: 5px;
+		border-radius: 4px;
+	}
+
+	.action-button:HOVER {
+		background-color: #FDB730;
+	}
+
+}

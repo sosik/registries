@@ -27,7 +27,9 @@ module.exports = function(grunt) {
 	grunt.registerTask('doc', 'yuidoc');
 
 	grunt.registerTask('x', ['uglify', 'copy:xparts', 'copy:xhtml', 'sass:x']);
-	grunt.registerTask('default', ['build', 'unitTest']);
+	grunt.registerTask('default', ['build', 'x', 'unitTest']);
+
+	grunt.registerTask('portal', ['uglify:xpsui', 'build:server', 'build:client'])
 
 	grunt.initConfig({
 		copy: {
@@ -185,6 +187,10 @@ module.exports = function(grunt) {
 			x: {
 				files: ['src/client/**'],
 				tasks: ['x']
+			},
+			portal: {
+				files: ['src/**'],
+				tasks: ['portal']
 			}
 		},
 		_clean: {

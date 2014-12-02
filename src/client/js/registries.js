@@ -18,7 +18,8 @@ angular.module('registries', [
 		'psui-validity-mark',
 		'pascalprecht.translate',
 		'psui-objectlink',
-		'psui-selectbox'
+		'psui-selectbox',
+		'portal-editor'
 ])
 .config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});
@@ -39,6 +40,9 @@ angular.module('registries', [
 		return '/dataset/get/partials/' + params.template;
 	}, controller: 'registry.customGenerateToTemplateCtrl',permissions:['Registry - read']});
 
+	$routeProvider.when('/portal/edit/:id?', {templateUrl: '/partials/portal-edit.html', controller: 'portal-editor.editCtrl',permissions:['Registry - write']});
+	$routeProvider.when('/portal/menu', {templateUrl: '/partials/portal-menu.html', controller: 'portal-editor.menuCtrl',permissions:['Registry - write']});
+	
 	$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
 }])
 .config(['$httpProvider', function ($httpProvider) {

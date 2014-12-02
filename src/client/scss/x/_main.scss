@@ -4,19 +4,16 @@ BODY, HTML {
 	overflow: hidden;
 }
 
-body{
-	font-size: 100%;
-	line-height: 1;
-	font-family: "Arial";
+.x-zero-height {
+	height: 0 !important;
+	overflow: hidden;
+	transition: all 0.5s ease-out;
+	-webkit-transition: all 0.5s ease-out;
 }
 
 * {
 	box-sizing: border-box;
 	@include not-selectable();
-}
-
-input, textarea, keygen, select, button {
-	margin: 0px;
 }
 
 .x-hidden {

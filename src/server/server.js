@@ -1,3 +1,4 @@
+/* jshint node:true */
 'use strict';
 
 // require('look').start();
@@ -33,6 +34,8 @@ var eventRegistryModule=require('./eventRegistry.js');
 
 var eventSchedulerModule=require('./eventScheduler.js');
 
+var portalApiModule = require('./portal/api-controller.js');
+
 var app = express();
 
 // setup request logging
@@ -45,6 +48,7 @@ app.disable('view cache');
 
 // Static data
 app.use(express.static(path.join(process.cwd(), 'build', 'client')));
+app.use('/portal/', express.static(path.join(process.cwd(), 'data', 'portal', 'client')));
 
 mongoDriver.init(config.mongoDbURI, function(err) {
 	if (err) {
@@ -123,6 +127,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/security/profile/update',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req,res){securityCtrl.updateSecurityProfile(req,res);});
 	app.get('/security/profiles',securityService.authenRequired,function(req,res){securityCtrl.getProfiles(req,res);});
 
+	var portalApi = new portalApiModule(mongoDriver);
+	app.post('/portalapi/getByTags', bodyParser.json(), function(req, res) {portalApi.getByTags(req, res);});
 
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));
@@ -146,6 +152,13 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 			allowedOperations: ['get'],
 			fileFilter: null});
 	app.use('/dataset',datasetRepoApp);
+
+	log.verbose('Configuring portal client sub applicaction');
+	var portalClientRepoApp = fsController.create({
+			rootPath: config.paths.portalClient,
+			allowedOperations: ['get'],
+			fileFilter: null});
+//	app.use('/portal', portalClientRepoApp);
 
 //	var server = app.listen(config.webserverPort || 3000, config.webserverHost || "0.0.0.0", function(){
 //		log.info("Http server listening at %j", server.address(), {});

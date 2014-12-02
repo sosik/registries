@@ -5,6 +5,9 @@ var extend = require('extend');
 
 
 var config = {
+	portalPort: 3001,
+	portalHost: 'localhost',
+	portalTemplatesPath: path.join('data', 'portal', 'fragments'),
 	webserverPort: process.env.REGISTRIES_HTTP_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000,
 	webserverSecurePort: process.env.REGISTRIES_HTTPS_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3443,
 	webserverHost: process.env.REGISTRIES_HTTP_IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
@@ -18,7 +21,8 @@ var config = {
 		photos: process.env.REGISTRIES_PATH_PHOTOS || process.cwd() + '/data/photos',
 		uploads: process.env.REGISTRIES_PATH_UPLOADS || process.cwd() + '/data/uploads',
 		schemas: process.env.REGISTRIES_PATH_SCHEMAS || process.cwd() + '/data/schemas',
-		dataset: process.env.REGISTRIES_PATH_DATASET || process.cwd() + '/data/'
+		dataset: process.env.REGISTRIES_PATH_DATASET || process.cwd() + '/data/',
+		portalClient: process.cwd() + '/data/portal/client'
 	},
 	mails:{
 		eventProcessingError: 'peter.ladanyi@unionsoft.sk',

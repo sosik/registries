@@ -1,0 +1,20 @@
+.x-multistring-edit {
+	.x-multistring-element {
+		background-color: $color1;
+		border: 1px #FFCC00 solid;
+		margin: 2px 2px 2px 2px;
+		padding: 2px 2px 2px 2px;
+		font-size: 60%;
+
+		SPAN {
+			color: #000000;
+			padding: 0 0 0 6px;
+		}
+
+		BUTTON {
+			border: 0;
+			background-color: $color1;
+			padding-right: 0;
+		}
+	}
+}

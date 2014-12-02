@@ -1,0 +1,177 @@
+.x-contenteditable {
+	//height: 600px;
+	border: silver solid 1px;
+}
+
+.x-contenteditable-buttons-holder {
+	background-color: #333333;
+	height: 30px;
+	transition: height 0.5s;
+	overflow: hidden;
+	transition: all 0.5s ease-out;
+	-webkit-transition: all 0.5s ease-out;
+	
+	button{
+		color: white;
+		//height:22px;
+		font-size:14px;
+		border:none;
+		border-right:1px solid white;
+		background-color: #333333;
+		margin:4px 0 4px 0;
+		@include icon-font();
+		
+		
+		
+		&:hover{
+			color: #FFCE0D;
+		}
+		
+		&:before {
+			position: relative;
+			top: 1px;
+			display: inline-block;
+		}
+
+		&.x-contenteditable-bold {
+			
+			&:before { 
+				content: $fa-var-bold; 
+			}
+			
+		}
+			
+		&.x-contenteditable-indent {
+			
+			&:before { 
+				content: $fa-var-indent; 
+			}
+				
+		}
+			
+		&.x-contenteditable-outdent {
+			
+			&:before { 
+				content: $fa-var-outdent; 
+			}
+				
+		}
+		
+		&.x-contenteditable-ol {
+			
+			&:before { 
+				content: $fa-var-list-ol; 
+			}
+				
+		}
+		
+		&.x-contenteditable-ul {
+			
+			&:before { 
+				content: $fa-var-list-ul; 
+			}
+				
+		}
+		
+		&.x-contenteditable-italic {
+			
+			&:before { 
+				content: $fa-var-italic; 
+			}
+				
+		}
+			
+		&.x-contenteditable-h {
+			
+			&:before { 
+				content: $fa-var-header; 
+			}
+				
+		}
+			
+		&.x-contenteditable-undo {
+			
+			&:before { 
+				content: $fa-var-undo; 
+			}
+				
+		}
+			
+		&.x-contenteditable-redo {
+			
+			&:before { 
+				content: $fa-var-repeat; 
+			}
+			
+		}
+			
+		&.x-contenteditable-table {
+			
+			&:before { 
+				content: $fa-var-table; 
+			}
+				
+		}
+			
+		&.x-contenteditable-image {
+			
+			&:before { 
+				content: $fa-var-image; 
+			}
+				
+		}
+			
+		&.x-contenteditable-link {
+		
+			&:before { 
+				content: $fa-var-link; 
+			}
+				
+		}
+			
+		&.x-contenteditable-center {
+			
+			&:before { 
+				content: $fa-var-align-center; 
+			}
+				
+		}
+			
+		&.x-contenteditable-left {
+			
+			&:before { 
+				content: $fa-var-align-left; 
+			}
+				
+		}
+			
+		&.x-contenteditable-right {
+			
+			&:before { 
+				content: $fa-var-align-right; 
+			}
+				
+		}
+			
+		&.x-contenteditable-justify {
+			
+			&:before { 
+				content: $fa-var-align-justify; 
+			}	
+
+		}
+		
+		&.x-contenteditable-remove-format {
+			
+			&:before { 
+				content: $fa-var-minus-circle; 
+			}	
+
+		}
+			
+		&.chosen{
+			color: #FFCE0D;
+		}
+	}
+}
+

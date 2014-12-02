@@ -33,7 +33,7 @@
 					d.setYear(year);
 					return d;
 				}
-			}
+			}	
 			return null;
 		}
 		
@@ -50,6 +50,26 @@
 			return null;
 		}
 		
+		function formatterYYYYMMDD(date) {
+			if (date instanceof Date) {
+				var ys = date.getFullYear().toString(10);
+
+				var ms = (date.getMonth() + 1).toString(10);
+				if (ms.length < 2) {
+					ms = '0'.concat(ms);
+				}
+
+				var ds = date.getDate().toString();
+				if (ds.length < 2) {
+					ds = '0'.concat(ds);
+				}
+
+				return ds.conat('.',ms,'.',ys);
+			}
+			
+			return null;
+		}
+
 		function parserDMYYYY(value){
 			var date;
 			
@@ -101,6 +121,18 @@
 				}
 			},
 			
+			formatterToBackend: function(value) {
+				if (value) {
+					var string = formatterYYYYMMDD(value);
+					if(string){
+						return string;
+					}
+
+					return value;
+				}
+				return '';
+			},
+
 			getNameOfMonth: function(month){
 				if (month == 0){
 					return $translate.instant('date.jan');

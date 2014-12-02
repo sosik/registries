@@ -241,7 +241,7 @@ module.exports = function(grunt) {
 		yuidoc: {
 			compile: {
 				options: {
-					paths: ['src/server/', 'src/client/js/'],
+					paths: ['src/server/', 'src/client/js/', 'src/shared/js'],
 					outdir: 'doc'
 				}
 			}

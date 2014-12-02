@@ -197,6 +197,8 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 						query = {'$regex': '^'+c.v+'.*' , $options: 'i'};
 					} else if (c.op === QueryFilter.operation.CONTAINS) {
 						query = {'$regex': '.*'+c.v+'.*' , $options: 'i'};
+					} else if (c.op === QueryFilter.operation.ALL) {
+						query = {'$all': c.v};
 					}  else if (c.op === QueryFilter.operation.EXISTS) {
 						query = {'$exists' : true};
 					} else {

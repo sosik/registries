@@ -9,7 +9,8 @@ var operation = {
 	IN: 'in',
 	NOT_EQUAL: 'neq', // field value is not equal
 	CONTAINS:'contains',
-	STARTS_WITH: 'starts' // field value starts with
+	STARTS_WITH: 'starts', // field value starts with
+	ALL: 'all' // all values present in array
 };
 
 var sort = {
@@ -49,6 +50,9 @@ var QueryFilter = function() {
 					break;
 				case operation.IN:
 					c = {f: field, op: operation.IN, v: val};
+					break;
+					case operation.ALL:
+					c = {f: field, op: operation.ALL, v: val};
 					break;
 
 				case operation.LESS:

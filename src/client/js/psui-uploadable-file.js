@@ -5,10 +5,8 @@ angular.module('psui-uploadable-file', ['psui-uploadable-image'])
 		require: ['?ngModel', 'psuiUploadableFile'],
 		scope: true,
 		controller: function() {
-			return {
-				srcElm: null,
-				imageProcessed: function(blob) {}
-			};
+				this.srcElm = null,
+				this.imageProcessed = function(blob) {};
 		},
 		link: function(scope, elm, attrs, ctrls) {
 			var fileButton = angular.element('<input type="file"/></input>');

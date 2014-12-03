@@ -12,7 +12,7 @@
 			link: function(scope, elm, attrs, ctrls) {
 				log.group('portal-widget-category-view Link');
 
-				elm.addClass('x-portal-widget-category-view');
+				elm.addClass('x-portal-widget-category');
 
 				scope.model = [];
 				scope.page = 0;

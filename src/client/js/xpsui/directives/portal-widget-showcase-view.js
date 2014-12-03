@@ -8,9 +8,11 @@
 			scope: {
 				data: '=xpsuiPortalWidgetShowcaseView'
 			},
-			template: '<article ng-repeat="c in model" style="position:absolute;" ng-show="visibleIndex == $index"><img ng-show="c.img.img" ng-src="{{c.img.img}}" style="width: 656px !important; height: 492px !important;"></img><div style="position: absolute; bottom: 8px; width: 100%; background-color: rgba(255, 255, 255, 0.4); padding: 5px;"><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a><div ng-bind-html="makeSafe(c.abstract)"></div></div></article>',
+			template: '<article ng-repeat="c in model" ng-show="visibleIndex == $index"><img ng-show="c.img.img" ng-src="{{c.img.img}}"></img><div class="x-portal-widget-showcase-textblock"><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a><div ng-bind-html="makeSafe(c.abstract)"></div></div></article>',
 			link: function(scope, elm, attrs, ctrls) {
 				log.group('portal-widget-category-view Link');
+
+				elm.addClass('x-portal-widget-showcase');
 
 				scope.model = [];
 

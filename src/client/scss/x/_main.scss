@@ -13,7 +13,6 @@ BODY, HTML {
 
 * {
 	box-sizing: border-box;
-	@include not-selectable();
 }
 
 .x-hidden {

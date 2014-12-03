@@ -219,6 +219,9 @@
 		};
 
 		$scope.save = function() {
+			if ($scope.model.meta) {
+				$scope.model.meta.lastModTimestamp = (new Date()).getTime();
+			}
 			$http({
 				url: '/udao/save/portalArticles',
 				method: 'PUT',

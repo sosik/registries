@@ -34,6 +34,8 @@ ApiController.prototype.getByTags = function(req, res) {
 	log.silly("Api getByTags");
 	
 	var tags = req.body.tags;
+	var skip = req.body.skip;
+	var limit = req.body.limit;
 
 	console.log(req.body);
 	
@@ -41,6 +43,20 @@ ApiController.prototype.getByTags = function(req, res) {
 
 	if (tags && tags.length && tags.length > 0)	{
 		qf.addCriterium('meta.tags', QueryFilter.operation.ALL, tags);
+	}
+
+	qf.addCriterium('meta.enabled', QueryFilter.operation.EQUAL, true);
+	qf.addCriterium('meta.publishFrom', QueryFilter.operation.GREATER_EQUAL, require('./../DateUtils.js').DateUtils.nowToReverse());
+
+	qf.addSort('meta.publishFrom', QueryFilter.sort.DESC);
+	qf.addSort('meta.lastModTimestamp', QueryFilter.sort.DESC);
+
+	if (skip) {
+		qf.setSkip(skip);
+	}
+
+	if (limit) {
+		qf.setLimit(limit);
 	}
 
 	console.log(qf);

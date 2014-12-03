@@ -12,7 +12,11 @@
 			link: function(scope, elm, attrs, ctrls) {
 				log.group('portal-widget-category-view Link');
 
+				elm.addClass('x-portal-widget-category-view');
+
 				scope.model = [];
+				scope.page = 0;
+				scope.numberPerPage = 20;
 
 				function findFirstOfType(obj, type) {
 					for (var j = 0; j < obj.length; ++j) {
@@ -34,7 +38,9 @@
 					method : 'POST',
 					url: '/portalapi/getByTags',
 					data: {
-						tags: scope.data.data.tags
+						tags: scope.data.data.tags,
+						skip: scope.page * scope.numberPerPage,
+						limit: scope.numberPerPage + 1
 					}
 				})
 				.success(function(data, status, headers, config){

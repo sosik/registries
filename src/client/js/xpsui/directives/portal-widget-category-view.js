@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiPortalWidgetCategoryView', ['xpsui:logging', '$compile', '$http', '$sce', '$route', function(log, $compile, $http, $sce, $route) {
+	.directive('xpsuiPortalWidgetCategoryView', ['xpsui:logging', '$compile', '$http', '$sce', '$route', '$location', function(log, $compile, $http, $sce, $route, $location) {
 		return {
 			restrict: 'A',
 			scope: {
@@ -56,7 +56,8 @@
 				});
 
 				scope.navigate = function(aid) {
-					$route.updateParams({id: aid});
+					$location.path('/portal/edit/' + aid);
+					//$route.updateParams({id: aid});
 				};
 
 				log.groupEnd();

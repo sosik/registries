@@ -1,6 +1,6 @@
 (function(angular) {
 	angular.module('portal-editor', ['psui-datepicker', 'xpsui:services', 'xpsui:directives'])
-				.controller('portal-editor.editCtrl', ['$scope', '$sce', '$http', 'psui.notificationFactory', '$route', '$routeParams', function($scope, $sce, $http, notificationFactory, $route, $routeParams) {
+				.controller('portal-editor.editCtrl', ['$scope', '$sce', '$http', 'psui.notificationFactory', '$route', '$routeParams', '$location', function($scope, $sce, $http, notificationFactory, $route, $routeParams, $location) {
 		$scope.model = {
 		};
 
@@ -194,7 +194,8 @@
 			})
 			.success(function(data, status, headers, config) {
 				if (data && data.length > 0 && data[0].id) {
-					$route.updateParams({id: data[0].id});
+					$location.path('/portal/edit/'+ data[0].id);
+					//$route.updateParams({id: data[0].id});
 				}
 			}).error(function(err) {
 				notificationFactory.error(err);
@@ -226,7 +227,8 @@
 			.success(function(data, status, headers, config){
 				notificationFactory.clear();
 				if (data.id) {
-					$route.updateParams({id: data.id});
+					$location.path('/portal/edit/'+ data.id);
+					//$route.updateParams({id: data.id});
 				} else if ($scope.model.id) {
 					$route.reload();
 				}
@@ -268,13 +270,15 @@
 			'schema-utils.SchemaUtilFactory',
 			'psui.notificationFactory',
 			'$http',
+			'$location',
 			function(
 				$scope,
 				$sce,
 				$route,
 				schemaUtilFactory,
 				notificationFactory,
-				$http
+				$http,
+				$location
 			) {
 		var portalSchemaUri = schemaUtilFactory.decodeUri('uri://registries/portal#');
 		var emptyMenu = {
@@ -489,7 +493,7 @@
 			}
 		};
 	}])
-	.directive('portalMenuRender', ['$http', '$route', '$compile', function($http, $route, $compile) {
+	.directive('portalMenuRender', ['$http', '$route', '$compile', '$location', function($http, $route, $compile, $location) {
 		return {
 			restrict: 'A',
 			link: function(scope, elm, attrs, ctrls) {
@@ -544,7 +548,8 @@
 					})
 					.success(function(data, status, headers, config){
 						if (data && data.length > 0 && data[0].id) {
-							$route.updateParams({id: data[0].id});
+							$location.path('/portal/edit/'+ data[0].id);
+							//$route.updateParams({id: data[0].id});
 						}
 					}).error(function(err) {
 						notificationFactory.error(err);

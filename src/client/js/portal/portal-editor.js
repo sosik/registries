@@ -512,7 +512,7 @@
 					var subMenu = angular.element('<div class="portal-sub-menu"></div>');
 					for (var i = 0; i < data.subElements.length; ++i) {
 						subMenu.append(angular.element('<div ng-click="navigate('+ (counter++) +')">'+ data.subElements[i].name+'</div>'));
-						menuHash.push(data.tags);
+						menuHash.push(data.subElements[i].tags);
 					}
 					menuEntry.append(subMenu);
 					return(menuEntry);
@@ -557,131 +557,6 @@
 				};
 			}
 		};
-	}])
-	.controller('portal-editor', ['$scope', '$sce', function($scope, $sce) {
-		$scope.mode = 'view';
-		$scope.blockSelectorShown = false;
-
-		$scope.templates = {
-			'index' : {
-				name: 'Titulok',
-				desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
-				icon: 'img/block-title.png',
-				meta: {
-					template: 'index',
-					isIndex: false,
-					isMenu: false,
-					parentMenu: null,
-					enabled: true,
-					publishFrom: new Date(),
-					tags: []
-				},
-				data: [
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'title',
-							element: '<h1></h1>'
-						},
-						data: '...Titulok článku...'
-					},
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'abstract',
-							element: '<section class="abstract"></section>'
-						},
-						data: '...Abstrakt článku, krátky popis a zdrnutie...'
-					},
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'contentBlock',
-							element: '<section class="content"></section'
-
-						},
-						data: '<p>...Obsah článku...</p>'
-					}
-
-				]
-			},
-			'article' : {
-				name: '',
-				meta: {
-					template: 'article',
-					isIndex: false,
-					isMenu: false,
-					parentMenu: null,
-					enabled: true,
-					publishFrom: new Date(),
-					tags: []
-				}
-			},
-			data: []
-		};
-
-		$scope.blocks = {
-			title: {
-					meta: {
-						name: 'title',
-						element: '<h1></h1>',
-						type: 'pure-html',
-						desc: '<h1>Titulok</h1><p>Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov</p>',
-						icon: 'img/block-title.png',
-					},
-					data: '...Titulok článku...'
-				},
-			abstract: {
-					meta: {
-						name: 'abstract',
-						element: '<section class="content"></section>',
-						type: 'pure-html',
-						desc: '<h1>Abstrakt</h1><p>Krátke zhrnutie článku</p>',
-						icon: 'img/block-title.png',
-					},
-					data: '...Titulok článku...'
-				}
-			};
-
-		$scope.model = angular.copy($scope.templates.index);
-
-		$scope.addNew = function addNew() {
-			enterEditMode();
-		};
-
-		function enterEditMode() {
-			$scope.mode = 'edit';
-			$scope.$broadcast('modechange');
-		}
-
-		$scope.save = function() {
-		}
-
-		$scope.templateChanged = function templateChanged() {
-			console.log($scope.model.meta);
-			$scope.model = angular.copy($scope.templates[$scope.model.meta.template]);
-		};
-
-		$scope.showBlockSelector = function showBlockSelector() {
-			$scope.blockSelectorShown = true;
-		};
-
-		$scope.selectBlock = function(block) {
-			$scope.blockSelectorShown = false;
-			$scope.model.data.push($scope.blocks[block]);
-			$scope.$broadcast('modechange');
-			console.log($scope.blocks[block]);
-			console.log($scope.model);
-		};
-
-		$scope.makeSafe = function(str) {
-			return $sce.trustAsHtml(str);
-		};
-
-		$scope.getTemplateUrl = function() {
-			return 'templates/' + $scope.model.meta.template + '.html';
-		};
-
 	}]);
 }(angular));
 

@@ -11,3 +11,4 @@ doc/
 nbproject/
 local-config.js
 npm-debug.log
+.idea

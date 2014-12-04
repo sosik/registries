@@ -202,8 +202,7 @@ module.exports = function(grunt) {
 		sass: {
 			compile: {
 				options: {
-					unixNewlines: true,
-					sourcemap: true
+					unixNewlines: true
 				},
 				files: [{
 					expand: true,
@@ -215,8 +214,7 @@ module.exports = function(grunt) {
 			},
 			bootstrap: {
 				options: {
-					unixNewlines: true,
-					sourcemap: true
+					unixNewlines: true
 				},
 				files: [{
 					expand: true,

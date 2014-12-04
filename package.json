@@ -22,7 +22,7 @@
     "grunt-cli": "^0.1.13",
     "grunt-contrib-clean": "*",
     "grunt-contrib-copy": "*",
-    "grunt-contrib-sass": "^0.7.3",
+    "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-watch": "*",
     "grunt-env": "^0.4.1",
     "grunt-mocha-test": "*",
@@ -36,7 +36,6 @@
     "object-hash": "~0.3.0"
   },
   "devDependencies": {
-    "grunt-contrib-sass": "^0.7.3",
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-yuidoc": "^0.5.2",
     "grunt-mocha-istanbul": "^2.1.0"

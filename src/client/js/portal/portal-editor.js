@@ -1,565 +1,564 @@
 (function(angular) {
-	angular.module('portal-editor', ['psui-datepicker', 'xpsui:services', 'xpsui:directives'])
-				.controller('portal-editor.editCtrl', ['$scope', '$sce', '$http', 'psui.notificationFactory', '$route', '$routeParams', '$location', function($scope, $sce, $http, notificationFactory, $route, $routeParams, $location) {
-		$scope.model = {
-		};
+  angular.module('portal-editor', ['psui-datepicker', 'xpsui:services', 'xpsui:directives'])
+        .controller('portal-editor.editCtrl', ['$scope', '$sce', '$http', 'psui.notificationFactory', '$route', '$routeParams', '$location', function($scope, $sce, $http, notificationFactory, $route, $routeParams, $location) {
+    $scope.model = {
+    };
 
-		$scope.templates = {
-			'index' : {
-				name: 'Titulok',
-				desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
-				icon: 'img/block-title.png',
-				meta: {
-					template: 'index',
-					isIndex: false,
-					isMenu: false,
-					parentMenu: null,
-					enabled: true,
-					publishFrom: null,
-					tags: []
-				},
-				data: [
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'title',
-							element: '<div></div>'
-						},
-						data: '<h1>...Titulok článku...</h1>'
-					},
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'abstract',
-							element: '<section class="abstract"></section>'
-						},
-						data: '...Abstrakt článku, krátky popis a zdrnutie...'
-					},
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'contentBlock',
-							element: '<section class="content"></section'
+    $scope.templates = {
+      'index' : {
+        name: 'Titulok',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
+        icon: 'img/block-title.png',
+        meta: {
+          template: 'index',
+          isIndex: false,
+          isMenu: false,
+          parentMenu: null,
+          enabled: true,
+          publishFrom: null,
+          tags: []
+        },
+        data: [
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'title',
+              element: '<div></div>'
+            },
+            data: '<h1>...Titulok článku...</h1>'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'abstract',
+              element: '<section class="abstract"></section>'
+            },
+            data: '...Abstrakt článku, krátky popis a zdrnutie...'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'contentBlock',
+              element: '<section class="content"></section'
 
-						},
-						data: '<p>...Obsah článku...</p>'
-					}
-				]
-			},
-			article : {
-				name: 'Article',
-				desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
-				icon: 'img/block-title.png',
-				meta: {
-					template: 'article',
-					enabled: true,
-					publishFrom: null,
-					tags: []
-				},
-				data: [
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'title',
-							element: '<div></div>'
-						},
-						data: '<h1>...Titulok článku...</h1>'
-					},
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'abstract',
-							element: '<section class="abstract"></section>'
-						},
-						data: '...Abstrakt článku, krátky popis a zdrnutie...'
-					},
-					{
-						meta: {
-							type: 'pure-html',
-							name: 'contentBlock',
-							element: '<section class="content"></section'
+            },
+            data: '<p>...Obsah článku...</p>'
+          }
+        ]
+      },
+      article : {
+        name: 'Article',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
+        icon: 'img/block-title.png',
+        meta: {
+          template: 'article',
+          enabled: true,
+          publishFrom: null,
+          tags: []
+        },
+        data: [
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'title',
+              element: '<div></div>'
+            },
+            data: '<h1>...Titulok článku...</h1>'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'abstract',
+              element: '<section class="abstract"></section>'
+            },
+            data: '...Abstrakt článku, krátky popis a zdrnutie...'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'contentBlock',
+              element: '<section class="content"></section'
 
-						},
-						data: '<p>...Obsah článku...</p>'
-					}
-				]
-			}
-		};
+            },
+            data: '<p>...Obsah článku...</p>'
+          }
+        ]
+      }
+    };
 
-		$scope.blocks = {
-			title: {
-					meta: {
-						name: 'title',
-						element: '<div></div>',
-						type: 'pure-html',
-						desc: '<h1>Titulok</h1><p>Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov</p>',
-						icon: 'img/block-title.png',
-					},
-					data: '<h1>...Titulok článku...</h1>'
-				},
-			abstract: {
-					meta: {
-						name: 'abstract',
-						element: '<section class="abstract"></section>',
-						type: 'pure-html',
-						desc: '<h1>Abstrakt</h1><p>Krátke zhrnutie článku</p>',
-						icon: 'img/block-title.png',
-					},
-					data: '...Abstrakt článku...'
-				},
-			content: {
-					meta: {
-						name: 'content',
-						element: '<section class="content"></section>',
-						type: 'pure-html',
-						desc: '<h1>Obsah</h1><p>Obsah článku obsahujúci hlavnú časť textu</p>',
-						icon: 'img/block-content.png',
-					},
-					data: '<p>...Obsah článku...</p>'
-				},
-			image: {
-					meta: {
-						name: 'image',
-						element: '<div></div>',
-						type: 'image',
-						desc: '<h1>Obrázok</h1><p>Veľký obrázok do článku</p>',
-						icon: 'img/block-image.png',
-					},
-					data: {
-						img: ''
-					}
-				},
-			category: {
-					meta: {
-						name: 'category',
-						element: '<div></div>',
-						type: 'category',
-						desc: '<h1>Kategória</h1><p>Zoznam článkov v danej kategórii</p>',
-						icon: 'img/block-category.png',
-					},
-					data: {
-						tags: []
-					}
-				},
-			gallery: {
-					meta: {
-						name: 'gallery',
-						element: '<div></div>',
-						type: 'gallery',
-						desc: '<h1>Galéria</h1><p>Galéria fotografií</p>',
-						icon: 'img/block-category.png',
-					},
-					data: {
-						images: []
-					}
-				},
-			showcase: {
-					meta: {
-						name: 'showcase',
-						element: '<div></div>',
-						type: 'showcase',
-						desc: '<h1>Výklad</h1><p>Najhorúcejšie články v prelínajúcom zobrazení výkladného okna</p>',
-						icon: 'img/block-category.png',
-					},
-					data: {
-						tags: []
-					}
-				}
-			};
+    $scope.blocks = {
+      title: {
+          meta: {
+            name: 'title',
+            element: '<div></div>',
+            type: 'pure-html',
+            desc: '<h1>Titulok</h1><p>Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov</p>',
+            icon: 'img/block-title.png',
+          },
+          data: '<h1>...Titulok článku...</h1>'
+        },
+      abstract: {
+          meta: {
+            name: 'abstract',
+            element: '<section class="abstract"></section>',
+            type: 'pure-html',
+            desc: '<h1>Abstrakt</h1><p>Krátke zhrnutie článku</p>',
+            icon: 'img/block-abstract.png',
+          },
+          data: '...Abstrakt článku...'
+        },
+      content: {
+          meta: {
+            name: 'content',
+            element: '<section class="content"></section>',
+            type: 'pure-html',
+            desc: '<h1>Obsah</h1><p>Obsah článku obsahujúci hlavnú časť textu</p>',
+            icon: 'img/block-content.png',
+          },
+          data: '<p>...Obsah článku...</p>'
+        },
+      image: {
+          meta: {
+            name: 'image',
+            element: '<div></div>',
+            type: 'image',
+            desc: '<h1>Obrázok</h1><p>Veľký obrázok do článku</p>',
+            icon: 'img/block-image.png',
+          },
+          data: {
+            img: ''
+          }
+        },
+      category: {
+          meta: {
+            name: 'category',
+            element: '<div></div>',
+            type: 'category',
+            desc: '<h1>Kategória</h1><p>Zoznam článkov v danej kategórii</p>',
+            icon: 'img/block-category.png',
+          },
+          data: {
+            tags: []
+          }
+        },
+      gallery: {
+          meta: {
+            name: 'gallery',
+            element: '<div></div>',
+            type: 'gallery',
+            desc: '<h1>Galéria</h1><p>Galéria fotografií</p>',
+            icon: 'img/block-gallery.png',
+          },
+          data: {
+            images: []
+          }
+        },
+      showcase: {
+          meta: {
+            name: 'showcase',
+            element: '<div></div>',
+            type: 'showcase',
+            desc: '<h1>Výklad</h1><p>Najhorúcejšie články v prelínajúcom zobrazení výkladného okna</p>',
+            icon: 'img/block-topics.png',
+          },
+          data: {
+            tags: []
+          }
+        }
+      };
 
-		//$scope.templateUrl = 'portal/templates/article.html';
+    //$scope.templateUrl = 'portal/templates/article.html';
 
-		//$scope.model = angular.copy($scope.templates.article);
+    //$scope.model = angular.copy($scope.templates.article);
 
-		console.log($routeParams);
-		if ($routeParams.id) {
-			$http({
-				url: '/udao/get/portalArticles/' + $routeParams.id,
-				method: 'GET',
-			})
-			.success(function(data, status, headers, config){
-				$scope.model = data;
-				$scope.viewTemplate = $scope.getViewTemplate();
+    console.log($routeParams);
+    if ($routeParams.id) {
+      $http({
+        url: '/udao/get/portalArticles/' + $routeParams.id,
+        method: 'GET',
+      })
+      .success(function(data, status, headers, config){
+        $scope.model = data;
+        $scope.viewTemplate = $scope.getViewTemplate();
 
-			}).error(function(err) {
-				notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
-			});
-		} else {
-			$http({
-				method : 'POST',
-				url: '/portalapi/getByTags',
-				data: {
-					tags: ['menu:index']
-				}
-			})
-			.success(function(data, status, headers, config) {
-				if (data && data.length > 0 && data[0].id) {
-					$location.path('/portal/edit/'+ data[0].id);
-					//$route.updateParams({id: data[0].id});
-				}
-			}).error(function(err) {
-				notificationFactory.error(err);
-			});
-		}
-		function enterEditMode() {
-			$scope.mode = 'edit';
-			$scope.$broadcast('modechange');
-		}
+      }).error(function(err) {
+        notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+      });
+    } else {
+      $http({
+        method : 'POST',
+        url: '/portalapi/getByTags',
+        data: {
+          tags: ['menu:index']
+        }
+      })
+      .success(function(data, status, headers, config) {
+        if (data && data.length > 0 && data[0].id) {
+          $location.path('/portal/edit/'+ data[0].id);
+          //$route.updateParams({id: data[0].id});
+        }
+      }).error(function(err) {
+        notificationFactory.error(err);
+      });
+    }
+    function enterEditMode() {
+      $scope.mode = 'edit';
+      $scope.$broadcast('modechange');
+    }
 
-		$scope.edit = function addNew() {
-			enterEditMode();
-		};
+    $scope.edit = function addNew() {
+      enterEditMode();
+    };
 
-		$scope.addNew = function addNew() {
-			$scope.model = {};
-			angular.copy($scope.templates.article, $scope.model);
-			$scope.viewTemplate = $scope.getViewTemplate();
+    $scope.addNew = function addNew() {
+      $scope.model = {};
+      angular.copy($scope.templates.article, $scope.model);
+      $scope.viewTemplate = $scope.getViewTemplate();
 
-			enterEditMode();
-		};
+      enterEditMode();
+    };
 
-		$scope.save = function() {
-			if ($scope.model.meta) {
-				$scope.model.meta.lastModTimestamp = (new Date()).getTime();
-			}
-			$http({
-				url: '/udao/save/portalArticles',
-				method: 'PUT',
-				data: $scope.model
-			})
-			.success(function(data, status, headers, config){
-				notificationFactory.clear();
-				if (data.id) {
-					$location.path('/portal/edit/'+ data.id);
-					//$route.updateParams({id: data.id});
-				} else if ($scope.model.id) {
-					$route.reload();
-				}
-			}).error(function(err) {
-				notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
-			});
-		};
+    $scope.save = function() {
+      if ($scope.model.meta) {
+        $scope.model.meta.lastModTimestamp = (new Date()).getTime();
+      }
+      $http({
+        url: '/udao/save/portalArticles',
+        method: 'PUT',
+        data: $scope.model
+      })
+      .success(function(data, status, headers, config){
+        notificationFactory.clear();
+        if (data.id) {
+          $location.path('/portal/edit/'+ data.id);
+          //$route.updateParams({id: data.id});
+        } else if ($scope.model.id) {
+          $route.reload();
+        }
+      }).error(function(err) {
+        notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+      });
+    };
 
-		$scope.cancel = function() {
-			$route.reload();
-		};
+    $scope.cancel = function() {
+      $route.reload();
+    };
 
-		$scope.showBlockSelector = function showBlockSelector() {
-			$scope.blockSelectorShown = true;
-		};
+    $scope.showBlockSelector = function showBlockSelector() {
+      $scope.blockSelectorShown = true;
+    };
 
-		$scope.selectBlock = function(block) {
-			$scope.blockSelectorShown = false;
-			$scope.model.data.push($scope.blocks[block]);
-			$scope.$broadcast('modechange');
-		};
+    $scope.selectBlock = function(block) {
+      $scope.blockSelectorShown = false;
+      $scope.model.data.push($scope.blocks[block]);
+      $scope.$broadcast('modechange');
+    };
 
-		$scope.makeSafe = function(str) {
-			return $sce.trustAsHtml(str);
-		};
+    $scope.makeSafe = function(str) {
+      return $sce.trustAsHtml(str);
+    };
 
-		$scope.getViewTemplate = function() {
-			if ($scope.model && $scope.model.meta && $scope.model.meta.template) {
-				return '/portal/templates/'+$scope.model.meta.template+'.html';
-			} else {
-				return null;
-			}
-		};
-	}])
-	.controller('portal-editor.menuCtrl', [
-			'$scope',
-			'$sce',
-			'$route',
-			'schema-utils.SchemaUtilFactory',
-			'psui.notificationFactory',
-			'$http',
-			'$location',
-			function(
-				$scope,
-				$sce,
-				$route,
-				schemaUtilFactory,
-				notificationFactory,
-				$http,
-				$location
-			) {
-		var portalSchemaUri = schemaUtilFactory.decodeUri('uri://registries/portal#');
-		var emptyMenu = {
-			index: {
-				name: 'ROOT',
-				transCode: null,
-				tags: [],
-				subElements: [
-				]
-			}
-		};
+    $scope.getViewTemplate = function() {
+      if ($scope.model && $scope.model.meta && $scope.model.meta.template) {
+        return '/portal/templates/'+$scope.model.meta.template+'.html';
+      } else {
+        return null;
+      }
+    };
+  }])
+  .controller('portal-editor.menuCtrl', [
+      '$scope',
+      '$sce',
+      '$route',
+      'schema-utils.SchemaUtilFactory',
+      'psui.notificationFactory',
+      '$http',
+      '$location',
+      function(
+        $scope,
+        $sce,
+        $route,
+        schemaUtilFactory,
+        notificationFactory,
+        $http,
+        $location
+      ) {
+    var portalSchemaUri = schemaUtilFactory.decodeUri('uri://registries/portal#');
+    var emptyMenu = {
+      index: {
+        name: 'ROOT',
+        transCode: null,
+        tags: [],
+        subElements: [
+        ]
+      }
+    };
 
-		$scope.model = angular.copy(emptyMenu);
+    $scope.model = angular.copy(emptyMenu);
 
-		$scope.cancel = function() {
-			$route.reload();
-		};
+    $scope.cancel = function() {
+      $route.reload();
+    };
 
-		$scope.save = function() {
-			$http({
-				url: '/udao/save/portalMenu',
-				method: 'PUT',
-				data: $scope.model
-			})
-			.success(function(data, status, headers, config){
-				notificationFactory.clear();
-				$route.reload();
-			}).error(function(err) {
-				notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
-			});
-		};
-		
-		$http({
-			method : 'GET',
-			url: '/udao/list/portalMenu',
-			data: {
-			}
-		})
-		.success(function(data, status, headers, config){
-			if (data && data.length > 0 && data[0].index) {
-				$scope.model = data[0];
-			}
-		}).error(function(err) {
-			notificationFactory.error(err);
-		});
+    $scope.save = function() {
+      $http({
+        url: '/udao/save/portalMenu',
+        method: 'PUT',
+        data: $scope.model
+      })
+      .success(function(data, status, headers, config){
+        notificationFactory.clear();
+        $route.reload();
+      }).error(function(err) {
+        notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+      });
+    };
 
-	}])
-	.directive('portalMenuEditor', ['$compile', function($compile) {
-		return {
-			restrict: 'A',
-			scope: {
-				index: '=portalMenuEditor',
-				elementIdx: '=portalMenuIndex'
-			},
-			controller: ['$scope', function($scope) {
-				this.remove = function(idx) {
-					if ($scope.index && $scope.index.subElements) {
-						$scope.index.subElements.splice(idx, 1);
-					}
-				};
-			}],
-			require: ["^^?portalMenuEditor"],
-			link: function(scope, elm, attrs, ctrls) {
-				scope.mode = 'view';
-				scope.opened = false;
+    $http({
+      method : 'GET',
+      url: '/udao/list/portalMenu',
+      data: {
+      }
+    })
+    .success(function(data, status, headers, config){
+      if (data && data.length > 0 && data[0].index) {
+        $scope.model = data[0];
+      }
+    }).error(function(err) {
+      notificationFactory.error(err);
+    });
 
-				elm.addClass('portal-menu-editor');
+  }])
+  .directive('portalMenuEditor', ['$compile', function($compile) {
+    return {
+      restrict: 'A',
+      scope: {
+        index: '=portalMenuEditor',
+        elementIdx: '=portalMenuIndex'
+      },
+      controller: ['$scope', function($scope) {
+        this.remove = function(idx) {
+          if ($scope.index && $scope.index.subElements) {
+            $scope.index.subElements.splice(idx, 1);
+          }
+        };
+      }],
+      require: ["^^?portalMenuEditor"],
+      link: function(scope, elm, attrs, ctrls) {
+        scope.mode = 'view';
+        scope.opened = false;
 
-				var header = angular.element('<div class="portal-menu-header"></div>');
-				var openIcon = angular.element('<i class="glyphicon glyphicon-minus-sign" style="padding-right:10px;"></i>');
-				var children = angular.element('<div style="padding-left: 20px;"><div ng-repeat="c in index.subElements"><div portal-menu-editor="c" portal-menu-index="$index"></div></div></div>');
-				var actionButtons = angular.element('<span style="padding-left: 10px;" class="psui-hidden"></span>');
-				var editButton = angular.element('<i class="action-button glyphicon-pencil"></i>');
-				var addButton = angular.element('<i class="action-button glyphicon-plus"></i>');
-				var removeButton = angular.element('<i class="action-button glyphicon-minus" ng-click="removeFn()"></i>');
+        elm.addClass('portal-menu-editor');
 
-				var editPanel = angular.element('<table class="psui-hidden portal-menu-editor-edit-panel">' +
-						'<tr><td>Meno:</td><td><input ng-model="index.name"</td></tr>' +
-						'<tr><td>Tagy:</td><td><span portal-multistring-edit ng-model="index.tags"></span></td></tr>' +
-						'</table>');
+        var header = angular.element('<div class="portal-menu-header"></div>');
+        var openIcon = angular.element('<i class="glyphicon glyphicon-minus-sign" style="padding-right:10px;"></i>');
+        var children = angular.element('<div style="padding-left: 20px;"><div ng-repeat="c in index.subElements"><div portal-menu-editor="c" portal-menu-index="$index"></div></div></div>');
+        var actionButtons = angular.element('<span style="padding-left: 10px;" class="psui-hidden"></span>');
+        var editButton = angular.element('<i class="action-button glyphicon-pencil"></i>');
+        var addButton = angular.element('<i class="action-button glyphicon-plus"></i>');
+        var removeButton = angular.element('<i class="action-button glyphicon-minus" ng-click="removeFn()"></i>');
 
-				editButton.on('click', function(evt) {
-					editPanel.toggleClass('psui-hidden');
-					evt.stopPropagation();
-				});
+        var editPanel = angular.element('<table class="psui-hidden portal-menu-editor-edit-panel">' +
+            '<tr><td>Meno:</td><td><input ng-model="index.name"</td></tr>' +
+            '<tr><td>Tagy:</td><td><span portal-multistring-edit ng-model="index.tags"></span></td></tr>' +
+            '</table>');
 
-				addButton.on('click', function(evt) {
-					scope.$apply(function () {
-						scope.addNew();
-					});
-					evt.stopPropagation();
-				});
+        editButton.on('click', function(evt) {
+          editPanel.toggleClass('psui-hidden');
+          evt.stopPropagation();
+        });
 
-				scope.removeFn = function() {
-						console.log(scope.elementIdx);
-						if (ctrls[0]) {
-							ctrls[0].remove(scope.elementIdx);
-						}
-				};
+        addButton.on('click', function(evt) {
+          scope.$apply(function () {
+            scope.addNew();
+          });
+          evt.stopPropagation();
+        });
 
-				if (ctrls[0]) {
-					actionButtons.append(editButton);
-				}
+        scope.removeFn = function() {
+            console.log(scope.elementIdx);
+            if (ctrls[0]) {
+              ctrls[0].remove(scope.elementIdx);
+            }
+        };
 
-				actionButtons.append(addButton);
-				if (ctrls[0]) {
-					actionButtons.append(removeButton);
-				}
+        if (ctrls[0]) {
+          actionButtons.append(editButton);
+        }
 
-				header.on('click', function(evt) {
-					if (scope.index.subElements.length > 0) {
-						openIcon.toggleClass('glyphicon-plus-sign');
-						openIcon.toggleClass('glyphicon-minus-sign');
+        actionButtons.append(addButton);
+        if (ctrls[0]) {
+          actionButtons.append(removeButton);
+        }
 
-						children.toggleClass('psui-hidden');
-					}
+        header.on('click', function(evt) {
+          if (scope.index.subElements.length > 0) {
+            openIcon.toggleClass('glyphicon-plus-sign');
+            openIcon.toggleClass('glyphicon-minus-sign');
 
-					evt.stopPropagation();
-				});
+            children.toggleClass('psui-hidden');
+          }
 
-				header.on('mouseover', function() {
-					actionButtons.removeClass('psui-hidden');
-				});
-				header.on('mouseleave', function() {
-					actionButtons.addClass('psui-hidden');
-				});
-				var name = angular.element('<span>{{index.name}}</span>');
+          evt.stopPropagation();
+        });
 
-				header.append(openIcon);
-				header.append(name);
-				header.append(actionButtons);
+        header.on('mouseover', function() {
+          actionButtons.removeClass('psui-hidden');
+        });
+        header.on('mouseleave', function() {
+          actionButtons.addClass('psui-hidden');
+        });
+        var name = angular.element('<span>{{index.name}}</span>');
 
-				if (scope.index.subElements.length < 1) {
-					openIcon.removeClass('glyphicon-minus-sign');
-					openIcon.removeClass('glyphicon-plus-sign');
-					openIcon.addClass('glyphicon-record');
-				}
+        header.append(openIcon);
+        header.append(name);
+        header.append(actionButtons);
 
-				elm.append(header);
-				elm.append(editPanel);
-				elm.append(children);
-				$compile(editPanel)(scope);
-				$compile(children)(scope);
-				$compile(header)(scope);
+        if (scope.index.subElements.length < 1) {
+          openIcon.removeClass('glyphicon-minus-sign');
+          openIcon.removeClass('glyphicon-plus-sign');
+          openIcon.addClass('glyphicon-record');
+        }
 
-				scope.addNew = function addNew() {
-					scope.index.subElements.push({
-						name: '...Nový...',
-						transCode: null,
-						tags: [],
-						subElements: []
-					});
-					openIcon.addClass('glyphicon-minus-sign');
-					openIcon.removeClass('glyphicon-record');
-					openIcon.removeClass('glyphicon-plus-sign');
-					children.removeClass('psui-hidden');
-				};
+        elm.append(header);
+        elm.append(editPanel);
+        elm.append(children);
+        $compile(editPanel)(scope);
+        $compile(children)(scope);
+        $compile(header)(scope);
 
-			}
-		};
-	}])
-	.directive('portalMultistringEdit', [function() {
-		return {
-			restrict: 'A',
-			require: ['ngModel'],
-			link: function(scope, elm, attrs, ctrls) {
-				var ngModel = ctrls[0];
+        scope.addNew = function addNew() {
+          scope.index.subElements.push({
+            name: '...Nový...',
+            transCode: null,
+            tags: [],
+            subElements: []
+          });
+          openIcon.addClass('glyphicon-minus-sign');
+          openIcon.removeClass('glyphicon-record');
+          openIcon.removeClass('glyphicon-plus-sign');
+          children.removeClass('psui-hidden');
+        };
 
-				elm.addClass('portal-multistring-edit');
+      }
+    };
+  }])
+  .directive('portalMultistringEdit', [function() {
+    return {
+      restrict: 'A',
+      require: ['ngModel'],
+      link: function(scope, elm, attrs, ctrls) {
+        var ngModel = ctrls[0];
 
-				var container = angular.element('<div></div>');
-				var input = angular.element('<input></input>');
-				var addButton = angular.element('<button class="btn btn-primary">Pridať</button>');
+        elm.addClass('portal-multistring-edit');
 
-				elm.addClass('portal-multistring-edit');
+        var container = angular.element('<div></div>');
+        var input = angular.element('<input></input>');
+        var addButton = angular.element('<button class="btn btn-primary">Pridať</button>');
 
-				ngModel.$render = function() {
-					var i, xButton, stringElm;
+        elm.addClass('portal-multistring-edit');
 
-					container.empty();
-					for (i in ngModel.$modelValue) {
-						stringElm = angular.element('<div class="portal-multistring-element"><span>'+ngModel.$modelValue[i]+'</span></div>');
-						xButton = angular.element('<i class="glyphicon-remove"></i>');
-						xButton.data('idx', i);
+        ngModel.$render = function() {
+          var i, xButton, stringElm;
 
-						xButton.on('click', function(evt) {
-							scope.$apply(function() {
-								ngModel.$modelValue.splice(angular.element(evt.target).data('idx'), 1);
-								ngModel.$render();
-							});
-						});
-						stringElm.append(xButton);
-						container.append(stringElm);
-					}
-				};
+          container.empty();
+          for (i in ngModel.$modelValue) {
+            stringElm = angular.element('<div class="portal-multistring-element"><span>'+ngModel.$modelValue[i]+'</span></div>');
+            xButton = angular.element('<i class="glyphicon-remove"></i>');
+            xButton.data('idx', i);
 
-				elm.append(container);
-				elm.append(input);
-				elm.append(addButton);
+            xButton.on('click', function(evt) {
+              scope.$apply(function() {
+                ngModel.$modelValue.splice(angular.element(evt.target).data('idx'), 1);
+                ngModel.$render();
+              });
+            });
+            stringElm.append(xButton);
+            container.append(stringElm);
+          }
+        };
 
-				input.on('change', function(evt) {
-					scope.$apply(function() {
-						ngModel.$modelValue.push(input.val());
-						ngModel.$render();
-						input.val('');
-					});
-				});
+        elm.append(container);
+        elm.append(input);
+        elm.append(addButton);
 
-				elm.bind('focus', function(evt) {
-					input[0].focus();
-				});
-			}
-		};
-	}])
-	.directive('portalMenuRender', ['$http', '$route', '$compile', '$location', function($http, $route, $compile, $location) {
-		return {
-			restrict: 'A',
-			link: function(scope, elm, attrs, ctrls) {
-				var loadingDiv = angular.element('<div>Nahrávam...</div>');
+        input.on('change', function(evt) {
+          scope.$apply(function() {
+            ngModel.$modelValue.push(input.val());
+            ngModel.$render();
+            input.val('');
+          });
+        });
 
-				elm.append(loadingDiv);
+        elm.bind('focus', function(evt) {
+          input[0].focus();
+        });
+      }
+    };
+  }])
+  .directive('portalMenuRender', ['$http', '$route', '$compile', '$location', function($http, $route, $compile, $location) {
+    return {
+      restrict: 'A',
+      link: function(scope, elm, attrs, ctrls) {
+        var loadingDiv = angular.element('<div>Nahrávam...</div>');
 
-				var menuHash = [];
-				var counter = 0;
+        elm.append(loadingDiv);
 
-				function renderMenuEntry(data, element) {
-					var menuEntry = angular.element('<div class="portal-menu-entry"><a ng-click="navigate('+ (counter++) +');">'+data.name+'</a></div>');
+        var menuHash = [];
+        var counter = 0;
 
-					menuHash.push(data.tags);
+        function renderMenuEntry(data, element) {
+          var menuEntry = angular.element('<div class="portal-menu-entry"><a ng-click="navigate('+ (counter++) +');">'+data.name+'</a></div>');
 
-					var subMenu = angular.element('<div class="portal-sub-menu"></div>');
-					for (var i = 0; i < data.subElements.length; ++i) {
-						subMenu.append(angular.element('<div ng-click="navigate('+ (counter++) +')">'+ data.subElements[i].name+'</div>'));
-						menuHash.push(data.subElements[i].tags);
-					}
-					menuEntry.append(subMenu);
-					return(menuEntry);
+          menuHash.push(data.tags);
 
-				}
+          var subMenu = angular.element('<div class="portal-sub-menu"></div>');
+          for (var i = 0; i < data.subElements.length; ++i) {
+            subMenu.append(angular.element('<div ng-click="navigate('+ (counter++) +')">'+ data.subElements[i].name+'</div>'));
+            menuHash.push(data.subElements[i].tags);
+          }
+          menuEntry.append(subMenu);
+          return(menuEntry);
 
-				$http({
-					method : 'GET',
-					url: '/udao/list/portalMenu',
-					data: {
-					}
-				})
-				.success(function(data, status, headers, config){
-					elm.empty();
-					if (data && data.length > 0 && data[0].index) {
-						for (var i = 0; i < data[0].index.subElements.length; ++i) {
-							var menuEntry = renderMenuEntry(data[0].index.subElements[i]);
-							elm.append(menuEntry);
-							$compile(menuEntry)(scope);
-						}
-					}
-				}).error(function(err) {
-					notificationFactory.error(err);
-				});
+        }
 
-				scope.navigate = function(i) {
-					$http({
-						method : 'POST',
-						url: '/portalapi/getByTags',
-						data: {
-							tags: menuHash[i]
-						}
-					})
-					.success(function(data, status, headers, config){
-						if (data && data.length > 0 && data[0].id) {
-							$location.path('/portal/edit/'+ data[0].id);
-							//$route.updateParams({id: data[0].id});
-						}
-					}).error(function(err) {
-						notificationFactory.error(err);
-					});
-				};
-			}
-		};
-	}]);
+        $http({
+          method : 'GET',
+          url: '/udao/list/portalMenu',
+          data: {
+          }
+        })
+        .success(function(data, status, headers, config){
+          elm.empty();
+          if (data && data.length > 0 && data[0].index) {
+            for (var i = 0; i < data[0].index.subElements.length; ++i) {
+              var menuEntry = renderMenuEntry(data[0].index.subElements[i]);
+              elm.append(menuEntry);
+              $compile(menuEntry)(scope);
+            }
+          }
+        }).error(function(err) {
+          notificationFactory.error(err);
+        });
+
+        scope.navigate = function(i) {
+          $http({
+            method : 'POST',
+            url: '/portalapi/getByTags',
+            data: {
+              tags: menuHash[i]
+            }
+          })
+          .success(function(data, status, headers, config){
+            if (data && data.length > 0 && data[0].id) {
+              $location.path('/portal/edit/'+ data[0].id);
+              //$route.updateParams({id: data[0].id});
+            }
+          }).error(function(err) {
+            notificationFactory.error(err);
+          });
+        };
+      }
+    };
+  }]);
 }(angular));
-

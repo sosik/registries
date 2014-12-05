@@ -35,7 +35,7 @@ $fixed-header-height: 40px !default;
 $menu-width: 250px !default;
 $menu-width-sm: 400px !default;
 $menu-item-font-size: 16px !default;
-$menu-item-height: 40px !default;
+$menu-item-height: 50px !default;
 $menu-item-icon-height: 50px !default;
 $menu-item-icon-width: 40px !default;
 $menu-item-icon-offset: 10px !default;
@@ -49,6 +49,7 @@ $modalview-body-offset: 10px !default;
 // ----------------------------------------
 $fieldset-item-min-height: 34px !default;
 $fieldset-offset: 6px !default;
+$fieldset-offset-sm: 14px !default;
 
 // inlineedit
 // ----------------------------------------
@@ -65,13 +66,20 @@ $string-height: 32px !default;
 // ----------------------------------------
 $dropdown-offset:  $fieldset-offset !default;
 $dropdown-height: $string-height !default;
-
+$dropdown-footer-font-size: $font-size-small;
+$dropdown-footer-height: $dropdown-footer-font-size + 2 * $string-offset;
 $dropdown-action-button-width: 28px !default;
 
+// selectbox component
+// ----------------------------------------
+$selectbox-item-offset-sm:   $fieldset-offset-sm;
 
 // calendar component
 // ----------------------------------------
-$calendar-action-offset: 4px 10px;
+$calendar-action-base-offset:  $fieldset-offset;
+$calendar-action-offset: $calendar-action-base-offset $calendar-action-base-offset;
+$calendar-controll-offset: $calendar-action-base-offset;
+$calendar-action-base-offset-sm:  $fieldset-offset-sm;
 
 // date component
 // ----------------------------------------

@@ -13,7 +13,9 @@
 		
 		Dropdown.DEFAULTS = {
 			closingTime: 150,
-			clsOpen: 'x-open'
+			clsOpen: 'x-open',
+			bodyClsOpen: 'x-dropdown-open',
+			allowClose: true
 		};
 		
 		Dropdown.prototype.getElement =  function(){
@@ -21,7 +23,7 @@
 		};
 		
 		Dropdown.prototype.getContentElement =  function(){
-			return this.$contentEl;
+			return this.$bodyEl;
 		};
 		
 		Dropdown.prototype.setInput = function(input){
@@ -45,18 +47,47 @@
 			if(!this.$actionEl){
 				this.$actionEl = angular.element('<div class="x-dropdown-action"><span>' + $translate.instant('Dropdown.toggle') + '</span></div>');
 				this.$contentEl = angular.element('<div class="x-dropdown-content"></div>');
+
+				this.$contentInnerEl = angular.element('<div class="x-dropdown-content-inner"></div>');
+				this.$contentEl.append(this.$contentInnerEl);
+
+				this.$titleEl = angular.element('<div class="x-dropdown-header">' + this.getElementTitle() + '</div>');
+				this.$contentInnerEl.append(this.$titleEl);
+				this.$closeEl = angular.element('<a href="#" class="x-dropdown-close"></a>');
+				this.$contentInnerEl.append(this.$closeEl);
+
+				this.$bodyEl = angular.element('<div class="x-dropdown-body"></div>');
+				this.$contentInnerEl.append(this.$bodyEl);
+
 				this.$element.append(this.$actionEl);
 				this.$element.append(this.$contentEl);
 				
 				this.$actionEl.on('click', function(event){
-					if(self.$element.hasClass(self.options.clsOpen)){
-						self.close(false);
-					} else {
-						self.open();
-					}
-					event.stopPropagation();
+					self.onCloseButton(event);
+				});
+
+				this.$closeEl.on('click', function(event){
+					self.onCloseButton(event);
 				});
 			}
+		};
+
+		Dropdown.prototype.getElementTitle = function(){
+			var schemaFragment = this.$element.data('schemaFragment');
+			if(schemaFragment){
+				return schemaFragment.title;
+			}
+			return '';
+		}
+
+		Dropdown.prototype.onCloseButton = function(event){
+			if(this.$element.hasClass(this.options.clsOpen)){
+				this.close(false);
+			} else {
+				this.open();
+			}
+			event.stopPropagation();
+			event.preventDefault();
 		};
 		
 		Dropdown.prototype.setOptions = function(options){
@@ -84,10 +115,13 @@
 				}, this.options.closingTime);
 				return true;
 			}
+
+			if(this.options.allowClose){
+				this.$element.removeClass(this.options.clsOpen);
 			
-			this.$element.removeClass(this.options.clsOpen);
-			
-			this.afterClose();
+				this.afterClose();
+				document.querySelector('body').classList.remove(this.options.bodyClsOpen);
+			}
 		};
 		
 		Dropdown.prototype.afterClose =  function(){};
@@ -95,6 +129,7 @@
 		Dropdown.prototype.open = function(){
 			this.$element.addClass(this.options.clsOpen);
 			this.afterOpen();
+			document.querySelector('body').classList.add(this.options.bodyClsOpen);
 		};
 		
 		Dropdown.prototype.afterOpen = function(){};

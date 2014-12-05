@@ -19,11 +19,16 @@
 		bottom: 100%;
 		white-space: nowrap;
 		vertical-align: middle;
-		// margin-bottom: -2px;
+
+		// fix IE
+		margin-bottom: -1px;
 		// background-color: white;
 
 		.x-component-button {
 			padding: $fieldset-offset;
+			@media (max-width: $screen-sm-max){
+				padding: $fieldset-offset-sm;
+			}
 		}	
 	}
 

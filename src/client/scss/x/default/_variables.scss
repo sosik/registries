@@ -32,6 +32,7 @@ $header-navigation-link-active: lighten($header-bg, 30%);
 $main-menu-bg: $color-black;
 $main-menu-color: $color-white;
 $main-item-hover-color: $color1;
+$main-item-active-bg-color: lighten($color-black, 10%);
 
 // string menu
 $string-border-color: $color-grey; 

@@ -12,12 +12,9 @@ body{
 
 * {
 	box-sizing: border-box;
-	@include not-selectable();
 }
 
-input, textarea, keygen, select, button {
-	margin: 0px;
-}
+
 
 .x-hidden {
 	display: none;
@@ -31,14 +28,6 @@ input, textarea, keygen, select, button {
 	height: $fixed-header-height;
 	z-index: 1;
 }
-
-// .x-main-menu {
-// 	position: fixed;
-// 	top: $fixed-header-height;
-// 	left: 0;
-// 	width: $menu-width;
-// 	bottom: 0;
-// }
 
 .x-main-content {
 	position: fixed;
@@ -84,7 +73,7 @@ input, textarea, keygen, select, button {
 	}
 
 	img{
-		height: 24px;
+		//height: 24px;
 		vertical-align: middle;
 		position: relative;
 		top: -2px;

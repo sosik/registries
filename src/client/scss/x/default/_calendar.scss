@@ -12,7 +12,7 @@
 
 	[tabindex]{
 		outline: none;
-		&:hover, &:focus{
+		&:focus{
 			background-color: $calendar-hover-color;
 		}
 	}
@@ -26,5 +26,4 @@
 		background-color: $calendar-current-background-color;
 		color: $calendar-current-color;
 	}
-	
 }

@@ -120,6 +120,11 @@
 		component.prototype._bindHandlers = function($items) {
 			var self = this;
 
+			// bind a mouseover handler
+			$items.on('mouseover', function(e) {
+				return self._handleMouseover(angular.element(this), e);
+			});
+
 			// bind a click handler
 			$items.on('click', function(e) {
 				return self._handleClick(angular.element(this), e);
@@ -141,6 +146,11 @@
 			});
 			
 			this.resetTabElemens();
+		};
+
+		component.prototype._handleMouseover = function($el, event){
+			this.setFocus($el);
+			event.stopPropagation();
 		};
 		
 		component.prototype._handleClick = function($el, event){
@@ -393,6 +403,7 @@
 			
 			this.setHeaderText('');
 			this.$contentElement.empty();
+			this.$headerActionElement.addClass('x-deactive');
 					
 			var year = date.getFullYear() - 4;
 
@@ -437,6 +448,7 @@
 				 date.getFullYear()
 			);
 			this.$contentElement.empty();
+			this.$headerActionElement.removeClass('x-deactive');
 			
 			var month = 0;
 			for (var i = 0; i<3; i++){
@@ -489,6 +501,7 @@
 			 
 
 			this.$contentElement.empty();
+			this.$headerActionElement.removeClass('x-deactive');
 			
 			date.setDate(1);
 			whichDay = date.getDay() - 1;

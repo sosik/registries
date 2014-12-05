@@ -2,7 +2,12 @@
 	font-size: em($font-size-small);
 	outline: none;
 
+	.x-deactive{
+		visibility: hidden;
+	}
+
 	.x-controlls{
+		padding-bottom: $calendar-controll-offset;
 		.x-controlls-header {
 			width: 100%;
 			display: table;
@@ -40,10 +45,14 @@
 	[tabindex]{
 		outline: none;
 		cursor: pointer;
-		&:hover{
-			background-color: #ddd;
+		//&:hover{
+			// background-color: #ddd;
+		//}
+		padding: $calendar-action-base-offset;
+
+		&.x-month, &.x-year{
+			padding: $calendar-action-base-offset * 2 $calendar-action-base-offset;
 		}
-		padding: $calendar-action-offset;
 	}
 
 	table{
@@ -68,5 +77,24 @@
 	.x-year{
 		text-align: center;
 	}
+
+
+	// moble and tablet
+	@media (max-width: $screen-sm-max) {
+
+		[tabindex]{
+			padding: $calendar-action-base-offset-sm;
+		}
+
+		table{
+			td,th{
+				padding: $calendar-action-base-offset-sm;
+			}
+			td{
+				text-align: center;
+			}
+		}
+	}
+	
 }
 

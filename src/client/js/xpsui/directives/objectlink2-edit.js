@@ -2,10 +2,10 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory', function(log, $parse, dropdownFactory, selectboxFactory, datafactory) {
+	.directive('xpsuiObjectlink2Edit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', function(log, $parse, dropdownFactory, selectboxFactory, datafactory) {
 		return {
 			restrict: 'A',
-			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiSelectEdit'],
+			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiObjectlink2Edit'],
 			controller: function($scope, $element, $attrs) {
 				this.setup = function(){
 					this.$input = angular.element('<input></input>');
@@ -25,7 +25,6 @@
 				var formControl = ctrls[1] || {};
 				var selfControl = ctrls[2];
 				var input = selfControl.getInput();
-				var schemaFragment = elm.data('schemaFragment');
 
 				elm.addClass('x-control');
 				elm.addClass('x-select-edit');
@@ -53,7 +52,7 @@
 					.render()
 				;
 
-				// selectbox
+				// selectobx
 				var selectbox = selectboxFactory.create(elm, {
 					onSelected: function(index, key, value){
 						input.val(value);
@@ -65,10 +64,7 @@
 				selectbox.setDropdown(dropdown);
 
 				// store
-				var dataset = datafactory.createArrayDataset(
-					schemaFragment.enum, 
-					schemaFragment.enumTransCodes
-				);
+				var dataset = datafactory.createTestDataset(scope, elm.data('schemaFragment'), 6000);
 				selectbox.setDataset(dataset);
 
 				log.groupEnd();
@@ -77,3 +73,4 @@
 	}]);
 
 }(window.angular));
+

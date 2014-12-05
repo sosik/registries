@@ -1,0 +1,20 @@
+*:not(input textarea){
+	@include not-selectable();
+}
+
+input, textarea, keygen, select, button {
+	margin: 0px;
+}
+
+a{
+	text-decoration: none;
+	cursor: pointer;
+}
+
+input::-ms-clear {
+   display: none;
+}
+
+input::-ms-reveal {
+   display: none;
+}

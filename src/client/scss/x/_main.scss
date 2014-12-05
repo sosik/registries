@@ -13,7 +13,6 @@ BODY, HTML {
 
 * {
 	box-sizing: border-box;
-}
 
 .x-hidden {
 	display: none;
@@ -27,14 +26,6 @@ BODY, HTML {
 	height: $fixed-header-height;
 	z-index: 1;
 }
-
-// .x-main-menu {
-// 	position: fixed;
-// 	top: $fixed-header-height;
-// 	left: 0;
-// 	width: $menu-width;
-// 	bottom: 0;
-// }
 
 .x-main-content {
 	position: fixed;
@@ -80,7 +71,7 @@ BODY, HTML {
 	}
 
 	img{
-		height: 24px;
+		//height: 24px;
 		vertical-align: middle;
 		position: relative;
 		top: -2px;

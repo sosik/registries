@@ -29,4 +29,10 @@
 	ul ul{
 		// background-color: lighten($main-menu-bg, 5%);
 	}
+
+	.x-active{
+		> a{
+			background-color: $main-item-active-bg-color;
+		}
+	}
 }

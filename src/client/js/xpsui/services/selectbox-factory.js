@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:services')
-	.factory('xpsui:SelectboxFactory', ['xpsui:logging', '$timeout', '$translate',  function(log, $timeout, $translate) {	
+	.factory('xpsui:SelectboxFactory', ['xpsui:logging', '$timeout', '$translate','xpsui:SelectDataFactory',  function(log, $timeout, $translate, datafactory) {	
 		var keys = {
 	            tab:      9,
 	            backspace:8,
@@ -27,6 +27,8 @@
 			this.dataset = null;
 			this.isRendered = false;
 			this.$searchInput = null;
+			// flag use for paging
+			this._startPaging = false;
 			this.selected = null;
 
 			this.options = angular.extend({}, Selectbox.DEFAULTS, options || {} );
@@ -43,8 +45,10 @@
 			onSelected: function(index, key, value){},
 			// onBlur close
 			closeOnBlur: true,
-			// scroll bufer
-			scrollBuffer: 40
+			// paging scroll bufer
+			pagingScrollBuffer: 40,
+			//paging items buffer
+			pagingItemsBuffer: 10,
 		};
 		
 		Selectbox.prototype.getElement =  function(){
@@ -81,15 +85,10 @@
 		};
 
 		Selectbox.prototype.setDataset = function(dataset){
+			var self = this;
 			this.dataset = dataset;
 
-			return this;
-		}
-
-		Selectbox.prototype.setStore = function(store){
-			var self = this;
-
-			this.setDataset( new DataSet(store, {
+			this.dataset.setOptions({
 				beforeLoad: function(dataSet){
 					self.onBeforeLoad();
 				},
@@ -99,8 +98,8 @@
 				reset: function(){
 					self.onReset();
 				}
-			}));
-			
+			});
+
 			return this;
 		}
 
@@ -155,6 +154,12 @@
 			this.unselectItem();
 			this.selected = $el.data('index');
 			$el.addClass('x-selected');
+
+			console.log('selected: ' + this.selected );
+			console.log('item min =<' + (this.dataset.data.length - this.options.pagingItemsBuffer));
+			if( this.selected >= this.dataset.data.length - this.options.pagingItemsBuffer ){
+				this.doPaging();
+			} 
 		};
 
 		// container where selectbox is rendered. 
@@ -194,11 +199,18 @@
 		Selectbox.prototype._handleScrollEvent = function(){
 			var self = this;
 			this.$itemsElement.on('scroll',function(){
-				if (this.scrollHeight - this.scrollTop <= this.offsetHeight + self.options.scrollBuffer) {
-		    		self.doLoad();
-		  		}
+				if (this.scrollHeight - this.scrollTop <= this.offsetHeight + self.options.pagingScrollBuffer) {
+					self.doPaging();
+				}
 			});
-		}
+		};
+
+		Selectbox.prototype.doPaging = function(){
+			if(!this._startPaging){
+				this._startPaging = true;
+				this.doLoad();
+			}
+		};
 
 		Selectbox.prototype.doLoad = function(){
 			this.dataset.load();
@@ -218,10 +230,12 @@
 			this.renderItems(newData);
 			this.$element.removeClass('x-loading');
 			this.setInfoNum();
+			this._startPaging = false;
 		};
 
 		Selectbox.prototype.onReset = function(){
 			this.selected = null;
+			this._startPaging = false;
 			if( this.$itemsElement.length ){
 				this.$itemsElement.empty();
 			}
@@ -339,7 +353,8 @@
 
 		Selectbox.prototype._handleMouseover = function($el, event){
 			if($el.hasClass('x-item')){
-				this.selectItem($el);
+				//this.selectItem($el);
+				$el[0].focus();
 			}
 		};
 
@@ -351,7 +366,7 @@
 			event.stopPropagation();
 		};
 
-		Selectbox.prototype._fixScoller = function($el){
+		Selectbox.prototype._fixScroller = function($el){
 			var selectedItem = $el[0];
 			var itemsElement = this.$itemsElement[0];
 			
@@ -385,7 +400,7 @@
 
 					var $selectedItem = angular.element(this.$itemsElement.children()[this.selected - 1]);
 					this.selectItem($selectedItem);
-					this._fixScoller($selectedItem);
+					this._fixScroller($selectedItem);
 
 					event.stopPropagation();
 					break;
@@ -400,7 +415,7 @@
 
 					var $selectedItem = angular.element(this.$itemsElement.children()[this.selected + 1]);
 					this.selectItem($selectedItem);
-					this._fixScoller($selectedItem);
+					this._fixScroller($selectedItem);
 
 					event.stopPropagation();
 					break;
@@ -449,138 +464,12 @@
 			this.renderInit();
 		};
 
-		/**
-		 * DataSet
-		 */
-		function DataSet(store, options){
-			this.store = store;
-			this.options = angular.extend({}, DataSet.DEFAULTS, options || {} );
-
-			this.data = [];
-
-			// offset of paging  
-			// e.g. n * this.option.limit
-			this.offset = 0;
-			// serach value
-			this.serachValue = null;
-			// load paging
-			this.loadDone = false;
-		};
-
-		DataSet.DEFAULTS = {
-			limit: 100,
-			beforeLoad: function(dataSet){},
-			loaded: function(dataSet, newData){},
-			reset: function(){},
-		};
-
-		// get limit plus one
-		DataSet.prototype.getLimit = function(value){
-			return this.options.limit + 1;
-		};
-
-		DataSet.prototype.getOffset = function(value){
-			return this.offset * this.options.limit;
-		};
-
-		DataSet.prototype.getSearchValue = function(){
-			return this.serachValue;
-		};
-
-		DataSet.prototype.setSearchValue = function(value){
-			this.reset();
-			this.serachValue = value;
-			return this;
-		};
-
-		DataSet.prototype.reset = function(){
-			this.data = [];
-			this.loadDone = false;
-			this.offset = 0;
-			this.serachValue = null;
-			this.options.reset();
-			return this;
-		};
-
-		DataSet.prototype.load = function(){
-			var self = this;
-			if (!this.loadDone) {
-				
-				this.options.beforeLoad(this);
-
-				this.store.load(this, function(data){
-					self.loaded(data);
-				});
-			}
-		};
-
-		DataSet.prototype.loaded = function(data){
-			if(data.length <= this.options.limit){
-				this.loadDone = true;
-			} else {
-				// remove limit plus one element
-				data.pop();
-			}
-			
-			this.data = this.data.concat(data);
-			this.options.loaded(this,data);
-			this.offset++;
-		}
-
-		/**
-		 * ArrayStore
-		 */
-
-		function ArrayStore(){
-			this.data = [];
-		};
-
-		ArrayStore.prototype.setData = function(data, translateCode){
-			if (translateCode) {
-				// there are transCodes
-				for (var i = 0; i < data.length; i++) {
-					this.data.push({
-						v: $translate.instant(translateCode[i]),
-						k: data.enum[i]
-					})
-				}
-			} else {
-				for (var i = 0; i < data.length; i++) {
-					this.data.push({
-						v: data[i],
-						k: data[i]
-					})
-				}
-			}
-		};
-
-		ArrayStore.prototype.load = function(dataset, callback){
-			var self = this;
-
-			this.timeout && $timeout.cancel(this.timeout);
-
-			this.timeout = $timeout(function(){
-				var data = [];
-
-				var regExp = new RegExp('^' + (dataset.getSearchValue() || '') ,'i');
-				for (var i = 0; i < self.data.length; ++i) {
-					if (regExp.test(self.data[i].v)) {
-						data.push(self.data[i]);
-					}
-				}
-
-				callback(
-					data.slice(dataset.getOffset(), dataset.getLimit() + dataset.getOffset())
-				);
-			}, 0);
-		};
+		
 
 		return {
+			controller: Selectbox,
 			create : function(element, options) {
 				return new Selectbox(element, options);
-			},
-			createArrayStore: function(){
-				return new ArrayStore();
 			}
 		}
 	

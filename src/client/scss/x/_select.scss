@@ -34,10 +34,12 @@
 
 	&.x-loading .x-selectbox header:after {
 		@include spin();
+		content: $icon-refresh;
 	}
 
 	.x-selectbox{
 		outline: none;
+		position: relative;
 		
 		header{
 			&:after{
@@ -70,7 +72,7 @@
 		footer{
 			@include clearfix();
 			
-			font-size: em($font-size-small);
+			font-size: em($dropdown-footer-font-size);
 			span{
 				display: inline-block;
 				padding: $string-offset;
@@ -87,5 +89,33 @@
 		position: relative;
 	}
 
+	// moble and tablet
+	@media (max-width: $screen-sm-max) {
+		.x-selectbox{
+			height: 100%;
+			header{
+				position: absolute;
+				top: 0px;
+				width: 100%;
+			}
 
+			.x-selectbox-items{
+				position: absolute;
+				top: $dropdown-height;
+				bottom: $dropdown-footer-height;
+				max-height: none;
+				width: 100%;
+			}
+
+			.x-item{
+				padding: $selectbox-item-offset-sm;
+			}
+
+			footer{
+				position: absolute;
+				bottom: 0px;
+				width: 100%;
+			}
+		}
+	}
 }

@@ -55,6 +55,7 @@ PageController.prototype.competitionMatches = function(req, res, next) {
 	qf.addCriterium('baseData.matchDate', QueryFilter.operation.LESS_EQUAL, require('../DateUtils.js').DateUtils.nowToReverse());
 	qf.addCriterium('baseData.competition.oid', QueryFilter.operation.EQUAL, cid);
 	qf.addSort('baseData.matchDate', QueryFilter.sort.DESC);
+	qf.setLimit(12);
 
 	this.refereeReportsDao.list(qf, function(err, data) {
 		if (err) {

@@ -46,7 +46,7 @@ ApiController.prototype.getByTags = function(req, res) {
 	}
 
 	qf.addCriterium('meta.enabled', QueryFilter.operation.EQUAL, true);
-	qf.addCriterium('meta.publishFrom', QueryFilter.operation.GREATER_EQUAL, require('./../DateUtils.js').DateUtils.nowToReverse());
+	qf.addCriterium('meta.publishFrom', QueryFilter.operation.LESS_EQUAL, require('./../DateUtils.js').DateUtils.nowToReverse());
 
 	qf.addSort('meta.publishFrom', QueryFilter.sort.DESC);
 	qf.addSort('meta.lastModTimestamp', QueryFilter.sort.DESC);

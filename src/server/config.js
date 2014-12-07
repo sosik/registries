@@ -7,14 +7,14 @@ var extend = require('extend');
 var config = {
 	portalPort: 3001,
 	portalHost: 'localhost',
-	portalTemplatesPath: path.join('data', 'portal', 'fragments'),
+	portalTemplatesPath: path.join('data', 'portal', 'templates'),
 	webserverPort: process.env.REGISTRIES_HTTP_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3000,
 	webserverSecurePort: process.env.REGISTRIES_HTTPS_PORT || process.env.OPENSHIFT_NODEJS_PORT || 3443,
 	webserverHost: process.env.REGISTRIES_HTTP_IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
 	webserverPublicUrl: process.env.REGISTRIES_PUBLIC_URL || process.env.OPENSHIFT_PUBLIC_URL || 'https://app.unionsoft.sk',
 	mongoDbURI: (
-				process.env.REGISTRIES_MONGODB_URL || process.env.OPENSHIFT_MONGODB_DB_URL
-				|| 'mongodb://' + (process.env.OPENSHIFT_MONGODB_DB_HOST || 'localhost') + ':' + (process.env.OPENSHIFT_MONGODB_DB_PORT || '27017')
+				process.env.REGISTRIES_MONGODB_URL || process.env.OPENSHIFT_MONGODB_DB_URL ||
+				'mongodb://' + (process.env.OPENSHIFT_MONGODB_DB_HOST || 'localhost') + ':' + (process.env.OPENSHIFT_MONGODB_DB_PORT || '27017')
 			) + '/registry',
 	mongoDbURI_test: 'mongodb://localhost:27017/integration_test_' + new Date().getTime(),
 	paths : {

@@ -1,0 +1,44 @@
+.x-objectlink2-view{
+	@include inline-view();
+
+	span{
+		display: inline-block;
+		margin-right: $objectlink2-view-item-offset;
+		&:last-child{
+			margin-right: 0px
+		}
+	}
+}
+
+.x-objectlink2-edit{
+	@include inline-edit( "div.x-input" );
+
+	div.x-input{
+		line-height: em($line-height);
+		span{
+			display: inline-block;
+			margin-right: $objectlink2-view-item-offset;
+			&:last-child{
+				margin-right: 0px
+			}
+		}
+	}
+
+
+	.x-selectbox{
+		.x-item{
+			font-size: 1em;
+
+			span{
+				display: inline-block;
+				margin-right: $objectlink2-view-item-offset;
+				&:last-child{
+					margin-right: 0px
+				}
+				//font-size: em($objectlink2-item-font-size);
+				// line-height: 1.4em;
+				// display: block;
+			}
+		}
+	} 
+}

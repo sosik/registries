@@ -144,7 +144,7 @@
 
 		ObjectDataSet.prototype = Object.create(DataSet.prototype);
 
-		ObjectDataSet.prototype.getLables = function(){
+		ObjectDataSet.prototype.getLabels = function(){
 			return this.store.lables;
 		}
 
@@ -156,34 +156,18 @@
 				data.pop();
 			}
 			
-			var tData = this._transformData(data);
-			this.data = this.data.concat(tData);
-			this.options.loaded(this,tData);
+			this.data = this.data.concat(data);
+			this.options.loaded(this,data);
 			this.offset++;
 		}
 
-		ObjectDataSet.prototype._transformData = function(data){
-			var transformed = [];
-			for(var i = 0; i < data.length; i++){
-				var curData = data[i];
-
-				var item = {
-					oid:curData.oid,
-					data: []
-				};
-				for(var j = 0; j < this.store.fieldsIndex.length; j++){
-					item.data.push(curData.refdata[this.store.fieldsIndex[j]]);
-					// var getter = $parse(this.store.fields[j]);
-					// item.data.push(getter(curData));
-				}
-
-				transformed.push(item);
-			
-			}
-			return transformed;
+		ObjectDataSet.prototype.getFieldLabel = function(index){
+			return this.store.getLabel(index);
 		}
 
-
+		ObjectDataSet.prototype.getFieldType = function(index){
+			return this.store.getFieldSchemaFragment(index).type;
+		}
 
 		/**
 		 * HttpStoreTest
@@ -196,7 +180,7 @@
 			this.fieldsIndex = [];
 
 			this._fieldsSchemaFragment = {};
-			this._lables = [];
+			this._lables = {};
 		};
 
 		HttpStoreTest.DEFAULTS = {
@@ -206,7 +190,7 @@
 		// ref to schema objectlink2.fields
 		HttpStoreTest.prototype.setFields = function(fields){
 			var field;
-			
+
 			this.fields = fields;
 			for( field in this.fields){
 				this.fieldsIndex.push(field);
@@ -226,29 +210,38 @@
 		};
 
 		HttpStoreTest.prototype.getFieldSchemaFragment = function(index){
-			var fieldName = this.fieldsIndex[index];
+			var fieldName = typeof index === "string" ? index : this.fieldsIndex[index];
 			if(!this._fieldsSchemaFragment[fieldName]){
-				var fieldProp= this.fields[fieldName].split("."),
-					path = [
-						this.schema,
-						"properties",
-						fieldProp[0],
-						"properties",
-						fieldProp[1]
-					],
-					getter = $parse(path.join('.'))
-				;
-
-			 	this._fieldsSchemaFragment[fieldName] = getter(this.scope);
+			 	this._fieldsSchemaFragment[fieldName] = HttpStoreTest.getFieldSchemaFragment(
+			 		this.schema, this.fields[fieldName], this.scope
+		 		);
 			}
 			return this._fieldsSchemaFragment[fieldName];
 		}
 
-		HttpStoreTest.prototype.getLable = function(index){
-			if(!this._lables[index]){
-			 	this._lables[index] = this._fieldsSchemaFragment[index].title;
+		HttpStoreTest.getFieldSchemaFragment = function(schema, field, scope){
+			var fieldProp = field.split("."),
+				path = [
+					schema,
+					"properties",
+					fieldProp[0],
+					"properties",
+					fieldProp[1]
+				],
+				getter = $parse(path.join('.'))
+			;
+
+		 	return getter(scope);
+		}
+
+
+		HttpStoreTest.prototype.getLabel = function(index){
+			var fieldName = typeof index === "string" ? index : this.fieldsIndex[index];
+
+			if(!this._lables[fieldName]){
+			 	this._lables[fieldName] = this.getFieldSchemaFragment(fieldName).title;
 			}
-			return this._lables[index];
+			return this._lables[fieldName];
 		};
 
 		HttpStoreTest.prototype.setTestData = function(count){
@@ -328,7 +321,8 @@
 				;
 
 				return new ObjectDataSet(store);
-			}
+			},
+			getFieldSchemaFragment: HttpStoreTest.getFieldSchemaFragment
 		}
 	
 	}]);

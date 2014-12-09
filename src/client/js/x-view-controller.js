@@ -21,7 +21,6 @@
 									'name': "baseData.name",
 									'licence': "coach.coachLicence",
 									'cretedOn': "baseData.createdOn"
-
 								}
 							}
 						},
@@ -155,7 +154,16 @@
 				country: 'Afghanistan',
 				surName: 'priezvisko',
 				birthDate: '20141212',
-				coach: 'test'
+				coach: {
+					schema:"uri://",
+					oid:345,
+					refdata:{
+						'surname': "John",
+						'name': "Hruska",
+						'licence': "094567564",
+						'cretedOn': "20130923"
+					}
+				}
 			}
 		};
 

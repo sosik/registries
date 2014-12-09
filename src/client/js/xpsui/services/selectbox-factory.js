@@ -449,7 +449,7 @@
 		Selectbox.prototype.actionSelected = function(){
 			if(this.selected !== null){
 				var val = this.dataset.data[this.selected];
-				this.options.onSelected(this.selected, val.v, val.k);
+				this.options.onSelected(val);
 			}
 			
 			this.$inputElement[0].focus();

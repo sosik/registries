@@ -15,7 +15,6 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 	var listObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/CollationUnmangler.js')(),
 			require('./manglers/ObjectCleanerUnmangler.js')(),
-
 			require('./manglers/TimestampUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
@@ -70,12 +69,15 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		var obj = req.body;
 		_dao.save(obj, function(err, data){
 			if (err) {
+				log.error(err);
 				throw err;
 			}
 			auditLog.info('user oid', req.currentUser.id,'has saved/modified object',obj);
 			res.json(data);
 		});
 	};
+
+
 
 	this.saveBySchema = function(req, res) {
 
@@ -119,10 +121,14 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			{collectionName: compiledSchema.table}
 		);
 
+		_daoAudit = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{collectionName: 'auditLog'}
+		);
+
 		log.verbose("data to save", req.body);
 
 		var obj = req.body;
-
 
 		if (obj.id){
 			//UPDATE
@@ -136,10 +142,20 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 						throw err;
 					}
 					res.status(200).json(data);
+
 					if (compiledSchema._fireEvents && compiledSchema._fireEvents.update ){
 						log.silly('Firing event',compiledSchema._fireEvents.update);
 						eventRegistry.emitEvent(compiledSchema._fireEvents.update,{entity:obj,user:req.currentUser});
 					}
+
+					var auditEntity={};
+					auditEntity.obj = obj;
+					auditEntity.user = req.currentUser.id;
+					auditEntity.action = "update";
+					auditEntity.timeStamp = new Date().getTime();
+					auditEntity.schemaName = schemaName;
+
+					_daoAudit.save(auditEntity, function (data){});
 				});
 
 			}
@@ -156,15 +172,27 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 				_dao.save(obj, function(err, data){
 					if (err) {
 						res.send(500);
-						throw err;
+						log.error(err);
+						return;
 					}
 					res.json(data);
+
 					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 					if (compiledSchema._fireEvents && compiledSchema._fireEvents.create ){
 						log.silly('Firing event',compiledSchema._fireEvents.create);
 
 						eventRegistry.emitEvent(compiledSchema._fireEvents.create,{entity:data,user:req.currentUser});
 					}
+
+					var auditEntity={};
+					auditEntity.obj = obj;
+					auditEntity.user = req.currentUser.id;
+					auditEntity.action = "create";
+					auditEntity.timeStamp = new Date().getTime();
+					auditEntity.schemaName = schemaName;
+
+					_daoAudit.save(auditEntity, function (data){
+					});
 				});
 
 			}
@@ -224,6 +252,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		log.verbose(req.params);
 		_dao.get(req.params.id, function(err, data){
 			if (err) {
+				log.error(err);
 				throw err;
 			}
 
@@ -274,6 +303,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		_dao.get(req.params.id, function(err, data){
 			if (err) {
+				log.error(err);
 				throw err;
 			}
 			setTimeout(getObjectMangler.mangle(data, compiledSchema, function(err, cb) {
@@ -292,6 +322,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		_dao.list({}, function(err, data){
 			if (err) {
+				log.error(err);
 				throw err;
 			}
 
@@ -345,6 +376,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		_dao.list(qf, function(err, data){
 			if (err) {
+				log.error(err);
 				throw err;
 			}
 
@@ -560,6 +592,7 @@ this.searchBySchemaCount = function(req, resp) {
 			limit : req.body.limit || 20
 		}, function(err, data){
 			if (err) {
+				log.error(err);
 				throw err;
 			}
 

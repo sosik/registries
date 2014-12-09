@@ -1,0 +1,38 @@
+.x-main-menu {
+	&, .x-main-menu-toggle{
+		background-color: $main-menu-bg;
+		color: $main-menu-color;
+	}
+
+	a{
+		color: $main-menu-color;
+	}
+
+	ul a{
+		&:hover, &.x-active-link{
+			color: $main-item-hover-color !important; 
+		}
+	}
+
+	ul {
+		.x-submenu-toggle{
+			border-top: 1px solid lighten($main-menu-bg, 20%);
+		}
+		li:first-child{
+			.x-submenu-toggle {
+				border-top: 0px;
+			}
+		}
+
+	}
+
+	ul ul{
+		// background-color: lighten($main-menu-bg, 5%);
+	}
+
+	.x-active{
+		> a{
+			background-color: $main-item-active-bg-color;
+		}
+	}
+}

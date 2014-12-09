@@ -1,0 +1,28 @@
+@mixin inline-view(){
+	width: 100%;
+	padding: $string-offset;
+	min-height: $inlineedit-min-height;
+
+	dev {
+		width: 100%;
+		@include text-selectable();
+		&:after{
+			content: '\0000A0';
+			visibility: hidden;
+		}
+	}
+}
+
+@mixin inline-edit($inputElement: input){
+	width: 100%;
+
+	#{$inputElement} {
+		border-width: 1px;
+		position: relative;
+		width: 100%;
+		font-size: em($base-font-size);
+
+		padding: $string-offset;
+		outline: none;
+	}
+}

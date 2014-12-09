@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiDatepicker',['xpsui:log', 'xpsui:DateUtil', '$translate', function(log, dateUtil, $translate) {
+	.directive('xpsuiCalendar',['xpsui:logging', 'xpsui:DateUtil', '$translate', 'xpsui:DropdownFactory', function(log, dateUtil, $translate, dropdownFactory) {
 		var keys = {
 	            tab:      9,
 	            enter:    13,
@@ -43,6 +43,7 @@
 				var value = dateUtil.parser(
 					angular.element(this).val()
 				);
+
 				if (value) {
 					self.setValue(value);
 					self.render();
@@ -68,6 +69,7 @@
 		};
 		
 		component.prototype.setValue = function(value){
+
 			if(angular.isUndefined(value)){
 				return this;
 			}
@@ -118,6 +120,11 @@
 		component.prototype._bindHandlers = function($items) {
 			var self = this;
 
+			// bind a mouseover handler
+			$items.on('mouseover', function(e) {
+				return self._handleMouseover(angular.element(this), e);
+			});
+
 			// bind a click handler
 			$items.on('click', function(e) {
 				return self._handleClick(angular.element(this), e);
@@ -140,6 +147,11 @@
 			
 			this.resetTabElemens();
 		};
+
+		component.prototype._handleMouseover = function($el, event){
+			this.setFocus($el);
+			event.stopPropagation();
+		};
 		
 		component.prototype._handleClick = function($el, event){
 			this._handleActions($el);
@@ -148,17 +160,17 @@
 		
 		component.prototype._handleKeyDown = function($el, event){
 			switch (event.keyCode) {
-				case keys.left:
+				case keys.up:
 					this.previousAction();
 					this.setFocus(this.$element);
 					event.stopPropagation();
 					break;
-				case keys.right:
+				case keys.down: //keys.down
 					this.nextAction();
 					this.setFocus(this.$element);
 					event.stopPropagation();
 					break;
-				case keys.down:
+				case keys.right: //keys.right
 					if(!this.$focusElement){
 						this.setFocus(
 							angular.element(this.getTabElements()[0])
@@ -178,7 +190,7 @@
 					}
 					event.stopPropagation();
 					break;
-				case keys.up:
+				case keys.left://keys.left
 					if(!this.$focusElement){
 						this.setFocus(
 							angular.element(this.getTabElements()[0])
@@ -252,6 +264,7 @@
 						this.getInput().val(
 							dateUtil.formatter($el.data('date'))
 						);
+						this.setValue($el.data('date'));
 						this.getInput()[0].focus();
 					}
 			}
@@ -262,7 +275,7 @@
 			if(!this.isRendered){
 				this.isRendered = true;
 				
-				this.$element = angular.element('<div class="x-datepicker-wrapper"></div>');
+				this.$element = angular.element('<div class="x-calendar"></div>');
 				
 				this.$element.attr('tabindex', '0');
 				if(this.dropdown){
@@ -322,7 +335,7 @@
 			$container.append(this.$headerActionElement);
 			
 			this.$nextActionElement = angular.element(
-				'<div  class="x-action-next" tabindex="-1">' + $translate.instant('date.next.day') + '</div>'
+				'<div  class="x-action-next" tabindex="-1"><span>' + $translate.instant('date.next.day') + '</span></div>'
 			); 
 			$container.append(this.$nextActionElement);
 			
@@ -390,6 +403,7 @@
 			
 			this.setHeaderText('');
 			this.$contentElement.empty();
+			this.$headerActionElement.addClass('x-deactive');
 					
 			var year = date.getFullYear() - 4;
 
@@ -434,6 +448,7 @@
 				 date.getFullYear()
 			);
 			this.$contentElement.empty();
+			this.$headerActionElement.removeClass('x-deactive');
 			
 			var month = 0;
 			for (var i = 0; i<3; i++){
@@ -486,6 +501,7 @@
 			 
 
 			this.$contentElement.empty();
+			this.$headerActionElement.removeClass('x-deactive');
 			
 			date.setDate(1);
 			whichDay = date.getDay() - 1;
@@ -581,26 +597,26 @@
 		
 		return {
 			restrict: 'A',
-			require: ['?xpsuiCtrl', '?ngModel','xpsuiDatepicker','xpsuiTextInput','?xpsuiDropdown'],
-			controller: function($scope, $element) {
-				var datapicker = new component();
-				datapicker.setRootElement($element);
-				
-				return datapicker;
-			},
+			require: ['?ngModel','xpsuiCalendar','xpsuiDateEdit'],
+			controller: component,
 			link: function(scope, elm, attrs, ctrls) {
-				var xpsuiCtrl = ctrls[0];
-				var ngModel = ctrls[1];
-				var xpsuiDatapickerCtrl = ctrls[2];
-				var xpsuiTextInputCtrl = ctrls[3];
-				var xpsuiDropdownCtrl = ctrls[4];
+				// var xpsuiCtrl = ctrls[0];
+				var ngModel = ctrls[0];
+				var xpsuiDatapickerCtrl = ctrls[1];
+				var xpsuiTextInputCtrl = ctrls[2];
+				var dropdown = dropdownFactory.create(elm);
 
-				elm.addClass('x-datepicker');
-				
+				dropdown.setInput(xpsuiTextInputCtrl.getInput())
+					.render()
+				;
+
+				elm.addClass('x-calendar-wrapper');
+
+				xpsuiDatapickerCtrl.setRootElement(elm);
 				xpsuiDatapickerCtrl.setInput(xpsuiTextInputCtrl.getInput());
 				
-				if(xpsuiDropdownCtrl){
-					xpsuiDatapickerCtrl.setDropdown(xpsuiDropdownCtrl);
+				if(dropdown){
+					xpsuiDatapickerCtrl.setDropdown(dropdown);
 				} else {
 					xpsuiDatapickerCtrl.render();
 				}

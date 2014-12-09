@@ -1,0 +1,84 @@
+.x-main-menu {
+	position: fixed;
+	top: $fixed-header-height;
+	left: 0;
+	width: $menu-width;
+	bottom: 0;
+	width: $menu-width;
+	z-index: 2;
+	@media (min-width: $screen-md-min){
+		overflow-y: auto;
+	}
+
+	&.x-modalview{
+		.x-modalview-window{
+			@media (min-width: $screen-sm) and (max-width: $screen-sm-max){
+				width: $menu-width-sm;
+			}
+		}
+	}
+	
+	.x-main-menu-toggle{
+		cursor: pointer;
+		position: fixed;
+		left: 0px;
+		top: 0px;
+		width: $fixed-header-height;
+		text-align: center;
+
+		&:before{
+			@include icon-font($icon-align-justify);
+			font-size: em(18px);
+			line-height: $fixed-header-height;
+		}
+		
+		@media (min-width: $screen-md-min){
+			display: none;
+		}
+	}
+	
+
+	&.x-open{
+		margin-left: 0px;
+	}
+
+	ul{
+		padding: 0px;
+		margin: 0px;
+		display: block;
+		li{
+			list-style: none;
+			display: block;
+		}
+		a{
+			text-decoration: none;
+			display: block;
+			cursor: pointer;
+			padding-left: $menu-item-icon-width + $menu-item-icon-offset * 2;
+			span{
+				font-size: em($menu-item-font-size);
+				line-height: em($menu-item-height, $menu-item-font-size);
+			}
+		}
+		.x-submenu-toggle{
+			padding-left: 0px;
+			i{
+				line-height: $menu-item-icon-height;
+				vertical-align: middle;
+				width: $menu-item-icon-width;
+				text-align: center;
+				margin-right: $menu-item-icon-offset;
+				margin-left: $menu-item-icon-offset;
+			}
+		}
+
+		ul{
+			display: none;
+		}
+
+		li.x-active > ul{
+			display: block;
+		}
+
+	}
+}

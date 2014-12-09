@@ -1,0 +1,81 @@
+// common
+BODY, HTML {
+	margin: 0 0 0 0;
+	overflow: hidden;
+}
+
+body{
+	font-size: 100%;
+	line-height: 1;
+	font-family: "Arial";
+}
+
+* {
+	box-sizing: border-box;
+}
+
+
+
+.x-hidden {
+	display: none;
+}
+
+.x-fixed-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: $fixed-header-height;
+	z-index: 1;
+}
+
+.x-main-content {
+	position: fixed;
+	top: $fixed-header-height;
+	right:0;
+	bottom:0;
+	left: 0;
+	
+	@media (min-width: $screen-md-min){
+		left: $menu-width;
+	}
+
+	padding: 5px 5px 5px 5px;
+	overflow-x: auto;
+}
+
+.x-form {
+}
+
+.x-form-title {
+	font-size: 200%;
+	font-weight: bold;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.x-component-button {
+	cursor: pointer;
+
+	SPAN {
+		padding-left: 3px;
+	}
+}
+
+
+.x-logo{
+	line-height: $fixed-header-height;
+	float: left;
+	margin-left: $fixed-header-height;
+	padding-left: 16px;
+	@media (min-width: $screen-md-min){
+		margin-left: 0px;
+	}
+
+	img{
+		//height: 24px;
+		vertical-align: middle;
+		position: relative;
+		top: -2px;
+	}
+}

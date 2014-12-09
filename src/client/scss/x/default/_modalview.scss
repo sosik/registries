@@ -1,0 +1,32 @@
+.x-modalview{
+
+	&.x-open{
+		@media (max-width: $screen-sm-max) {
+			background-color: $modlaview-bg-color;
+
+			.x-modalview-window{
+				background-color: $modalview-body-bg-color;
+				
+				&, a {
+					color: $modalview-color;
+				}
+
+			}
+
+			.x-modalview-header{
+				background-color: $modalview-header-bg;
+			}
+
+			.x-modalview-header, .x-modalview-close {
+				color: $color-black;
+			}
+
+			.x-modalview-close{
+				&:hover{
+					color: $color-white;
+				}
+			}
+		}
+
+	}
+}

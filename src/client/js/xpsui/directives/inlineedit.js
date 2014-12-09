@@ -41,7 +41,7 @@
 
 				var buttonsElm = angular.element('<div class="x-inlineedit-buttons x-hidden"></button></div>');
 				var commitButton = angular.element('<button class="x-component-button x-inlineedit-commit-button"><i class="fa fa-check"></i><span>Uložiť</span></button>');
-				var rollbackButton = angular.element('<button class="x-component-button x-inlineedit-rollback-button"><i class="fa fa-check"></i><span>Zrušiť</span></button>');
+				var rollbackButton = angular.element('<button class="x-component-button x-inlineedit-rollback-button"><i class="fa fa-remove"></i><span>Zrušiť</span></button>');
 
 				buttonsElm.append(commitButton).append(rollbackButton);
 

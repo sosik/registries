@@ -14,7 +14,8 @@
 	<meta name="copyright" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link rel="stylesheet" href="css/x-main.css" />
+	<link rel="stylesheet" href="css/x.css" />
+	<link rel="stylesheet" href="css/x-default.css" />
 	<link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="img/icon.ico" />
 	
@@ -34,11 +35,86 @@
 		<ng-view></ng-view>
 	</div>
 -->
-<div class="x-fixed-header">a</div>
-<div class="x-main-menu">
-	<a href="#/view/a/a">a</a>
+<div class="x-fixed-header">
+	<div class="x-logo">
+		<img src="img/logo.svg">
+	</div>
+
+	<nav>
+		<ul>
+			<li><span class="text-block"
+				><span >Administrator</span><i class="icon-user"></i></span
+			></li>
+			<li  class=""><a 
+				href="#"><span >Odhlásit se</span><i class="icon-power-off"></i></a
+			></li>
+		</ul>
+	</nav>
 </div>
-<div class="x-main-content">
+<div xpsui-menu class="x-main-menu x-modalview">
+	<div class="x-main-menu-toggle"></div>
+	<div class="x-modalview-window">
+		<span class="x-modalview-header">Menu</span>
+		<div class="x-main-menu-toggle x-modalview-close"></div>
+		<div class="x-modalview-body">
+			<ul>
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-group fa-2x"></i><span>Člen</span></a>
+					<ul>
+						<li><a href="#/view/a/a"><span>Nový</span></a></li>
+						<li><a href="#/view/a/a"><span>Hledat</span></a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-credit-card fa-2x"></i><span>Poplatek</span></a>
+					<ul>
+						<li><a href="#/view/a/a"><span>Nový poplatek</span></a></li>
+						<li><a href="#/view/a/a"><span >Hledat poplatek</span></a></li>
+						<li><a href="#/view/a/a"><span>Nova platba</span></a></li>
+						<li><a href="#/view/a/a"><span>Hledat platbu</span></a></li>
+
+						<li><a href="#/view/a/a"><span >Nový import</span></a></li>
+						<li><a href="#/view/a/a"><span >Hledat import</span></a></li>
+
+					</ul>
+				</li>
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-home fa-2x"></i><span>Organizace</span></a>
+					<ul>
+						<li><a href="#/view/a/a"><span >Nová</span></a></li>
+						<li><a href="#/view/a/a"><span >Hledat</span></a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-gear fa-2x"></i><span>Můj profil</span></a>
+					<ul>
+						<li><a href="#/view/a/a"><span >Profil</span></a></li>
+						<li><a href="#/view/a/a"><span >Změna hesla</span></a></li>
+					</ul>
+				</li>
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-cogs fa-2x"></i><span>Oprávnění</span></a>
+					<ul>
+						<li><a href="#/view/a/a"><span >Nová skupina</span></a></li>
+						<li><a href="#/view/a/a"><span >Skupiny oprávnění</span></a></li>
+						<li><a href="#/view/a/a"><span >Oprávnění uživatelů</span></a></li>
+						<li><a href="#/view/a/a"><span >Nový bezpečnostnej profil</span></a></li>
+						<li><a href="#/view/a/a"><span >Hledat bezpečnostnej profil</span></a></li>
+
+					</ul>
+				</li>
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-pie-chart fa-2x"></i><span>Statistiky</span></a>
+					<ul>
+						<li><a href="#/view/a/a"><span >Zobrazit</span></a></li>
+					</ul>
+				</li>
+
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-reorder fa-2x"></i><span>Schémata</span></a>
+					<ul>
+						<li><a href="#/view/a/a"><span >Seznam schémat</span></a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="x-main-content" xpsui-menu>
 	<ng-view></ng-view>
 </div>
 </body>

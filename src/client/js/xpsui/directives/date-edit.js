@@ -2,10 +2,10 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiStringEdit', ['xpsui:logging', function(log) {
+	.directive('xpsuiDateEdit', ['xpsui:logging', function(log) {
 		return {
 			restrict: 'A',
-			require: ['ngModel', '?^xpsuiFormControl','xpsuiStringEdit'],
+			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiDateEdit'],
 			controller: function($scope, $element, $attrs) {
 				this.setup = function(){
 					this.$input = angular.element('<input></input>');
@@ -24,12 +24,12 @@
 
 				var ngModel = ctrls[0];
 				var formControl = ctrls[1] || {};
-				var selfControl = ctrls[2] || {};
+				var selfControl = ctrls[2];
 
 				var input = selfControl.getInput();
 
 				elm.addClass('x-control');
-				elm.addClass('x-string-edit');
+				elm.addClass('x-date-edit');
 
 				ngModel.$render = function() {
 					input.val(ngModel.$viewValue || '');

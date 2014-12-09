@@ -1,0 +1,15 @@
+.x-select-edit {
+	INPUT {
+		border: 1px solid $string-border-color;
+		background-color: $string-background-color;
+	}
+
+	.x-selectbox{
+		.x-selected{
+			background-color: $color-active;
+		}
+		footer{
+			background-color: $selectbox-background-color;
+		}
+	}
+}

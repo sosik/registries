@@ -1,0 +1,30 @@
+.x-date-view {
+	@include inline-view();
+}
+
+.x-date-edit {
+	@include inline-edit();
+
+	.x-dropdown-action{
+		&:after{
+			@include icon-font($icon-calendar-empty);
+		}
+		&:hover{
+			&:after{
+				content: $icon-calendar;
+			}
+		}
+	}
+
+	&.x-open{
+		.x-dropdown-action{
+			&:after{
+				content: $icon-calendar;
+			}
+		}
+	}
+
+	.x-dropdown-content{
+		width: $date-dropdown-width;
+	}
+}

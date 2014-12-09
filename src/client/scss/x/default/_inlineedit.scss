@@ -1,0 +1,24 @@
+.x-inlineedit {
+	.x-inlineedit-buttons {
+		background-color: $inlineedit-background;	
+	}
+
+	.x-inlineedit-buttons {
+		background-color: none;
+		.x-component-button {
+			background-color: transparent;
+			border: none;
+
+			&:hover{
+				i{
+					//color: $main-item-hover-color;
+				}
+				
+			}
+		}
+	}
+}
+
+.x-inlineedit-active:AFTER {
+	//background-color: $inlineedit-penic-background;
+}

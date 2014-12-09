@@ -1,6 +1,7 @@
 @mixin inline-view(){
 	width: 100%;
 	padding: $string-offset;
+	min-height: $inlineedit-min-height;
 
 	dev {
 		width: 100%;
@@ -12,10 +13,10 @@
 	}
 }
 
-@mixin inline-edit(){
+@mixin inline-edit($inputElement: input){
 	width: 100%;
 
-	input {
+	#{$inputElement} {
 		border-width: 1px;
 		position: relative;
 		width: 100%;

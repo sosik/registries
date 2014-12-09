@@ -55,8 +55,8 @@
 
 				// selectbox
 				var selectbox = selectboxFactory.create(elm, {
-					onSelected: function(index, key, value){
-						input.val(value);
+					onSelected: function(value){
+						input.val(value.v);
 						console.log('onSelected');
 						console.log(arguments);
 					}

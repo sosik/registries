@@ -1,0 +1,27 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form form-horizontal">
+				<fieldset>
+					<legend>{{'schema.editor.schema.editing' | translate}}</legend>
+
+					<div class="form-group">
+						<section class="col-md-12" id="editor">
+							<div>
+								<div style="height: 80vh;" ui-ace="aceConfig" ng-model="schema"></div>
+							</div>
+						</section>
+					</div>
+				</fieldset>
+				<div class="form-group">
+					<div class="col-md-12">
+						<button ng-click="postData(schema)" class="btn btn-primary pull-right" ng-disabled="loading">
+							<i ng-class="{ 'glyphicon-ok': !loading, 'fa fa-spin fa-spinner': loading }"></i>{{'schema.editor.save' | translate}}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

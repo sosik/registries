@@ -10,6 +10,7 @@ module.exports = {
 	PROPERTIES_KEYWORD: 'properties', // properties keyword
 	REQUIRED_KEYWORD: 'required',
 	SEQUENCE: '$sequence',
+	UNIQUE:'$unique',
 	VARIABLE_SYMBOL: '$VariableSymbol',
 	TIMESTAMP: '$timestamp',
 	TYPE_KEYWORD: 'type',

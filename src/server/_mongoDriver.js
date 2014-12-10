@@ -9,7 +9,9 @@ var bson = require('mongodb').BSONPure;
 module.exports = function(MongoClient, ObjectID, QueryFilter) {
 	var _database = null;
 
-	return {
+
+
+	var self={
 		/*
 		 * @func init
 		 *  async db initialization
@@ -111,6 +113,13 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			// nothing to mangle
 			return obj;
 		},
+		createObjectId: function(hexStr) {
+				if (hexStr){
+					return ObjectID.createFromHexString(hexStr);
+				}
+				return null;
+		},
+
 		constructUpdateObject: function(obj) {
 			if (!obj) {
 				return null;
@@ -175,6 +184,9 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 					var c = queryFilter.crits[i];
 
 					var query;
+					if ('_id'==c.f){
+						c.v= self.createObjectId(c.v);
+					}
 
 					if (c.op === QueryFilter.operation.EQUAL) {
 						query = c.v;
@@ -256,4 +268,5 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 			};
 		}
 	};
+	return self;
 };

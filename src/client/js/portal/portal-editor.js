@@ -248,6 +248,10 @@
       $scope.blockSelectorShown = true;
     };
 
+    $scope.hideBlockSelector = function hideBlockSelector() {
+      $scope.blockSelectorShown = false;
+    };
+
     $scope.selectBlock = function(block) {
       $scope.blockSelectorShown = false;
       $scope.model.data.push($scope.blocks[block]);

@@ -9,14 +9,15 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-mocha-istanbul');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-karma');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
 	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:templates','copy:ssl', 'copy:sharedJsServer']);
 	grunt.registerTask('build:client', ['build:schemas', 'copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass', 'copy:sharedJsClient']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:schemas']);
-	grunt.registerTask('test', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
-	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
+	grunt.registerTask('test', ['env:test', 'build', 'x', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma']);
+	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);
 
@@ -247,6 +248,11 @@ module.exports = function(grunt) {
 		env: {
 			test: {
 				NODE_ENV: 'test'
+			}
+		},
+		karma: {
+			unitClient: {
+				configFile: 'tests/config/unitClient.conf.js'
 			}
 		}
 	});

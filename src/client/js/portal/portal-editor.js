@@ -349,6 +349,20 @@
         this.removeParent = function(idx) {
           $scope.$parent.removeFn(idx);
         };
+        this.upInParent = function(idx) {
+          var curr = $scope.$parent.index.subElements[idx];
+          if (idx > 0) {
+            $scope.$parent.index.subElements.splice(idx, 1);
+            $scope.$parent.index.subElements.splice(idx-1, 0, curr);
+          }
+        };
+        this.downInParent = function(idx) {
+          var curr = $scope.$parent.index.subElements[idx];
+          if (idx < $scope.$parent.index.subElements.length-1) {
+            $scope.$parent.index.subElements.splice(idx, 1);
+            $scope.$parent.index.subElements.splice(idx+1, 0, curr);
+          }
+        };
       }],
       require: ["^?portalMenuEditor"],
       link: function(scope, elm, attrs, ctrls) {
@@ -364,14 +378,18 @@
         var editButton = angular.element('<i class="action-button glyphicon-pencil"></i>');
         var addButton = angular.element('<i class="action-button glyphicon-plus"></i>');
         var removeButton = angular.element('<i class="action-button glyphicon-minus" ng-click="removeParent()"></i>');
+        var downButton = angular.element('<i class="action-button glyphicon-arrow-down" ng-click="downFn()"></i>');
+        var upButton = angular.element('<i class="action-button glyphicon-arrow-up" ng-click="upFn()"></i>');
 
         var editPanel = angular.element('<table class="psui-hidden portal-menu-editor-edit-panel">' +
             '<tr><td>Meno:</td><td><input ng-model="index.name"</td></tr>' +
             '<tr><td>Tagy:</td><td><span portal-multistring-edit ng-model="index.tags"></span></td></tr>' +
             '</table>');
+ 
 
         editButton.on('click', function(evt) {
           editPanel.toggleClass('psui-hidden');
+          scope.opened = !scope.opened;
           evt.stopPropagation();
         });
 
@@ -395,6 +413,26 @@
             }
         };
 
+        scope.upFn = function() {
+            editPanel.removeClass('psui-hidden');
+            editPanel.addClass('psui-hidden');
+            children.removeClass('psui-hidden');
+            children.addClass('psui-hidden');
+            if (ctrls[0]) {
+              ctrls[0].upInParent(scope.elementIdx);
+            }
+          }
+
+        scope.downFn = function() {
+            editPanel.removeClass('psui-hidden');
+            editPanel.addClass('psui-hidden');
+            children.removeClass('psui-hidden');
+            children.addClass('psui-hidden');
+            if (ctrls[0]) {
+              ctrls[0].downInParent(scope.elementIdx);
+            }
+          }
+
         if (ctrls[0]) {
           actionButtons.append(editButton);
         }
@@ -402,6 +440,8 @@
         actionButtons.append(addButton);
         if (ctrls[0]) {
           actionButtons.append(removeButton);
+          actionButtons.append(downButton);
+          actionButtons.append(upButton);
         }
 
         header.on('click', function(evt) {

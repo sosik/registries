@@ -39,9 +39,6 @@
 			var self = this;
 			this.$inputElement = element;
 
-			console.log('input element');
-			console.log(this.$inputElement);
-			
 			this.$inputElement.on('change',function(){
 				var value = dateUtil.parser(
 					angular.element(this).val()
@@ -66,15 +63,12 @@
 		
 		component.prototype.getDate = function(value){
 			if(this.date === null || this.date === undefined){
-				this.setDate(this.value ? this.value : new Date);
+				this.setDate(this.value ? this.value : new Date());
 			}
 			return this.date;
 		};
 		
 		component.prototype.setValue = function(value){
-			console.log('setValue');
-			console.log(value);
-
 			if(angular.isUndefined(value)){
 				return this;
 			}
@@ -374,7 +368,7 @@
 		};
 		
 		component.prototype.currentDayAction = function(){
-			this.setDate(new Date);
+			this.setDate(new Date());
 			this.doLayout = this.dailyLayout;
 			this.doLayout();
 		};
@@ -390,7 +384,7 @@
 		component.prototype.doLayout = function(){};
 		
 		component.prototype.yearlyLayout = function(){
-			var currentDate = new Date,
+			var currentDate = new Date(),
 				selectedDate = this.getValue(),
 				tr, td,
 				date = new Date(this.getDate().getTime())
@@ -432,7 +426,7 @@
 		};
 		
 		component.prototype.monthlyLayout = function(){
-			var currentDate = new Date,
+			var currentDate = new Date(),
 				selectedDate = this.getValue(),
 				tr, td,
 				date = new Date(this.getDate().getTime())
@@ -478,7 +472,7 @@
 		};
 		
 		component.prototype.dailyLayout = function(){
-			var currentDate = new Date,
+			var currentDate = new Date(),
 				selectedDate = this.getValue(),
 				whichDay,
 				tr, td,
@@ -580,7 +574,7 @@
 			if (this.value) {
 				this.setDate(this.value);
 			} else {
-				this.setDate(new Date);
+				this.setDate(new Date());
 			}
 			
 			// set daily render layout

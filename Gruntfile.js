@@ -16,7 +16,7 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:schemas']);
 	grunt.registerTask('test', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
-	grunt.registerTask('unitTest', ['env:test', 'build', 'mochaTest:unitServer', 'mochaTest:unitShared']);
+	grunt.registerTask('unitTest', ['env:test', 'mochaTest:unitServer', 'mochaTest:unitShared']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);
 
@@ -26,10 +26,10 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('doc', 'yuidoc');
 
-	grunt.registerTask('x', ['uglify', 'copy:xparts', 'copy:xhtml', 'sass:x']);
+	grunt.registerTask('x', ['copy:x', 'sass:x', 'uglify']);
 	grunt.registerTask('default', ['build', 'x', 'unitTest']);
 
-	grunt.registerTask('portal', ['uglify:xpsui', 'build:server', 'build:client'])
+	grunt.registerTask('portal', ['uglify:xpsui', 'build:server', 'build:client']);
 
 	grunt.initConfig({
 		copy: {
@@ -100,13 +100,9 @@ module.exports = function(grunt) {
 					{expand: true, cwd: 'src/shared/js', src: ['**'], dest: 'build/server'}
 				]
 			},
-			xparts: {
+			x: {
 				files: [
-					{expand: true, cwd: 'src/client/partials', src: ['**/x-*'], dest: 'build/client/partials'}
-				]
-			},
-			xhtml: {
-				files: [
+					{expand: true, cwd: 'src/client/partials', src: ['**/x-*'], dest: 'build/client/partials'},
 					{expand: true, cwd: 'src/client/html', src: ['**/x-*'], dest: 'build/client/'}
 				]
 			}
@@ -226,8 +222,7 @@ module.exports = function(grunt) {
 			},
 			x: {
 				options: {
-					unixNewlines: true,
-					sourcemap: 'inline'
+					unixNewlines: true
 				},
 				files: {
 					'build/client/css/x-main.css': 'src/client/scss/x-main.scss',

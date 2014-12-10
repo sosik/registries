@@ -43,7 +43,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	});
 
 	var schemaRegistry = new schemaRegistryModule.SchemaRegistry({schemasList:schemasListPaths});
-	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry);
+	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry,{emitEvent:function(){}});
 
 	go(udc,schema,function(err){ if(err){console.log(err)} mongoDriver.close(); console.log('Items saved',itemsSaved); });
 

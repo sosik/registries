@@ -346,8 +346,11 @@
             $scope.index.subElements.splice(idx, 1);
           }
         };
+        this.removeParent = function(idx) {
+          $scope.$parent.removeFn(idx);
+        };
       }],
-      require: ["^^?portalMenuEditor"],
+      require: ["^?portalMenuEditor"],
       link: function(scope, elm, attrs, ctrls) {
         scope.mode = 'view';
         scope.opened = false;
@@ -360,7 +363,7 @@
         var actionButtons = angular.element('<span style="padding-left: 10px;" class="psui-hidden"></span>');
         var editButton = angular.element('<i class="action-button glyphicon-pencil"></i>');
         var addButton = angular.element('<i class="action-button glyphicon-plus"></i>');
-        var removeButton = angular.element('<i class="action-button glyphicon-minus" ng-click="removeFn()"></i>');
+        var removeButton = angular.element('<i class="action-button glyphicon-minus" ng-click="removeParent()"></i>');
 
         var editPanel = angular.element('<table class="psui-hidden portal-menu-editor-edit-panel">' +
             '<tr><td>Meno:</td><td><input ng-model="index.name"</td></tr>' +
@@ -379,10 +382,16 @@
           evt.stopPropagation();
         });
 
-        scope.removeFn = function() {
-            console.log(scope.elementIdx);
+        scope.removeParent = function() {
             if (ctrls[0]) {
-              ctrls[0].remove(scope.elementIdx);
+              ctrls[0].removeParent(scope.elementIdx);
+            }
+          }
+
+        scope.removeFn = function(idx) {
+            console.log(idx);
+            if (ctrls[0]) {
+              ctrls[0].remove(idx);
             }
         };
 

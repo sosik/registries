@@ -9,6 +9,8 @@ var universalDaoModule = require('./../../build/server/UniversalDao.js');
 
 var objectTools = require('./../../build/server/ObjectTools.js');
 
+var dateUtils = require('./../../build//server/DateUtils.js').DateUtils;
+
 var async = require('async');
 
 var path = null;
@@ -52,7 +54,7 @@ function parseLines(callback){
 
 	var dataSet2=new DataSet();
 	rd.on('line', dataSet2.collectLine);
-	rd.on('close', function(){processDataset(dataSet2,callback);});
+	rd.on('close', function(){console.log('collected');processDataset(dataSet2,callback);});
 }
 
 
@@ -85,7 +87,7 @@ function processDataset(dataset,callback){
 		lineProcessors.push( function(callback){processLine(importDefinition,line,lineNr++,callback); });
 	});
 
-	async.parallel(lineProcessors,callback);
+	async.parallelLimit(lineProcessors,10,callback);
 }
 
 
@@ -103,21 +105,19 @@ function processLine(def,line,lineNr,callback){
 					resovleFs.push(function(callback2){
 						if (toResolve.byBirthNumber){
 							resolveByBirthNumberToObjectLink(json,toResolve.attribute,callback2);
-						}
-						else
-						if (toResolve.byName){
+						} else if (toResolve.pathUpdated){
+							resolveToAttribute(json,toResolve,callback2);
+						} else if (toResolve.byName){
 							resolveByNameToObjectLink(json,toResolve.attribute,callback2);
-						}
-						else if (toResolve.path){
+						} else if (toResolve.path){
 							resolveByPathToObjectLink(json,toResolve.attribute,toResolve.path,callback2);
-						}
-						else {
+						} else {
 							resolveToObjectLink(json,toResolve.attribute,callback2);
 						}
 					});
 				});
 
-				async.parallel(resovleFs, function( err ){
+				async.parallelLimit(resovleFs,20, function( err ){
 
 				if (def.copy){
 						def.copy.map(function(item){
@@ -127,7 +127,14 @@ function processLine(def,line,lineNr,callback){
 
 				if (def.merge){
 						try {
-							eval(def.merge.searchByMethod + '(json,dao,mergeAndSave,callback)');
+							if (def.merge.mergeCond){
+								var mergeCond=def.merge.mergeCond;
+								eval(def.merge.searchByMethod + '(json,dao,mergeAndSave,mergeCond,callback)');
+							}
+							else {
+								eval(def.merge.searchByMethod + '(json,dao,mergeAndSave,callback)');
+							}
+
 						}	catch (err){
 							console.log('Not able to evaluate ', def.merge.searchByMethod);
 						}
@@ -269,8 +276,17 @@ function parseDef(rawDef) {
 			def.copy.push({"from": items[1],"to":items[2]});
 		break;
 		case '$merge$':
-				def.merge={	searchByMethod: items[1], registry:items[2]};
+				if (items.length===3){
+					def.merge={searchByMethod: items[1], registry:items[2]};
+				}
+
+				if (items.length===4){
+					def.merge={searchByMethod: items[1], registry:items[3], mergeCond: items[2]};
+				}
+
 			break;
+
+
 		case '$resolve$':
 			if (!def.resolve) {
 				def.resolve = [];
@@ -285,7 +301,7 @@ function parseDef(rawDef) {
 			def.resolve.push({attribute:items[1],byName:true});
 			break;
 
-			case '$resolveByPath$':
+		case '$resolveByPath$':
 			if (!def.resolve) {
 				def.resolve = [];
 			}
@@ -293,8 +309,16 @@ function parseDef(rawDef) {
 			def.resolve.push({attribute:items[1],path:items[2]});
 			break;
 
+		case '$resolveToAttribute$':
+			if (!def.resolve) {
+				def.resolve = [];
+			}
 
-			case '$resolveByBirthNumber$':
+			def.resolve.push({pathToResolve:items[1],registryToSearch:items[2],pathToMatch:items[3],pathUsed:items[4],pathUpdated:items[5]});
+			break;
+
+
+		case '$resolveByBirthNumber$':
 			if (!def.resolve) {
 				def.resolve = [];
 			}
@@ -393,7 +417,7 @@ function resolveToObjectLink(json,path,callback){
 
 	var parts=path.split('.');
 
-	console.log(json,path);
+	// console.log(json,path);
 
 	var obj = json;
 	var prev;
@@ -403,7 +427,7 @@ function resolveToObjectLink(json,path,callback){
 		lastPart = part;
 	});
 	if (!obj) return;
-	console.log(obj);
+	// console.log(obj);
 	// console.log(json);
 	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : obj.registry
@@ -477,7 +501,7 @@ function resolveByNameToObjectLink(json,path,callback){
 function resolveByPathToObjectLink(json,path,searchPath,callback){
 
 
-	console.log(json,path,searchPath);
+	// console.log(json,path,searchPath);
 	// console.log('resolveByNameToObjectLink',json,path);
 	var parts=path.split('.');
 
@@ -514,6 +538,38 @@ function resolveByPathToObjectLink(json,path,searchPath,callback){
 		obj.oid=data[0].id;
 		delete obj.unresolved;
 		callback(null);
+	} );
+}
+function resolveToAttribute(json,resDef,callback){
+
+
+	// {pathToResolve:items[1],registryToSearch:items[2],pathToMatch:items[3],pathUsed:items[4],pathUpdated:items[5]};
+
+	// console.log(json,path,searchPath);
+	// console.log('resolveByNameToObjectLink',json,p);
+	var obj = objectTools.getValue(json,resDef.pathToResolve);
+	if (!obj){
+		callback();
+		return;
+	}
+	var daoLink = new universalDaoModule.UniversalDao(mongoDriver, {
+		collectionName : resDef.registryToSearch
+	});
+
+	daoLink.list(QueryFilter.create().addCriterium(resDef.pathToMatch, QueryFilter.operation.EQUAL,''+obj.unresolved.trim()), function(err,data){
+		if (err) {
+			callback(err);
+			return;
+		}
+		if (data.length===0){
+			callback();
+			console.log('Not able to resolve',obj);
+			return;
+		}
+
+		objectTools.setValue(json,resDef.pathUpdated,objectTools.getValue(data[0],resDef.pathUsed));
+		delete obj.unresolved;
+		callback();
 	} );
 }
 
@@ -752,11 +808,15 @@ function mapAktivna(item){
 	return 'neaktívna';
 }
 
-
+function substring10(item){
+	if (!item) return null;
+	item=item.replace('"','');
+	return item.substr(0,10);
+}
 
 function parseDateMix(item)	{
 	if (!item) return null;
-
+	// console.log('parsing',item);
 	if (item.indexOf('/')>-1){
 		var parts=item.split('/');
 		if (parts[1].length===1) {
@@ -926,5 +986,155 @@ function findImportId(json,dao,mergeAndSave,callback){
 		var qf=QueryFilter.create();
 		qf.addCriterium('import.id',QueryFilter.operation.EQUAL,json.import.id);
 		dao.list(qf,function (err,data){if (err) {callback(err);return;} mergeAndSave(err,dao,data[0],json,callback); });
+
+}
+
+function findByPlayerId(json,dao,mergeAndSave,condFunction,callback){
+
+		// console.log('method called', json,dao,mergeAndSave,condFunction);
+
+		var qf=QueryFilter.create();
+
+		qf.addCriterium('baseData.registrationID',QueryFilter.operation.EQUAL,json.baseData.registrationID);
+
+		dao.list(qf,function (err,data){
+			if (err) {callback(err);return;}
+			var expr=condFunction+ '(data[0],json)';
+			// console.log('makakkkk',expr);
+			if ( eval(expr)===true ){
+				mergeAndSave(err,dao,data[0],json,callback);
+			}
+			else {
+				callback();
+			}
+		});
+
+}
+
+
+function mergeWhenNewerPlayer(player,playerToMerge){
+	var save =false;
+
+	if (!player) return false;
+
+	// console.log(player,playerToMerge);
+
+	var tmp = playerToMerge.tmp;
+	if (tmp.club.unresolved) return false;
+
+	if (tmp.validFrom<'20040101'){
+		return false;
+	}
+
+	 delete playerToMerge.tmp;
+
+	switch(tmp.type) {
+
+		// číslo 1 – stály hráč
+		case '1':
+
+			if (!player.player.validFrom){
+				save=true;
+			} else if (!player.player.clubOfFirstRegistration) {
+				save=true;
+			} else if (player.player.validFrom < tmp.validFrom) {
+					save=true;
+			}
+
+			playerToMerge.player={};
+
+			playerToMerge.player.clubOfFirstRegistration=tmp.club;
+			playerToMerge.player.validFrom= tmp.validFrom;
+			playerToMerge.player.validTo=tmp.validTo;
+
+			break;
+
+		// číslo 2 – pendlujúci hráč, hráč so striedavým štartom //môže hrať v 2 kategóriách v tom istom klube//
+		case '2':
+
+				if (!player.player.hostingStartDate){
+					save=true;
+				} else if (!player.player.clubOfFirstRegistration) {
+					save=true;
+				} else if (player.player.hostingStartDate < tmp.validFrom) {
+					save=true;
+				}
+
+				if (tmp.validTo && dateUtils.nowToReverse()>tmp.validTo ){
+					save=false;
+				}
+
+				playerToMerge.player={};
+
+				playerToMerge.player.clubOfFirstRegistration=tmp.club;
+				playerToMerge.player.hostingStartDate = tmp.validFrom;
+				playerToMerge.player.hostingEndDate = tmp.validTo;
+
+				break;
+		// číslo 3 – hosťujúci hráč //hráč môže štartovať v inom klube, t.j. nie v materskom//
+		case '3':
+
+				if (!player.player.hostingStartDate){
+					save=true;
+				} else if (!player.player.clubOfFirstRegistration) {
+					save=true;
+				} else if (player.player.hostingStartDate < tmp.validFrom) {
+					save=true;
+				}
+
+				if (tmp.validTo && dateUtils.nowToReverse()>tmp.validTo ){
+					save=false;
+				}
+
+				playerToMerge.player={};
+
+				playerToMerge.player.clubOfFirstRegistration=tmp.club;
+				playerToMerge.player.hostingStartDate = tmp.validFrom;
+				playerToMerge.player.hostingEndDate = tmp.validTo;
+
+
+				break;
+
+		// číslo 10 – tréner družstva
+		case '10':
+
+			if (!player.coach.dateOfApplicationForId){
+					save=true;
+				} else if (!player.coach.association) {
+					save=true;
+				} else if (player.coach.dateOfApplicationForId < tmp.validFrom) {
+					save=true;
+				}
+
+				if (tmp.validTo && dateUtils.nowToReverse()>tmp.validTo ){
+					save=false;
+				}
+
+				playerToMerge.coach={};
+
+				playerToMerge.coach.association=tmp.club;
+				playerToMerge.coach.dateOfApplicationForId = tmp.validFrom;
+				playerToMerge.coach.dateOfExpiration = tmp.validTo;
+
+				break;
+		// číslo 11 – asistent trénera
+		case '11':
+				break;
+
+		// číslo 15 – vedúci družstva // posledných cca 10 rokov sa nevyužíva//
+		case '15':
+
+				break;
+
+		// číslo 255 – nezaradený hráč v klube, t.j. nie je na žiadnej súpiske, ale je v danom materskom klube
+		case '255':
+
+				break;
+
+
+
+	}
+
+	return save;
 
 }

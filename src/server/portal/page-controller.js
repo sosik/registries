@@ -201,6 +201,7 @@ PageController.prototype.renderPage = function(req, res, next) {
 
 	if (req.params && req.params.aid) {
 		aid = req.params.aid;
+		log.verbose('renderPage params', req.params);
 	}
 	this.getArticle(aid, function(err, data) {
 		if (err) {

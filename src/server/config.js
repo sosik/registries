@@ -15,7 +15,7 @@ var config = {
 	mongoDbURI: (
 				process.env.REGISTRIES_MONGODB_URL || process.env.OPENSHIFT_MONGODB_DB_URL ||
 				'mongodb://' + (process.env.OPENSHIFT_MONGODB_DB_HOST || 'localhost') + ':' + (process.env.OPENSHIFT_MONGODB_DB_PORT || '27017')
-			) + '/registry',
+			) + '/registry' + (process.env.NODE_ENV == 'test' ? '_test' : ''),
 	mongoDbURI_test: 'mongodb://localhost:27017/integration_test_' + new Date().getTime(),
 	paths : {
 		photos: process.env.REGISTRIES_PATH_PHOTOS || process.cwd() + '/data/photos',

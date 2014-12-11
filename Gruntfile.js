@@ -10,16 +10,25 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-karma');
+	grunt.loadNpmTasks('grunt-protractor-runner');
+	grunt.loadNpmTasks('grunt-express-server');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
 	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:templates','copy:ssl', 'copy:sharedJsServer']);
 	grunt.registerTask('build:client', ['build:schemas', 'copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass', 'copy:sharedJsClient']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:schemas']);
-	grunt.registerTask('test', ['env:test', 'build', 'x', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma']);
+	grunt.registerTask('test', ['env:test', 'build', 'x', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma', 'express', 'e2e:tests'/*, 'smoke:tests'*/]);
 	grunt.registerTask('unitTest', ['env:test', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);
+
+	grunt.registerTask('e2e', [ 'env:test', 'build', 'x', 'express', 'e2e:tests' ]);
+	grunt.registerTask('e2e:tests', [ 'protractor:e2e-firefox', 'protractor:e2e-chrome' ]);
+
+	/** TODO: Enable this when some smoke tests will exist
+	grunt.registerTask('smoke', [ 'env:test', 'build', 'x', 'express', 'smoke:tests' ]);
+	grunt.registerTask('smoke:tests', [ 'protractor:smoke-firefox', 'protractor:smoke-chrome' ]); */
 
 	grunt.renameTask('clean', '_clean');
 	grunt.registerTask('clean', ['_clean:build']);
@@ -248,6 +257,38 @@ module.exports = function(grunt) {
 		karma: {
 			unitClient: {
 				configFile: 'tests/config/unitClient.conf.js'
+			}
+		},
+		express: {
+			all: {
+				options: {
+					script: 'build/server/server.js',
+					output: 'server listening at',
+					// Because logger in the NDOE_ENV=test is silent, after delay the server is considered as running
+					delay: 5000
+				}
+			}
+		},
+		protractor: {
+			'e2e-chrome': {
+				options: {
+					configFile: 'tests/config/e2e.chrome.conf.js'
+				}
+			},
+			'e2e-firefox': {
+				options: {
+					configFile: 'tests/config/e2e.firefox.conf.js'
+				}
+			},
+			'smoke-chrome': {
+				options: {
+					configFile: 'tests/config/smoke.chrome.conf.js'
+				}
+			},
+			'smoke-firefox': {
+				options: {
+					configFile: 'tests/config/smoke.firefox.conf.js'
+				}
 			}
 		}
 	});

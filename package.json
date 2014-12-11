@@ -25,17 +25,20 @@
     "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-watch": "*",
     "grunt-env": "^0.4.1",
+    "grunt-express-server": "^0.4.19",
     "grunt-mocha-test": "*",
+    "grunt-protractor-runner": "^1.1.4",
     "mongodb": "^1.4.7",
     "node-uuid": "*",
     "nodemailer": "^0.6.5",
+    "object-hash": "~0.3.0",
     "readline": "0.0.3",
     "supervisor": "^0.6.0",
     "swig": "^1.4.1",
-    "winston": "^0.7.3",
-    "object-hash": "~0.3.0"
+    "winston": "^0.7.3"
   },
   "devDependencies": {
+    "chai-as-promised": "^4.1.1",
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-yuidoc": "^0.5.2",
     "grunt-karma": "^0.9.0",
@@ -43,7 +46,8 @@
     "karma": "^0.12.28",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.1.9",
-    "karma-phantomjs-launcher": "^0.1.4"
+    "karma-phantomjs-launcher": "^0.1.4",
+    "protractor": "^1.5.0"
   },
   "scripts": {
     "test": "grunt test",

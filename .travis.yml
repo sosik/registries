@@ -1,9 +1,23 @@
 language: node_js
+
+env:
+  global:
+    - secure: HOwWIu551c0rmVjLawKVY33Gy4L7O0hzII39d1BEHM8xwFnO004P78q/+MrIr65KdHzUkFn0RggqgA8Ks+S3bbU5QHgTZhJW9mlOAusAHf6TMRW2OH/FxMQbnOUvzRaCwcwvTiOVvTkSSdrgop6bV4reHncfUooVthSPb3Kile0=
+    - secure: EBTCa076eznDrXp0tp4z9GTv9r6n2gGhZa3AhOyjDASRFYB5wqnpH2fiKQ3+6GpeTJsubohl4hxt1a4MJ2KTr3i75ZmCDfkk1Qfu8Mi8vcTNrqGYum/mngI6Fb6+EgwAKHqNKynIHZoDhtuR72M53mIbWd4smt7Xz84HNXVHqGo=
+
 nodejs:
   - "0.11"
   - "0.10"
+
+addons:
+  sauce_connect: true
+
+services:
+  - mongodb
+
 before_install:
-    - "npm install -g grunt-cli"
-    - "npm install -g bower"
-    - "gem install sass --version 3.4.0"
-    - "bower install"
+  - "npm install -g grunt-cli bower"
+  - "gem install sass --version 3.4.0"
+  - "bower install"
+  # Add demo01 data
+  - "./tools/setupData.sh demo01"

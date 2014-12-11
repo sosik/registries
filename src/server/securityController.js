@@ -667,7 +667,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 		resp.cookie(cfg.securityTokenCookie, token, {
 				httpOnly : true,
-				secure : true
+				secure : process.env.NODE_ENV != 'test'
 		});
 		resp.cookie(cfg.loginNameCookie, loginName, {
 			httpOnly : false
@@ -679,7 +679,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 		resp.cookie(cfg.profileCookie, profile, {
 				httpOnly : true,
-				secure : true
+				secure : process.env.NODE_ENV != 'test'
 		});
 
 		log.verbose('setProfileCookie',profile );

@@ -166,7 +166,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 //	});
 
 
-	if (process.env.REGISTRIES_PRODUCTION) {
+	if (process.env.REGISTRIES_PRODUCTION || process.env.NODE_ENV == 'test') {
 		// We are in production environment, use only http port
 
 		var port = config.webserverPort;

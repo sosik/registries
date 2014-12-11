@@ -96,8 +96,15 @@
 			return null;
 		}
 
+		function nowToReverse() {
+			return parserDMYYYY(new Date());
+		};
+
 		return {
 			getDateFromYYYYMMDD: getDateFromYYYYMMDD, 
+			nowToReverse: function () {
+				return nowToReverse();
+			},
 			formatter:function(value) {
 				if (value) {
 					var string = formatterDMYYYY(value);

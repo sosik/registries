@@ -1,6 +1,6 @@
 (function(angular) {
   angular.module('portal-editor', ['psui-datepicker', 'xpsui:services', 'xpsui:directives'])
-        .controller('portal-editor.editCtrl', ['$scope', '$sce', '$http', 'psui.notificationFactory', '$route', '$routeParams', '$location', function($scope, $sce, $http, notificationFactory, $route, $routeParams, $location) {
+        .controller('portal-editor.editCtrl', ['$scope', '$sce', '$http', 'psui.notificationFactory', '$route', '$routeParams', '$location', 'xpsui:DateUtil', function($scope, $sce, $http, notificationFactory, $route, $routeParams, $location, dateUtils) {
     $scope.model = {
     };
 
@@ -15,7 +15,7 @@
           isMenu: false,
           parentMenu: null,
           enabled: true,
-          publishFrom: null,
+          publishFrom: dateUtils.nowToReverse(),
           tags: []
         },
         data: [
@@ -53,7 +53,7 @@
         meta: {
           template: 'article',
           enabled: true,
-          publishFrom: null,
+          publishFrom: dateUtils.nowToReverse(),
           tags: []
         },
         data: [

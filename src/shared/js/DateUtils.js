@@ -241,11 +241,9 @@
 		 *
 		 * @property angularExport
 		 */
-		angular
-		.module('registries').service('DateUtils', new DateUtils());
+		angular.module('xpsui:services').factory('registries.dateUtils', [ DateUtils ]);
 	}
 
 }(
 	(typeof angular === "undefined") ? null : angular,
 	(typeof module === "undefined") ? null : module))
-

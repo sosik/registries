@@ -79,6 +79,26 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		});
 	};
 
+
+	function convertLocalErrors(locals){
+		if (locals.length===0){
+				return null;
+		}
+		var retVal={};
+		locals.forEach(function(local){
+			var field='default';
+			if (local.f){
+				field=local.f;
+			}
+
+			if (!retVal[field]){
+				retVal[field]=[];
+			}
+			retVal[field].push({f:local.f,c:local.c,d:local.d});
+		});
+		return retVal;
+	}
+
 	this.saveBySchema = function(req, res) {
 
 		var schemaName = safeUrlEncoder.decode(req.params.schema);
@@ -129,8 +149,12 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		if (obj.id){
 			//UPDATE
 			auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
-			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
+			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, local) {
 				if (err){res.send(500);return;}
+				if (local && local.length>0){
+					res.status(400).send(convertLocalErrors(local));
+					return;
+				}
 
 				_dao.update(obj, function(err, data){
 					if (err) {
@@ -150,9 +174,14 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		else {
 			//CREATE
 			auditLog.info('user oid', req.currentUser.id,'has created object',obj);
-			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, cb) {
+			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, local) {
 
 				if (err){res.send(500);log.error(err);return;}
+				if (local && local.length>0){
+					res.status(400).send(convertLocalErrors(local));
+					return;
+				}
+
 				objectTools.removeNullProperties(obj);
 
 				_dao.save(obj, function(err, data){

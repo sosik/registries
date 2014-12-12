@@ -68,8 +68,18 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		.success(function(data, status, headers, config){
 			notificationFactory.clear();
 			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
-		}).error(function(err) {
-			notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+		}).error(function(data, status, headers, config) {
+			if (status===400){
+				for(var item in data){
+					data[item].map(function(fieldError){
+						notificationFactory.warn(
+						{translationCode:fieldError.c,translationData:fieldError.d, time:3000});
+					});
+				}
+
+			} else {
+				notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+			}
 		});
 	};
 
@@ -110,7 +120,19 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			notificationFactory.info({translationCode:'registry.succesfully.saved', time:3000});
 		})
 		.error(function(data, status, headers, config) {
-			notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+			if (status===400){
+				for(var item in data){
+
+					data[item].map(function(fieldError){
+						notificationFactory.warn(
+						{translationCode:fieldError.c,translationData:fieldError.d, time:3000});
+					});
+
+				}
+
+			} else {
+				notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
+			}
 		});
 	};
 

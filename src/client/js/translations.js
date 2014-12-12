@@ -10,6 +10,9 @@ angular.module('registries')
 		"login.selected.profile.continue":"Pokračovať s profilom",
 		"login.profile":"Profil",
 
+		"validation.field.not.unique":"Hodnota nie je unikátna.",
+		"validation.field.not.number":"Hodnota nie je číslo.",
+
 		"menu.member.title": "Člen",
 		"menu.player.title": "Hráč",
 		"menu.fees.title": "Poplatok",
@@ -470,6 +473,10 @@ angular.module('registries')
 		"login.authentication.failed": "Přihlášení selhalo",
 		"login.selected.profile.continue":"Pokračovat s profilem",
 		"login.profile":"Profil",
+
+		"validation.field.not.unique":"Hodnota není unikátní.",
+		"validation.field.not.number":"Hodnota není číslo.",
+
 
 		"menu.member.title": "Člen",
 		"menu.player.title": "Hráč",

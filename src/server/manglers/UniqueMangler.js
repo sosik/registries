@@ -39,7 +39,7 @@
 			}
 
 			if (data.length>0){
-				callback(null,"Not Unique: other object with same value of " + objPath );
+				callback(null,{f:objPath,c:'validation.field.not.unique',d:objFragment});
 			} else {
 				callback(null,null);
 			}

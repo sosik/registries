@@ -39,7 +39,7 @@ var SchemaController = function(mongoDriver,schemaRegistry,eventRegistry, option
 			log.info('Schema not found ', schemaUri);
 			return;
 		}
-		resp.send(200, schema.compiled);
+		resp.status(200).send(schema.compiled);
 
 	};
 
@@ -63,7 +63,7 @@ var SchemaController = function(mongoDriver,schemaRegistry,eventRegistry, option
 			}
 			schemaRegistry.load();
 			eventRegistry.load();
-			
+
 		});
 	};
 

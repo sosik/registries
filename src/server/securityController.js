@@ -446,7 +446,7 @@ this.updateSecurityProfile = function(req, resp) {
 			}
 
 			t.setProfileCookie(resp,req.body.profileId);
-			resp.send(200);
+			resp.sendStatus(200);
 
 		});
 

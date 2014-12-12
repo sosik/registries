@@ -83,7 +83,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 
 	this.authenRequired= function (req,res,next){
 		if (!req.authenticated ) {
-			res.send(401);
+			res.sendStatus(401);
 		}else {
 			next();
 		}
@@ -141,10 +141,10 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 				this.check=function(req,res,next){
 					 log.verbose('checking for perm',xperm);
 						if (!req.authenticated ) {
-							res.send(401);
+							res.sendStatus(401);
 						}else
 							if (!hasPermission(req.perm,xperm)) {
-								res.send(403,t.missingPermissionMessage(xperm));
+								res.status(403).send(t.missingPermissionMessage(xperm));
 							}
 							else {
 								next();

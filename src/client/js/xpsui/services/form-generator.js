@@ -35,7 +35,7 @@
 				field.attr('xpsui-model', modelPath);
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
-				if(schemaFragment.objectlink2){
+				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.data('schemaFragment', schemaFragment);
 				} else if(schemaFragment.type === "string"){
@@ -54,7 +54,7 @@
 				
 
 			} else {
-				if(schemaFragment.objectlink2){
+				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.data('schemaFragment', schemaFragment);
 				} else if(schemaFragment.type === "string"){

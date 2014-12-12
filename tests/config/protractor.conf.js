@@ -1,3 +1,9 @@
+var q = require('q'),
+	async = require('async');
+
+var mongoDriver = require('./../../build/server/mongoDriver.js'),
+	serverConfig = require('./../../build/server/config.js');
+
 // Configuration for the protractor
 var config = {
 
@@ -5,7 +11,27 @@ var config = {
 
 	capabilities: {},
 
-	framework: 'mocha'
+	framework: 'mocha',
+
+	/** Drop test database so we can run tests on clean DB */
+	beforeLaunch: function() {
+		var deferred = q.defer();
+		async.series([
+			function initMongo(cb) {
+				mongoDriver.init(serverConfig.mongoDbURI, cb);
+			},
+			function dropDatabase(cb) {
+				mongoDriver.getDb().dropDatabase(cb);
+			},
+			function closeConnection(cb) {
+				mongoDriver.close();
+				return cb();
+			}
+		], function(err) {
+			return err ? deferred.reject(err) : deferred.resolve();
+		});
+		return deferred.promise;
+	}
 
 };
 

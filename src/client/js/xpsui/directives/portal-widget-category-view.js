@@ -8,7 +8,11 @@
 			scope: {
 				data: '=xpsuiPortalWidgetCategoryView'
 			},
-			template: '<article ng-repeat="c in model" style="overflow: auto;"><img ng-show="c.img.img" ng-src="{{c.img.img}}" style="width: 164px !important; height: 123px !important;float: right;"></img><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a><div ng-bind-html="makeSafe(c.abstract)"></div></article>',
+			template: '<article ng-repeat="c in model" style="overflow: auto;"><img ng-show="c.img.img" ng-src="{{c.img.img}}" style="width: 164px !important; height: 123px !important;float: right;"></img><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a><div ng-bind-html="makeSafe(c.abstract)"></div></article>'
+				+ '<div style=" text-align: right; ">'
+				+ '	<a ng-click="prevPage()" style=" color: #CB2225; "><i class="fa fa-chevron-left x-portal-widget-gallery-prev-btn"></i></a>'
+				+ '	&nbsp;&nbsp;<a ng-click="nextPage()" style=" color: #CB2225; "><i class="fa fa-chevron-right x-portal-widget-gallery-next-btn"></i></a>'
+				+ '</div>',
 			link: function(scope, elm, attrs, ctrls) {
 				log.group('portal-widget-category-view Link');
 
@@ -16,7 +20,36 @@
 
 				scope.model = [];
 				scope.page = 0;
-				scope.numberPerPage = 20;
+				scope.numberPerPage = scope.data.data.pageSize;
+				console.log('dsa');
+				if ((typeof scope.numberPerPage === "undefined")
+						|| scope.numberPerPage == '') {
+					scope.numberPerPage = 20;
+				}
+				scope.prevPage = function () {
+					scope.page--;
+					if (scope.page < 0) {
+						scope.page = 0;
+					}
+					scope.refreshPage();
+				};
+				scope.nextPage = function () {
+					scope.page++;
+					var totalPages = Math.ceil((1.0 * scope.modelAll.length) / (1.0 * scope.numberPerPage));
+					if (scope.page >= totalPages) {
+						scope.page = totalPages-1;
+					}
+					scope.refreshPage();
+				};
+				scope.refreshPage = function () {
+					scope.model = [];
+					var iterateFrom = scope.page*scope.numberPerPage;
+					var iterateTo = (scope.page+1)*scope.numberPerPage;
+					var iterateTo = (iterateTo < scope.modelAll.length)? iterateTo : scope.modelAll.length;
+					for (var i = iterateFrom; i < iterateTo; ++i) {
+						scope.model.push(scope.modelAll[i]);
+					}
+				}
 
 				function findFirstOfType(obj, type) {
 					for (var j = 0; j < obj.length; ++j) {
@@ -34,28 +67,30 @@
 					return '';
 				};
 
+				console.log('querying with page size: ' + scope.numberPerPage);
 				$http({
 					method : 'POST',
 					url: '/portalapi/getByTags',
 					data: {
 						tags: scope.data.data.tags,
-						skip: scope.page * scope.numberPerPage,
-						limit: scope.numberPerPage + 1
+						skip: 0,
+						limit: null
 					}
 				})
 				.success(function(data, status, headers, config){
 					if (data && data.length > 0) {
-						scope.model = [];
-					   	for (var i = 0; i < data.length; ++i) {
-							scope.model.push({
+						scope.modelAll = [];
+						for (var i = 0; i < data.length; ++i) {
+							scope.modelAll.push({
 								id: data[i].id,
 								title: findFirstOfType(data[i].data, 'title'),
 								abstract: findFirstOfType(data[i].data, 'abstract'),
 								img: findFirstOfType(data[i].data, 'image'),
 							});
-					   }
-				
-						console.log(scope.model);
+						}
+						scope.refreshPage();
+
+						console.log(scope.modelAll);
 					}
 				}).error(function(err) {
 					notificationFactory.error(err);

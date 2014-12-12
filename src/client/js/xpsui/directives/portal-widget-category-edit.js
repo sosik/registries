@@ -25,6 +25,10 @@
 					+' <label class="col-sm-2 control-label">Tagy:</label>'
 					+' <div class="col-sm-4"><div class="input-group"><div portal-multistring-edit ng-model="data.data.tags"></div></div></div>'
 					+'</div>'
+					+'<div class="form-group row">'
+					+' <label class="col-sm-2 control-label">Stránka:</label>'
+					+' <div class="col-sm-4"><div class="input-group"><input ng-model="data.data.pageSize"/></div></div>'
+					+'</div>'
 					+'</div>'
 					+'</fieldset>'
 					+'</form>');

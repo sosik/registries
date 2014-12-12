@@ -197,12 +197,15 @@ PageController.prototype.competitionResults = function(req, res, next) {
 PageController.prototype.renderPage = function(req, res, next) {
 	var locals = {};
 
-	var aid;
+	var aid, page = 0;
 
 	if (req.params && req.params.aid) {
 		aid = req.params.aid;
-		log.verbose('renderPage params', req.params);
 	}
+	if (req.params && req.params.page) {
+		page = parseInt(req.params.page);
+	}
+
 	this.getArticle(aid, function(err, data) {
 		if (err) {
 			log.error('Failed to get article %s', aid);
@@ -242,7 +245,11 @@ PageController.prototype.renderPage = function(req, res, next) {
 
 			function createCategoryResolver(elm, aid) {
 				log.silly('Creating category block resolver');
-				
+
+				elm.data.aid = aid;
+				if ((typeof elm.data.pageSize === "undefined") || elm.data.pageSize == '') {
+					elm.data.pageSize = 20;
+				}
 				function findFirstOfType(obj, type) {
 					for (var j = 0; j < obj.length; ++j) {
 						if (obj[j].meta.name === type) {
@@ -252,15 +259,29 @@ PageController.prototype.renderPage = function(req, res, next) {
 				}
 
 				return function(callback) {
-					pageController.getArticlesByTags(elm.data.tags, null, null, function(err, data) {
+					pageController.getArticlesByTags(elm.data.tags, page, elm.data.pageSize, function(err, data) {
 						if (err) {
 							log.verbose('Failed to resolve articles for article block %s', elm, err);
 							callback(err);
 						}
 
 						if (data) {
+							var currPage = 0;
+							if (page) {
+								currPage = page;
+							}
+							elm.data.prevPage = 0;
+							if (currPage > 0) {
+								elm.data.prevPage = currPage - 1;
+							}
+							elm.data.nextPage = currPage + 1;
+							if (data.length <= elm.data.pageSize) {
+								elm.data.nextPage = currPage;
+							}
 							elm.data.articles = [];
-							for (var i=0; i < data.length; ++i) {
+							var noOfPageElements =
+								(data.length <= elm.data.pageSize)? data.length :elm.data.pageSize;
+							for (var i=0; i < noOfPageElements; ++i) {
 								elm.data.articles.push({
 									id: data[i].id,
 									title: findFirstOfType(data[i].data, 'title'),
@@ -294,7 +315,7 @@ PageController.prototype.renderPage = function(req, res, next) {
 				if (locals.article) {
 					for (var i in locals.article.data) {
 						if (locals.article.data[i] && locals.article.data[i].meta.type === 'category' || locals.article.data[i].meta.type === 'showcase') {
-							blocksResolvers.push(createCategoryResolver(locals.article.data[i]));
+							blocksResolvers.push(createCategoryResolver(locals.article.data[i], aid));
 						}
 					}
 				}
@@ -397,6 +418,10 @@ PageController.prototype.getArticlesByTags = function(tags, page, countPerPage, 
 	if (page) {
 		_skip = page * _limit;
 	}
+	if (countPerPage && countPerPage>1) {
+		_limit = countPerPage+1;
+	}
+	log.info('Query limits:' + page + ' ' + _limit + ' ' + countPerPage + ' ' + _skip);
 
 	var qf = QueryFilter.create();
 

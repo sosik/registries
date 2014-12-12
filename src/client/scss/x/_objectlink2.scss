@@ -1,6 +1,10 @@
 .x-objectlink2-view{
 	@include inline-view();
 
+	> div{
+		display: inline-block;
+	}
+
 	span{
 		display: inline-block;
 		margin-right: $objectlink2-view-item-offset;
@@ -15,6 +19,9 @@
 
 	div.x-input{
 		line-height: em($line-height);
+		display: inline-block;
+		min-height: $inlineedit-min-height;
+		
 		span{
 			display: inline-block;
 			margin-right: $objectlink2-view-item-offset;

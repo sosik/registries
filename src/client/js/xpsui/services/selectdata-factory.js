@@ -2,7 +2,8 @@
 	'use strict';
 
 	angular.module('xpsui:services')
-	.factory('xpsui:SelectDataFactory', ['xpsui:logging', '$timeout', '$translate','$http', '$parse',  function(log, $timeout, $translate, $http,$parse) {
+	.factory('xpsui:SelectDataFactory', ['xpsui:logging', '$timeout', '$translate','$http', '$parse', 'xpsui:SchemaUtil',  'xpsui:HttpHandlerFactory',
+	function(log, $timeout, $translate, $http,$parse, schemaUtil, httpHandlerFactory) {
 		/**
 		 * DataSet
 		 */
@@ -22,7 +23,7 @@
 		};
 
 		DataSet.DEFAULTS = {
-			limit: 30,
+			limit: 16,
 			beforeLoad: function(dataSet){},
 			loaded: function(dataSet, newData){},
 			reset: function(){},
@@ -101,7 +102,7 @@
 				for (var i = 0; i < data.length; i++) {
 					this.data.push({
 						v: $translate.instant(translateCode[i]),
-						k: data.enum[i]
+						k: data[i]
 					})
 				}
 			} else {
@@ -144,10 +145,6 @@
 
 		ObjectDataSet.prototype = Object.create(DataSet.prototype);
 
-		ObjectDataSet.prototype.getLabels = function(){
-			return this.store.lables;
-		}
-
 		ObjectDataSet.prototype.loaded = function(data){
 			if(data.length <= this.options.limit){
 				this.loadDone = true;
@@ -160,14 +157,157 @@
 			this.options.loaded(this,data);
 			this.offset++;
 		}
-
-		ObjectDataSet.prototype.getFieldLabel = function(index){
-			return this.store.getLabel(index);
+		
+		ObjectDataSet.prototype.getFieldsSchema = function(index){
+			return this.store.fields;
 		}
 
-		ObjectDataSet.prototype.getFieldType = function(index){
-			return this.store.getFieldSchemaFragment(index).type;
-		}
+
+		/**
+		 * ObjectLinkStore
+		 */
+		function ObjectLinkStore(options){
+			this.options = angular.extend({}, ObjectLinkStore.DEFAULTS, options || {} );
+			this.schema = {};
+			this.criteria = null;
+			this.fields = null;
+			this.http = null;
+		};
+
+		ObjectLinkStore.DEFAULTS = {
+			searchCondition: 'starts',
+			orderBySort: 'asc'
+		};
+
+		ObjectLinkStore.prototype.initFieldsSchema = function(callback){
+			var self = this;
+			if(!this.fields){
+				schemaUtil.getFieldsSchemaFragment(
+					schemaUtil.concatUri(this.schema.schema, 'new'), 
+					this.schema.fields, 
+					function(fields){
+						self.fields = fields;
+						callback();
+					}
+				);
+
+				return ;
+			}
+			callback();
+		};
+
+		ObjectLinkStore.prototype.getHttp = function(){
+			if(!this.http){
+				this.http = httpHandlerFactory.newHandler();
+			}
+			return this.http ;
+		};
+
+		// ref to schema $objectLink2ForcedCriteria
+		ObjectLinkStore.prototype.setForcedCriteria = function(criteria){
+			this.criteria = criteria;
+			return this;
+		};
+
+		// ref to schema $objectLink2
+		ObjectLinkStore.prototype.setSchema = function(schema){
+			this.schema = schema;
+			return this;
+		};
+
+		ObjectLinkStore.prototype.getHttpConfing = function(dataset){
+			var config = {
+					method : 'POST',
+					url: '/search/' + schemaUtil.encodeUri(schemaUtil.concatUri(this.schema.schema, 'search')),
+					data: {
+						criteria: [], 
+						limit: dataset.getLimit() , 
+						skip: dataset.getOffset(), 
+						sortBy:[]
+					}
+				},
+				orderByName = null
+			;
+
+			// orderBy
+			if (!this._orderByName) {
+				for (var field in this.schema.fields){
+					this._orderByName = this.schema.fields[field];
+					break;
+				}
+			}
+
+			config.data.sortBy.push({
+				"f": this._orderByName,
+				"o": this.options.orderBySort
+			});
+
+			// search criteria
+			for (var field in this.schema.fields){
+				config.data.criteria.push({
+					f: this.schema.fields[field],
+					v: dataset.getSearchValue() ? dataset.getSearchValue() : '',
+					op: this.options.searchCondition
+				});
+			}
+
+			config.data.criteria = config.data.criteria.concat(
+				(this.criteria && this.criteria instanceof Array) ? this.criteria : []
+			);
+
+			return config;
+		};
+
+		ObjectLinkStore.prototype.load = function(dataset, callback){
+			var self = this;
+
+			this.initFieldsSchema(function(){
+				var promise = self.getHttp().http(
+					self.getHttpConfing(dataset)
+				);
+
+				promise.then(
+					// success
+					function(args){
+						var data = [];
+
+						if(args.data && args.data instanceof Array){
+							for (var i = 0; i < args.data.length; i++) {
+								data.push(
+									ObjectLinkStore.getData(
+										self.schema,
+										args.data[i]
+									)
+								);
+							}
+						}
+						callback(data);
+					},
+
+					// error
+					function(){
+						arguments;
+					}
+				);
+			});
+
+		};
+
+		ObjectLinkStore.getData = function(objectLink, data){
+			var field,
+				outData = {
+					schema: objectLink.schema,
+					oid: data.id,
+					refData: {}
+				}
+			;
+			for (var field in objectLink.fields) {
+				var getter = $parse(objectLink.fields[field]);
+				outData.refData[field] = getter(data);
+			}
+
+			return outData;
+		};
 
 		/**
 		 * HttpStoreTest
@@ -219,6 +359,8 @@
 			return this._fieldsSchemaFragment[fieldName];
 		}
 
+
+		//@todo use schemaUtil instead
 		HttpStoreTest.getFieldSchemaFragment = function(schema, field, scope){
 			var fieldProp = field.split("."),
 				path = [
@@ -289,12 +431,6 @@
 				var data = [];
 
 				data = self.data;
-				// var regExp = new RegExp('^' + (dataset.getSearchValue() || '') ,'i');
-				// for (var i = 0; i < self.data.length; ++i) {
-				// 	if (regExp.test(self.data[i].v)) {
-				// 		data.push(self.data[i]);
-				// 	}
-				// }
 
 				callback(
 					data.slice(dataset.getOffset(), dataset.getLimit() + dataset.getOffset())
@@ -312,17 +448,27 @@
 
 				return new DataSet(store);
 			},
+			createObjectDataset: function(schemaFragment){
+				var store = new ObjectLinkStore();
+
+				store.setSchema(schemaFragment.$objectLink2)
+					.setForcedCriteria(schemaFragment.$objectLink2ForcedCriteria)
+				;
+
+				return new ObjectDataSet(store);
+			},
 			createTestDataset: function(scope, schemaFragment, itemLenght){
 				var store = new HttpStoreTest();
-				store.setFields(schemaFragment.objectlink2.fields)
+				store.setFields(schemaFragment.$objectLink2.fields)
 					.setScope(scope)
-					.setSchema(schemaFragment.objectlink2.schema)
+					.setSchema(schemaFragment.$objectLink2.schema)
 					.setTestData(itemLenght ? itemLenght: 4000)
 				;
 
 				return new ObjectDataSet(store);
 			},
-			getFieldSchemaFragment: HttpStoreTest.getFieldSchemaFragment
+			getFieldSchemaFragment: HttpStoreTest.getFieldSchemaFragment,
+			getObjectLinkData: ObjectLinkStore.getData
 		}
 	
 	}]);

@@ -2,8 +2,8 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiObjectlink2Edit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory',
-	function(log, $parse, dropdownFactory, objectlink2Factory, dataFactory) {
+	.directive('xpsuiObjectlink2Edit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', 'xpsui:SchemaUtil',
+	function(log, $parse, dropdownFactory, objectlink2Factory, dataFactory, schemaUtil) {
 		return {
 			restrict: 'A',
 			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiObjectlink2Edit'],
@@ -34,60 +34,31 @@
 				elm.addClass('x-select-edit x-objectlink2-edit');
 
 				ngModel.$render = function() {
-					input.empty();
-
-					if (ngModel.$viewValue) {
-						render(ngModel.$viewValue);
-
-						// if (ngModel.$viewValue.refdata) {
-						// 	for (var i in ngModel.$viewValue.refdata) {
-						// 		var fieldSchemaFragment = dataFactory.getFieldSchemaFragment(
-						// 				schemaFragment.objectlink2.schema, schemaFragment.objectlink2.fields[i], scope
-						// 			),
-						// 			type = fieldSchemaFragment.type,
-						// 			label = fieldSchemaFragment.title,
-						// 			value = ngModel.$viewValue.refdata[i]
-						// 		;
-
-						// 		input.append(
-						// 			angular.element('<span title="' + label + '">' 
-						// 				+ objectlink2Factory.getFormatedValue(type,value) 
-						// 				+ '</span>'
-						// 			)
-						// 		);
-						// 	}
-						// }
-					}
+					render(dataFactory.getObjectLinkData(
+						schemaFragment.$objectLink2, ngModel.$viewValue
+					));
 				};
 
 				function render(data){
 					input.empty();
 
-					for (var i in data.refdata) {
-						var fieldSchemaFragment = dataFactory.getFieldSchemaFragment(
-								schemaFragment.objectlink2.schema, schemaFragment.objectlink2.fields[i], scope
-							),
-							type = fieldSchemaFragment.type,
-							label = fieldSchemaFragment.title,
-							value = data.refdata[i]
-						;
-
-						input.append(
-							angular.element('<span title="' + label + '">' 
-								+ objectlink2Factory.getFormatedValue(type,value) 
-								+ '</span>'
-							)
+					if (data) {
+						schemaUtil.getFieldsSchemaFragment(
+							schemaUtil.concatUri(schemaFragment.$objectLink2.schema, 'new'), 
+							schemaFragment.$objectLink2.fields, 
+							function(fields){
+								objectlink2Factory.renderElement(
+									input,
+									fields,
+									data
+								);
+							}
 						);
 					}
 				}
 
 				elm.append(input);
 
-				input.on('change', function(evt) {
-					scope.$apply(function() {
-						ngModel.$setViewValue(input.val());
-					});
-				});
 
 				elm.bind('focus', function(evt) {
 					input[0].focus();
@@ -111,7 +82,7 @@
 				selectbox.setDropdown(dropdown);
 
 				// store
-				var dataset = dataFactory.createTestDataset(scope, schemaFragment, 6000);
+				var dataset = dataFactory.createObjectDataset(schemaFragment);
 				selectbox.setDataset(dataset);
 
 				log.groupEnd();

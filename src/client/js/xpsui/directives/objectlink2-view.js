@@ -2,8 +2,8 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiObjectlink2View', ['xpsui:logging', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', 
-	function(log, objectlink2Factory, selectDataFactory) {
+	.directive('xpsuiObjectlink2View', ['xpsui:logging', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', 'xpsui:SchemaUtil',
+	function(log, objectlink2Factory, dataFactory, schemaUtil) {
 		return {
 			restrict: 'A',
 			require: ['ngModel'],
@@ -23,26 +23,20 @@
 				ngModel.$render = function() {
 					view.empty();
 
-					if (ngModel.$viewValue) {
-
-						if (ngModel.$viewValue.refdata) {
-							for (var i in ngModel.$viewValue.refdata) {
-								var fieldSchemaFragment = selectDataFactory.getFieldSchemaFragment(
-										schemaFragment.objectlink2.schema, schemaFragment.objectlink2.fields[i], scope
-									),
-									type = fieldSchemaFragment.type,
-									label = fieldSchemaFragment.title,
-									value = ngModel.$viewValue.refdata[i]
-								;
-
-								view.append(
-									angular.element('<span title="' + label + '">' 
-										+ objectlink2Factory.getFormatedValue(type,value) 
-										+ '</span>'
+					if (ngModel.$viewValue && ngModel.$viewValue.id) {
+						schemaUtil.getFieldsSchemaFragment(
+							schemaUtil.concatUri(schemaFragment.$objectLink2.schema, 'new'), 
+							schemaFragment.$objectLink2.fields, 
+							function(fields){
+								objectlink2Factory.renderElement(
+									view, 
+									fields, 
+									dataFactory.getObjectLinkData(
+										schemaFragment.$objectLink2, ngModel.$viewValue
 									)
 								);
 							}
-						}
+						);
 					}
 				};
 			}

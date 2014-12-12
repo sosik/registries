@@ -1,0 +1,31 @@
+@import "variables";
+@import "mixins";
+
+@import "../../../../bower_components/components-font-awesome/scss/variables";
+// @import "../../../../bower_components/components-font-awesome/scss/icons";
+
+// common
+@import "font";
+@import "normalize";
+
+// components
+@import "dropdown";
+@import "fieldset";
+@import "inlineedit";
+@import "header-navigation";
+@import "modalview";
+@import "main";
+@import "menu";
+@import "form-input";
+@import "calendar";
+@import "string";
+@import "date";
+@import "select";
+<<<<<<< HEAD
+@import "multistring";
+@import "portal-widget";
+@import "contenteditable";
+=======
+@import "objectlink2";
+
+>>>>>>> XPSUI objectlink2 mobile/tablet view

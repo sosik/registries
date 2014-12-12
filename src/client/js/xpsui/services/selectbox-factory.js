@@ -101,11 +101,11 @@
 			});
 
 			return this;
-		}
+		};
 
 		Selectbox.prototype.getDataset = function(dataset){
 			return this.dataset ;
-		}
+		};
 
 		Selectbox.prototype.setDropdown = function(dropdown){
 			var self = this;
@@ -383,7 +383,7 @@
 			if( bottomBorderSelectedItem > bottomBorderItemsEl ) {
 				itemsElement.scrollTop += bottomBorderSelectedItem - bottomBorderItemsEl;
 			}
-		}
+		};
 
 		Selectbox.prototype._handleKeyDown = function($el, event){
 			var self = this;
@@ -442,7 +442,7 @@
 		Selectbox.prototype.actionFilter = function(value){
 			this.dataset.setSearchValue(value);
 			this.doLoad();
-		}
+		};
 
 
 		// the item is selected
@@ -463,7 +463,6 @@
 		Selectbox.prototype.render = function(){
 			this.renderInit();
 		};
-
 		
 
 		return {

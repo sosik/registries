@@ -218,9 +218,24 @@
       enterEditMode();
     };
 
+    $scope.findSurrogateTitle = function(pageBlocks) {
+      if (pageBlocks) {
+        for(i = 0; i < pageBlocks.length; i++) {
+          if (pageBlocks[i].meta.name == 'title') {
+            return pageBlocks[i].data.replace('<h1>', '').replace('</h1>', '');
+          }
+        }
+      }
+      return '';
+    }
+
     $scope.save = function() {
       if ($scope.model.meta) {
         $scope.model.meta.lastModTimestamp = (new Date()).getTime();
+        if (!$scope.model.meta.title) {
+          var surrogateTitle = $scope.findSurrogateTitle($scope.model.data);
+          $scope.model.meta.title = surrogateTitle;
+        }
       }
       $http({
         url: '/udao/save/portalArticles',

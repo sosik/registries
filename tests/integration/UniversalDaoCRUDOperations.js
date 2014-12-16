@@ -201,17 +201,17 @@ describe('universalDaoCRUDOperations', function() {
 		);
 		var a1 = {
 			meta: {
-				tag: 'orange'
+				tags: ['orange', 'blue']
 			}
 		};
 		var a2 = {
 			meta: {
-				tag: 'red'
+				tags: ['red']
 			}
 		};
 		var a3 = {
 			meta: {
-				tag: 'orange'
+				tags: ['orange']
 			}
 		};
 		d.save(a1, function(err, data) {
@@ -229,14 +229,15 @@ describe('universalDaoCRUDOperations', function() {
 						throw new Error(err);
 					}
 
-					d.distinct('meta.tag', {}, function(err, data) {
+					d.distinct('meta.tags', {}, function(err, data) {
 						if (err) {
 							throw new Error(err);
 						}
 
-						expect(data.length).to.be.equal(2);
+						expect(data.length).to.be.equal(3);
 						expect(data).to.include('red');
 						expect(data).to.include('orange');
+						expect(data).to.include('blue');
 
 						done();
 					});

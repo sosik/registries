@@ -192,6 +192,60 @@ describe('universalDaoCRUDOperations', function() {
 			done();
 		});
 	});
+	it('Distinct - should return distinct values for a path', function(done) {
+		// this is first test, there should be no user
+		var cn = 'testCol';
+		var d = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{collectionName: cn}
+		);
+		var a1 = {
+			meta: {
+				tag: 'orange'
+			}
+		};
+		var a2 = {
+			meta: {
+				tag: 'red'
+			}
+		};
+		var a3 = {
+			meta: {
+				tag: 'orange'
+			}
+		};
+		d.save(a1, function(err, data) {
+			if (err) {
+				throw new Error(err);
+			}
+
+			d.save(a2, function(err, data) {
+				if (err) {
+					throw new Error(err);
+				}
+
+				d.save(a2, function(err, data) {
+					if (err) {
+						throw new Error(err);
+					}
+
+					d.distinct('meta.tag', {}, function(err, data) {
+						if (err) {
+							throw new Error(err);
+						}
+
+						expect(data.length).to.be.equal(2);
+						expect(data).to.include('red');
+						expect(data).to.include('orange');
+
+						done();
+					});
+				});
+
+			});
+		});
+	});
+
 	it('List with criteria - dao should find object by criteria', function(done) {
 		var cn = 'testCol2';
 		var d = new universalDaoModule.UniversalDao(

@@ -97,6 +97,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, function(req, res){udc.getBySchema(req, res);});
 	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.list(req, res);});
 	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.listBySchema(req, res);});
+	app.get('/udao/articleTagsDistinct',securityService.authenRequired, bodyParser.json(),function(req,res){udc.getArticleTagsDistinct(req,res);});
 	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.search(req, res);});
 	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){udc.searchBySchemaCount(req,res);});
 	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){udc.searchBySchema(req,res);});

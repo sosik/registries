@@ -239,6 +239,28 @@ var UniversalDao = function(mongoDriver, options) {
 	};
 
 	/**
+	 * Returns distinct paths
+	 *
+	 * @param {String} path - expression for distinct values.
+	 * @param {Object} queryFilter - search options - use QueryFilter class.
+	 * @param {resultCallback} callback - async callback, result data contain distinct values
+	 */
+	this.distinct = function(path, queryFilter, callback) {
+		var _findOptions = mongoDriver.constructSearchQuery(queryFilter);
+		delete _findOptions.limit;
+
+		log.silly(_findOptions);
+		_collection.distinct(path, _findOptions.selector, function(err, data){
+			if (err) {
+				callback(err);
+				return;
+			}
+			log.silly(data);
+			callback(null, data);
+		});
+	};
+
+	/**
 	* Aggregate
 	*
 	* @param {Object} queryFilter - search options - use QueryFilter class

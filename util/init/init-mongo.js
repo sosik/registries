@@ -130,7 +130,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 					"name": "Administrator",
 					"bornNumber": "771010/1010",
 					"surName": "UnionSoft s.r.o.",
-					"birthDate": "10.10.1977",
+					"birthDate": "19771010",
 					"nationality": "SVK",
 					"gender": "M"
 				},

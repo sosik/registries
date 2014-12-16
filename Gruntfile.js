@@ -10,6 +10,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-karma');
+	grunt.loadNpmTasks('grunt-debug-task');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
 	grunt.registerTask('build:server', ['build:schemas', 'copy:server','copy:templates','copy:ssl', 'copy:sharedJsServer']);
@@ -33,6 +34,11 @@ module.exports = function(grunt) {
 	grunt.registerTask('portal', ['uglify:xpsui', 'build:server', 'build:client']);
 
 	grunt.initConfig({
+		debug: {
+			options: {
+			  open: false // do not open node-inspector in Chrome automatically
+			}
+		},
 		copy: {
 			html: {
 				files: [

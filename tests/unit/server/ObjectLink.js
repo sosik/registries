@@ -29,9 +29,9 @@ describe('ObjectLink', function() {
 		var schema = schemaTools.getSchema('uri://registries/user#');
 
 		var objectLinksBySchema = [];
-		objectTools.propertyVisitor(schema.compiled, /\$objectLink$/, function(val, path, obj) {
+		objectTools.propertyVisitor(schema.compiled, /\objectLink$/, function(val, path, obj) {
 			objectLinksBySchema.push(objectTools.stripFromPath(path, 1));
-			
+
 		});
 
 		expect(objectLinksBySchema.length).to.be.equal(4);

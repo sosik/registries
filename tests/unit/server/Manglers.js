@@ -74,7 +74,7 @@ describe('Manglers', function() {
 						type: 'object',
 						properties: {
 							city: {
-								$objectLink: {
+								objectLink: {
 									registry: 'cities',
 									name: 'baseData.name',
 									surName: 'baseData.surName'
@@ -87,7 +87,7 @@ describe('Manglers', function() {
 			tags: {
 				type: 'array',
 				items: {
-					$objectLink: {
+					objectLink: {
 						registry: 'tags',
 						name: 'baseData.name'
 					}
@@ -104,7 +104,7 @@ describe('Manglers', function() {
 					name: {
 						type: 'string',
 						required: true,
-						$collate:true
+						collate:true
 					}
 				}
 			}
@@ -137,7 +137,7 @@ describe('Manglers', function() {
 		to.baseData.name = 1;
 
 		om.mangle(to, ts, function(err, localErrors) {
-			expect(err).to.not.exist;
+			expect(err).to.not.exist();
 			expect(localErrors).to.have.length(2);
 			done();
 		});
@@ -152,7 +152,7 @@ describe('Manglers', function() {
 		delete to.baseData.gender;
 
 		om.mangle(to, ts, function(err, localErrors) {
-			expect(err).to.not.exist;
+			expect(err).to.not.exist();
 			expect(localErrors).to.have.length(1);
 			done();
 		});
@@ -201,11 +201,11 @@ describe('Manglers', function() {
 		};
 
 		om.mangle(to, ts, function(err, localErrors) {
-			expect(err).to.not.exist;
+			expect(err).to.not.exist();
 			expect(localErrors).to.have.length(0);
 			expect(to.baseData.name).to.have.keys('v', 'c');
 			expect(to.baseData.name.v).to.be.equal('TestName');
-			expect(to.baseData.name.c).to.be.not.empty;
+			expect(to.baseData.name.c).to.be.not.empty();
 			done();
 		});
 	});
@@ -222,11 +222,11 @@ describe('Manglers', function() {
 		};
 
 		om.mangle(to, ts, function(err, localErrors) {
-			expect(err).to.not.exist;
+			expect(err).to.not.exist();
 			expect(localErrors).to.have.length(0);
 			expect(to.baseData.name).to.be.equal('testValue');
-			expect(to.baseData.name.v).to.not.exist;
-			expect(to.baseData.name.c).to.not.exist;
+			expect(to.baseData.name.v).to.not.exist();
+			expect(to.baseData.name.c).to.not.exist();
 			done();
 		});
 	});

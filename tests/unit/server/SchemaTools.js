@@ -3,9 +3,47 @@ var expect = require('chai').expect;
 describe('SchemaTools', function() {
 	var SchemaToolsModule = require(process.cwd() + '/build/server/SchemaTools.js');
 
+	it('extend should work',function(done){
+
+		var simpleSchema1 = {
+			"id": "uri://registries/simpleSchema1",
+			at1:"test",
+			atOver:"shouldBechaged",
+			atComplicated:{test:"simpleSchema1" , testOver:"simpleSchema1"},
+			shouldNotExist:"aaa"
+		};
+		var simpleSchema2 = {
+			"id": "uri://registries/simpleSchema2",
+			$extends: "uri://registries/simpleSchema1",
+			at2:"test",
+			atOver:"changed",
+			atComplicated:{ testOver:"simpleSchema2", test2:"test2"},
+			shouldNotExist:null
+		};
+
+		var schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null,simpleSchema1);
+		schemaTools.registerSchema(null	,simpleSchema2);
+		schemaTools.parse();
+		schemaTools.compile();
+
+		var schema=schemaTools.getSchema('uri://registries/simpleSchema2');
+		expect(schema).to.be.not.null();
+		expect(schema.compiled).to.be.not.null();
+		expect(schema.compiled.at1).to.be.not.null();
+		expect(schema.compiled.at2).to.be.not.null();
+		expect(schema.compiled.atOver).to.be.eql('changed');
+		expect(schema.compiled).to.not.have.property('shouldNotExist');
+
+		// console.log(schemaTools.getSchema('uri://registries/simpleSchema2'));
+
+		done();
+
+	});
+
 	it('Simple schema registration and retriaval', function(done) {
 		var simpleSchema1 = {
-			"id": "uri://registries/simpleSchema1#"
+			"id": "uri://registries/simpleSchema1"
 		};
 		var schemaTools = new SchemaToolsModule.SchemaTools();
 

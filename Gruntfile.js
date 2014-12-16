@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-protractor-runner');
+	grunt.loadNpmTasks('grunt-debug-task');
 	grunt.loadNpmTasks('grunt-express-server');
 
 	grunt.registerTask('build:schemas', ['copy:schemas']);
@@ -42,6 +43,11 @@ module.exports = function(grunt) {
 	grunt.registerTask('portal', ['uglify:xpsui', 'build:server', 'build:client']);
 
 	grunt.initConfig({
+		debug: {
+			options: {
+			  open: false // do not open node-inspector in Chrome automatically
+			}
+		},
 		copy: {
 			html: {
 				files: [

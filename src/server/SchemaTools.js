@@ -12,6 +12,7 @@ var path = require('path');
 var extend = require('extend');
 var util = require('util');
 var schemaConstants = require('./SchemaConstants.js');
+var objectTools = require('./ObjectTools.js');
 
 /**
  * SchemaTools class. Used as main schemas manipulation class.
@@ -48,7 +49,7 @@ var SchemaTools = function() {
 				"type": "object"
 			}
 		},
-	}
+	};
 
 	// hashTable storing registered caches
 	var schemasCache = {};
@@ -169,14 +170,15 @@ var SchemaTools = function() {
 				case '$schema':
 				case 'id' :
 				case 'type' :
-				case '$ref' :
+				case schemaConstants.EXTENDS_KEYWORD:
+				case schemaConstants.REF_KEYWORD:
 					// skip schema keywords;
 					break;
 				default:
 					var propLocalPath = null;
 					var propUrl = null;
 
-					if (schema.def[prop].id && prop !== 'properties') {
+					if (schema.def[prop] && schema.def[prop].id && prop !== 'properties') {
 						// id is defined, lets override canonical resolution, but only if it is not inside properties
 						propUrl = URL.resolve(uri, schema.def[prop].id);
 						// make id argument absolute
@@ -188,7 +190,7 @@ var SchemaTools = function() {
 						propUrl = URL.resolve(uri, propLocalPath);
 					}
 
-					if ('object' === typeof schema.def[prop]) {
+					if (schema.def[prop] && 'object' === typeof schema.def[prop]) {
 						// dive only if it is object
 						that.registerSchema(propUrl, schema.def[prop], true);
 						parseInternal(propUrl, that.getSchema(propUrl), propLocalPath);
@@ -223,7 +225,7 @@ var SchemaTools = function() {
 	var compileInternal = function(obj) {
 		var p, compiled, refSchema, compiledSchema, errMessage, res, props, propName;
 
-		if ('object' === typeof obj) {
+		if ( obj && 'object' === typeof obj) {
 			// obj is object or array
 			if (Array.isArray(obj)) {
 				// obj is array
@@ -267,6 +269,9 @@ var SchemaTools = function() {
 					return {done: true, val: compiledSchema};
 				}
 
+
+
+
 				props = Object.getOwnPropertyNames(obj);
 				for (p in props) {
 					propName = props[p];
@@ -281,6 +286,36 @@ var SchemaTools = function() {
 							return {done: false, val: null};
 						}
 					}
+				}
+
+
+				// $extends
+				if (obj.hasOwnProperty(schemaConstants.EXTENDS_KEYWORD)) {
+
+
+					refSchema = self.getSchema(obj[schemaConstants.EXTENDS_KEYWORD]);
+					if (refSchema === null) {
+						// there is no such schema registered
+						errMessage = util.format('Referenced schema not found %s', obj[schemaConstants.REF_KEYWORD]);
+						log.silly(errMessage);
+						throw new Error(errMessage);
+					}
+
+					compiledSchema = refSchema.compiled;
+
+					if (typeof compiledSchema === 'undefined' || compiledSchema === null) {
+						// ref schema is not compiled
+						log.silly('Referenced schema not compiled %s', obj[schemaConstants.REF_KEYWORD]);
+						return {done:false, val: null};
+					}
+
+					// we are done with whole object as $ref can be only property
+
+					var extended=extend(true,compiledSchema,obj);
+
+					objectTools.removeNullProperties(extended);
+
+					return {done: true, val: extended};
 				}
 
 				return {done: true, val: obj};

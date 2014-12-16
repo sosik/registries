@@ -547,6 +547,26 @@ this.searchBySchemaCount = function(req, resp) {
 	};
 
 
+this.getArticleTagsDistinct = function(req, resp) {
+
+		log.silly('searching tags distinct', req.params);
+		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
+			collectionName: 'portalArticles'
+		});
+
+		//db.portalArticles.distinct("meta.tags")
+		var qf=QueryFilter.create();
+
+		dao.distinct('meta.tags',qf, function(err, data) {
+			if (err) {
+				resp.status(500).send(err);
+			} else {
+				resp.status(200).send(data);
+			}
+		});
+
+	};
+
 
 	this.search = function(req, res) {
 		_dao = new universalDaoModule.UniversalDao(

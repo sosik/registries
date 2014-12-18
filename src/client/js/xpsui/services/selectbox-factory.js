@@ -49,6 +49,8 @@
 			pagingScrollBuffer: 40,
 			//paging items buffer
 			pagingItemsBuffer: 10,
+			// allow custom text which can not be in collection
+			freeTextMode: false
 		};
 		
 		Selectbox.prototype.getElement =  function(){
@@ -62,10 +64,14 @@
 		Selectbox.prototype.setInput = function(element){
 			var self = this;
 			this.$inputElement = element;
-			
-			this.$inputElement.on('keydown', function(event) {
-				if( event.keyCode >= 48 ){
+
+
+			this.$inputElement.on('keypress', function(event) {
+				if(!self.options.freeTextMode){
 					event.preventDefault();
+				}
+				
+				if( self.options.useSearchInput && event.keyCode >= 48 ){
 					self.dropdown && self.dropdown.open();
 
 					if(self.$searchInput){
@@ -130,7 +136,7 @@
 
 			if(this.options.useSearchInput){
 				this.$searchInput[0].focus();
-			} else {
+			} else if(!this.options.freeTextMode) {
 				this.$selectboxElement[0].focus();
 			}
 							

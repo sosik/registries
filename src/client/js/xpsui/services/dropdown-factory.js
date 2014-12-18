@@ -3,10 +3,11 @@
 
 	angular.module('xpsui:services')
 	.factory('xpsui:DropdownFactory', ['xpsui:logging', '$timeout', '$translate',  function(log, $timeout, $translate) {	
-		function Dropdown($element){
+		function Dropdown($element,options){
 			this.$element = $element;
 			
-			this.options = Dropdown.DEFAULTS;
+			//this.options = Dropdown.DEFAULTS;
+			this.options = angular.extend({}, Dropdown.DEFAULTS, options || {} );
 			
 			this.closeTimeout = null;
 		};
@@ -15,7 +16,8 @@
 			closingTime: 150,
 			clsOpen: 'x-open',
 			bodyClsOpen: 'x-dropdown-open',
-			allowClose: true
+			allowClose: true,
+			showDropdownAction: true
 		};
 		
 		Dropdown.prototype.getElement =  function(){
@@ -44,8 +46,10 @@
 		
 		Dropdown.prototype.renderInit = function(){
 			var self = this;
-			if(!this.$actionEl){
-				this.$actionEl = angular.element('<div class="x-dropdown-action"><span>' + $translate.instant('Dropdown.toggle') + '</span></div>');
+			if(!this.$contentEl){
+				// showDropdownAction
+				//this.$actionEl = angular.element('<div class="x-dropdown-action"><span>' + $translate.instant('Dropdown.toggle') + '</span></div>');
+				this.initDropdownAtion();
 				this.$contentEl = angular.element('<div class="x-dropdown-content"></div>');
 
 				this.$contentInnerEl = angular.element('<div class="x-dropdown-content-inner"></div>');
@@ -62,11 +66,17 @@
 				this.$element.append(this.$actionEl);
 				this.$element.append(this.$contentEl);
 				
-				this.$actionEl.on('click', function(event){
+				this.$closeEl.on('click', function(event){
 					self.onCloseButton(event);
 				});
+			}
+		};
 
-				this.$closeEl.on('click', function(event){
+		Dropdown.prototype.initDropdownAtion = function(){
+			var self = this;
+			if(this.options.showDropdownAction){
+				this.$actionEl = angular.element('<div class="x-dropdown-action"><span>' + $translate.instant('Dropdown.toggle') + '</span></div>');
+				this.$actionEl.on('click', function(event){
 					self.onCloseButton(event);
 				});
 			}
@@ -127,9 +137,11 @@
 		Dropdown.prototype.afterClose =  function(){};
 		
 		Dropdown.prototype.open = function(){
-			this.$element.addClass(this.options.clsOpen);
-			this.afterOpen();
-			document.querySelector('body').classList.add(this.options.bodyClsOpen);
+			if(!this.$element.hasClass(this.options.clsOpen)){
+				this.$element.addClass(this.options.clsOpen);
+				this.afterOpen();
+				document.querySelector('body').classList.add(this.options.bodyClsOpen);
+			}
 		};
 		
 		Dropdown.prototype.afterOpen = function(){};
@@ -144,8 +156,8 @@
 		};
 
 		return {
-			create : function(element) {
-				return new Dropdown(element);
+			create : function(element, options) {
+				return new Dropdown(element, options);
 			}
 		}
 	

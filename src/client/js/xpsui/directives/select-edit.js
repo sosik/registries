@@ -2,7 +2,8 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory', function(log, $parse, dropdownFactory, selectboxFactory, datafactory) {
+	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory', '$timeout', 
+		function(log, $parse, dropdownFactory, selectboxFactory, datafactory, $timeout) {
 		return {
 			restrict: 'A',
 			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiSelectEdit'],
@@ -48,17 +49,24 @@
 				});
 
 				// dropdown
-				var dropdown = dropdownFactory.create(elm);
+				var dropdown = dropdownFactory.create(elm,{
+					// showDropdownAction: false
+					//allowClose: false
+				});
 				dropdown.setInput(selfControl.getInput())
 					.render()
 				;
 
 				// selectbox
 				var selectbox = selectboxFactory.create(elm, {
+					// useSearchInput: false,
+					// freeTextMode: true,
 					onSelected: function(value){
 						input.val(value.v);
-						console.log('onSelected');
-						console.log(arguments);
+
+						// console.log(selectbox.$searchInput.val());
+						// console.log('onSelected');
+						// console.log(arguments);
 					}
 				});
 				selectbox.setInput(selfControl.getInput());
@@ -70,6 +78,13 @@
 					schemaFragment.enumTransCodes
 				);
 				selectbox.setDataset(dataset);
+
+				// input.on('keypress',function(){
+				// 	$timeout(function(){
+				// 		dropdown.open();
+				// 		selectbox.actionFilter(input.val());
+				// 	}, 300);
+				// });
 
 				log.groupEnd();
 			}

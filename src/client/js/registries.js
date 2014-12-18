@@ -19,7 +19,9 @@ angular.module('registries', [
 		'pascalprecht.translate',
 		'psui-objectlink',
 		'psui-selectbox',
-		'portal-editor'
+		'portal-editor',
+		'xpsui:services',
+		'xpsui:directives'
 ])
 .config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
 	$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});

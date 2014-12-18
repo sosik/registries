@@ -531,7 +531,9 @@
       }
     };
   }])
-  .directive('portalMultistringEdit', [function() {
+  .directive('portalMultistringEdit', 
+      ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory',
+          function(log, $parse, dropdownFactory, selectboxFactory, datafactory) {
     return {
       restrict: 'A',
       require: ['ngModel'],

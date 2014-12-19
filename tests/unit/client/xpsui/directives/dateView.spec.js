@@ -15,7 +15,7 @@ describe("xpsuiDateView", function () {
 	}));
 
 	beforeEach(function createElement() {
-		$rootScope.date = '4.12.2014';
+		$rootScope.date = '20141204'; // date in eu format: '4.12.2014'
 
 		// Create an element and compile it
 		element = $compile('<div xpsui-date-view ng-model="date"></div>')($rootScope);

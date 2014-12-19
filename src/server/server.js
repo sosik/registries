@@ -1,4 +1,4 @@
-/* jshint node:true */
+-/* jshint node:true */
 'use strict';
 
 // require('look').start();
@@ -97,7 +97,6 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, udc.getBySchema);
 	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), udc.list);
 	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), udc.listBySchema);
-	app.get('/udao/articleTagsDistinct',securityService.authenRequired, bodyParser.json(),function(req,res){udc.getArticleTagsDistinct(req,res);});
 	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), udc.search);
 	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchemaCount);
 	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchema);
@@ -130,6 +129,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	var portalApi = new portalApiModule(mongoDriver);
 	app.post('/portalapi/getByTags', bodyParser.json(), function(req, res) {portalApi.getByTags(req, res);});
+	app.get('/portalapi/articleTagsDistinct',securityService.authenRequired, bodyParser.json(),function(req,res){udc.getArticleTagsDistinct(req,res);});
 
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));

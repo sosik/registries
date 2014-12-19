@@ -113,7 +113,7 @@
 				selectbox.setDropdown(dropdown);
 
 				$http({
-					url: '/udao/articleTagsDistinct',
+					url: '/portalapi/articleTagsDistinct',
 					method: "GET",
 					headers: {'Content-Type': 'application/json'}
 				}).success(function (data, status, headers, config) {

@@ -2,8 +2,8 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiObjectlink2View', ['xpsui:logging', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', 'xpsui:SchemaUtil',
-	function(log, objectlink2Factory, dataFactory, schemaUtil) {
+	.directive('xpsuiObjectlink2View', ['xpsui:logging', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', 'xpsui:SchemaUtil','$parse',
+	function(log, objectlink2Factory, dataFactory, schemaUtil, $parse) {
 		return {
 			restrict: 'A',
 			require: ['ngModel'],
@@ -12,7 +12,8 @@
 
 				var ngModel = ctrls[0],
 					view = angular.element('<div></div>'),
-					schemaFragment = elm.data('schemaFragment')
+					parseSchemaFragment = $parse(attrs.xpsuiSchema),
+					schemaFragment = parseSchemaFragment(scope)
 				;
 
 				elm.addClass('x-control');

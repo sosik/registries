@@ -108,7 +108,7 @@ angular.module('psui-objectlink', [])
 			ngModel.$render = function() {
 				if (ngModel.$viewValue) {
 					if (ngModel.$viewValue.refData) {
-						elm.next().find('cancelPart').children().removeClass('psui-hidden');
+						elm.parent().find('cancelPart').children().removeClass('psui-hidden');
 						var displayText = '';
 						var count = 0;
 						for (var i in ngModel.$viewValue.refData) {
@@ -125,11 +125,11 @@ angular.module('psui-objectlink', [])
 						elm.html('<table style="width:100%; table-layout: fixed;"><tr>' + displayText + '</tr></table>');
 					} else {
 						elm.html('&nbsp;');
-						elm.next().find('cancelPart').children().addClass('psui-hidden');
+						elm.parent().find('cancelPart').children().addClass('psui-hidden');
 					}
 				} else {
 					elm.html('&nbsp;');
-					elm.next().find('cancelPart').children().addClass('psui-hidden');
+					elm.parent().find('cancelPart').children().addClass('psui-hidden');
 				}
 /*				if (ngModel.$viewValue) {
 					if (ngModel.$viewValue.refData) {
@@ -339,7 +339,7 @@ angular.module('psui-objectlink', [])
 			buttonCancelValue.on('click', function () {
 				ngModel.$setViewValue(null);// dataArray[index]
 				ngModel.$render();
-				elm.next().find('cancelPart').children().addClass('psui-hidden');
+				elm.parent().find('cancelPart').children().addClass('psui-hidden');
 			});
 
 			elm.on('keydown', function(evt) {
@@ -401,7 +401,7 @@ angular.module('psui-objectlink', [])
 				//commitChange(index);
 				this.hide();
 				elm[0].focus();
-				elm.next().find('cancelPart').children().removeClass('psui-hidden');
+				elm.parent().find('cancelPart').children().removeClass('psui-hidden');
 			};
 			wrapper.append(dropdown.getDropdownElement());
 

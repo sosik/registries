@@ -20,13 +20,14 @@
 				this.setup();
 			},
 			link: function(scope, elm, attrs, ctrls) {
-				log.group('String edit Link');
+				log.group('Select edit Link');
 
 				var ngModel = ctrls[0];
 				var formControl = ctrls[1] || {};
 				var selfControl = ctrls[2];
 				var input = selfControl.getInput();
-				var schemaFragment = elm.data('schemaFragment');
+				var parseSchemaFragment = $parse(attrs.xpsuiSchema);
+				var schemaFragment = parseSchemaFragment(scope);
 
 				elm.addClass('x-control');
 				elm.addClass('x-select-edit');

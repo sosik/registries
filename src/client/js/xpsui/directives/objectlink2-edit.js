@@ -27,7 +27,8 @@
 					formControl = ctrls[1] || {},
 					selfControl = ctrls[2],
 					input = selfControl.getInput(),
-					schemaFragment = elm.data('schemaFragment')
+					parseSchemaFragment = $parse(attrs.xpsuiSchema),
+					schemaFragment = parseSchemaFragment(scope)
 				;
 
 				elm.addClass('x-control');

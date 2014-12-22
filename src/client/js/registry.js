@@ -185,7 +185,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 				crits.push({
 					op: 'eq',
 					f: 'baseData.player.oid',
-					v: ngModel.$viewValue.oid
+					v: (ngModel.$viewValue ? ngModel.$viewValue.oid : '')
 				});
 				crits.push({
 					op: 'eq',

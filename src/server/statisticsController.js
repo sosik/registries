@@ -100,7 +100,7 @@ var StatisticsController = function(mongoDriver, options) {
 			collectionName : "fees"
 		});
 		var strDate = dateUtils.dateToReverse( dateUtils.dateAddDays(new Date(),-365));
-		log.error(strDate);
+		//log.error(strDate);
 		dao.aggregate([{$project:{"baseData.setupDate":1,isNew:{$gt:["$baseData.setupDate",strDate]},sum:1,count:1,'baseData.feePaymentStatus':1,'baseData.membershipFee':1}},{$group:{_id:{status:'$baseData.feePaymentStatus',isNew:'$isNew'},sum:{$sum:"$baseData.membershipFee"},count:{$sum:1}}}],callback);
 	};
 

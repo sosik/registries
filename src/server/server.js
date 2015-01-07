@@ -91,16 +91,16 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter);
 
-	app.put('/udao/save/:table',  securityService.authenRequired,bodyParser.json(), function(req, res){udc.save(req, res);});
-	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.saveBySchema(req, res);});
-	app.get('/udao/get/:table/:id',securityService.authenRequired, bodyParser.json(), function(req, res){udc.get(req, res);});
-	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, function(req, res){udc.getBySchema(req, res);});
-	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.list(req, res);});
-	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), function(req, res){udc.listBySchema(req, res);});
+	app.put('/udao/save/:table',  securityService.authenRequired,bodyParser.json(), udc.save);
+	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser.json(),udc.saveBySchema);
+	app.get('/udao/get/:table/:id',securityService.authenRequired, bodyParser.json(), udc.get);
+	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, udc.getBySchema);
+	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), udc.list);
+	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), udc.listBySchema);
 	app.get('/udao/articleTagsDistinct',securityService.authenRequired, bodyParser.json(),function(req,res){udc.getArticleTagsDistinct(req,res);});
-	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), function(req, res){udc.search(req, res);});
-	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){udc.searchBySchemaCount(req,res);});
-	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),function(req,res){udc.searchBySchema(req,res);});
+	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), udc.search);
+	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchemaCount);
+	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchema);
 
 	app.post('/login', bodyParser.json(), function(req, res){securityCtrl.login(req, res);});
 	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});
@@ -137,7 +137,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 //	app.all('/my*',fsCtrl2.handle);
 
 	app.use(express.static(__dirname + '/public'));
-	app.use(errorhandler({ dumpExceptions: true, showStack: true }));
+	app.use(errorhandler({ dumpExceptions: true, showStack: false }));
 
 	log.verbose('Configuring photos sub applicaction');
 	var photosRepoApp = fsController.create({rootPath: config.paths.photos ,fileFilter: null});

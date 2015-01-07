@@ -61,7 +61,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 	this.mongoDriver=mongoDriver;
 	var securityService= new securityServiceModule.SecurityService();
 
-	this.save = function(req, res) {
+	this.save = function(req, res,next) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: req.params.table}
@@ -72,7 +72,8 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		var obj = req.body;
 		_dao.save(obj, function(err, data){
 			if (err) {
-				throw err;
+				next(error);
+				return;
 			}
 			auditLog.info('user oid', req.currentUser.id,'has saved/modified object',obj);
 			res.json(data);
@@ -99,26 +100,26 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		return retVal;
 	}
 
-	this.saveBySchema = function(req, res) {
+	this.saveBySchema = function(req, res,next) {
 
 		var schemaName = safeUrlEncoder.decode(req.params.schema);
 
 		if (!schemaRegistry) {
 			log.error('missing schemaRegistry');
-			throw 'This method requires schemaRegistry';
+			throw new Error('This method requires schemaRegistry');
 		}
 		var schema = schemaRegistry.getSchema(schemaName);
 
 		if (!schema) {
 			log.error('schema %s not found', schemaName);
-			throw 'Schema not found';
+			throw new Error('Schema not found');
 		}
 
 		var compiledSchema = schema.compiled;
 
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
-			throw 'Schema is not compiled';
+			throw new Error('Schema is not compiled');
 		}
 
 		if (compiledSchema[consts.SAVE_BY_SCHEMA]){
@@ -126,7 +127,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			compiledSchema = schemaRegistry.getSchema(schemaName).compiled;
 			if (!compiledSchema) {
 				log.error('saveByschema %s is not compiled', schemaName);
-				throw 'Schema is not compiled';
+				throw new Error('Schema is not compiled');
 			}
 		}
 
@@ -150,18 +151,24 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			//UPDATE
 			auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
 			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, local) {
-				if (err){res.send(500);return;}
+
+				if (err){
+					next(err);
+					return;
+				}
+
 				if (local && local.length>0){
-					res.status(400).send(convertLocalErrors(local));
+					res.status(400);
+					next(convertLocalErrors(local));
 					return;
 				}
 
 				_dao.update(obj, function(err, data){
 					if (err) {
-						res.send(500);
-						throw err;
+						next(err);
+						return;
 					}
-					res.status(200).json(data);
+					res.json(data);
 					if (compiledSchema._fireEvents && compiledSchema._fireEvents.update ){
 						log.silly('Firing event',compiledSchema._fireEvents.update);
 						eventRegistry.emitEvent(compiledSchema._fireEvents.update,{entity:obj,user:req.currentUser});
@@ -176,9 +183,14 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, local) {
 
-				if (err){res.send(500);log.error(err);return;}
+				if (err){
+					log.error(err);
+					next(err);
+					return;
+				}
 				if (local && local.length>0){
-					res.status(400).send(convertLocalErrors(local));
+					res.status(400);
+					next(convertLocalErrors(local));
 					return;
 				}
 
@@ -186,10 +198,12 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 				_dao.save(obj, function(err, data){
 					if (err) {
-						res.send(500);
-						throw err;
+
+						next(err);
+						return;
 					}
 					res.json(data);
+
 					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 					if (compiledSchema._fireEvents && compiledSchema._fireEvents.create ){
 						log.silly('Firing event',compiledSchema._fireEvents.create);
@@ -246,7 +260,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 	};
 
-	this.get = function(req, res) {
+	this.get = function(req, res,next) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: req.params.table}
@@ -255,21 +269,22 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		log.verbose(req.params);
 		_dao.get(req.params.id, function(err, data){
 			if (err) {
-				throw err;
+				next(err);
+				return;
 			}
 
 			res.json(data);
 		});
 	};
 
-	this.getBySchema = function(req, res) {
+	this.getBySchema = function(req, res,next) {
 
 		log.silly('getBySchema',req.params);
 		var schemaName = safeUrlEncoder.decode(req.params.schema);
 
 		if (!schemaRegistry) {
 			log.error('missing schemaRegistry');
-			throw 'This method requires schemaRegistry';
+			throw new Error('This method requires schemaRegistry');
 		}
 
 		var schema = schemaRegistry.getSchema(schemaName);
@@ -278,14 +293,14 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		if (!schema) {
 			log.error('schema %s not found', schemaName);
-			throw 'Schema not found';
+			throw new Error('Schema not found');
 		}
 
 		var compiledSchema = schema.compiled;
 
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
-			throw 'Schema is not compiled';
+			throw new Error('Schema is not compiled');
 		}
 
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
@@ -294,6 +309,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			return;
 		}
 
+
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: compiledSchema.table}
@@ -301,21 +317,22 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		if (!req.params.id){
 			log.error('Id is not defined for read from schema', schemaName);
-			throw 'Id is not defined.';
+			throw new Error ('Id is not defined.');
 		}
 		_dao.get(req.params.id, function(err, data){
 			if (err) {
-				throw err;
+				next(err);
+				return;
 			}
 			setTimeout(getObjectMangler.mangle(data, compiledSchema, function(err, cb) {
-									if (err){res.send(500);}
+									if (err){next(err); return;}
 									res.status(200).json(data);
 								}), 0);
 
 		});
 	};
 
-	this.list = function(req, res) {
+	this.list = function(req, res,next) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: req.params.table}
@@ -323,19 +340,20 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		_dao.list({}, function(err, data){
 			if (err) {
-				throw err;
+				next(err);
+				return;
 			}
 
 			res.json(data);
 		});
 	};
 
-	this.listBySchema = function(req, res) {
+	this.listBySchema = function(req, res,next) {
 		var schemaName = safeUrlEncoder.decode(req.params.schema);
 
 		if (!schemaRegistry) {
 			log.error('missing schemaRegistry');
-			throw 'This method requires schemaRegistry';
+			throw new Error('This method requires schemaRegistry');
 		}
 
 		var schema = schemaRegistry.getSchema(schemaName);
@@ -343,7 +361,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		if (!schema) {
 			log.error('schema %s not found', schemaName);
-			throw 'Schema not found';
+			throw new Error('Schema not found');
 		}
 
 		var compiledSchema = schema.compiled;
@@ -352,11 +370,11 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
-			throw 'Schema is not compiled';
+			throw new Error('Schema is not compiled');
 		}
 
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
-			res.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
+			res.status(403).json(securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
 			return;
 		}
 
@@ -376,7 +394,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		_dao.list(qf, function(err, data){
 			if (err) {
-				throw err;
+				next(err);
 			}
 
 			res.json(data);
@@ -430,7 +448,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 
 
-this.searchBySchema = function(req, resp) {
+this.searchBySchema = function(req, resp,next) {
 
 
 		log.silly('searching for', req.params);
@@ -445,7 +463,7 @@ this.searchBySchema = function(req, resp) {
 
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
-			throw 'Schema is not compiled';
+			throw new Error('Schema is not compiled');
 		}
 
 
@@ -453,7 +471,7 @@ this.searchBySchema = function(req, resp) {
 
 			log.warn('user has not rights to search in schema',schemaName);
 
-			resp.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
+			resp.status(403).json(securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
 			return;
 		}
 
@@ -478,7 +496,7 @@ this.searchBySchema = function(req, resp) {
 		log.silly('used crits', qf);
 		dao.list(qf, function(err, data) {
 			if (err) {
-				resp.send(500, err);
+				next(err);
 			} else {
 				if (data) {
 					var mangFuncs = [];
@@ -494,13 +512,13 @@ this.searchBySchema = function(req, resp) {
 
 					async.parallelLimit(mangFuncs, 3, function(err, cb) {
 						if (err) {
-							resp.send(500, err);
+							next(err);
 							return;
 						}
-						resp.status(200).json(data);
+						resp.json(data);
 					});
 				} else {
-					resp.status(200).json(data);
+					resp.json(data);
 				}
 			}
 		});
@@ -508,7 +526,7 @@ this.searchBySchema = function(req, resp) {
 	};
 
 
-this.searchBySchemaCount = function(req, resp) {
+this.searchBySchemaCount = function(req, resp,next) {
 
 		log.silly('searching for', req.params);
 		var schemaName=safeUrlEncoder.decode(req.params.schema);
@@ -521,13 +539,13 @@ this.searchBySchemaCount = function(req, resp) {
 
 		if (!compiledSchema) {
 			log.error('schema %s is not compiled', schemaName);
-			throw 'Schema is not compiled';
+			throw new Error('Schema is not compiled');
 		}
 
 		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
 			log.warn('user has not rights to search in schema',schemaName);
 
-			resp.send(403,securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
+			resp.status(403).json(securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
 			return;
 		}
 
@@ -548,7 +566,7 @@ this.searchBySchemaCount = function(req, resp) {
 		log.silly('used crits', crits);
 		dao.count(qf, function(err, data) {
 			if (err) {
-				resp.send(500, err);
+				next(err);
 			} else {
 				if (data) {
 					var mangFuncs = [];
@@ -564,13 +582,13 @@ this.searchBySchemaCount = function(req, resp) {
 
 					async.parallelLimit(mangFuncs, 3, function(err, cb) {
 						if (err) {
-							resp.send(500, err);
+							next(err);
 						}
 
-						resp.send(200, data);
+						resp.json(data);
 					});
 				} else {
-					resp.send(200, data);
+					resp.json(data);
 				}
 			}
 		});
@@ -579,7 +597,7 @@ this.searchBySchemaCount = function(req, resp) {
 
 
 
-	this.search = function(req, res) {
+	this.search = function(req, res ,next) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: req.params.table}
@@ -591,7 +609,8 @@ this.searchBySchemaCount = function(req, resp) {
 			limit : req.body.limit || 20
 		}, function(err, data){
 			if (err) {
-				throw err;
+			 	next (err);
+				return;
 			}
 
 			res.json(data);

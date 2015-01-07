@@ -70,8 +70,8 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
 		}).error(function(data, status, headers, config) {
 			if (status===400){
-				for(var item in data){
-					data[item].map(function(fieldError){
+				for(var item in data.error){
+					data.error[item].map(function(fieldError){
 						notificationFactory.warn(
 						{translationCode:fieldError.c,translationData:fieldError.d, time:3000});
 					});
@@ -121,13 +121,11 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 		})
 		.error(function(data, status, headers, config) {
 			if (status===400){
-				for(var item in data){
+				for(var item in data.error){
 
-					data[item].map(function(fieldError){
-						notificationFactory.warn(
-						{translationCode:fieldError.c,translationData:fieldError.d, time:3000});
+					data.error[item].map(function(fieldError){
+						notificationFactory.warn({translationCode:fieldError.c,translationData:fieldError.d, time:3000});
 					});
-
 				}
 
 			} else {

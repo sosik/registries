@@ -9,13 +9,13 @@
 	}
 
 	CollationUnmangler.prototype.mangle = function(ctx,objFragment, schemaFragment, objPath, callback) {
-		log.silly('ObjectCleanerMangler mangler start for %s', objPath);
 
 		if (!schemaFragment || !schemaFragment[consts.COLLATE]) {
 			callback(null, null);
 			return;
 		}
 
+		log.silly('ObjectCleanerMangler mangler start for %s', objPath);
 
 		var value=objectTools.getValue(ctx.o,objPath);
 
@@ -25,7 +25,7 @@
 			}
 		}
 
-		objectTools.remove(ctx.o,objPath+"X");
+		//objectTools.remove(ctx.o,objPath+"X");
 
 		callback();
 		log.debug('CollationUnmangler mangling finished for %s',  objPath);

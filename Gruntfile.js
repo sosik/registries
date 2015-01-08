@@ -6,6 +6,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-mocha-test');
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	grunt.loadNpmTasks('grunt-env');
+	grunt.loadNpmTasks('grunt-exec');
 	grunt.loadNpmTasks('grunt-mocha-istanbul');
 	grunt.loadNpmTasks('grunt-contrib-yuidoc');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -24,7 +25,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);
 
 	grunt.registerTask('e2e', [ 'env:test', 'build', 'x', 'express', 'e2e:tests' ]);
-	grunt.registerTask('e2e:tests', [ 'protractor:e2e-firefox', 'protractor:e2e-chrome' ]);
+	grunt.registerTask('e2e:tests', [ 'exec:webdriver-manager', 'protractor:e2e-firefox', 'protractor:e2e-chrome' ]);
 
 	/** TODO: Enable this when some smoke tests will exist
 	grunt.registerTask('smoke', [ 'env:test', 'build', 'x', 'express', 'smoke:tests' ]);
@@ -289,6 +290,11 @@ module.exports = function(grunt) {
 				options: {
 					configFile: 'tests/config/smoke.firefox.conf.js'
 				}
+			}
+		},
+		exec: {
+			'webdriver-manager': {
+				command: './node_modules/.bin/webdriver-manager update'
 			}
 		}
 	});

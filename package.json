@@ -25,6 +25,7 @@
     "grunt-contrib-sass": "^0.8.1",
     "grunt-contrib-watch": "*",
     "grunt-env": "^0.4.1",
+    "grunt-exec": "^0.4.6",
     "grunt-express-server": "^0.4.19",
     "grunt-mocha-test": "*",
     "grunt-protractor-runner": "^1.1.4",

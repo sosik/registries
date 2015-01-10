@@ -127,6 +127,7 @@ angular.module('registries')
 		"security.user.edit.profile":"Profily používateľa",
 		"security.user.edit.added.profiles":"Pridelené profily",
 		"security.user.edit.available.profiles":"Dostupné profily",
+		"security.profile.edit.modification.done":"Úspešne uložené",
 
 		"schema.editor.save": "Uložiť",
 		"schema.editor.edit": "Upraviť",

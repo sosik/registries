@@ -5,7 +5,7 @@ module.exports = {
 
 	//Schema keywords
 	REF_KEYWORD: '$ref',//resolvable reference
-	EXTENDS_KEYWORD: '$extends', // schema extension
+	EXTENDS_KEYWORD: 'extends', // schema extension
 	IREF_KEYWORD: 'uref', //unresolvable reference
 
 	//Schema structure

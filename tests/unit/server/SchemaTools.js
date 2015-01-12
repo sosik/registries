@@ -14,7 +14,7 @@ describe('SchemaTools', function() {
 		};
 		var simpleSchema2 = {
 			"id": "uri://registries/simpleSchema2",
-			$extends: "uri://registries/simpleSchema1",
+			extends: "uri://registries/simpleSchema1",
 			at2:"test",
 			atOver:"changed",
 			atComplicated:{ testOver:"simpleSchema2", test2:"test2"},

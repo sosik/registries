@@ -288,15 +288,13 @@ var SchemaTools = function() {
 					}
 				}
 
-
 				// $extends
 				if (obj.hasOwnProperty(schemaConstants.EXTENDS_KEYWORD)) {
-
 
 					refSchema = self.getSchema(obj[schemaConstants.EXTENDS_KEYWORD]);
 					if (refSchema === null) {
 						// there is no such schema registered
-						errMessage = util.format('Referenced schema not found %s', obj[schemaConstants.REF_KEYWORD]);
+						errMessage = util.format('Referenced schema not found %s', obj[schemaConstants.EXTENDS_KEYWORD]);
 						log.silly(errMessage);
 						throw new Error(errMessage);
 					}
@@ -305,15 +303,17 @@ var SchemaTools = function() {
 
 					if (typeof compiledSchema === 'undefined' || compiledSchema === null) {
 						// ref schema is not compiled
-						log.silly('Referenced schema not compiled %s', obj[schemaConstants.REF_KEYWORD]);
+						log.silly('Referenced schema not compiled %s', obj[schemaConstants.EXTENDS_KEYWORD]);
 						return {done:false, val: null};
 					}
 
 					// we are done with whole object as $ref can be only property
-
-					var extended=extend(true,compiledSchema,obj);
+					// console.log("before extend",JSON.stringify(obj));
+					delete obj[schemaConstants.EXTENDS_KEYWORD];
+					var extended=extend(true,{},compiledSchema,obj);
 
 					objectTools.removeNullProperties(extended);
+					// console.log("after extend",JSON.stringify(extended));
 
 					return {done: true, val: extended};
 				}

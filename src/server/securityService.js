@@ -9,9 +9,9 @@ var QueryFilter = require('./QueryFilter.js');
 var DEFAULT_CFG = {};
 
 var actions = {
-		READ : '_read',
-		MODIFY : '_modify',
-		CREATE : '_create'
+		READ : 'read',
+		MODIFY : 'modify',
+		CREATE : 'create'
 };
 
 var SecurityService = function(mongoDriver, schemaRegistry, options) {
@@ -23,10 +23,10 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		log.verbose('checking permision on schema:action',schema,action);
 
 		var missingPerm=null;
-		if ('_security' in schema) {
-			if (action in schema['_security']) {
-				if ('_static' in schema['_security'][action]) {
-					var requiredPerms = schema['_security'][action]['_static'];
+		if ('security' in schema) {
+			if (action in schema['security']) {
+				if ('_static' in schema['security'][action]) {
+					var requiredPerms = schema['security'][action]['static'];
 					 requiredPerms.map(function(required) {
 						if ( !(required in avaliablePerm)  ||  !(avaliablePerm[required]) ){
 							missingPerm=required;
@@ -50,7 +50,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 
 
 	this.requiredPermissions = function(schema, action) {
-		return schema['_security'][action]['_static'].join(' ');
+		return schema['security'][action]['static'].join(' ');
 	};
 
 

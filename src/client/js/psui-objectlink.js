@@ -24,7 +24,7 @@ angular.module('psui-objectlink', [])
 
 						console.log(schemaFragment(scope));
 						console.log(ngModel.$viewValue.refData);
-						for (var prop in schemaFragment(scope).$objectLink) {
+						for (var prop in schemaFragment(scope).objectLink) {
 							if (prop === 'registry') {
 								continue;
 							}
@@ -177,9 +177,9 @@ angular.module('psui-objectlink', [])
 				return true;
 			};
 
-			
+
 			var wrapper;
-			
+
 			// create base html elements
 			if (elm.parent().hasClass('psui-wrapper')) {
 				// element is wrapped, we are going to use this wrapper
@@ -218,16 +218,16 @@ angular.module('psui-objectlink', [])
 			}
 
 			var dataArray = new Array();
-			
+
 			var doSearch = function(callback) {
 				dataArray = [];
 				if (schemaFragment(scope)) {
 					var qfName = null;
-					for (var f in schemaFragment(scope).$objectLink){
+					for (var f in schemaFragment(scope).objectLink){
 						if (f === 'registry') {
 							continue;
 						} else {
-							qfName = schemaFragment(scope).$objectLink[f];
+							qfName = schemaFragment(scope).objectLink[f];
 							break;
 						}
 					}
@@ -245,24 +245,24 @@ angular.module('psui-objectlink', [])
 							crits.push(dirtyAgeFilter);
 						}
 					}
-					
+
 					if (schemaFragment(scope).$objectLinkForcedCriteria) {
 						crits = crits.concat(schemaFragment(scope).$objectLinkForcedCriteria);
 					}
-					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria: crits, limit: 40, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
+					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).objectLink.registry, data: {criteria: crits, limit: 40, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
 					.success(function(data, status, headers, config){
 						//console.log('blabla' + data);
 						for (var i = 0; i < data.length; ++i) {
 							var rData = {
-								registry: schemaFragment(scope).$objectLink.registry,
+								registry: schemaFragment(scope).objectLink.registry,
 								oid: data[i].id,
 								refData: {}
 							};
 
 							//var e = angular.element('<div></div>');
-							for (var field in schemaFragment(scope).$objectLink) {
+							for (var field in schemaFragment(scope).objectLink) {
 								if (field != 'registry') {
-									var dataField = schemaFragment(scope).$objectLink[field];
+									var dataField = schemaFragment(scope).objectLink[field];
 
 									var getter = $parse(dataField);
 									var setter = $parse(field);
@@ -298,7 +298,7 @@ angular.module('psui-objectlink', [])
 							dataArray.push(rData);
 							//dataArray[i]=[];
 							/*for (j in rData.refData) {
-								
+
 								if (typeof rData.refData[j] === 'string') {
 									//displayText += '<td style="width: '+100/count+'%;">' + rData.refData[j] + '</td>';
 									dataArray[i].push(rData.refData[j]);
@@ -313,20 +313,20 @@ angular.module('psui-objectlink', [])
 					}).error(function(err) {
 					});
 				}
-				
+
 			}
-			
-			
+
+
 			var dropdown = new dropdownFactory.createDropdown({searchable: true});
-			
-			
+
+
 			//doSearch(function(){dropdown.setData(dataArray);});
 			dropdown.onSearchChanged = function() {
 				doSearch(function() {
 					dropdown.setData(dataArray);
 				});
 			};
-			
+
 			buttonShowDropdown.on('click', function() {
 				if (dropdown.isVisible()) {
 					dropdown.hide();
@@ -335,7 +335,7 @@ angular.module('psui-objectlink', [])
 					doSearch(function(){dropdown.setData(dataArray);});
 				}
 			});
-			
+
 			buttonCancelValue.on('click', function () {
 				ngModel.$setViewValue(null);// dataArray[index]
 				ngModel.$render();
@@ -364,7 +364,7 @@ angular.module('psui-objectlink', [])
 				}
 				// any other key
 			});
-			
+
 			buttonShowDropdown.on('keydown', function(evt) {
 				switch (evt.keyCode) {
 					case 40: // key down
@@ -387,7 +387,7 @@ angular.module('psui-objectlink', [])
 				}
 				// any other key
 			});
-			
+
 			buttonShowDropdown.on('focus', function(evt){
 				dropdown.cancelTimeout();
 			});

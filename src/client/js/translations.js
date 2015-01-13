@@ -10,6 +10,9 @@ angular.module('registries')
 		"login.selected.profile.continue":"Pokračovať s profilom",
 		"login.profile":"Profil",
 
+		"enum.gender.M":"Muž",
+		"enum.gender.F":"Žena",
+
 		"validation.field.not.unique":"Hodnota nie je unikátna.",
 		"validation.field.not.number":"Hodnota nie je číslo.",
 
@@ -473,6 +476,8 @@ angular.module('registries')
 		"login.authentication.failed": "Přihlášení selhalo",
 		"login.selected.profile.continue":"Pokračovat s profilem",
 		"login.profile":"Profil",
+		"enum.gender.M":"Muž",
+		"enum.gender.F":"Žena",
 
 		"validation.field.not.unique":"Hodnota není unikátní.",
 		"validation.field.not.number":"Hodnota není číslo.",

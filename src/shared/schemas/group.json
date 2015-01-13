@@ -14,7 +14,7 @@
     	"_modify": {
     		"_static":["System Admin"]
     	}
-    }, 
+    },
     "listFields": [
         {
             "field": "id",
@@ -43,7 +43,7 @@
                 "parent": {
                     "title": "Parent group",
                     "required": false,
-                    "$objectLink": {
+                    "objectLink": {
                         "registry": "groups",
                         "name": "baseData.name"
                     }

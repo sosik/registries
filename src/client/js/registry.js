@@ -581,7 +581,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 								input = angular.element('<psui-array-control schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-array-control>');
 							} else {
 
-								if (value2.$objectLink) {
+								if (value2.objectLink) {
 									input = angular.element('<psui-objectlink psui-validity-mark schema-fragment="'+attrs.psuiSchemaForm+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
 								} else if (value2.render && value2.render.component === 'psui-datepicker') {
 									input = angular.element('<input psui-validity-mark psui-datepicker type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');
@@ -797,7 +797,7 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 								//input.append(angular.element('<psui-objectlink psui-inlineedit="view" psui-validity-mark schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'.items" ng-model="'+options.modelPath+'.'+key+'.'+key2+'[$index]"></psui-objectlink>'));
 								input = angular.element('<psui-array-control psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-array-control>');
 							} else {
-								if (value2.$objectLink) {
+								if (value2.objectLink) {
 									input = angular.element('<psui-objectlink psui-inlineedit="view" schema-fragment="'+attrs.psuiSchemaForm2+'.schema.properties.'+key+'.properties.'+key2+'" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"></psui-objectlink>');
 								} else if (value2.render && value2.render.component === 'psui-datepicker') {
 									input = angular.element('<input psui-validity-mark psui-datepicker psui-inlineedit="view" type="text" class="form-control" placeholder="" ng-model="'+options.modelPath+'.'+key+'.'+key2+'"/>');

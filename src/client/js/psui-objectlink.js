@@ -24,7 +24,7 @@ angular.module('psui-objectlink', [])
 
 						console.log(schemaFragment(scope));
 						console.log(ngModel.$viewValue.refData);
-						for (var prop in schemaFragment(scope).$objectLink) {
+						for (var prop in schemaFragment(scope).objectLink) {
 							if (prop === 'registry') {
 								continue;
 							}
@@ -174,9 +174,9 @@ angular.module('psui-objectlink', [])
 				return true;
 			};
 
-			
+
 			var wrapper;
-			
+
 			// create base html elements
 			if (elm.parent().hasClass('psui-wrapper')) {
 				// element is wrapped, we are going to use this wrapper
@@ -186,32 +186,32 @@ angular.module('psui-objectlink', [])
 				wrapper = angular.element('<span class="psui-wrapper"></span>');
 				elm.wrap(wrapper);
 			}
-			
+
 			if (!attrs.tabindex) {
 				attrs.$set('tabindex', 0);
 			}
-			
+
 			elm.addClass('psui-selectbox');
 			elm.addClass('form-control');
-			
+
             var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
 			var buttonShowDropdown = angular.element('<button type="button" class="btn psui-icon-chevron-down"></button>');
 			buttonShowDropdown.attr('tabindex', '-1');
 			buttonsHolder.append(buttonShowDropdown);
 
-			
+
 			var dataArray = new Array();
-			
+
 			var doSearch = function(callback) {
 				dataArray = [];
 				if (schemaFragment(scope)) {
 					var qfName = null;
-					for (var f in schemaFragment(scope).$objectLink){
+					for (var f in schemaFragment(scope).objectLink){
 						if (f === 'registry') {
 							continue;
 						} else {
-							qfName = schemaFragment(scope).$objectLink[f];
+							qfName = schemaFragment(scope).objectLink[f];
 							break;
 						}
 					}
@@ -229,24 +229,24 @@ angular.module('psui-objectlink', [])
 							crits.push(dirtyAgeFilter);
 						}
 					}
-					
+
 					if (schemaFragment(scope).$objectLinkForcedCriteria) {
 						crits = crits.concat(schemaFragment(scope).$objectLinkForcedCriteria);
 					}
-					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).$objectLink.registry, data: {criteria: crits, limit: 40, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
+					$http({ method : 'POST',url: '/udao/search/'+schemaFragment(scope).objectLink.registry, data: {criteria: crits, limit: 40, skip:0, sortBy:[{f:qfName, o:'asc'}]} })
 					.success(function(data, status, headers, config){
 						//console.log('blabla' + data);
 						for (var i = 0; i < data.length; ++i) {
 							var rData = {
-								registry: schemaFragment(scope).$objectLink.registry,
+								registry: schemaFragment(scope).objectLink.registry,
 								oid: data[i].id,
 								refData: {}
 							};
 
 							//var e = angular.element('<div></div>');
-							for (var field in schemaFragment(scope).$objectLink) {
+							for (var field in schemaFragment(scope).objectLink) {
 								if (field != 'registry') {
-									var dataField = schemaFragment(scope).$objectLink[field];
+									var dataField = schemaFragment(scope).objectLink[field];
 
 									var getter = $parse(dataField);
 									var setter = $parse(field);
@@ -282,7 +282,7 @@ angular.module('psui-objectlink', [])
 							dataArray.push(rData);
 							//dataArray[i]=[];
 							/*for (j in rData.refData) {
-								
+
 								if (typeof rData.refData[j] === 'string') {
 									//displayText += '<td style="width: '+100/count+'%;">' + rData.refData[j] + '</td>';
 									dataArray[i].push(rData.refData[j]);
@@ -297,20 +297,20 @@ angular.module('psui-objectlink', [])
 					}).error(function(err) {
 					});
 				}
-				
+
 			}
-			
-			
+
+
 			var dropdown = new dropdownFactory.createDropdown({searchable: true});
-			
-			
+
+
 			//doSearch(function(){dropdown.setData(dataArray);});
 			dropdown.onSearchChanged = function() {
 				doSearch(function() {
 					dropdown.setData(dataArray);
 				});
 			};
-			
+
 			buttonShowDropdown.on('click', function() {
 				if (dropdown.isVisible()) {
 					dropdown.hide();
@@ -319,7 +319,7 @@ angular.module('psui-objectlink', [])
 					doSearch(function(){dropdown.setData(dataArray);});
 				}
 			});
-			
+
 			elm.on('keydown', function(evt) {
 				switch (evt.keyCode) {
 					case 40: // key down
@@ -342,7 +342,7 @@ angular.module('psui-objectlink', [])
 				}
 				// any other key
 			});
-			
+
 			buttonShowDropdown.on('keydown', function(evt) {
 				switch (evt.keyCode) {
 					case 40: // key down
@@ -365,11 +365,11 @@ angular.module('psui-objectlink', [])
 				}
 				// any other key
 			});
-			
+
 			buttonShowDropdown.on('focus', function(evt){
 				dropdown.cancelTimeout();
 			});
-			
+
 			// override dropdown select functionality
 			dropdown.onSelected = function(index) {
 			console.log('stalacilo');

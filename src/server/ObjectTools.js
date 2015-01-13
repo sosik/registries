@@ -236,7 +236,7 @@ var ObjectTools = function() {
 		var linkSchemaPaths = [];
 		var that = this;
 
-		this.propertyVisitor(schemaObj, /.\$objectLink$/, function(val, path, obj) {
+		this.propertyVisitor(schemaObj, /.\objectLink$/, function(val, path, obj) {
 			linkSchemaPaths.push(that.stripFromPath(path, 1));
 		});
 
@@ -244,9 +244,9 @@ var ObjectTools = function() {
 		var objectLinkResolver = function(item, callback) {
 			var schemaFragment = that.evalPath(schemaObj, item);
 			var fields = [];
-			for (var prop in schemaFragment.$objectLink) {
+			for (var prop in schemaFragment.objectLink) {
 				if (prop !== "registry") {
-					fields.push(schemaFragment.$objectLink[prop]);
+					fields.push(schemaFragment.objectLink[prop]);
 				}
 			}
 
@@ -263,9 +263,9 @@ var ObjectTools = function() {
 					}
 
 					objectFragment.refData = objectFragment.refData || {};
-					for (var prop in schemaFragment.$objectLink) {
+					for (var prop in schemaFragment.objectLink) {
 						if (prop !== "registry") {
-							objectFragment.refData[prop] = data[schemaFragment.$objectLink[prop]];
+							objectFragment.refData[prop] = data[schemaFragment.objectLink[prop]];
 						}
 					}
 

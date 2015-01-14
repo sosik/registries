@@ -639,9 +639,9 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			'schemaFragment' : '='
 		},
 		template: '<div style="position: relative;" class="input-group" ng-repeat="ae in ngModel track by $id(ae)">'
-					+ '<button style="position: absolute; right: 100%;" class="psui-btn" ng-click="removeByIndex($index);"><i class="glyphicon-minus"></i>Odstrániť</button><psui-objectlink psui-validity-mark schema-fragment="schemaFragment.items" ng-model="ngModel[$index]"></psui-objectlink>'
+					+ '<button style="position: absolute; right: 100%;" class="psui-btn" ng-click="removeByIndex($index);"><i class="glyphicon-minus"></i>{{\'generic.search.remove\' | translate}}</button><psui-objectlink psui-validity-mark schema-fragment="schemaFragment.items" ng-model="ngModel[$index]"></psui-objectlink>'
 					+'</div>'
-					+ '<button class="psui-btn pull-right" ng-click="appendNew();"><i class="glyphicon-plus"></i> Pridať</button>',
+					+ '<button class="psui-btn pull-right" ng-click="appendNew();"><i class="glyphicon-plus"></i>{{\'generic.search.add\' | translate}}</button>',
 		link: function(scope, element, attrs, controller) {
 			console.log(scope.psuiModel);
 			console.log(scope.schemaFragment);

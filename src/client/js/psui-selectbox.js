@@ -21,14 +21,24 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 						data.push({
 							v: $translate.instant(schemaFragment.enumTransCodes[i]),
 							k: schemaFragment.enum[i]
-						})
+						});
 					}
 				} else {
-					for (var i = 0; i < schemaFragment.enum.length; i++) {
-						data.push({
-							v: schemaFragment.enum[i],
-							k: schemaFragment.enum[i]
-						})
+					if (schemaFragment.translationPrefix){
+						for (var i = 0; i < schemaFragment.enum.length; i++) {
+							data.push({
+								v: $translate.instant(schemaFragment.translationPrefix+'.'+schemaFragment.enumTransCodes[i]),
+								k: schemaFragment.enum[i]
+							});
+						}
+					} else {
+						for (var i = 0; i < schemaFragment.enum.length; i++) {
+							data.push({
+								v: schemaFragment.enum[i],
+								k: schemaFragment.enum[i]
+							});
+						}
+
 					}
 				}
 			}
@@ -96,7 +106,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 			if (ctrls[0]) {
 				var ngModelCtrl = ctrls[0];
 				//ng-model controller is there
-				
+
 				var commitChange = function(index) {
 					var val = data[index];
 					elm.text(val.v + ' - ' + val.k);
@@ -195,7 +205,7 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 				}
 				// any other key
 			});
-			
+
 			buttonShowDropdown.on('keydown', function(evt) {
 				switch (evt.keyCode) {
 					case 40: // key down
@@ -218,11 +228,11 @@ angular.module('psui-selectbox', ['psui', 'pascalprecht.translate'])
 				}
 				// any other key
 			});
-			
+
 			buttonShowDropdown.on('focus', function(evt){
 				dropdown.cancelTimeout();
 			})
-			
+
 			// if there is psui-form-ctrl bind active component change and close dropdown
 			var psuiFormCtrl;
 			if (ctrls[1]) {

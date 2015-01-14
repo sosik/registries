@@ -10,6 +10,12 @@ angular.module('registries')
 		"login.selected.profile.continue":"Pokračovať s profilom",
 		"login.profile":"Profil",
 
+		"enum.active.A":"Aktívny",
+		"enum.active.I":"Neaktívny",
+
+		"enum.boolean.true":"Áno",
+		"enum.boolean.false":"Nie",
+
 		"enum.gender.M":"Muž",
 		"enum.gender.F":"Žena",
 
@@ -44,9 +50,10 @@ angular.module('registries')
 		"menu.search.referee.lower.level": "Hľadať rozhodcu",
 		"menu.search.coach.lower.level": "Hľadať trénera",
 		"menu.search.company.lower.level": "Hľadať spoločnosť",
+		"menu.search.officer.lower.level": "Hľadať funkcionára",
 		"menu.search.club.lower.level": "Hľadať klub",
 		"menu.search.association.lower.level": "Hľadať zväz",
-		"menu.search.statistic.lower.level": "Hľadať štatistu",
+		"menu.search.statistic.lower.level": "Hľadať štatistika",
 		"menu.search.medic.lower.level": "Hľadať zdravotníka",
 
 		"menu.new.lower.level": "Nový",
@@ -509,7 +516,8 @@ angular.module('registries')
 		"menu.search.member.lower.level": "Hledat člena",
 		"menu.search.player.lower.level": "Hledat hráča",
 		"menu.search.referee.lower.level": "Hledat rozhodcu",
-		"menu.search.statistic.lower.level": "Hledat statistu",
+		"menu.search.statistic.lower.level": "Hledat statistika",
+		"menu.search.officer.lower.level": "Hľadať funkcionára",
 		"menu.search.medic.lower.level": "Hledat zdravotníka",
 		"menu.search.coach.lower.level": "Hledat trenéra",
 		"menu.search.company.lower.level": "Hledat spoločnosť",

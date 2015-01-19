@@ -46,7 +46,7 @@ describe("[AUTH] Login page", function () {
 		});
 
 		it('should display user profile after login', function(done) {
-			expect(browser.getLocationAbsUrl()).to.eventually.equal(browser.baseUrl + '/#/registry/view/' + safeUrlEncoder.encode('uri://registries/member#') + "/" + person.id);
+			expect(browser.getLocationAbsUrl()).to.eventually.equal(browser.baseUrl + '/#/registry/view/' + safeUrlEncoder.encode('uri://registries/people#views/fullperson') + "/" + person.id);
 		});
 
 	});

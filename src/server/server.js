@@ -1,4 +1,4 @@
-/* jshint node:true */
+-/* jshint node:true */
 'use strict';
 
 // require('look').start();
@@ -130,6 +130,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	var portalApi = new portalApiModule(mongoDriver);
 	app.post('/portalapi/getByTags', bodyParser.json(), function(req, res) {portalApi.getByTags(req, res);});
+	app.get('/portalapi/articleTagsDistinct',securityService.authenRequired, bodyParser.json(),function(req,res){udc.getArticleTagsDistinct(req,res);});
 
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));

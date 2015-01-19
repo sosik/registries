@@ -1,4 +1,32 @@
 .x-dropdown-content{
 	@include box-shadow($dropdown-shadow-color);
 	border-color: $dropdown-border-color;
+
+
+	@media (max-width: $screen-sm-max) {
+		background-color: $modlaview-bg-color;
+
+		// .x-modalview-window{
+		// 	background-color: $modalview-body-bg-color;
+			
+		// 	&, a {
+		// 		color: $modalview-color;
+		// 	}
+
+		// }
+
+		.x-dropdown-header{
+			background-color: $modalview-header-bg;
+		}
+
+		.x-dropdown-header, .x-dropdown-close {
+			color: $color-black;
+		}
+
+		.x-dropdown-close {
+			&:hover{
+				color: $color-white;
+			}
+		}
+	}
 }

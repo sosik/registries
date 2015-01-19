@@ -25,7 +25,9 @@
 		 * Api is identical to $http api
 		 */
 		HttpHandler.prototype.http = function(config) {
-			var deffered = $q.defer();
+			var deffered = $q.defer(),
+				self = this
+			;
 
 			if (this.activeDeffered) {
 				this.activeDeffered.reject('cancelled');
@@ -35,23 +37,25 @@
 			$http(config).then(
 				// success
 				function() {
-					if (this.activeDeffered === deffered) {
+					if (self.activeDeffered === deffered) {
 						deffered.resolve.apply(deffered, arguments);
+						self.activeDeffered = null;
 					}
 
-					this.activeDeffered = null;
+					//self.activeDeffered = null;
 				},
 				// error
 				function() {
-					if (this.activeDeffered === deffered) {
+					if (self.activeDeffered === deffered) {
 						deffered.reject.apply(deffered, arguments);
+						self.activeDeffered = null;
 					}
 
-					this.activeDeffered = null;
+					//selfs.activeDeffered = null;
 				},
 				// notify
 				function() {
-					if (this.activeDeffered === deffered) {
+					if (self.activeDeffered === deffered) {
 						deffered.notify.apply(deffered, arguments);
 					}
 				}

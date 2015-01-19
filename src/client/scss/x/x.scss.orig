@@ -21,7 +21,11 @@
 @import "string";
 @import "date";
 @import "select";
+<<<<<<< HEAD
 @import "multistring";
 @import "portal-widget";
-@import "objectlink2";
 @import "contenteditable";
+=======
+@import "objectlink2";
+
+>>>>>>> XPSUI objectlink2 mobile/tablet view

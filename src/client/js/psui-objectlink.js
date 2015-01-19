@@ -108,6 +108,7 @@ angular.module('psui-objectlink', [])
 			ngModel.$render = function() {
 				if (ngModel.$viewValue) {
 					if (ngModel.$viewValue.refData) {
+						elm.parent().find('cancelPart').children().removeClass('psui-hidden');
 						var displayText = '';
 						var count = 0;
 						for (var i in ngModel.$viewValue.refData) {
@@ -124,9 +125,11 @@ angular.module('psui-objectlink', [])
 						elm.html('<table style="width:100%; table-layout: fixed;"><tr>' + displayText + '</tr></table>');
 					} else {
 						elm.html('&nbsp;');
+						elm.parent().find('cancelPart').children().addClass('psui-hidden');
 					}
 				} else {
 					elm.html('&nbsp;');
+					elm.parent().find('cancelPart').children().addClass('psui-hidden');
 				}
 /*				if (ngModel.$viewValue) {
 					if (ngModel.$viewValue.refData) {
@@ -186,21 +189,34 @@ angular.module('psui-objectlink', [])
 				wrapper = angular.element('<span class="psui-wrapper"></span>');
 				elm.wrap(wrapper);
 			}
-			
+
 			if (!attrs.tabindex) {
 				attrs.$set('tabindex', 0);
 			}
-			
+
 			elm.addClass('psui-selectbox');
 			elm.addClass('form-control');
-			
-            var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
+
+			var buttonsHolder = angular.element('<div class="psui-buttons-holder"></div>');
 			wrapper.append(buttonsHolder);
+			var buttonCancelValue = angular.element(
+				'<cancelPart><button type="button" class="btn glyphicon glyphicon-remove remove-value" '
+				+ 'style="color: red; padding-right: 0px;"></button></cancelPart>');
+				//psui-hidden remove-value
+				//+ 'style="color: red; padding-right: 0px;" ng-show="showCancelButton()"></button>');
+				//+ 'style="color: red; padding-right: 0px;" ng-show="ngModel.$viewValue != null"></button>');
 			var buttonShowDropdown = angular.element('<button type="button" class="btn psui-icon-chevron-down"></button>');
+			buttonCancelValue.attr('tabindex', '-1');
+			buttonsHolder.append(buttonCancelValue);
 			buttonShowDropdown.attr('tabindex', '-1');
 			buttonsHolder.append(buttonShowDropdown);
+			$compile(buttonsHolder)(scope);
 
-			
+			if (ngModel.$viewValue) {
+				// psui-hidden remove-value
+				buttonCancelValue.removeClass('psui-hidden');
+			}
+
 			var dataArray = new Array();
 			
 			var doSearch = function(callback) {
@@ -320,6 +336,12 @@ angular.module('psui-objectlink', [])
 				}
 			});
 			
+			buttonCancelValue.on('click', function () {
+				ngModel.$setViewValue(null);// dataArray[index]
+				ngModel.$render();
+				elm.parent().find('cancelPart').children().addClass('psui-hidden');
+			});
+
 			elm.on('keydown', function(evt) {
 				switch (evt.keyCode) {
 					case 40: // key down
@@ -369,15 +391,17 @@ angular.module('psui-objectlink', [])
 			buttonShowDropdown.on('focus', function(evt){
 				dropdown.cancelTimeout();
 			});
-			
+
 			// override dropdown select functionality
 			dropdown.onSelected = function(index) {
 			console.log('stalacilo');
 				ngModel.$setViewValue(dataArray[index]);
 				ngModel.$render();
+				elm.find('.remove-value').removeClass('psui-hidden');
 				//commitChange(index);
 				this.hide();
 				elm[0].focus();
+				elm.parent().find('cancelPart').children().removeClass('psui-hidden');
 			};
 			wrapper.append(dropdown.getDropdownElement());
 

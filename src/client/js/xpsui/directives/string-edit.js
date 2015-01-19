@@ -5,14 +5,28 @@
 	.directive('xpsuiStringEdit', ['xpsui:logging', function(log) {
 		return {
 			restrict: 'A',
-			require: ['ngModel', '?^xpsuiFormControl'],
+			require: ['ngModel', '?^xpsuiFormControl','xpsuiStringEdit'],
+			controller: function($scope, $element, $attrs) {
+				this.setup = function(){
+					this.$input = angular.element('<input></input>');
+				}
+				
+				this.getInput = function(){
+					return this.$input;
+				}
+
+				this.$input = null;
+				this.setup();
+				
+			},
 			link: function(scope, elm, attrs, ctrls) {
 				log.group('String edit Link');
 
 				var ngModel = ctrls[0];
 				var formControl = ctrls[1] || {};
+				var selfControl = ctrls[2] || {};
 
-				var input = angular.element('<input></input>');
+				var input = selfControl.getInput();
 
 				elm.addClass('x-control');
 				elm.addClass('x-string-edit');

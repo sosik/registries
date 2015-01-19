@@ -28,7 +28,7 @@
 			return;
 		}
 
-		if (!objFragment) {
+		if (!objFragment && objFragment!==0) {
 			log.debug('Required validation failed for %s',  objPath);
 			callback(null, [new RequiredValidationError(objPath)]);
 			return;

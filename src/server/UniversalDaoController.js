@@ -169,9 +169,9 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 						return;
 					}
 					res.json(data);
-					if (compiledSchema._fireEvents && compiledSchema._fireEvents.update ){
-						log.silly('Firing event',compiledSchema._fireEvents.update);
-						eventRegistry.emitEvent(compiledSchema._fireEvents.update,{entity:obj,user:req.currentUser});
+					if (compiledSchema[consts.FIRE_EVENTS] && compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_UPDATE] ){
+						log.silly('Firing event',compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_UPDATE]);
+						eventRegistry.emitEvent(compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_UPDATE],{entity:obj,user:req.currentUser});
 					}
 				});
 
@@ -205,10 +205,10 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 					res.json(data);
 
 					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
-					if (compiledSchema._fireEvents && compiledSchema._fireEvents.create ){
-						log.silly('Firing event',compiledSchema._fireEvents.create);
 
-						eventRegistry.emitEvent(compiledSchema._fireEvents.create,{entity:data,user:req.currentUser});
+					if (compiledSchema[consts.FIRE_EVENTS] && compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE] ){
+						log.silly('Firing event',compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE]);
+						eventRegistry.emitEvent(compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE],{entity:data,user:req.currentUser});
 					}
 				});
 

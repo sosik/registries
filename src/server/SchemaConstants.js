@@ -34,5 +34,9 @@ module.exports = {
 	TIMESTAMP: 'timestamp', // marks fields that will be updated with server era-time
 	COLLATE: 'collate', //marks fields that needs to be collated/ordered .
 
+	//Events
+	FIRE_EVENTS:"fireEvents",
+	FIRE_EVENTS_UPDATE:"update",
+	FIRE_EVENTS_CREATE:"create"
 
 };

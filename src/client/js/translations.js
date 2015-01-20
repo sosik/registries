@@ -18,8 +18,6 @@ angular.module('registries')
 
 		"enum.gender.M":"Muž",
 		"enum.gender.F":"Žena",
-		"enum.boolean.true":"Áno",
-		"enum.boolean.false":"Nie",
 
 		"validation.field.not.unique":"Hodnota nie je unikátna.",
 		"validation.field.not.number":"Hodnota nie je číslo.",

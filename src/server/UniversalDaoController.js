@@ -67,15 +67,16 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			{collectionName: req.params.table}
 		);
 
-		log.verbose("data to save", req.body);
+		log.verbose("data to savvar e", req.body);
 
 		var obj = req.body;
 		_dao.save(obj, function(err, data){
 			if (err) {
+				log.error(err);
 				next(error);
 				return;
 			}
-			auditLog.info('user oid', req.currentUser.id,'has saved/modified object',obj);
+			auditLogs.info('user oid', req.currentUser.id,'has saved/modified object',obj);
 			res.json(data);
 		});
 	};
@@ -137,9 +138,14 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			return;
 		}
 
-		_dao = new universalDaoModule.UniversalDao(
+		var _dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: compiledSchema.table}
+		);
+
+		var _daoAudit = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{collectionName: 'auditLogs'}
 		);
 
 		log.verbose("data to save", req.body);
@@ -149,7 +155,6 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		if (obj.id){
 			//UPDATE
-			auditLog.info('user oid', req.currentUser.id,'has modified object',obj);
 			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, local) {
 
 				if (err){
@@ -173,6 +178,15 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 						log.silly('Firing event',compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_UPDATE]);
 						eventRegistry.emitEvent(compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_UPDATE],{entity:obj,user:req.currentUser});
 					}
+
+					var auditEntity={};
+					auditEntity.obj = obj;
+					auditEntity.user = req.currentUser.id;
+					auditEntity.action = "update";
+					auditEntity.timeStamp = new Date().getTime();
+					auditEntity.schemaName = schemaName;
+
+					_daoAudit.save(auditEntity, function (data){});
 				});
 
 			}
@@ -180,7 +194,6 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		else {
 			//CREATE
-			auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 			setTimeout(saveObjectMangler.mangle(obj, compiledSchema, function(err, local) {
 
 				if (err){
@@ -198,18 +211,27 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 				_dao.save(obj, function(err, data){
 					if (err) {
-
+						log.error(err);
 						next(err);
 						return;
 					}
 					res.json(data);
 
-					auditLog.info('user oid', req.currentUser.id,'has created object',obj);
 
 					if (compiledSchema[consts.FIRE_EVENTS] && compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE] ){
 						log.silly('Firing event',compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE]);
 						eventRegistry.emitEvent(compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE],{entity:data,user:req.currentUser});
 					}
+
+					var auditEntity={};
+					auditEntity.obj = obj;
+					auditEntity.user = req.currentUser.id;
+					auditEntity.action = "create";
+					auditEntity.timeStamp = new Date().getTime();
+					auditEntity.schemaName = schemaName;
+
+					_daoAudit.save(auditEntity, function (data){
+					});
 				});
 
 			}
@@ -269,6 +291,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		log.verbose(req.params);
 		_dao.get(req.params.id, function(err, data){
 			if (err) {
+				log.error(err);
 				next(err);
 				return;
 			}
@@ -321,6 +344,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		_dao.get(req.params.id, function(err, data){
 			if (err) {
+				log.error(err);
 				next(err);
 				return;
 			}
@@ -340,6 +364,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 
 		_dao.list({}, function(err, data){
 			if (err) {
+				log.error(err);
 				next(err);
 				return;
 			}
@@ -394,6 +419,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		}
 		_dao.list(qf, function(err, data){
 			if (err) {
+				log.error(err);
 				next(err);
 			}
 
@@ -566,6 +592,7 @@ this.searchBySchemaCount = function(req, resp,next) {
 		log.silly('used crits', crits);
 		dao.count(qf, function(err, data) {
 			if (err) {
+				log.error(err);
 				next(err);
 			} else {
 				if (data) {
@@ -582,6 +609,7 @@ this.searchBySchemaCount = function(req, resp,next) {
 
 					async.parallelLimit(mangFuncs, 3, function(err, cb) {
 						if (err) {
+
 							next(err);
 						}
 
@@ -629,6 +657,7 @@ this.getArticleTagsDistinct = function(req, resp) {
 			limit : req.body.limit || 20
 		}, function(err, data){
 			if (err) {
+				log.error(err);
 			 	next (err);
 				return;
 			}

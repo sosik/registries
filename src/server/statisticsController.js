@@ -89,7 +89,7 @@ var StatisticsController = function(mongoDriver, options) {
 			collectionName : "people"
 		});
 
-		dao.count(QueryFilter.create().addCriterium("baseData.gender", QueryFilter.operation.EQUAL, "Z"),function(err,data){
+		dao.count(QueryFilter.create().addCriterium("baseData.gender", QueryFilter.operation.EQUAL, "F"),function(err,data){
 			callback(err,data);
 		});
 	};

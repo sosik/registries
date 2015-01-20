@@ -119,7 +119,9 @@ function saveItem(item,udc,callback){
 	res= new res();
 	req.perm={"Registry - write": true};
 
-	udc.saveBySchema(req,res);
+	udc.saveBySchema(req,res,function (err){
+		if (err) console.log(err);
+	});
 
 
 }

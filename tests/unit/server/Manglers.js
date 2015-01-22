@@ -158,6 +158,23 @@ describe('Manglers', function() {
 		});
 	});
 
+	it('Required validation - zero value should pass', function(done) {
+		var om = ObjectManglerModule.create([requiredValidator]);
+
+		var to = extend(true, {}, testObject01);
+		var ts = extend(true, {}, testSchema01);
+
+		to.fee=0;
+		ts.properties.fee={required:true};
+
+
+		om.mangle(to, ts, function(err, localErrors) {
+			expect(err).to.not.exist();
+			expect(localErrors).to.have.length(0);
+			done();
+		});
+	});
+
 	it('ObjectLink mangler', function(done) {
 		var om = ObjectManglerModule.create([objectLinkMangler]);
 
@@ -190,7 +207,7 @@ describe('Manglers', function() {
 		});
 	});
 
-	it('Collate mangler should enhace object', function(done) {
+	it('Collate mangler should enhance object', function(done) {
 		var om = ObjectManglerModule.create([collationMangler]);
 
 		var to = extend(true, {}, testObject01);

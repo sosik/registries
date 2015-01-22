@@ -111,7 +111,7 @@ ObjectMangler.prototype.mangle = function(obj, schema, callback) {
 
 				var propFragment = null;
 				var schemaPropFragment = null;
-				if (objFragment && objFragment[propsToVisit[i]]) {
+				if (objFragment  && (objFragment[propsToVisit[i]] || objFragment[propsToVisit[i]]===0) ) {
 					propFragment = objFragment[propsToVisit[i]];
 				}
 

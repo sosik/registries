@@ -461,14 +461,15 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 		var schemaPath=objectTools.objecPathToSchemaPath(field);
 		if (schemaPath){
 			var schemaFragment=objectTools.evalPath(schema,schemaPath);
-			if (schemaFragment && schemaFragment.$collate){
+			if (schemaFragment && schemaFragment[consts.COLLATE]){
 				return field+"."+suffix;
 			}
 			else {
 				return field;
 			}
-		}else
+		}else{
 			return field;
+		}
 
 	}
 

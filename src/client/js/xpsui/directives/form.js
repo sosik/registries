@@ -41,12 +41,20 @@
 					return;
 				}
 
-				var schema = scope.$eval(attrs.xpsuiSchema);
-				var mode = attrs.xpsuiForm;
+				scope.$watchCollection( attrs.xpsuiSchema, function() {
+					log.info('xpsuiForm generate');
+					var schema = scope.$eval(attrs.xpsuiSchema);
+					var mode = attrs.xpsuiForm;	
 
-				elm.append('<div class="x-form-title">' + schema.title + '</div>');
-				
-				formGenerator.generateForm(scope, elm, schema, attrs.xpsuiSchema, attrs.xpsuiModel, mode || formGenerator.MODE.VIEW);
+					if(schema.properties){
+						elm.append('<div class="x-form-title">' + schema.title + '</div>');
+						formGenerator.generateForm(scope, elm, schema, attrs.xpsuiSchema, attrs.xpsuiModel, mode || formGenerator.MODE.VIEW);
+					} else {
+						log.info('xpsuiForm schema does not exist');
+					}
+					
+					
+				});
 
 				log.timeEnd('xpsuiForm Link');
 				log.groupEnd();

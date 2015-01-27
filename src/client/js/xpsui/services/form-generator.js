@@ -105,9 +105,13 @@
 				return;
 			}
 
-			if (schemaFragment && schemaFragment.type) {
+			// @todo schema root missing type property
+			// if (schemaFragment && schemaFragment.type) {
+			if (schemaFragment) {
 				// schema fragment has defined type
-				if (schemaFragment.type === 'object') {
+				// @todo schema root missing type property
+				//if (schemaFragment.type === 'object') {
+				if (typeof schemaFragment.properties == 'object') {
 					for (p in schemaFragment.properties) {
 
 						localSchemaPath = schemaPath.concat('.properties.', p);

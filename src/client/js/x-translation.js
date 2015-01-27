@@ -13,6 +13,18 @@
 			"login.selected.profile.continue":"Pokračovať s profilom",
 			"login.profile":"Profil",
 
+			"enum.active.A":"Aktívny",
+			"enum.active.I":"Neaktívny",
+
+			"enum.boolean.true":"Áno",
+			"enum.boolean.false":"Nie",
+
+			"enum.gender.M":"Muž",
+			"enum.gender.F":"Žena",
+
+			"validation.field.not.unique":"Hodnota nie je unikátna.",
+			"validation.field.not.number":"Hodnota nie je číslo.",
+
 			"menu.member.title": "Člen",
 			"menu.player.title": "Hráč",
 			"menu.fees.title": "Poplatok",
@@ -41,9 +53,10 @@
 			"menu.search.referee.lower.level": "Hľadať rozhodcu",
 			"menu.search.coach.lower.level": "Hľadať trénera",
 			"menu.search.company.lower.level": "Hľadať spoločnosť",
+			"menu.search.officer.lower.level": "Hľadať funkcionára",
 			"menu.search.club.lower.level": "Hľadať klub",
 			"menu.search.association.lower.level": "Hľadať zväz",
-			"menu.search.statistic.lower.level": "Hľadať štatistu",
+			"menu.search.statistic.lower.level": "Hľadať štatistika",
 			"menu.search.medic.lower.level": "Hľadať zdravotníka",
 
 			"menu.new.lower.level": "Nový",
@@ -59,6 +72,7 @@
 			"menu.profiles.lower.level":"Hľadať bezpečnostný profil",
 			"menu.statistics.title":"Štatistiky",
 			"menu.statistics.show.title":"Zobraziť",
+
 			"menu.massmailing.title":"Hromadná pošta",
 			"menu.massmailing.new.lower.level":"Nový vzor",
 			"menu.massmailing.search.lower.level":"Vyhľadáť",
@@ -70,7 +84,8 @@
 			"massmail.html.template":"Html verzia správy",
 			"massmail.search.recipient":"Vyhľadáť príjemcov",
 			"massmail.send.view":"Hromadná pošta",
-			"massmail.selection.all":"Všetkým",
+			"massmail.selection.all":"Podľa filtra",
+
 			"header.settings": "Nastavenia",
 			"header.log.out": "Odhlásiť sa",
 			"personal.change.password.change.password": "Zmena hesla",
@@ -91,6 +106,7 @@
 			"registry.new.new": "Nový",
 			"registry.new.cancel": "Zrušiť",
 			"registry.new.send": "Odoslať",
+			"registry.succesfully.generated":"Stretnutia boli úspešne vygenerované",
 			"security.group.edit.list.of.security.groups": "Zoznam bezpečnostných skupín",
 			"security.group.edit.id": "ID",
 			"security.group.edit.edit": "Upraviť",
@@ -127,6 +143,7 @@
 			"security.user.edit.profile":"Profily používateľa",
 			"security.user.edit.added.profiles":"Pridelené profily",
 			"security.user.edit.available.profiles":"Dostupné profily",
+			"security.profile.edit.modification.done":"Úspešne uložené",
 
 			"schema.editor.save": "Uložiť",
 			"schema.editor.edit": "Upraviť",
@@ -146,6 +163,7 @@
 			"psui.uploadable.image.unsupported.image.type":"Nepodporovaný formát obrázku",
 			"psui.imageresizor.rotate":"otočiť",
 			"psui.imageresizor.ok":"ok",
+			"psui.uploadable.file.unsupported.file.type":"Nepodporovaný formát súboru",
 			"date.monday":"Po",
 			"date.tuesday":"Ut",
 			"date.wednesday":"St",
@@ -202,6 +220,14 @@
 			"schema.statistics.baseData":"Základné",
 			"schema.statistics.member.count":"Počet členov",
 			"schema.statistics.women.count":"Počet žien",
+			"schema.statistics.fees":"Poplatky",
+			"schema.statistics.fees.expected.count":"Počet vystavených",
+			"schema.statistics.fees.expected.sum":"Suma vystavených",
+			"schema.statistics.fees.paid.count":"Počet zaplatených",
+			"schema.statistics.fees.paid.sum":"Suma zplatených",
+			"schema.statistics.fees.overdue.count":"Počet po splatnosti",
+			"schema.statistics.fees.overdue.sum":"Suma po splatnosti",
+
 			"schemas.countries.enum.AFG": "Afganistan",
 			"schemas.countries.enum.ALA": "Alandy",
 			"schemas.countries.enum.ALB": "Albánsko",
@@ -462,6 +488,12 @@
 			"login.authentication.failed": "Přihlášení selhalo",
 			"login.selected.profile.continue":"Pokračovat s profilem",
 			"login.profile":"Profil",
+			"enum.gender.M":"Muž",
+			"enum.gender.F":"Žena",
+
+			"validation.field.not.unique":"Hodnota není unikátní.",
+			"validation.field.not.number":"Hodnota není číslo.",
+
 
 			"menu.member.title": "Člen",
 			"menu.player.title": "Hráč",
@@ -489,7 +521,8 @@
 			"menu.search.member.lower.level": "Hledat člena",
 			"menu.search.player.lower.level": "Hledat hráča",
 			"menu.search.referee.lower.level": "Hledat rozhodcu",
-			"menu.search.statistic.lower.level": "Hledat statistu",
+			"menu.search.statistic.lower.level": "Hledat statistika",
+			"menu.search.officer.lower.level": "Hľadať funkcionára",
 			"menu.search.medic.lower.level": "Hledat zdravotníka",
 			"menu.search.coach.lower.level": "Hledat trenéra",
 			"menu.search.company.lower.level": "Hledat spoločnosť",
@@ -520,6 +553,7 @@
 			"massmail.search.recipient":"Vyhledat příjemce",
 			"massmail.send.view":"Hromadní pošta",
 			"massmailing.send":"Odeslat",
+			"massmail.selection.all":"Podle filtra",
 			"header.settings": "Nastavení",
 			"header.log.out": "Odhlásit se",
 			"personal.change.password.change.password": "Změna hesla",
@@ -540,6 +574,7 @@
 			"registry.new.new": "Nový",
 			"registry.new.cancel": "Zrušit",
 			"registry.new.send": "Odeslat",
+			"registry.succesfully.generated":"Stretnutia boli úspešne vygenerované",
 			"security.group.edit.list.of.security.groups": "Seznam bezpečnostních skupin",
 			"security.group.edit.id": "ID",
 			"security.group.edit.edit": "Upravit",
@@ -593,7 +628,9 @@
 			"psui.uploadable.image.unsupported.image.type": "Nepodporovaný formát obrázku",
 			"psui.imageresizor.rotate": "otočit",
 			"psui.imageresizor.ok": "ok",
+			"psui.uploadable.file.unsupported.file.type":"Nepodporovaný formát souboru",
 			"date.monday": "Po",
+
 			"date.tuesday": "Út",
 			"date.wednesday": "St",
 			"date.thursday": "Čt",
@@ -648,7 +685,13 @@
 			"schema.statistics.baseData":"Základní",
 			"schema.statistics.member.count":"Počet členov",
 			"schema.statistics.women.count":"Počet žien",
-			"schemas.countries.enum.AFG": "Afganistan",
+			"schema.statistics.fees":"Poplatky",
+			"schema.statistics.fees.expected.count":"Počet vystavených",
+			"schema.statistics.fees.expected.sum":"Suma vystavených",
+			"schema.statistics.fees.paid.count":"Počet zaplatených",
+			"schema.statistics.fees.paid.sum":"Suma zplatených",
+			"schema.statistics.fees.overdue.count":"Počet po splatnosti",
+			"schema.statistics.fees.overdue.sum":"Suma po splatnosti",	"schemas.countries.enum.AFG": "Afganistan",
 			"schemas.countries.enum.ALA": "Alandy",
 			"schemas.countries.enum.ALB":"Albánie",
 			"schemas.countries.enum.DZA":"Alžírsko",
@@ -899,7 +942,11 @@
 			"schemas.countries.enum.ESH":"Západní Sahara",
 			"schemas.countries.enum.ZWE":"Zimbabwe"
 		});
-		$translateProvider.preferredLanguage('sk');
-
+	}])
+	.controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {
+		$scope.setLang = function(lang) {
+			$translate.use(lang);
+		};
 	}]);
+	
 }(angular));

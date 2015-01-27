@@ -11,6 +11,16 @@ angular.module('psui-objectlink', [])
 			}
 			var ngModel = ctrls[0];
 
+			function allNumbers(aString) {
+				for (i=0; i<aString.length; i++) {
+					if (('' + parseInt(aString[i]) != aString[i])
+							&& aString[i] != '0') {
+						return false;
+					}
+				}
+				return true;
+			}
+
 			ngModel.$render = function() {
 				if (ngModel.$viewValue) {
 					if (ngModel.$viewValue.refData) {
@@ -30,7 +40,17 @@ angular.module('psui-objectlink', [])
 							}
 
 							if (typeof ngModel.$viewValue.refData[prop] === 'string') {
-								displayText += '<td style="width: '+100/count+'%;">' + ngModel.$viewValue.refData[prop] + '</td>';
+								var valRaw = ngModel.$viewValue.refData[prop];
+								if (valRaw && valRaw.length == 8 && allNumbers(valRaw)
+										&& (valRaw.indexOf('19') == 0 || valRaw.indexOf('20') == 0)) {
+									var year = valRaw.substring(0,4);
+									var month = valRaw.substring(4,6);
+									var day = valRaw.substring(6,8);
+									valDate = '' + day + '.' + month + '.' + year;
+									displayText += '<td style="width: '+100/count+'%;">' + valDate + '</td>';
+								} else {
+									displayText += '<td style="width: '+100/count+'%;">' + valRaw + '</td>';
+								}
 							}
 
 						}

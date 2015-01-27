@@ -285,7 +285,18 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 /*					scope.$apply( function() {
 						ngModel.$setViewValue(elm.val());
 					});
-*/					changeMode('view');
+*/
+					if (elm.prop('tagName') == 'PSUI-ARRAY-CONTROL') {
+						console.log('ngModel is: ' + ngModel);
+						for (i=0; i<ngModel.$modelValue.length; i++) {
+							if (ngModel.$modelValue[i] && ngModel.$modelValue[i].refData) {
+							} else {
+								ngModel.$modelValue.splice(i, 1);
+								i--;
+							}
+						}
+					}
+					changeMode('view');
 					scope.$emit('psui:model_changed');
 				};
 

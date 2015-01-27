@@ -93,9 +93,11 @@ angular.module('psui-uploadable-image', [])
 			fileButton.addClass('psui-uploadable-image-fbutton');
 
 			elm.on('click', function(evt) {
+				fileButton[0].files[0] = '';
+				fileButton[0].value = '';
 				fileButton[0].click();
 			});
-
+			
 			var commit = function() {
 			};
 

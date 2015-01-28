@@ -45,6 +45,8 @@
     "grunt-debug-task": "^0.1.5",
     "grunt-karma": "^0.9.0",
     "grunt-mocha-istanbul": "^2.1.0",
+    "grunt-protractor-runner": "^1.2.1",
+    "grunt-protractor-webdriver": "^0.2.0",
     "karma": "^0.12.28",
     "karma-chai": "^0.1.0",
     "karma-mocha": "^0.1.9",
@@ -53,6 +55,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "start": "supervisor --watch 'build/' -- build/server/server.js"
+    "start": "supervisor --watch 'build/' -- build/server/server.js",
+    "install": "node node_modules/protractor/bin/webdriver-manager update"
   }
 }

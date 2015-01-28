@@ -9,9 +9,14 @@ var config = {
 
 	baseUrl: 'http://localhost:3000',
 
-	capabilities: {},
+	capabilities: { browserName: 'firefox' },
+	multiCapabilities: [{
+		browserName: 'firefox'
+	}, {
+		browserName: 'chrome'
+	}];
 
-	framework: 'mocha',
+//	framework: 'mocha',
 
 	/** Drop test database so we can run tests on clean DB */
 	beforeLaunch: function() {
@@ -20,9 +25,9 @@ var config = {
 			function initMongo(cb) {
 				mongoDriver.init(serverConfig.mongoDbURI, cb);
 			},
-			function dropDatabase(cb) {
-				mongoDriver.getDb().dropDatabase(cb);
-			},
+//			function dropDatabase(cb) {
+//				mongoDriver.getDb().dropDatabase(cb);
+//			},
 			function closeConnection(cb) {
 				mongoDriver.close();
 				return cb();

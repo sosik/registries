@@ -112,14 +112,15 @@ describe('demo version tests', function() {
 	});
 
 	it('should create new Stadion and find it in search', function() {
-		if (dataType != DATA_TYPE_SVF || dataType == DATA_TYPE_DEMO) {
+		if (dataType != DATA_TYPE_SVF && dataType != DATA_TYPE_DEMO) {
 			return;
 		}
 		var Uniquename = 'Uniquename' + new Date().getTime();
 		var Uniquestreet = 'Radlinskeho' + new Date().getTime();
 		// Open the Osoba submenu
-		element(by.css('li[title="Štadión"] div')).click();
-		element.all(by.css('li[title="Štadión"] ul a')).get(0).click();
+//		element(by.css('li[title="Štadión"] div')).click();
+//		element.all(by.css('li[title="Štadión"] ul a')).get(0).click();
+		browser.get(serverFullURL + '/#/registry/new/uri~3A~2F~2Fregistries~2Fstadiums~23views~2Fstadium');
 		expect(element(by.css('h1')).getText()).toEqual('ŠPORTOVÝ OBJEKT');
 		expect(element(by.css('legend')).getText()).toEqual('ZÁKLADNÉ ÚDAJE');
 		// Fill in the person
@@ -137,7 +138,7 @@ describe('demo version tests', function() {
 		// Create the new object
 		element(by.css('button.btn-ok')).click();
 		// Open Hladaj submenu
-		element.all(by.css('li[title="Štadión"] ul a')).get(1).click();
+		browser.get(serverFullURL + '/#/search/uri~3A~2F~2Fregistries~2Fstadiums~23views~2Fstadium');
 		// Fill in the filter
 		element.all(by.css('option')).get(2).click();
 		element(by.model('crit.value')).click();

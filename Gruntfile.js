@@ -11,6 +11,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-karma');
 	grunt.loadNpmTasks('grunt-protractor-runner');
+	grunt.loadNpmTasks('grunt-protractor-webdriver');
 	grunt.loadNpmTasks('grunt-debug-task');
 	grunt.loadNpmTasks('grunt-express-server');
 
@@ -23,9 +24,9 @@ module.exports = function(grunt) {
 	grunt.registerTask('unitTest', ['env:test', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);
-
+	
 	grunt.registerTask('e2e', [ 'env:test', 'build', 'x', 'express', 'e2e:tests' ]);
-	grunt.registerTask('e2e:tests', [ 'protractor:e2e-firefox', 'protractor:e2e-chrome' ]);
+	grunt.registerTask('e2e:tests', [ 'protractor:e2e-chrome', /*'protractor:e2e-firefox'*/ ]);
 
 	/** TODO: Enable this when some smoke tests will exist
 	grunt.registerTask('smoke', [ 'env:test', 'build', 'x', 'express', 'smoke:tests' ]);

@@ -668,7 +668,12 @@ angular.module('registry', ['schema-utils', 'psui', 'psui.form-ctrl', 'psui-obje
 			};
 
 			scope.appendNew = function() {
-				scope.ngModel.push({});
+				if (scope.ngModel) {
+					scope.ngModel.push({});
+				} else {
+					scope.ngModel = [];
+					scope.ngModel.push({});
+				}
 			};
 
 		}

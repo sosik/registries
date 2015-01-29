@@ -74,6 +74,13 @@
 				// selectobx
 				var selectbox = objectlink2Factory.create(elm, {
 					onSelected: function(value){
+						
+						scope.$apply(function() {
+							ngModel.$setViewValue(
+								value
+							);
+						});
+
 						render(value);
 						console.log('onSelected');
 						console.log(arguments);

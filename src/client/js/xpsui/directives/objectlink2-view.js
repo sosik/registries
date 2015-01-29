@@ -24,7 +24,9 @@
 				ngModel.$render = function() {
 					view.empty();
 
-					if (ngModel.$viewValue && ngModel.$viewValue.id) {
+					if (ngModel.$viewValue && 
+						(ngModel.$viewValue.id || ngModel.$viewValue.oid)
+					) {
 						schemaUtil.getFieldsSchemaFragment(
 							schemaUtil.concatUri(schemaFragment.$objectLink2.schema, 'new'), 
 							schemaFragment.$objectLink2.fields, 

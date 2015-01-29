@@ -63,8 +63,7 @@
 					//} else {
 						field = angular.element('<div xpsui-string-view></div>');
 					//}
-				}
-				if(schemaFragment.type === "date"){
+				} else if(schemaFragment.type === "date"){
 					field = angular.element('<div xpsui-date-view></div>');
 				}
 
@@ -113,7 +112,7 @@
 				//if (schemaFragment.type === 'object') {
 				if (typeof schemaFragment.properties == 'object') {
 					for (p in schemaFragment.properties) {
-
+						component = null;
 						localSchemaPath = schemaPath.concat('.properties.', p);
 						localModelPath = modelPath.concat('.', p);
 						localFragment = schemaFragment.properties[p];
@@ -137,10 +136,11 @@
 						}
 						
 						//component = componentGenerator.generate(schemaFragment.properties[p], localSchemaPath, localModelPath, mode || this.MODE.VIEW);
+						if(component){
+							elm.append(component);
+							$compile(component)(scope);
+						}
 
-						elm.append(component);
-						$compile(component)(scope);
-						
 						log.groupEnd();
 					}
 				} else {

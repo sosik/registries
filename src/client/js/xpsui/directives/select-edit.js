@@ -65,9 +65,11 @@
 					onSelected: function(value){
 						input.val(value.v);
 
-						// console.log(selectbox.$searchInput.val());
-						// console.log('onSelected');
-						// console.log(arguments);
+						scope.$apply(function() {
+							ngModel.$setViewValue(
+								value.v
+							);
+						});
 					}
 				});
 				selectbox.setInput(selfControl.getInput());

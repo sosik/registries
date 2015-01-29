@@ -243,13 +243,13 @@
 			});
 
 			// search criteria
-			for (var field in this.schema.fields){
-				config.data.criteria.push({
-					f: this.schema.fields[field],
-					v: dataset.getSearchValue() ? dataset.getSearchValue() : '',
-					op: this.options.searchCondition
-				});
-			}
+			// for (var field in this.schema.fields){
+			// 	config.data.criteria.push({
+			// 		f: this.schema.fields[field],
+			// 		v: dataset.getSearchValue() ? dataset.getSearchValue() : '',
+			// 		op: this.options.searchCondition
+			// 	});
+			// }
 
 			config.data.criteria = config.data.criteria.concat(
 				(this.criteria && this.criteria instanceof Array) ? this.criteria : []
@@ -294,19 +294,27 @@
 		};
 
 		ObjectLinkStore.getData = function(objectLink, data){
-			var field,
-				outData = {
-					schema: objectLink.schema,
-					oid: data.id,
-					refData: {}
+			if( typeof data === 'object'){
+				if(data['refData']){
+					return data;
 				}
-			;
-			for (var field in objectLink.fields) {
-				var getter = $parse(objectLink.fields[field]);
-				outData.refData[field] = getter(data);
-			}
 
-			return outData;
+				var field,
+					outData = {
+						schema: objectLink.schema,
+						oid: data.id,
+						refData: {}
+					}
+				;
+				for (var field in objectLink.fields) {
+					var getter = $parse(objectLink.fields[field]);
+					outData.refData[field] = getter(data);
+				}
+
+				return outData;
+			}
+			
+			return null;
 		};
 
 		/**

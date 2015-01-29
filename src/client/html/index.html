@@ -38,11 +38,15 @@
 	<script src="js/xpsui.min.js"></script>
 	<script src="js/x-main.min.js"></script>
 
+	<script src="dataset/get/js/x-translations.js"></script>
+
 	<!-- javascript shared libs -->
 	<script src="js/x-safeUrlEncoder.js"></script>
 
 </head>
 <body ng-app="x-registries">
+
+<div psui-notification></div>
 
 <div class="x-fixed-header">
 	<div class="x-logo">
@@ -51,11 +55,11 @@
 
 	<nav>
 		<ul>
-			<li><span class="text-block"
-				><span >Administrator</span><i class="icon-user"></i></span
+			<li ng-show="security.currentUser.systemCredentials.login.loginName"><span class="text-block"
+				><span>{{security.currentUser.systemCredentials.login.loginName}}</span><i class="icon-user"></i></span
 			></li>
-			<li  class=""><a 
-				href="#"><span >Odhlásit se</span><i class="icon-power-off"></i></a
+			<li ng-show="security.currentUser.systemCredentials.login.loginName" class=""><a 
+				href="#"><span>Odhlásit se</span><i class="icon-power-off"></i></a
 			></li>
 		</ul>
 	</nav>
@@ -67,7 +71,7 @@
 		<div class="x-main-menu-toggle x-modalview-close"></div>
 		<div class="x-modalview-body">
 			<ul>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-group fa-2x"></i><span>Člen</span></a>
+				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-group fa-2x"></i><span>{{'menu.member.title' | translate}}</span></a>
 					<ul>
 						<li><a href="#/registry/new/member"><span>Nový</span></a></li>
 						<li><a href="#/registry/view/member/54c60bc7fbe3ad11149bb844"><span>View</span></a></li>

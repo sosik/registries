@@ -21,7 +21,7 @@
 		};
 
 		$scope.save = function() {
-			$scope.newForm.psui.prepareForSubmit();
+			//$scope.newForm.psui.prepareForSubmit();
 			if ($scope.newForm.$invalid) {
 				notificationFactory.error({translationCode: 'registry.form.not.filled.correctly', time: 5000});
 				return;
@@ -30,7 +30,7 @@
 			$http({url: '/udao/saveBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri($scope.currentSchemaUri , 'new')), method: 'PUT',data: $scope.model.obj})
 			.success(function(data, status, headers, config){
 				notificationFactory.clear();
-				$location.path('/registry/view/' + schemaUtilFactory.encodeUri($scope.currentSchemaUri) + '/' + data.id);
+				$location.path('/registry/view/' + schemaUtilFactory.encodeUri($routeParams.schema) + '/' + data.id);
 			}).error(function(err) {
 				notificationFactory.error({translationCode:'registry.unsuccesfully.saved', time:3000});
 			});

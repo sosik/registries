@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiInlineedit', ['xpsui:logging', 'xpsui:FormGenerator', '$compile', '$timeout', function(log, formGenerator, $compile, $timeout) {
+	.directive('xpsuiInlineedit', ['xpsui:logging', 'xpsui:FormGenerator', '$compile', '$timeout', '$parse', function(log, formGenerator, $compile, $timeout, $parse) {
 		return {
 			restrict: 'A',
 			require: ['^xpsuiFormControl'],
@@ -13,6 +13,7 @@
 
 				var modelPath = attrs.xpsuiModel;
 				var schemaPath = attrs.xpsuiSchema;
+				var oldValue = null;
 
 				elm.addClass('x-inlineedit');
 
@@ -59,6 +60,8 @@
 					elm.removeClass('x-inlineedit-active');
 
 					elm.off('click', viewModeClickHandler);
+
+					oldValue = scope.$eval(modelPath);
 				}
 
 				var viewModeClickHandler = function(evt) {
@@ -80,6 +83,7 @@
 
 				function commit() {
 					enterViewMode();
+					scope.$emit('xpsui:model_changed');
 
 					return true;
 				}
@@ -98,6 +102,10 @@
 
 				function rollback() {
 					enterViewMode();
+
+					scope.$apply(function() {
+						$parse(modelPath).assign(scope, oldValue); 
+					});
 				}
 
 				var rollbackClickHandler = function(evt) {

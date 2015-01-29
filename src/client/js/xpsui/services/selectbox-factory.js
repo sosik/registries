@@ -42,7 +42,7 @@
 			// info line:
 			showInfo: true,
 			// callback
-			onSelected: function(index, key, value){},
+			onSelected: function(value){},
 			// onBlur close
 			closeOnBlur: true,
 			// paging scroll bufer

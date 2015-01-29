@@ -20,7 +20,7 @@
 	   };
 	   
 		var component = function(){
-			this.options = angular.extend({}, component.DEFAULT);
+			this.options = angular.extend({}, component.DEFAULTS);
 			// selected date - date from input
 			this.value;
 			
@@ -33,6 +33,16 @@
 		};
 		
 		component.DEFAULT = {
+			/**
+			 * callback when date is selected
+			 *
+			 * @param date Date
+			 */
+			onSelected: function(date){}
+		};
+
+		component.prototype.setOptions = function(options){
+			angular.extend(this.options, options || {});
 		};
 		
 		component.prototype.setInput = function(element){
@@ -260,10 +270,12 @@
 						this.dailyLayout();
 						this.setFocus(this.getFirstTabElement());
 					} else if($el.hasClass('x-day') && $el.data('date')){
-						this.getInput().val(
-							dateUtil.formatter($el.data('date'))
-						);
+						// this.getInput().val(
+						// 	dateUtil.formatter($el.data('date'))
+						// );
 						this.setValue($el.data('date'));
+						this.options.onSelected($el.data('date'));
+
 						this.getInput()[0].focus();
 					}
 			}
@@ -621,6 +633,19 @@
 				}
 				
 				if (ngModel) {
+					xpsuiDatapickerCtrl.setOptions({
+						onSelected: function(date){
+							xpsuiTextInputCtrl.getInput().val(
+								dateUtil.formatter(date)
+							);
+							scope.$apply(function() {
+								ngModel.$setViewValue(
+									dateUtil.formatter(date)
+								);
+							});
+						}
+					})
+
 					ngModel.$render = function() {
 						xpsuiDatapickerCtrl.setValue(
 							dateUtil.parser(ngModel.$viewValue)

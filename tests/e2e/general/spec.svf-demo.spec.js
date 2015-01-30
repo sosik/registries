@@ -46,8 +46,8 @@ describe('demo version tests', function() {
 		element.all(by.css('.form-group')).get(8).element(by.css('header input')).sendKeys('Mu');
 		element.all(by.css('.form-group')).get(8).element(by.css('div.psui-dropdown section div:nth-child(1)')).click();
 		//var nationality = element(by.model('model.obj.baseData.nationality'));
-		element.all(by.css('.form-group')).get(9).element(by.css('button.psui-icon-chevron-down')).click();
-		element.all(by.css('.form-group')).get(9).element(by.css('div.psui-dropdown section div:nth-child(1)')).click();
+//		element.all(by.css('.form-group')).get(9).element(by.css('button.psui-icon-chevron-down')).click();
+//		element.all(by.css('.form-group')).get(9).element(by.css('div.psui-dropdown section div:nth-child(1)')).click();
 		//var stateOfPerson = element(by.model('model.obj.baseData.stateOfPerson'));
 		element.all(by.css('.form-group')).get(15).element(by.css('button.psui-icon-chevron-down')).click();
 		element.all(by.css('.form-group')).get(15).element(by.css('div.psui-dropdown section div:nth-child(1)')).click();

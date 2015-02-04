@@ -104,7 +104,7 @@ function bergerTable (teams,terms) {
 }
 	function saveBerger(entity,callback){
 
-		var saveSchema= schemaUtilFactory.encodeUri("uri://registries/refereeReport#new");
+		var saveSchema= schemaUtilFactory.encodeUri("uri://registries/refereeReport#views/refereeReport/new");
 		var saved=0;
 		var all=[];
 
@@ -132,7 +132,7 @@ function bergerTable (teams,terms) {
 	}
 
 	function generateBerger(entity,callback){
-		var searchSchema="uri://registries/schedule#search";
+		var searchSchema="uri://registries/schedule#views/schedule/search";
 		$http({
 			method : 'POST',
 			url : '/search/' + schemaUtilFactory.encodeUri(searchSchema),

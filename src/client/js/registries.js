@@ -106,7 +106,7 @@ angular.module('registries', [
 	}
 
 	$rootScope.$on('$routeChangeStart', function() {
-		notificationFactory.clear();
+		// notificationFactory.clear();
 	});
 
 	// hang on route change, so we can check if user meets security criteria
@@ -114,6 +114,7 @@ angular.module('registries', [
 		if (nextRoute && nextRoute.permissions) {
 			// check permissions only if defined
 			if (changeRouteRuleActive && (!$rootScope.security.currentUser || !SecurityService.hasPermissions(nextRoute.permissions))) {
+				notificationFactory.clear();
 				notificationFactory.warn({translationCode:'security.user.missing.permissions',translationData: nextRoute.permissions ,time:5000});
 				$location.url('/login');
 			}

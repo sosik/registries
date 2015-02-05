@@ -50,7 +50,7 @@
 								<button ng-click="addCrit()" type="button" class="btn btn-secondary"><i class="glyphicon-plus"></i>{{'generic.search.add' | translate}}</button>
 							</div>
 							<div class="col-xs-3">
-								<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
+								<button ng-disabled="disabledSearch" ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
 							</div>
 						</div>
 					</fieldset>

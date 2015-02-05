@@ -179,6 +179,35 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						}
 					};
 
+
+					/**
+					* checks if current user has all required permissions
+					*/
+					service.checkPermissions = function(requiredPermissions,callback) {
+						if (!requiredPermissions || requiredPermissions.length < 1) {
+							// there are no permissions to check, so we have
+							callback();
+							return;
+						}
+
+						if ($rootScope.security.currentUser && $rootScope.security.currentUser.systemCredentials && $rootScope.security.currentUser.systemCredentials.login &&
+						$rootScope.security.currentUser.systemCredentials.permissions) {
+							for ( var i in requiredPermissions) {
+								if ($rootScope.security.currentUser.systemCredentials.permissions[requiredPermissions[i]] !== true) {
+									// missing permission
+
+									callback(requiredPermissions[i]);
+									return;
+								}
+							}
+
+							callback();
+						} else {
+							// non valid current user, no permissions
+							callback('Not Authorized');
+						}
+					};
+
 					return service;
 				} ])
 //

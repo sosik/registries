@@ -136,7 +136,7 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 	return service;
 } ])
 //
-.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate', 'xpsui:ObjectTools', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate, objectTools ) {
+.controller('SearchCtrl', [ '$scope', '$routeParams','$location', 'generic-search.GenericSearchFactory' ,'schema-utils.SchemaUtilFactory' ,'psui.notificationFactory','$translate', 'xpsui:ObjectTools','security.SecurityService', function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate, objectTools,security ) {
 	var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 	$scope.entityUri = entityUri;
@@ -171,12 +171,29 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 		});
 	};
 
+	function checkIFReadPermmited(per){
+		security.checkPermisions()
+	}
+
 
 	schemaUtilFactory.getCompiledSchema(entityUri, 'search').success(function(data) {
 
 		$scope.schema=data;
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
+		$scope.disabledSearch=true;
+
+		if (data['security']&&data['security']['read']){
+			security.checkPermissions(data['security']&&data['security']['read']['static'],function(message){
+				if (message){
+					notificationFactory.warn({translationCode:'security.user.missing.permissions',translationData: message,time:5000});
+				} else {
+					$scope.disabledSearch=false;
+				}
+			});
+		}
+
+
 
 		$scope.entity = $translate.instant( data.transCode || data.title);
 

@@ -2,10 +2,12 @@
 	'use strict';
 
 	angular.module('xpsui:controllers')
-	.controller('xpsui:RegistryViewCtrl', ['$scope', '$routeParams', '$http', '$location','xpsui:SchemaUtil','psui.notificationFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
-		$scope.currentSchema = 'uri://registries/' + $routeParams.schema;
+	.controller('xpsui:RegistryViewCtrl', ['$scope', '$routeParams', '$http', '$location','xpsui:SchemaUtil','xpsui:NotificationFactory', function($scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
+		//$scope.currentSchema = 'uri://registries/' + $routeParams.schema;
+		$scope.currentSchema = $routeParams.schema;
 		$scope.currentId = $routeParams.id;
-		$scope.currentSchemaUri = schemaUtilFactory.decodeUri('uri://registries/' + $routeParams.schema);
+		//$scope.currentSchemaUri = schemaUtilFactory.decodeUri('uri://registries/' + $routeParams.schema);
+		$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
 
 		$scope.model = {};
 		$scope.model.obj = {};

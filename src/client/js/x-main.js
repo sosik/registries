@@ -7,22 +7,22 @@
 		'xpsui:services', 
 		'xpsui:directives', 
 		'xpsui:controllers',
-		'pascalprecht.translate',
+		'pascalprecht.translate'
 
-		'x-security',
-		'personal-page',
-		'psui-notification'
+		// 'x-security',
+		// 'personal-page',
+		// 'psui-notification'
 	])
 	.config(['$routeProvider', 'xpsui:loggingProvider',function($routeProvider, loggingProvider) {
 		// $routeProvider.when('/view/:schema/:objId', {controller: 'xViewController', templateUrl: '/partials/x-view.html'});
 
-		$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'personalPageCtrl', permissions:['System User']});
-		$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
+		$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'xpsui:PersonalPageCtrl', permissions:['System User']});
+		$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		//$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
 		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl',permissions:['Registry - write']});
 		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl',permissions:['Registry - read']});
 		
-		$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
+		$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		
 		loggingProvider.setLevel(5);
 	}])
@@ -30,7 +30,7 @@
 	 * Main function, initializes all required data and scopes. For configuration of $providers
 	 * use .config
 	 */
-	.run(["$rootScope", '$location', 'security.SecurityService', '$cookies','psui.notificationFactory', function($rootScope, $location, SecurityService,$cookies,notificationFactory) {
+	.run(["$rootScope", '$location', 'xpsui:SecurityService', '$cookies','xpsui:NotificationFactory', function($rootScope, $location, SecurityService,$cookies,notificationFactory) {
 		$rootScope.security = $rootScope.security || {};
 		// by default, current user is undefined, as there is noone logged in
 

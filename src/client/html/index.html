@@ -27,17 +27,12 @@
 	<script src="lib/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
 	<script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
 	<script src="lib/angular-ui-ace/ui-ace.js"></script>
-
-	<!-- javascript old libs -->
-	<script src="js/x-security.js"></script> <!-- @todo: refactor -->
-	<script src="js/psui-notification.js"></script>
-	<script src="js/personalPage.js"></script>
-	<!-- <script src="js/x-generic-search.js"></script> -->
-
+	
 	<!-- javascript new libs-->
 	<script src="js/xpsui.min.js"></script>
 	<script src="js/x-main.min.js"></script>
 
+	<!-- javascript data libs -->
 	<script src="dataset/get/js/x-translations.js"></script>
 
 	<!-- javascript shared libs -->
@@ -46,7 +41,7 @@
 </head>
 <body ng-app="x-registries">
 
-<div psui-notification></div>
+<div xpsui-notification></div>
 
 <div class="x-fixed-header">
 	<div class="x-logo">
@@ -73,8 +68,8 @@
 			<ul>
 				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-group fa-2x"></i><span>{{'menu.member.title' | translate}}</span></a>
 					<ul>
-						<li><a href="#/registry/new/member"><span>Nový</span></a></li>
-						<li><a href="#/registry/view/member/54c60bc7fbe3ad11149bb844"><span>View</span></a></li>
+						<li><a href="#/registry/new/{{'uri://registries/people#views/fullperson'|uriescape}}"><span>Nový</span></a></li> 
+						<li><a href="#/registry/view/{{'uri://registries/people#views/fullperson'|uriescape}}/53cf5c54118025ff1b88e368"><span>View</span></a></li>
 					</ul>
 				</li>
 				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-credit-card fa-2x"></i><span>Poplatek</span></a>

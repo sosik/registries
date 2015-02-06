@@ -46,6 +46,31 @@
 						birthDate: {
 							type: 'date',
 							title: 'Dátum narodenia'
+						},
+						fullName: {
+							title: "Celé meno",
+							type: "string",
+							calculation: {
+								onlyEmpty: true,
+								func: "concat",
+								args: {
+									1: {
+										func: "get",
+										args: {
+											"path": "baseData.name"
+										},
+										watch: true
+									},
+									2: " ",
+									3: {
+										func: "get",
+										args: {
+											path: "baseData.surName"
+										},
+										watch: true
+									}
+								}
+							}
 						}
 					}
 				},

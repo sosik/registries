@@ -1,21 +1,16 @@
-describe("xpsui:Calculator", function () {
+describe.only("xpsui:Calculator", function () {
 
 	var $compile,
 		$rootScope,
-		$q,
 		calculator;
 
 	var SCHEMAS = {
-		concatenateStatic: {
-			func: 'concatenate',
-			args: {
-				p1: 'Johan',
-				p2: ' ',
-				p3: 'Straus'
-			}
+		concatStatic: {
+			func: 'concat',
+			args: [ 'Johan', ' ', 'Straus' ]
 		},
-		concatenate: {
-			func: 'concatenate',
+		concat: {
+			func: 'concat',
 			args: {
 				p1: {
 					func: 'get',
@@ -32,8 +27,8 @@ describe("xpsui:Calculator", function () {
 				}
 			}
 		},
-		concatenateWithDefaults: {
-			func: 'concatenate',
+		concatWithDefaults: {
+			func: 'concat',
 			args: {
 				p1: {
 					func: 'get',
@@ -51,8 +46,8 @@ describe("xpsui:Calculator", function () {
 				}
 			}
 		},
-		concatenateWithWatch: {
-			func: 'concatenate',
+		concatWithWatch: {
+			func: 'concat',
 			args: {
 				p1: {
 					func: 'get',
@@ -74,14 +69,14 @@ describe("xpsui:Calculator", function () {
 	};
 
 	var SCOPES = {
-		concatenateStatic: {},
-		concatenate: {
+		concatStatic: {},
+		concat: {
 			baseData: {
 				firstName: 'Abraham',
 				lastName: 'Lincoln'
 			}
 		},
-		concatenateWithDefaults: {
+		concatWithDefaults: {
 			baseData: {
 				firstName: 'Janko'
 			}
@@ -92,47 +87,46 @@ describe("xpsui:Calculator", function () {
 	beforeEach(angular.mock.module('x-registries'));
 
 	// Inject necessary services
-	beforeEach(inject(['$compile', '$rootScope', 'xpsui:Calculator', '$q', function (_$compile_, _$rootScope_, _calculator_, _$q_) {
+	beforeEach(inject(['$compile', '$rootScope', 'xpsui:Calculator', function (_$compile_, _$rootScope_, _calculator_) {
 		$compile = _$compile_;
 		$rootScope = _$rootScope_;
 		calculator = _calculator_;
-		$q = _$q_;
 	}]));
 
 	it("should have a createProperty function", function() {
-		expect(calculator.createProperty).to.not.be.undefined;
+		expect(calculator).to.respondTo('createProperty');
 	});
 
 	it('should create a ComputedProperty instance from schema with "getter" and "watcher"', function() {
-		var property = calculator.createProperty(SCHEMAS.concatenateStatic);
-		expect(property.getter).to.not.be.undefined;
-		expect(property.watcher).to.not.be.undefined;
+		var property = calculator.createProperty(SCHEMAS.concatStatic);
+		expect(property).to.respondTo('getter');
+		expect(property).to.respondTo('watcher');
 	});
 
-	it('should concatenate static string arguments', function(done) {
+	it('should concat static string arguments', function(done) {
 		var scope = $rootScope.$new();
-		scope.person = SCOPES.concatenateStatic;
+		scope.person = SCOPES.concatStatic;
 
-		var property = calculator.createProperty(SCHEMAS.concatenateStatic);
+		var property = calculator.createProperty(SCHEMAS.concatStatic);
 		expect(property.getter(scope.person)).to.eventually.be.equal('Johan Straus').notify(done);
 		scope.$apply();
 	});
 
-	it('should concatenate string arguments from scope', function(done) {
+	it('should concat string arguments from scope', function(done) {
 		var scope = $rootScope.$new();
-		scope.person = SCOPES.concatenate;
+		scope.person = SCOPES.concat;
 
-		var property = calculator.createProperty(SCHEMAS.concatenate);
+		var property = calculator.createProperty(SCHEMAS.concat);
 		expect(property.getter(scope.person)).to.eventually.be.equal('Abraham Lincoln').notify(done);
 
 		scope.$apply();
 	});
 
-	it('should concatenate string arguments from scope and apply defaults', function(done) {
+	it('should concat string arguments from scope and apply defaults', function(done) {
 		var scope = $rootScope.$new();
-		scope.person = SCOPES.concatenateWithDefaults;
+		scope.person = SCOPES.concatWithDefaults;
 
-		var property = calculator.createProperty(SCHEMAS.concatenateWithDefaults);
+		var property = calculator.createProperty(SCHEMAS.concatWithDefaults);
 		expect(property.getter(scope.person)).to.eventually.be.equal('Janko Hraško').notify(done);
 
 		scope.$apply();
@@ -140,10 +134,10 @@ describe("xpsui:Calculator", function () {
 
 	it('should have watcher to watch scope changes', function() {
 		var scope = $rootScope.$new();
-		scope.person = angular.copy(SCOPES.concatenate);
+		scope.person = angular.copy(SCOPES.concat);
 
 		var changed = false;
-		var property = calculator.createProperty(SCHEMAS.concatenateWithWatch);
+		var property = calculator.createProperty(SCHEMAS.concatWithWatch);
 
 		scope.$watch(property.watcher(scope.person), function(newValue, oldValue) {
 			if (newValue != oldValue) {
@@ -161,5 +155,31 @@ describe("xpsui:Calculator", function () {
 
 		expect(changed).to.be.equal(true);
     });
+
+});
+
+describe.only("xpsui:Calculator:ComputationRegistry", function() {
+
+	var $compile,
+		$rootScope,
+		$q,
+		computationRegistry;
+
+	// Initialize module xpsui:directives
+	beforeEach(angular.mock.module('x-registries'));
+
+	// Inject necessary services
+	beforeEach(inject(['$compile', '$rootScope', '$q', 'xpsui:Calculator:ComputationRegistry', function (_$compile_, _$rootScope_, _$q_, _computationRegistry_) {
+		$compile = _$compile_;
+		$rootScope = _$rootScope_;
+		computationRegistry = _computationRegistry_;
+		$q = _$q_;
+	}]));
+
+	it('should concat strings', function() {
+		expect(computationRegistry).to.respondTo('concat');
+		expect(computationRegistry.concat([ "Johan","Straus" ])).to.be.equal('JohanStraus');
+		expect(computationRegistry.concat([ "Abraham", " ", "Lincoln" ])).to.be.equal('Abraham Lincoln');
+	});
 
 });

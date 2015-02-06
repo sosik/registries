@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiFormControl', ['xpsui:logging', 'xpsui:FormGenerator', '$compile', function(log, formGenerator, $compile) {
+	.directive('xpsuiFormControl', ['xpsui:logging', function(log) {
 		return {
 			restrict: 'A',
 			controller: function() {
@@ -32,6 +32,17 @@
 				var ngModel = ctrls[2];
 
 				formControl.form = form;
+
+				// Check if this field is calculation
+				var schema = scope.$eval(attrs.xpsuiSchema);
+				if (schema.calculation && form) {
+					log.debug("Registering calculation");
+					// Register calculation using the form controller
+					var unregister = form.registerCalculation(attrs.xpsuiModel, schema.calculation);
+					// Deregister calculation on $destroy
+					scope.$on('destroy', unregister);
+				}
+
 			}
 		};
 	}]);

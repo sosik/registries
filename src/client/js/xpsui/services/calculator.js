@@ -32,7 +32,7 @@
 				/**
 				 * Default noop function
 				 *
-				 * @param args
+				 * @param {*} args
 				 * @returns {*}
 				 */
 				noop: function(args) { return args; },
@@ -40,10 +40,10 @@
 				/**
 				 * Concat all values from args - keys are sorted, before concatenation
 				 *
-				 * @param args
+				 * @param {object|array} args
 				 * @returns {string}
 				 */
-				concatenate: function(args) {
+				concat: function(args) {
 					var keys = Object.keys(args).sort(),
 						result = '';
 					for (var i = 0; i < keys.length; i++) {
@@ -55,9 +55,9 @@
 				/**
 				 * Get value from the scope object
 				 *
-				 * @param args
-				 * @param scope
-				 * @param def
+				 * @param {object} args Args must be an object with "path" property
+				 * @param {object} scope
+				 * @param {*} def
 				 * @returns {*}
 				 */
 				'get': function(args, scope, def) {
@@ -82,6 +82,21 @@
 			/**
 			 * Constructor for the ComputedProperty
 			 *
+			 * ```js
+				{
+					"onlyEmpty": false,                   // If true - modify model only if the current model value is undefined or ""
+					"func": "concat",                     // Function from "xpsui:Calculator:ComputationRegistry",
+					"args": {                             // {array|object} - based on the requirements of the function from ComputationRegistry
+						1: "Ing.",                        // Arguments can be strings
+							2: {                          // or another computation
+								"func": "get",
+								"args": {
+								"path": "baseData.name"
+							}
+						}
+					}
+				}
+			 * ```
 			 * @param schema
 			 * @constructor
 			 */
@@ -162,6 +177,12 @@
 
 		.factory('xpsui:Calculator', ['xpsui:Calculator:ComputedProperty', function(ComputedProperty) {
 			return {
+				/**
+				 * Create new instance of the ComputedProperty
+				 *
+				 * @param {object} schema
+				 * @returns {ComputedProperty}
+				 */
 				createProperty: function(schema) {
 					return new ComputedProperty(schema);
 				}

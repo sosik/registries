@@ -22,7 +22,8 @@
 
 		FormGenerator.prototype.generateLabel = function(schemaFragment) {
 			// TODO translation
-			return angular.element('<div class="x-fieldset-label"><span>' + schemaFragment.title + '</span></div>');
+			var isRequired = (schemaFragment.required ? ' xpsui-required': '');
+			return angular.element('<div class="x-fieldset-label ' + isRequired + '" ><span>' + schemaFragment.title + '</span></div>');
 		};
 
 		FormGenerator.prototype.generateField = function(schemaFragment, schemaPath, modelPath, mode) {
@@ -59,6 +60,19 @@
 				}
 				
 				field.attr('ng-model', modelPath);
+				field.attr('xpsui-validity-mark', '');
+
+				// validations
+				if (schemaFragment.required) {
+					field.attr('required', true);
+				}
+
+				if (schemaFragment.unique) {
+					console.log('');
+					field.attr('xpsui-unique', schemaPath + '.unique');
+					// @todo it is replaced with recursive function (from down to up)
+					// field.attr('psui-unique-id', options.modelPath+'.id');
+				}
 				
 
 			} else {

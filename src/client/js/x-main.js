@@ -21,6 +21,7 @@
 		//$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
 		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl',permissions:['Registry - write']});
 		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl',permissions:['Registry - read']});
+		$routeProvider.when('/search/:entity', {templateUrl : 'partials/generic-search.html', controller : 'xpsui:SearchCtrl'});
 		
 		$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		

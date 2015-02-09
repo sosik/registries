@@ -15,16 +15,16 @@
 						console.log(newVal + attrs.ngSrc);
 						if (newVal === null || newVal.length < 1) {
 							// src is not set, lets use default src
-							elm.attr('src', attrs.psuiDefaultSrc);
+							elm.attr('src', attrs.xpsuiDefaultSrc);
 						}
 					});
 				} else {
-					elm.attr('src', attrs.psuiDefaultSrc);
+					elm.attr('src', attrs.xpsuiDefaultSrc);
 				}
 
 				// handle 404 and other error states by default inmage
 				elm.bind('error', function() {
-					elm.attr('src', attrs.psuiDefaultSrc);
+					elm.attr('src', attrs.xpsuiDefaultSrc);
 				});
 			}
 		};

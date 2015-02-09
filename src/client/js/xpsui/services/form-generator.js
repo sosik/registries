@@ -37,10 +37,10 @@
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
 
-				// if (schemaFragment.type === 'array') {
-				// 	field = angular.element('<div xpsui-array-control-edit></div>');
-				// 	field.attr('xpsui-schema', schemaPath);
-				// } else 
+				if (schemaFragment.type === 'array') {
+					field = angular.element('<div xpsui-array-control-edit></div>');
+					field.attr('xpsui-schema', schemaPath);
+				} else 
 				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
@@ -82,15 +82,15 @@
 
 			} else {
 
-				// if (schemaFragment.type === 'array') {
-				// 	field = angular.element('<div xpsui-array-control-view></div>');
-				// 	field.attr('xpsui-schema', schemaPath);
-				// } else 
+				if (schemaFragment.type === 'array') {
+					field = angular.element('<div xpsui-array-control-view></div>');
+					field.attr('xpsui-schema', schemaPath);
+				} else 
 				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.$uploadableImage){
-					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" psui-default-src="/img/no_photo.jpg"></img>');
+					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
 				} else if(schemaFragment.type === "string"){
 					if(schemaFragment.enum){
 						field = angular.element('<div xpsui-select-view></div>');

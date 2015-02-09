@@ -32,11 +32,6 @@
 				elm.addClass('x-control');
 				elm.addClass('x-select-edit');
 
-				ngModel.$render = function() {
-					input.val(ngModel.$viewValue || '');
-					formControl.oldValue = ngModel.$modelValue;
-				};
-
 				elm.append(input);
 
 				input.on('change', function(evt) {
@@ -67,7 +62,7 @@
 
 						scope.$apply(function() {
 							ngModel.$setViewValue(
-								value.v
+								value.k ? value.k : value.v
 							);
 						});
 					}
@@ -81,6 +76,11 @@
 					schemaFragment.enumTransCodes
 				);
 				selectbox.setDataset(dataset);
+
+				ngModel.$render = function() {
+					input.val(dataset.store.getValueByKey(ngModel.$viewValue) || ngModel.$viewValue || '');
+					formControl.oldValue = ngModel.$modelValue;
+				};
 
 				// input.on('keypress',function(){
 				// 	$timeout(function(){

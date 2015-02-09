@@ -115,6 +115,15 @@
 			}
 		};
 
+		ArrayStore.prototype.getValueByKey = function(key){
+			for (var i = 0; i < this.data.length; i++) {
+				if(this.data[i]['k'] === key){
+					return this.data[i]['v'];
+				}
+			}
+			return false;
+		};
+
 		ArrayStore.prototype.load = function(dataset, callback){
 			var self = this;
 

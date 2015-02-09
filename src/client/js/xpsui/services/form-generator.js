@@ -36,6 +36,11 @@
 				field.attr('xpsui-model', modelPath);
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
+
+				// if (schemaFragment.type === 'array') {
+				// 	field = angular.element('<div xpsui-array-control-edit></div>');
+				// 	field.attr('xpsui-schema', schemaPath);
+				// } else 
 				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
@@ -76,17 +81,23 @@
 				
 
 			} else {
+
+				// if (schemaFragment.type === 'array') {
+				// 	field = angular.element('<div xpsui-array-control-view></div>');
+				// 	field.attr('xpsui-schema', schemaPath);
+				// } else 
 				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.$uploadableImage){
 					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" psui-default-src="/img/no_photo.jpg"></img>');
 				} else if(schemaFragment.type === "string"){
-					//if(schemaFragment.enum){
-					//	field = angular.element('<div xpsui-select-view></div>');
-					//} else {
+					if(schemaFragment.enum){
+						field = angular.element('<div xpsui-select-view></div>');
+						field.attr('xpsui-schema', schemaPath);
+					} else {
 						field = angular.element('<div xpsui-string-view></div>');
-					//}
+					}
 				} else if(schemaFragment.type === "date"){
 					field = angular.element('<div xpsui-date-view></div>');
 				}
@@ -150,7 +161,7 @@
 								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
 								component.attr('xpsui-fieldset', mode);
-							} else if (localFragment.type === 'string' || localFragment.type === 'date') {
+							} else if (localFragment.type === 'string' || localFragment.type === 'date' || localFragment.type === 'array') {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {
 								log.warn('Local fragment type %s not implemented yet', localFragment.type);

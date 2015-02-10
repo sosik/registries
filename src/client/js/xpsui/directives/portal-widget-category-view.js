@@ -8,8 +8,11 @@
 			scope: {
 				data: '=xpsuiPortalWidgetCategoryView'
 			},
-			template: '<article ng-repeat="c in model" style="overflow: auto;"><img ng-show="c.img.img" ng-src="{{c.img.img}}" style="width: 164px !important; height: 123px !important;float: right;"></img><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a><div ng-bind-html="makeSafe(c.abstract)"></div></article>'
-				+ '<div style=" text-align: right; ">'
+			template: '<article ng-repeat="c in model" style="overflow: auto;">'
+				+ '			<div><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a></div>'
+				+ '			<img ng-show="c.img.img" ng-src="{{c.img.img}}" style="width: 164px !important; height: 123px !important;float: left;"></img>'
+				+ '			<div ng-bind-html="makeSafe(c.abstract)" class="x-portal-widget-category-inner"></div></article>'
+				+ '<div style=" text-align: right; " class="x-portal-widget-category-navigation">'
 				+ '	<a ng-click="prevPage()" style=" color: #CB2225; "><i class="fa fa-chevron-left x-portal-widget-gallery-prev-btn"></i></a>'
 				+ '	&nbsp;&nbsp;<a ng-click="nextPage()" style=" color: #CB2225; "><i class="fa fa-chevron-right x-portal-widget-gallery-next-btn"></i></a>'
 				+ '</div>',
@@ -72,7 +75,7 @@
 					method : 'POST',
 					url: '/portalapi/getByTags',
 					data: {
-						tags: scope.data.data.tags,
+						tags: ['showcase'], //scope.data.data.tags,
 						skip: 0,
 						limit: null
 					}

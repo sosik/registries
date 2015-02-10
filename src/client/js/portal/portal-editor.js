@@ -117,6 +117,26 @@
           },
           data: '<p>...Obsah článku...</p>'
         },
+        matchResults: {
+            meta: {
+              name: 'match-results',
+              element: '<section class="x-portal-competition-matches"><header>Výsledky</header></section>',
+              type: 'match-results',
+              desc: '<h1>Výsledky</h1><p>Časť obsahujúa výsledky súťaží.</p>',
+              icon: 'img/block-content.png',
+            },
+            data: '<h1>Výsledky súťaží</h1>'
+          },
+//          matchStandings: {
+//              meta: {
+//                name: 'match-standings',
+//                element: '<section class="x-portal-competition-matches"><header>Poradie</header></section>',
+//                type: 'match-standings',
+//                desc: '<h1>Poradie</h1><p>Časť obsahujúa poradie podľa výsledkov súťaží.</p>',
+//                icon: 'img/block-content.png',
+//              },
+//              data: '<h1>Poradie</h1>'
+//            },
       image: {
           meta: {
             name: 'image',

@@ -20,7 +20,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('build:client', ['build:schemas', 'copy:html','copy:htmlpartials', 'copy:css', 'copy:js', 'copy:img', 'copy:fonts', 'sass', 'copy:sharedJsClient']);
 
 	grunt.registerTask('build', ['clean:build', 'build:client', 'copy:bower', 'build:server', 'build:schemas']);
-	grunt.registerTask('test', ['env:test', 'build', 'x', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma', 'express', 'e2e:tests'/*, 'smoke:tests'*/]);
+	grunt.registerTask('test', ['env:test', 'build', 'x', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma', /* 'express', 'e2e:tests', 'smoke:tests'*/]);
 	grunt.registerTask('unitTest', ['env:test', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);

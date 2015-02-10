@@ -14,7 +14,7 @@ var config = {
 		browserName: 'firefox'
 	}, {
 		browserName: 'chrome'
-	}];
+	}],
 
 //	framework: 'mocha',
 

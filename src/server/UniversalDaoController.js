@@ -76,7 +76,11 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 				next(error);
 				return;
 			}
-			auditLogs.info('user oid', req.currentUser.id,'has saved/modified object',obj);
+
+			//FIXME: Old fashion audit log is obsolete. pure save method is not audited. It should be used
+			//only as save by schema. Don't forget to remove declaration also.
+			//auditLogs.info('user oid', req.currentUser.id,'has saved/modified object',obj);
+
 			res.json(data);
 		});
 	};

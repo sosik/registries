@@ -480,7 +480,7 @@
         }
 
         header.on('click', function(evt) {
-          if (scope.index.subElements.length > 0) {
+          if (scope.index && scope.index.subElements && scope.index.subElements.length > 0) {
             openIcon.toggleClass('glyphicon-plus-sign');
             openIcon.toggleClass('glyphicon-minus-sign');
 
@@ -502,7 +502,7 @@
         header.append(name);
         header.append(actionButtons);
 
-        if (scope.index.subElements.length < 1) {
+        if (scope.index && scope.index.subElements && scope.index.subElements.length < 1) {
           openIcon.removeClass('glyphicon-minus-sign');
           openIcon.removeClass('glyphicon-plus-sign');
           openIcon.addClass('glyphicon-record');

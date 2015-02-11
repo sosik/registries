@@ -20,6 +20,9 @@ var config = require(path.join(process.cwd(), '/build/server/config.js'));
 var universalDaoControllerModule = require(process.cwd() + '/build/server/UniversalDaoController.js');
 
 var securityControllerModule = require('./securityController.js');
+
+var accountingControllerModule = require('./accountingController.js');
+
 var securityServiceModule = require('./securityService.js');
 var securityService= new securityServiceModule.SecurityService();
 
@@ -81,6 +84,10 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	var securityCtrl= new  securityControllerModule.SecurityController(mongoDriver,schemaRegistry,config);
 
+
+	var accountingCtrl= new  accountingControllerModule.AccountingController(mongoDriver,schemaRegistry,config);
+
+
 	var statisticsCtrl = new statisticsControllerModule.StatisticsController(mongoDriver,{});
 	var schemaCtrl = new schemaControllerModule.SchemaController(mongoDriver,schemaRegistry,eventRegistry,{
 		rootPath: config.paths.schemas
@@ -105,6 +112,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});
 	app.get('/user/current',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.getCurrentUser(req, res);});
 	app.post('/user/profile',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.selectProfile(req, res);});
+
+	app.get('/info/accounting/user/:userId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getUserInfo);
+	app.get('/info/accounting/club/:clubId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getClubInfo);
 
 	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req, res){securityCtrl.resetPassword(req, res);});
 	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(),function(req, res){securityCtrl.changePassword(req, res);});

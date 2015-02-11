@@ -1,5 +1,5 @@
 angular.module('generators', ['registries'])
-.factory('generators.Generator', [ '$http', 'registries.safeUrlEncoder','schema-utils.SchemaUtilFactory','$q', function($http, urlEncoder,schemaUtilFactory,$q) {
+.factory('generators.Generator', [ '$http', 'registries.safeUrlEncoder','schema-utils.SchemaUtilFactory','$q','xpsui:ObjectTools', function($http, urlEncoder,schemaUtilFactory,$q,objectTools) {
 	var service = {};
 
 /** Counts porter(-berger) table
@@ -154,10 +154,71 @@ function bergerTable (teams,terms) {
 		});
 	}
 
+	function generateUserAccounting(entity,callback){
+
+		$http({
+			method : 'GET',
+			url : '/info/accounting/user/' + entity.id,
+
+		}).success(function(info){
+			entity.accounting=info;
+			callback();
+		}).error(function(err){
+			callback(err);
+		});
+	}
+
+	function generateClubAccounting(entity,callback){
+
+		$http({
+			method : 'get',
+			url : '/info/accounting/club/' + entity.id,
+
+		}).success(function(info){
+			entity.accounting=info;
+			callback();
+		}).error(function(err){
+			callback(err);
+		});
+	}
+
+
+	service.exportCsv = function() {
+		var c = convertCriteria($scope.searchCrit);
+		// add forced criteria
+		for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
+			c.push($scope.forcedCriterias[idx]);
+		}
+		genericSearchFactory.getSearch($scope.entityUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),0,1000).success(function(data) {
+
+			data=toHtml($scope.schema,data);
+
+			var blob = new Blob([data], {type: 'application/vnd.ms-excel;charset=utf-8'});
+			var url  =  window.webkitURL||window.URL;
+			var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+			link.href = url.createObjectURL(blob);
+			link.download = 'search-export.xls'; // whatever file name you want :)
+
+			var event = document.createEvent('MouseEvents');
+			event.initEvent('click', true, false);
+			link.dispatchEvent(event);
+
+		}).error(function(err) {
+			notificationFactory.error(err);
+		});
+	};
+
+
 	service.generate=function(entity,type,callback){
 		switch (type){
 			case "BERGER":
 				generateBerger(entity,callback);
+				break;
+			case "USER-ACCOUNTING":
+				generateUserAccounting(entity,callback);
+				break;
+			case "CLUB-ACCOUNTING":
+				generateClubAccounting(entity,callback);
 				break;
 		}
 	};

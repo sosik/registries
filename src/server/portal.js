@@ -53,7 +53,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var pageController = require('./portal/page-controller.js');
 	pageController.init(mongoDriver);
 
-	app.get('/', pageController.renderPage);
+	app.get('/:page?', pageController.renderPage);
 	app.get('/article/:aid?/:page?', pageController.renderPage);
 	app.get('/competition/list', pageController.competitionsList);
 	app.get('/competition/matches/:cid', pageController.competitionMatches);

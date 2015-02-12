@@ -75,7 +75,7 @@
 					method : 'POST',
 					url: '/portalapi/getByTags',
 					data: {
-						tags: ['showcase'], //scope.data.data.tags,
+						tags: scope.data.data.tags,
 						skip: 0,
 						limit: null
 					}

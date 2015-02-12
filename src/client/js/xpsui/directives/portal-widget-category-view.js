@@ -12,7 +12,7 @@
 				+ '			<div><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a></div>'
 				+ '			<img ng-show="c.img.img" ng-src="{{c.img.img}}" style="width: 164px !important; height: 123px !important;float: left;"></img>'
 				+ '			<div ng-bind-html="makeSafe(c.abstract)" class="x-portal-widget-category-inner"></div></article>'
-				+ '<div style=" text-align: right; " class="x-portal-widget-category-navigation">'
+				+ '<div style=" text-align: right; clear: both;" class="x-portal-widget-category-navigation">'
 				+ '	<a ng-click="prevPage()" style=" color: #CB2225; "><i class="fa fa-chevron-left x-portal-widget-gallery-prev-btn"></i></a>'
 				+ '	&nbsp;&nbsp;<a ng-click="nextPage()" style=" color: #CB2225; "><i class="fa fa-chevron-right x-portal-widget-gallery-next-btn"></i></a>'
 				+ '</div>',

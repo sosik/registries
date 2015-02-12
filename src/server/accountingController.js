@@ -171,8 +171,8 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 	this.getUserInfo = function(req, res,next) {
 
 		if (!req.params.userId){
-			log.error("userId not present");
-			next("userId not present");
+			log.error('userId not present');
+			next('userId not present');
 			return;
 		}
 
@@ -185,16 +185,16 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 	this.getClubInfo = function(req, res,next) {
 
 		if (!req.params.clubId){
-			log.error("clubId not present");
-			next("clubId not present");
+			log.error('clubId not present');
+			next('clubId not present');
 			return;
 		}
 
 		//get users fees and payments
 		var qf=QueryFilter.create();
-		qf.addCriterium("hockeyPlayerInfo.clubName.oid","eq",req.params.clubId)
-		qf.addCriterium("membershipFeeInfo.membershipFee","ex",null);
-		qf.addCriterium("hockeyPlayerInfo.isActivePlayer","ex",true);
+		qf.addCriterium('hockeyPlayerInfo.clubName.oid','eq',req.params.clubId)
+		qf.addCriterium('membershipFeeInfo.membershipFee','ex',null);
+		qf.addCriterium('hockeyPlayerInfo.isActivePlayer','eq','');
 
 		peopleDao.find(qf,function(error,players){
 
@@ -271,7 +271,7 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 
 			//get users fees and payments
 			var qf=QueryFilter.create();
-			qf.addCriterium("baseData.member.oid","eq",peopleId);
+			qf.addCriterium('baseData.member.oid','eq',peopleId);
 			// qf.addSort('baseData.accountingDate','asc');
 
 			var va =  new VirtualAccount();
@@ -289,7 +289,7 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 				result.payments=payments;
 
 				var qf=QueryFilter.create();
-				qf.addCriterium("baseData.member.oid","eq",peopleId);
+				qf.addCriterium('baseData.member.oid','eq',peopleId);
 
 
 

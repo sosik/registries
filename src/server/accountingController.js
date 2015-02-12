@@ -194,7 +194,7 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 		var qf=QueryFilter.create();
 		qf.addCriterium('hockeyPlayerInfo.clubName.oid','eq',req.params.clubId)
 		qf.addCriterium('membershipFeeInfo.membershipFee','ex',null);
-		qf.addCriterium('hockeyPlayerInfo.isActivePlayer','eq','');
+		qf.addCriterium('hockeyPlayerInfo.isActivePlayer','eq','TRUE');
 
 		peopleDao.find(qf,function(error,players){
 

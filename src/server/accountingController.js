@@ -193,7 +193,8 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 		//get users fees and payments
 		var qf=QueryFilter.create();
 		qf.addCriterium("hockeyPlayerInfo.clubName.oid","eq",req.params.clubId)
-
+		qf.addCriterium("membershipFeeInfo.membershipFee","ex",null);
+		qf.addCriterium("hockeyPlayerInfo.isActivePlayer","ex",true);
 
 		peopleDao.find(qf,function(error,players){
 
@@ -242,7 +243,7 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 			var personLine={
 				name:personInfo.entity.baseData.name.v,
 				surName:personInfo.entity.baseData.surName.v,
-				fee:personInfo.entity.membershipFeeInfo.membershipFee,
+				ee:personInfo.entity.membershipFeeInfo.membershipFee,
 				paidValue: -1,
 			 	feesToPay:personInfo.counted.toPay.length,
 			 	feesToPayValue:countToPay(personInfo.counted.toPay),

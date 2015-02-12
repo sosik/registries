@@ -243,7 +243,7 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 			var personLine={
 				name:personInfo.entity.baseData.name.v,
 				surName:personInfo.entity.baseData.surName.v,
-				ee:personInfo.entity.membershipFeeInfo.membershipFee,
+				fee:personInfo.entity.membershipFeeInfo.membershipFee,
 				paidValue: -1,
 			 	feesToPay:personInfo.counted.toPay.length,
 			 	feesToPayValue:countToPay(personInfo.counted.toPay),

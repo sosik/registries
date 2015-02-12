@@ -55,21 +55,229 @@
 				/**
 				 * Get value from the scope object
 				 *
-				 * @param {object} args Args must be an object with "path" property
+				 * @param {object|array} args Args must be an object with "path" property
 				 * @param {object} scope
 				 * @param {*} def
 				 * @returns {*}
 				 */
 				'get': function(args, scope, def) {
-					var deferred = q.defer();
+					var keys = Object.keys(args).sort();
+					var path = args[keys[0]];
 
-					if (!args.path) {
-						deferred.reject("Invalid Schema: args.path not found!");
-					} else {
-						deferred.resolve(dotAccess(scope, args.path, def));
+					return dotAccess(scope, path, def);
+				},
+
+				/**
+				 * Returns a substring of the first argument, with start as second argument and
+				 * optional length as third argument
+				 *
+				 * @param {object|array} args
+				 * @returns {string}
+				 */
+				substr: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var string = args[keys[0]],
+						start = args[keys[1]],
+						length;
+
+					if (keys[2]) {
+						length = args[keys[2]];
 					}
 
-					return deferred.promise;
+					return string.substr(start, length);
+				},
+
+				/**
+				 * Returns a result of the first argument modulo second argument
+				 *
+				 * @param {object|array} args
+				 * @returns {number}
+				 */
+				mod: function(args) {
+					var keys = Object.keys(args).sort();
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first % second;
+				},
+
+				/**
+				 * Returns a string of the first argument, where search as second argument
+				 * is replaced by value as third argument
+				 *
+				 * @param {object|array} args
+				 * @returns {string}
+				 */
+				replace: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var string = args[keys[0]],
+						search = args[keys[1]],
+						value = args[keys[2]];
+
+					return string.replace(search, value);
+				},
+
+				/**
+				 * Returns a second argument when conditional as first argument is true else
+				 * third argument is returned
+				 *
+				 * @param {object|array} args
+				 * @returns {*}
+				 */
+				'if': function(args) {
+					var keys = Object.keys(args).sort();
+
+					var condition = args[keys[0]],
+						first = args[keys[1]],
+						second = args[keys[2]];
+
+					return condition ? first : second;
+				},
+
+				/**
+				 * Returns a length of the first argument
+				 *
+				 * @param {object|array} args
+				 * @returns {number}
+				 */
+				length: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]];
+
+					return first.length;
+				},
+
+				/**
+				 * Returns true when first argument is equal to the second argument
+				 *
+				 * @param {object|array} args
+				 * @returns {boolean}
+				 */
+				eq: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first == second;
+				},
+
+				/**
+				 * Returns true when first argument is greater then second argument
+				 *
+				 * @param {object|array} args
+				 * @returns {boolean}
+				 */
+				gt: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first > second;
+				},
+
+				/**
+				 * Returns true when first argument is greater or equal to the second argument
+				 *
+				 * @param {object|array} args
+				 * @returns {boolean}
+				 */
+				gte: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first >= second;
+				},
+
+				/**
+				 * Returns true when first argument is less then second argument
+				 *
+				 * @param {object|array} args
+				 * @returns {boolean}
+				 */
+				lt: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first < second;
+				},
+
+				/**
+				 * Returns true when first argument is less or equal to the second argument
+				 *
+				 * @param {object|array} args
+				 * @returns {boolean}
+				 */
+				lte: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first <= second;
+				},
+
+				/**
+				 * Returns true when first argument and the second argument are true
+				 *
+				 * @param {object|array} args
+				 * @returns {boolean}
+				 */
+				and: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first && second;
+				},
+
+				/**
+				 * Returns true when first argument or the second argument are true
+				 *
+				 * @param {object|array} args
+				 * @returns {boolean}
+				 */
+				or: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var first = args[keys[0]],
+						second = args[keys[1]];
+
+					return first || second;
+				},
+
+				/**
+				 * Returns string as first argument padded to size as second argument with
+				 * values as third argument
+				 *
+				 * @param {object|array} args
+				 * @returns {string}
+				 */
+				pad: function(args) {
+					var keys = Object.keys(args).sort();
+
+					var string = args[keys[0]] + "", // Convert to string
+						size = args[keys[1]],
+						fill = '0';
+
+					if (keys[2]) {
+						fill = args[keys[2]];
+					}
+
+					while (string.length < size) {
+						string = fill + string;
+					}
+
+					return string;
 				}
 			};
 

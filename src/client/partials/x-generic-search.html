@@ -1,0 +1,102 @@
+<section id="SearchPage" ng-app="doc.ui-ace" class="ng-scope">
+	<form novalidate class="ng-pristine ng-valid">
+		<div >
+			<div>
+
+				<div>
+
+					<fieldset>
+						<legend>{{'generic.search.searching' | translate}} ({{entity}})</legend>
+
+
+						<div ng-repeat="crit in searchCrit">
+
+							<div>
+								<select ng-change="selectedCritAttribute(crit)"
+									ng-model="crit.attribute"
+									ng-options="att.title group by att.group for att in searchDef.attributes"></select>
+							</div>
+
+							<div>
+								<select
+									ng-model="crit.operator"
+									ng-Init="crit.operator=searchDef.operators[0]"
+									ng-options="op.title for op in searchDef.operators" options-class='crit.attribute.class' >
+
+								</select>
+							</div>
+
+							<div ng-show="!crit.attribute.render">
+								<input type="text" id="name" name="name" ng-model="crit.value"
+									placeholder="" class="ng-pristine ng-valid"
+									autocomplete="off">
+							</div>
+
+							<div ng-show="crit.attribute.render.objectLink">
+								<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
+							</div>
+
+							<div ng-show="crit.attribute.render.datepicker">
+								<input psui-datepicker schema-fragment="crit.attribute.schemaFragment" ng-model="crit.value" />
+							</div>
+
+							<div>
+								<button ng-click="removeCrit($index)" type="button"><i class="glyphicon-remove"></i>{{'generic.search.remove' | translate}}</button>
+							</div>
+						</div>
+
+						<div>
+							<div>
+								<button ng-click="addCrit()" type="button"><i class="glyphicon-plus"></i>{{'generic.search.add' | translate}}</button>
+							</div>
+							<div>
+								<button ng-disabled="disabledSearch" ng-click="search()"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
+							</div>
+						</div>
+					</fieldset>
+
+				</div>
+			</div>
+			<div>
+				<div ng-show="data!=null">
+
+					<fieldset>
+						<legend>{{'generic.search.result.of.searching' | translate}}</legend>
+						<div>
+							<table>
+								<thead>
+									<tr>
+										<th  ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-show="data.length>0" ng-repeat="obj in data"
+										>
+										<td ng-repeat="header in headers">{{getVal(header.field, $eval('obj.'+header.field))}}</td>
+										<td class="psui-actions-holder">
+											<a ng-href="{{getLink($index)}}" class="psui-btn psui-view-btn">
+												<i></i><span>{{'generic.search.view' | translate}}</span>
+											</a>
+										</td>
+									</tr>
+									<tr ng-show="data.length==0"
+										>
+										<td colspan="{{headers.length}}" >
+											{{'generic.search.nodata.found'|translate}}
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>&nbsp;
+						<div/>
+						<div>
+							<button ng-show="data" ng-click='exportCsv()'> {{'generic.search.export.csv' | translate}} </button>
+							<button ng-show="data" ng-click='searchNext()'> >>> </button>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>

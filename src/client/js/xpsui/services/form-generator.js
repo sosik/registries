@@ -52,7 +52,9 @@
 					field.attr('style', (schemaFragment.$uploadableImage.width ? 'width:'+ schemaFragment.$uploadableImage.width+'px !important;':'')
 						+ (schemaFragment.$uploadableImage.height ? 'height:'+schemaFragment.$uploadableImage.height+'px !important;':'')
 					);
-				} else if(schemaFragment.type === "string"){
+				} else if( schemaFragment.type === "string"
+					|| schemaFragment.type === "Decimal"
+				){
 					if(schemaFragment.enum){
 						field = angular.element('<div xpsui-select-edit></div>');
 						field.attr('xpsui-schema', schemaPath);
@@ -91,7 +93,9 @@
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.$uploadableImage){
 					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
-				} else if(schemaFragment.type === "string"){
+				} else if( schemaFragment.type === "string"
+					|| schemaFragment.type === "Decimal"
+				){
 					if(schemaFragment.enum){
 						field = angular.element('<div xpsui-select-view></div>');
 						field.attr('xpsui-schema', schemaPath);
@@ -161,7 +165,11 @@
 								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
 								component.attr('xpsui-fieldset', mode);
-							} else if (localFragment.type === 'string' || localFragment.type === 'date' || localFragment.type === 'array') {
+							} else if (localFragment.type === 'string' 
+								|| localFragment.type === 'date' 
+								|| localFragment.type === 'array'
+								|| localFragment.type === 'Decimal'
+							) {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {
 								log.warn('Local fragment type %s not implemented yet', localFragment.type);

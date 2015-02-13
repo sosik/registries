@@ -1,0 +1,222 @@
+<div>
+	<div>
+		<div>
+			<form>
+				<fieldset>
+				<legend>{{'security.profile.edit.searching' |translate}} ({{entity}})</legend>
+
+					<div ng-repeat="crit in searchCrit">
+
+						<div>
+							<select ng-model="crit.attribute"
+								ng-options="att.title for att in searchDef.attributes"></select>
+						</div>
+						<div>
+							<select
+								ng-model="crit.operator"
+								ng-Init="crit.operator=searchDef.operators[0]"
+								ng-options="op.title for op in searchDef.operators"></select>
+						</div>
+						<div ng-show="!crit.objectLink">
+							<input
+								type="text" id="name" name="name" ng-model="crit.value"
+								placeholder="value" class="ng-pristine ng-valid"
+								autocomplete="off">
+
+						</div>
+						<div ng-show="crit.objectLink">
+							<input
+								type="text" id="name" name="name" ng-model="crit.selectedObject"
+								placeholder="value" class="ng-pristine ng-valid"
+								autocomplete="off">
+
+						</div>
+
+						<div>
+							<button ng-click="removeCrit($index)">
+						<i class="glyphicon-remove"></i>{{'security.profile.edit.cancel' |translate}}
+							</button>
+						</div>
+					</div>
+
+					<div >
+						<div>
+							<button ng-click="addCrit()"><i class="glyphicon-plus"></i>{{'security.profile.edit.add' |translate}}</button>
+						</div>
+						<div>
+							<button ng-click="search()" ><i class="glyphicon-search"></i>{{'security.profile.edit.search' |translate}}</button>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+
+			<div ng-show='profileList'>
+				<fieldset>
+				<legend>{{'security.profile.edit.result' |translate}} ({{entity}})</legend>
+					<div>
+						<table>
+							<thead>
+								<tr>
+									<th ng-repeat="header in headers">{{header.title}}</th>
+						<th>{{'security.profile.edit.actions' |translate}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-class="{'psui-active': (selectedProfile===obj)}" ng-repeat="obj in profileList" ng-click="goView($index)"
+									>
+									<td ng-repeat="header in headers">{{getVal("obj." +
+										header.field)}} {{$eval("obj."+header.field)}}</td>
+
+									<td>
+										<span ng-click='selectProfile(obj)'>
+											<i></i><span>{{'security.profile.edit.edit' |translate}}</span>
+										</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</fieldset>
+			</div>
+
+		</div>
+	</div>
+	<div>
+		<div ng-show="selectedProfile">
+				<div>
+					<fieldset>
+						<legend>{{'security.profile.edit.name.data' |translate}} - {{selectedProfile.baseData.name}}</legend>
+						<div>
+							<label for="name">{{'security.profile.edit.name' |translate}}</label>
+							<div class="col-sm-8">
+								<input type="text" id="name" name="name"
+									ng-model="selectedProfile.baseData.name" placeholder=""
+									class="ng-pristine ng-valid" autocomplete="off">
+							</div>
+						</div>
+						<div>
+
+						</div>
+
+					</fieldset>
+				</div>
+
+			<div>
+				<fieldset>
+					<legend>
+						{{'security.profile.edit.groups' |translate}} - {{selectedProfile.baseData.name}}
+					</legend>
+
+					<div>
+						<div>
+							<div>
+								<div >
+									<header>{{'security.profile.edit.added.groups' |translate}}</header>
+									<section >
+										<div ng-repeat="group in profile.groups" ng-click="removeGroup(group)">
+											<i class="glyphicon-minus"></i><span>{{group.baseData.name}}</span>
+										</div>
+									</section>
+								</div>
+								<div >
+									<header>{{'security.profile.edit.available.groups' |translate}}</header>
+									<section>
+										<div ng-repeat="group in groups" ng-click="addGroup(group)">
+											<i class="glyphicon-plus"></i><span>{{group.baseData.name}}</span>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+
+			<div>
+				<fieldset>
+					<legend>
+						{{'security.profile.edit.permissions' |translate}} -
+							{{selectedProfile.baseData.name}}
+					</legend>
+
+					<div>
+						<div>
+							<div>
+								<div >
+									<header>{{'security.profile.edit.added.permissions' |translate}}</header>
+									<section >
+										<div ng-repeat="perm in profile.permissions" ng-click="removePermission(perm)">
+											<i class="glyphicon-minus"></i><span>{{perm}}</span>
+										</div>
+									</section>
+								</div>
+								<div >
+									<header>{{'security.profile.edit.available.permissions' |translate}}</header>
+									<section>
+										<div ng-repeat="perm in permissions" ng-click="addPermission(perm)">
+											<i class="glyphicon-plus"></i><span>{{perm}}</span>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+
+				<fieldset>
+				<legend>{{'security.profile.edit.data.criteria' |translate}} - {{selectedProfile.baseData.name}}</legend>
+
+					<div ng-repeat="crit in profileCrit">
+						<div>
+							<select ng-model="crit.schema"
+								ng-options="schema for schema in searchSchemas"  ng-change="schemaChange(crit)" ></select>
+						</div>
+						<div>
+							<select ng-model="crit.attribute"
+								ng-options="att.title for att in crit.attDef.attributes"></select>
+						</div>
+						<div>
+							<select
+								ng-model="crit.operator"
+								ng-options="op.title for op in searchDef.operators"></select>
+						</div>
+						<div ng-show="!crit.attribute.render">
+							<input
+								type="text" id="name" name="name" ng-model="crit.value"
+								placeholder="value" class="ng-pristine ng-valid"
+								autocomplete="off">
+						</div>
+
+						<div ng-show="crit.attribute.render.objectLink">
+							<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
+						</div>
+
+						<div>
+							<button ng-click="removeProfileCrit($index)">
+						<i class="glyphicon-remove"></i>{{'security.profile.edit.cancel' |translate}}
+							</button>
+						</div>
+					</div>
+					<div >
+						<div>
+							<button ng-click="addProfileCrit()"><i class="glyphicon-plus"></i>{{'security.profile.edit.add' |translate}}</button>
+						</div>
+					</div>
+				</fieldset>
+
+				<div>
+					<div>
+						<div class="btn-group pull-right">
+							<button ng-click="updateProfileSecurity()" class="btn btn-primary">
+								<i class="glyphicon-ok"></i>{{'security.profile.edit.save' |translate}}
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+</div>

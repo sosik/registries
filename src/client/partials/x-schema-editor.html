@@ -1,0 +1,69 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12 col-lg-5">
+			<fieldset>
+				<legend>{{'schema.editor.list.of.schemas.for.editation' | translate}}</legend>
+				
+				<div class="table-responsive">
+					<table class="table">
+						<thead>
+							<tr>
+						<th>{{'schema.editor.id' | translate}}</th>
+						<th>{{'schema.editor.name' | translate}}</th>
+						<th>{{'schema.editor.size' | translate}}</th>
+						<th> </th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-class="{'psui-active': (selectedSchema===schema)}"  ng-repeat="schema in schemaList">
+								<td>{{$index + 1}}</td>
+								<td>{{schema.name}}</td>
+								<td>{{schema.size}}</td>
+								<!-- <td class="btn-group btn-group-xs"><a href="{{ '#/schema/edit/'+schema.name}}" class="btn btn-default">edit</a></td> -->
+								<td class="psui-actions-holder">
+									<span class="psui-btn psui-edit-btn" ng-click="selectSchema(schema)">
+										<i></i><span>{{'schema.editor.edit' | translate}}</span>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
+		</div>
+
+		<div class="col-md-12 col-lg-7">
+			<div class="form form-horizontal" ng-show="selectedSchema" >
+				<fieldset>
+					<legend>{{'schema.editor.schema.editing' | translate}}</legend>
+					
+					<div class="form-group">
+						<section class="col-md-12" ng-show="selectedSchema" id="editor"  ng-cloak >
+							<div>
+								<div style="height: 400px;"
+								ui-ace="{
+									useWrapMode : true,
+									showGutter: true,
+									theme: 'twilight',
+									mode: 'json',
+									onLoad: aceLoaded
+								}"
+								ng-model="aceModel">
+									Ace here
+								</div>
+							</div>
+						</section>
+					</div>
+				</fieldset>
+				<div class="form-group">
+					<div class="col-md-12">
+						<button ng-click="postData(aceModel)" class="btn btn-primary pull-right">
+							<i class="glyphicon-ok"></i>{{'schema.editor.save' | translate}}
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>

@@ -1,0 +1,102 @@
+<div>
+	<div>
+		<div>
+			<fieldset>
+				<legend>{{'security.group.edit.list.of.security.groups' | translate}}</legend>
+			</fieldset>
+			<div >
+				<table>
+					<thead>
+						<tr>
+						<th>{{'security.group.edit.id' | translate}}</th>
+						<th>{{'security.group.edit.name' | translate}}</th>
+						<th>{{'security.group.edit.actions' | translate}}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-class="{'psui-active': (selectedGroup===group)}"  ng-repeat="group in groups">
+							<td>{{$index + 1}}</td>
+							<td>{{group.baseData.name}}</td>
+							<td>
+								<span class="psui-btn psui-edit-btn" ng-click="selectGroup(group)">
+									<i></i><span>{{'security.group.edit.edit' | translate}}</span>
+								</span>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div>
+			<div ng-show="selectedGroup">
+				<div>
+					<fieldset>
+							<legend>{{'security.group.edit.modification.of.security.group' | translate}} - {{selectedGroup.baseData.name}}</legend>
+						<div>
+						<label for="name">{{'security.group.edit.id.of.group' | translate}}</label>
+							<div>
+								<input type="text" id="name" name="name"
+									ng-model="selectedGroup.baseData.id" placeholder=""
+									class="ng-pristine ng-valid" autocomplete="off">
+							</div>
+						</div>
+						<div>
+						<label for="name">{{'security.group.edit.name.of.group' | translate}}</label>
+							<div>
+								<input type="text" id="name" name="name"
+									ng-model="selectedGroup.baseData.name" placeholder=""
+									class="ng-pristine ng-valid" autocomplete="off">
+							</div>
+						</div>
+						
+						<div>
+							<label for="name">{{'security.group.edit.parent.group' | translate}}</label>
+							<div>
+								<div xpsui-objectlink2-edit="" xpsui-schema="schemaFormOptions.schema.properties.baseData.properties.parent" ng-model="selectedGroup.baseData.parent" ></div>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				
+				<div >
+					<fieldset>
+							<legend>{{'security.group.edit.permissions' | translate}} - {{selectedGroup.baseData.name}}</legend>
+						<div>
+							<div>
+								<div>
+									<div class="permissions">
+										<header>{{'security.group.edit.added.permissions' | translate}}</header>
+										<section>
+											<div ng-repeat="perm in group.permissions" class="psui-list-item" ng-click="removePermission(perm)">
+												<i class="glyphicon-minus"></i><span>{{perm}}</span>
+											</div>
+										</section>
+									</div>
+									<div class="permissions">
+										<header>{{'security.group.edit.available.permissions' | translate}}</header>
+										<section>
+											<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
+												<i class="glyphicon-plus"></i><span>{{perm}}</span>
+											</div>
+										</section>
+									</div>
+								</div>
+							</div>
+						</div>
+					</fieldset>
+					
+					<div>
+						<div>
+							<button ng-click="updateGroupPermissions()">
+								<i class="glyphicon-ok"></i>{{'security.group.edit.save' | translate}}
+							</button>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
+

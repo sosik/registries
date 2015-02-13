@@ -6,7 +6,7 @@
 		'$scope', 
 		'$routeParams', 
 		'xpsui:SecurityService', 
-		'generic-search.GenericSearchFactory', 
+		'xpsui:GenericSearchFactory', 
 		'xpsui:SchemaUtil',
 		'xpsui:NotificationFactory', 
 		function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {

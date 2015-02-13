@@ -7,7 +7,8 @@
 		'xpsui:services', 
 		'xpsui:directives', 
 		'xpsui:controllers',
-		'pascalprecht.translate'
+		'pascalprecht.translate',
+		'ui.ace'
 
 		// 'x-security',
 		// 'personal-page',
@@ -16,12 +17,19 @@
 	.config(['$routeProvider', 'xpsui:loggingProvider',function($routeProvider, loggingProvider) {
 		// $routeProvider.when('/view/:schema/:objId', {controller: 'xViewController', templateUrl: '/partials/x-view.html'});
 
-		$routeProvider.when('/personal-page', {templateUrl: '/partials/personal-page.html', controller: 'xpsui:PersonalPageCtrl', permissions:['System User']});
-		$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'xpsui:SecurityLoginCtrl'});
-		//$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
+		$routeProvider.when('/personal-page', {templateUrl: '/partials/x-personal-page.html', controller: 'xpsui:PersonalPageCtrl', permissions:['System User']});
+		$routeProvider.when('/statistics', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:StatisticsViewCtrl', permissions:['Registry - read']});
+		$routeProvider.when('/login', {templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
+		$routeProvider.when('/personal-change-password', {templateUrl: '/partials/x-personal-change-password.html', controller: 'xpsui:SecurityPersonalChangePasswordCtrl', permissions:['System User']});
+		$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/x-security-group-edit.html', controller: 'xpsui:SecurityGroupEditCtrl', permissions:['Security - read']});
+		$routeProvider.when('/security/user/edit', {templateUrl: 'partials/x-security-user-edit.html', controller: 'xpsui:SecurityUserEditCtrl',permissions:['Security - read']});
+		$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/x-security-profile-edit.html', controller: 'xpsui:SecurityProfileEditCtrl',permissions:['Security - read']});
+	
 		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl',permissions:['Registry - write']});
 		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl',permissions:['Registry - read']});
 		$routeProvider.when('/search/:entity', {templateUrl : 'partials/generic-search.html', controller : 'xpsui:SearchCtrl'});
+
+		$routeProvider.when('/schema/edit', {templateUrl: 'partials/x-schema-editor.html', controller: 'xpsui:SchemaEditCtrl' ,permissions:['System Admin']});
 		
 		$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		

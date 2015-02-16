@@ -33,7 +33,7 @@
               name: 'abstract',
               element: '<section class="abstract"></section>'
             },
-            data: '...Abstrakt článku, krátky popis a zdrnutie...'
+            data: '...Abstrakt článku, krátky popis a zhrnutie...'
           },
           {
             meta: {
@@ -71,7 +71,7 @@
               name: 'abstract',
               element: '<section class="abstract"></section>'
             },
-            data: '...Abstrakt článku, krátky popis a zdrnutie...'
+            data: '...Abstrakt článku, krátky popis a zhrnutie...'
           },
           {
             meta: {
@@ -161,6 +161,18 @@
             tags: []
           }
         },
+        overview: {
+            meta: {
+              name: 'overview',
+              element: '<div></div>',
+              type: 'overview',
+              desc: '<h1>Prehľad</h1><p>Prehľad článkov pod sebou.</p>',
+              icon: 'img/block-category.png',
+            },
+            data: {
+              tags: []
+            }
+          },
       gallery: {
           meta: {
             name: 'gallery',

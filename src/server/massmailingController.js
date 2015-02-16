@@ -56,9 +56,10 @@ var MassmailingController = function(mongoDriver, options) {
 			}
 
 			if(htmlTemplate){
-				htmlTemplate='<img src="{{mailId}}">'+htmlTemplate;
+				htmlTemplate='<img src="{{mailId}}"\>\n'+htmlTemplate;
 				resolvedHtml=renderService.renderInstant(htmlTemplate,{locals:{'recipient':user,'sender':sender,mailId:mailId}});
 			}
+
 
 			var mailOptions = {
 				from : cfg.mails.massmailSenderAddress,

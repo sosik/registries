@@ -4,13 +4,13 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 .factory('massmailing.MassmailingFactory', [ '$http', function($http) {
 	var service = {};
 	service.sendMail = function(template,criteria,users) {
-		
+
 		return $http({
 			method : 'POST',
 			url : '/massmailing/send',
 			data : {
 				criteria : criteria,
-				template: template, 
+				template: template,
 				users: users
 			}
 		});
@@ -19,11 +19,12 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 	return service;
 } ])
 //
-.controller('massmailing.editCtrl', [ '$scope', '$routeParams', 'schema-utils.SchemaUtilFactory','generic-search.GenericSearchFactory','psui.notificationFactory','schema-utils.SchemaUtilFactory','massmailing.MassmailingFactory',function($scope, $routeParams,SchemaUtilFactory,genericSearchFactory,notificationFactory,schemaUtilFactory,massmailingFactory) {
-	
+.controller('massmailing.editCtrl', [ '$scope', '$routeParams', 'schema-utils.SchemaUtilFactory','generic-search.GenericSearchFactory','psui.notificationFactory','schema-utils.SchemaUtilFactory','massmailing.MassmailingFactory',
+	function($scope, $routeParams,SchemaUtilFactory,genericSearchFactory,notificationFactory,schemaUtilFactory,massmailingFactory) {
+
 	var schemaUri='uri://registries/mailtemplates#master/view';
-	var peopleSchemaUri='uri://registries/member';
-	
+	var peopleSchemaUri='uri://registries/people#views/fullperson/';
+
 	$scope.selectedTemplate={baseData:  { name: '', textTemplate: '', htmlTemplate: ''} };
 	$scope.searchDef = {};
 	$scope.searchCrit = [];
@@ -40,7 +41,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 		$scope.entity = data.title;
 
-		$scope.addCrit(); 
+		$scope.addCrit();
 		$scope.headers = data.listFields;
 		$scope.sortBy={header: data.listFields[0] , direction : 'asc' };
 		$scope.forcedCriterias = data.forcedCriterias || [];
@@ -49,7 +50,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 	});
 
 
-	
+
 	function convertSortBy(searchBy){
 		if (!searchBy)  {
 			return null;
@@ -64,7 +65,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 
 		crit.map(function(c) {
 			if (c && c.attribute && c.attribute.path) {
-				
+
 				retval.push({
 					f : c.attribute.path,
 					v : c.value,
@@ -80,7 +81,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 	$scope.addCrit = function() {
 		$scope.searchCrit.push({});
 	};
-	
+
 	$scope.removeCrit = function(index) {
 		$scope.searchCrit.splice(index, 1);
 	};
@@ -89,7 +90,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		$scope.templates=data;
 	});
 
-	
+
 	$scope.search = function() {
 		var c = convertCriteria($scope.searchCrit);
 		// add forced criteria
@@ -97,7 +98,7 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 			c.push($scope.forcedCriterias[idx]);
 		}
 		$scope.lastCriteria=JSON.parse(JSON.stringify(c));
-		
+
 		genericSearchFactory.getSearch(peopleSchemaUri, c,convertSortBy( $scope.sortBy),0,pageSize).success(function(data) {
 			$scope.data = data;
 			genericSearchFactory.getSearchCount(peopleSchemaUri,c).success(function(data) {
@@ -108,11 +109,11 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
-	};	
-	
+	};
+
 
 	$scope.recipientCount=function(){
-		if ($scope.selectAll){ 
+		if ($scope.selectAll){
 			return $scope.dataSize;
 		}
 		else {
@@ -134,14 +135,14 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 			}
 			else {
 				$scope.sortBy={header: header , direction : 'asc' };
-			} 
+			}
 		}
 		else {
 			$scope.sortBy={header: header , direction : 'desc' };
 		}
 		$scope.search();
 	};
-	
+
 	$scope.searchNext = function() {
 		var c = convertCriteria($scope.searchCrit);
 		// add forced criteria
@@ -150,17 +151,17 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 		}
 		c.
 		genericSearchFactory.getSearch(peopleSchemaUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,pageSize).success(function(data) {
-			
+
 			data.map(function (newItems){
 				$scope.data.push(newItems);
 			});
-			
-			
+
+
 		}).error(function(err) {
 			notificationFactory.error(err);
 		});
 	};
-	
+
 
 	$scope.sendMail=function(){
 		var userIds=null;
@@ -172,12 +173,14 @@ angular.module('massmailing', ['schema-utils','pascalprecht.translate','schema-u
 			userIds=[];
 			for(var index in $scope.data){
 				if( $scope.data[index].selected){
-					
+
 					userIds.push($scope.data[index].id);
 				}
 			}
 		}
-		massmailingFactory.sendMail($scope.selectedTemplate,criteria,userIds);
+		massmailingFactory.sendMail($scope.selectedTemplate,criteria,userIds).success(function(){
+			notificationFactory.info({translationCode:'massmailing.sent', time:3000});
+		});
 	};
-	
+
 } ]);

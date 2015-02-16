@@ -69,7 +69,7 @@ var MassmailingController = function(mongoDriver, options) {
 			};
 
 			transport.sendMail(mailOptions);
-			log.debug('Sending mail', mailOptions,sender);
+			log.debug('Sending mail', mailOptions,sender.id);
 		}	catch(err){
 			log.error('error',err.stack);
 		}

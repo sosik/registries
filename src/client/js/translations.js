@@ -75,6 +75,8 @@ angular.module('registries')
 		"menu.massmailing.search.lower.level":"Vyhľadáť",
 		"menu.massmailing.send.title":"Odoslať",
 		"massmailing.send":"Odoslať",
+		"massmailing.sent":"Správa bola odoslaná.",
+
 		"massmail.predefined.template": "Preddefinované vzory",
 		"massmail.plaintext.template":"Text správy",
 		"massmail.subject.template":"Predment správy",
@@ -485,7 +487,7 @@ angular.module('registries')
 		"login.authentication.failed": "Přihlášení selhalo",
 		"login.selected.profile.continue":"Pokračovat s profilem",
 		"login.profile":"Profil",
-		
+
 		"enum.active.A":"Aktívny",
 		"enum.active.I":"Neaktívny",
 
@@ -560,6 +562,7 @@ angular.module('registries')
 		"massmail.search.recipient":"Vyhledat příjemce",
 		"massmail.send.view":"Hromadní pošta",
 		"massmailing.send":"Odeslat",
+		"massmailing.sent":"Správa byla odeslaná.",
 		"massmail.selection.all":"Podle filtra",
 		"header.settings": "Nastavení",
 		"header.log.out": "Odhlásit se",

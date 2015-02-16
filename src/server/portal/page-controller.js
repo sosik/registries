@@ -314,7 +314,9 @@ PageController.prototype.renderPage = function(req, res, next) {
 
 				if (locals.article) {
 					for (var i in locals.article.data) {
-						if (locals.article.data[i] && locals.article.data[i].meta.type === 'category' || locals.article.data[i].meta.type === 'showcase') {
+						if (locals.article.data[i] && locals.article.data[i].meta.type === 'category' 
+								|| locals.article.data[i].meta.type === 'showcase'
+								|| locals.article.data[i].meta.type === 'overview') {
 							blocksResolvers.push(createCategoryResolver(locals.article.data[i], aid));
 						}
 					}

@@ -8,6 +8,7 @@ var universalDaoModule = require('./../../build/server/UniversalDao.js');
 var schemaRegistryModule = require('./../../build/server/schemaRegistry.js');
 
 var universalDaoControllerModule = require('./../../build/server/UniversalDaoController.js');
+var eventSchedulerModule = require('./../../build/server/eventScheduler.js');
 
 var path = require('path');
 var async = require('async');
@@ -43,15 +44,27 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	});
 
 	var schemaRegistry = new schemaRegistryModule.SchemaRegistry({schemasList:schemasListPaths});
-	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry,{emitEvent:function(){}});
 
-	go(udc,schema,function(err){ if(err){console.log(err)} mongoDriver.close(); console.log('Items saved',itemsSaved); });
+	var eventScheduler = new eventSchedulerModule.EventScheduler(mongoDriver,{});
+
+	var eventSchedulerCalls = [];
+	var udc = new universalDaoControllerModule.UniversalDaoController(mongoDriver, schemaRegistry,{emitEvent:function(eventType,eventData){
+		eventSchedulerCalls.push(
+			function (callback){
+				var fireTime=new Date().getTime()+5000;
+				console.log('s');
+				eventScheduler.scheduleEvent(fireTime,eventType,eventData,null,callback);
+			}
+		)
+	}});
+
+	go(udc,schema,eventSchedulerCalls,function(err){ if(err){console.log(err)} mongoDriver.close(); console.log('Items saved',itemsSaved); });
 
 });
 
 
 
-function go(udc,schema,callback) {
+function go(udc,schema,eventSchedulerCalls,callback) {
 
 	var req={params:{schema:schema},body:{limit:1000000}};
 	req.perm={'Registry - read':true};
@@ -65,7 +78,7 @@ function go(udc,schema,callback) {
 			return this;
 		};
 		this.json=function(data){
-			iterateData(data,udc,callback);
+			iterateData(data,udc,eventSchedulerCalls,callback);
 		};
 	};
 
@@ -77,17 +90,23 @@ function go(udc,schema,callback) {
 }
 
 
-function iterateData(data,udc,callback){
+function iterateData(data,udc,eventSchedulerCalls,callback){
 
 	console.log('Data fully read',data.length);
 	var toCall=data.map(function (item){
 
-		return function(callback) {
-			saveItem(item,udc,callback);
+		return function(cb) {
+			saveItem(item,udc,cb);
 		};
 	});
 
-	async.parallelLimit(toCall,10,callback);
+	async.parallelLimit(toCall,10, function(err){
+		if (err){
+			console.log(err);
+		}
+		async.parallelLimit(eventSchedulerCalls,10,callback);
+
+	});
 
 }
 

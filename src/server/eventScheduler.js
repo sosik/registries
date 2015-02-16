@@ -47,7 +47,11 @@ var EventScheduler = function(mongoDriver,cfg) {
 		};
 
 		this.fireEvents=function(events){
+			if (events.length==prop.batchSize){
+				setTimeout(self.pollForEvents,200);
+			}
 			events.map(function(event){
+				var eventId=event.id;
 				setTimeout(function(){
 					eventDao.getWithTimeLock(event,3000,function (err, event){
 						if (err) {log.error('getWithTimeLock',err); return;}
@@ -57,7 +61,7 @@ var EventScheduler = function(mongoDriver,cfg) {
 						log.verbose('firing event',event);
 						//should be called when handling of atleast started.
 						event.eventData.done=function(){
-							eventDao.remove(event.id,function(err,data){if (err) {log.error('done',err); return;} log.verbose('event removed',data);});
+							eventDao.remove(eventId,function(err,data){if (err) {log.error('done',err); return;} log.verbose('event removed',data);});
 						};
 						self.eventRegistry.emitEvent(event.eventType,event.eventData);
 
@@ -85,12 +89,20 @@ var EventScheduler = function(mongoDriver,cfg) {
 
 
 		this.unscheduleEvents=function(refId,eventTypes,cb){
-			var toRemove = {refIds:refId};
+
+			if (!refId){
+				log.error('RefId should be specified');
+				return;
+			}
+
+			var qf=QueryFilter.create();
+			qf.addCriterium('refIds', QueryFilter.operation.IN,[refId]);
 
 			if (eventTypes && eventTypes.length>0){
-				toRemove.eventType = {$in:eventTypes};
+				qf.addCriterium('eventType', QueryFilter.operation.IN,eventTypes);
 			}
-			eventDao.delete(toRemove,function(err,data){if (err) {log.error('unscheduleEvents',err);cb(err); return;} log.verbose('event unscheduled',data);cb(err,data);});
+
+			eventDao.delete(qf,function(err,data){if (err) {log.error('unscheduleEvents',err);cb(err); return;} log.verbose('event unscheduled',data);cb(err,data);});
 		};
 
 		this.start=function (){

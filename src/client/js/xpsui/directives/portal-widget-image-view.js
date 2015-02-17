@@ -13,8 +13,8 @@
 
 				elm.empty();
 				elm.addClass('x-portal-widget-view');
-
-				var content = angular.element('<div class="psui-wrapper" style="text-align: center;"><img ng-src="{{data.data.img}}" style="width: 656px !important; height: 492px !important; margin:0;"></img></div>');
+//width: 656px !important; height: 492px !important; 
+				var content = angular.element('<div class="psui-wrapper" style="text-align: center;"><img ng-src="{{data.data.img}}" style="margin:0;"></img></div>');
 
 				elm.append(content);
 

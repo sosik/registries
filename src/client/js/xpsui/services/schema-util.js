@@ -123,12 +123,6 @@
 		};
 
 		return service;
-	} ])
-	/**
-	 * Filter for encoding url directly in html code
-	 */
-	.filter('uriescape', ['xpsui:SchemaUtil', function(schemaUtilFactory) {
-		return  function(data){return schemaUtilFactory.encodeUri(data);};
-	}]);
+	} ]);
 
 }(window.angular));

@@ -14,12 +14,25 @@
 	<meta name="copyright" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<link rel="shortcut icon" href="favicon.ico" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/bootstrap.css" />
+	<!--<link rel="stylesheet" href="css/bootstrap-theme.css" />-->
+	<link rel="stylesheet" href="css/main.css" />
+	<link rel="stylesheet" href="dataset/get/css/custom.css" />
+	<link rel="stylesheet" href="css/psui-uploadable-image.css" />
+	<link rel="stylesheet" href="css/psui-imageresizor.css" />
+	<link rel="stylesheet" href="css/psui-notification.css" />
+	<link rel="stylesheet" href="css/psui-selectbox.css" />
+	<link rel="stylesheet" href="css/portal-editor.css" />
+	<link rel="stylesheet" href="portal/css/portal.css" />
 	<link rel="stylesheet" href="css/x.css" />
-	<link rel="stylesheet" href="css/x-default.css" />
 	<link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="img/icon.ico" />
-	
-	<!-- javascript global -->
+
+	<script src="js/modernizr.js"></script>
+
+	<script src="lib/rangy/rangy-core.js"></script>
 	<script src="lib/angular/angular.js"></script>
 	<script src="lib/angular-route/angular-route.js"></script>
 	<script src="lib/angular-cookies/angular-cookies.js"></script>
@@ -27,84 +40,63 @@
 	<script src="lib/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
 	<script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
 	<script src="lib/angular-ui-ace/ui-ace.js"></script>
-	
-	<!-- javascript new libs-->
+	<script src="js/security.js"></script>
+	<script src="js/personalPage.js"></script>
+	<script src="js/statistics.js"></script>
+	<script src="js/massmailing.js"></script>
+	<script src="js/registry.js"></script>
+	<script src="js/registries.js"></script>
+	<script src="js/schema-utils.js"></script>
+	<script src="js/generic-search.js"></script>
+	<script src="js/generators.js"></script>
+	<script src="js/schema-editor.js"></script>
+	<script src="js/psui.js"></script>
+	<script src="js/xpsui.js"></script>
+	<script src="js/psui-uploadable-image.js"></script>
+	<script src="js/psui-uploadable-file.js"></script>
+	<script src="js/psui-imageresizor.js"></script>
+	<script src="js/psui-notification.js"></script>
+	<script src="js/psui-contenteditable.js"></script>
+	<script src="js/psui-datepicker.js"></script>
+	<script src="js/psui-form-controller.js"></script>
+	<script src="js/psui-default-src.js"></script>
+	<script type="application/javascript" src="js/psui.js"></script>
+	<script src="js/psui-selectbox.js"></script>
+	<script src="js/translations.js"></script>
+	<script src="dataset/get/js/translations.js"></script>
+	<script src="js/psui-validity-mark.js"></script>
+	<script src="js/psui-objectlink.js"></script>
+	<script src="js/safeUrlEncoder.js"></script>
+	<script src="js/portal/portal-editor.js"></script>
 	<script src="js/xpsui.min.js"></script>
 	<script src="js/x-main.min.js"></script>
 
-	<!-- javascript data libs -->
-	<script src="dataset/get/js/x-translations.js"></script>
-
 	<!-- javascript shared libs -->
 	<script src="js/x-safeUrlEncoder.js"></script>
-
 </head>
-<body ng-app="x-registries">
-
-<div xpsui-notification></div>
-
-<div class="x-fixed-header">
-	<div class="x-logo">
-		<img src="img/logo.svg">
-	</div>
-
-	<nav>
-		<ul>
-			<li ng-show="security.currentUser.systemCredentials.login.loginName"><span class="text-block"
-				><span>{{security.currentUser.systemCredentials.login.loginName}}</span><i class="icon-user"></i></span
-			></li>
-			<li ng-show="security.currentUser.systemCredentials.login.loginName" class=""><a 
-				href="#"><span>Odhlásit se</span><i class="icon-power-off"></i></a
-			></li>
-		</ul>
-	</nav>
-</div>
-<div xpsui-menu class="x-main-menu x-modalview">
-	<div class="x-main-menu-toggle"></div>
-	<div class="x-modalview-window">
-		<span class="x-modalview-header">Menu</span>
-		<div class="x-main-menu-toggle x-modalview-close"></div>
-		<div class="x-modalview-body">
-			<ul>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-group fa-2x"></i><span>{{'menu.member.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/registry/new/{{'uri://registries/people#views/fullperson'|uriescape}}"><span>Nový</span></a></li> 
-						<li><a href="#/search/{{'uri://registries/people#views/fullperson'|uriescape}}"><span>{{'menu.search.person.lower.level' | translate}}</span></a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-gear fa-2x"></i><span>{{'menu.my.profile.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/personal-page"><span >{{'menu.profile.lower.level' | translate}}</span></a></li>
-						<li><a href="#/personal-change-password"><span >{{'menu.change.password.lower.level' | translate}}</span></a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-cogs fa-2x"></i><span>{{'menu.permissions.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/registry/new/{{'uri://registries/security#groupmaster'|uriescape}}"><span >{{'menu.new.group.lower.level' | translate}}</span></a></li>
-						<li><a href="#/security/group/edit/"><span >{{'menu.permission.groups.lower.level' | translate}}</span></a></li>
-						<li><a href="#/security/user/edit"><span >{{'menu.user.permissions.lower.level' | translate}}</span></a></li>
-						<li><a href="#/registry/new/{{'uri://registries/security#profilesmaster'|uriescape}}"><span >{{'menu.new.profile.lower.level' | translate}}</span></a></li>
-						<li><a href="#/security/profile/edit"><span >{{'menu.profiles.lower.level' | translate}}</span></a></li>
-
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-pie-chart fa-2x"></i><span>{{'menu.statistics.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/statistics"><span >{{'menu.statistics.show.title' | translate}}</span></a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-reorder fa-2x"></i><span>{{'menu.schemas.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/schema/edit"><span >{{'menu.schema.list.lower.level' | translate}}</span></a></li>
-					</ul>
-				</li>
-			</ul>
+<body ng-app="registries">
+	<div psui-notification></div>
+	<div id="main-wrapper" ng-class="{'login-page': !security.currentUser}" ng-class="{'main-menu-active': app.mainMenu}">
+		<header ng-include="'partials/header.html'"></header>
+		<div id="main-menu" class="" ng-show="app.mainMenu" ng-include="'dataset/get/partials/main-menu.html'"></div>
+		<div psui-notification></div>
+		<div id="content-wrapper">
+			<div id="content">
+				<ng-view></ng-view>
+				<footer>
+					<div class="footer-content container-fluid">
+						<div class="row">
+							<div class="col-lg-3">
+								&copy; Copyright 2014 Unionsoft s r. o.
+							</div>
+							<div class="col-lg-9 version">
+								CODEBASE : Version ##CODEBASE_VERSION_PLACEHOLDER##, Commit ##CODEBASE_COMMIT_PLACEHOLDER##, Build date ##CODEBASE_BUILDDATE_PLACEHOLDER##<br/>DATASET: Version ##DATASET_VERSION_PLACEHOLDER##, Commit ##DATASET_COMMIT_PLACEHOLDER##
+							</div>
+						</div>
+					</div>
+				</footer>
+			</div>
 		</div>
 	</div>
-</div>
-
-<div class="x-main-content">
-	<ng-view></ng-view>
-</div>
 </body>
 </html>

@@ -16,10 +16,14 @@
 		}
 
 			log.silly('TimestampUnmangler mangler start for %s', objPath);
-			var d= new Date(objFragment);
-			var strDate=''.concat(d.getDate(), '.', d.getMonth() + 1, '.' + d.getFullYear(), ' ', d.getHours(), ':',
-				(''.concat(d.getMinutes()).length === 1 ? '0'+d.getMinutes():d.getMinutes()), ':',
-				(''.concat(d.getSeconds()).length === 1 ? '0'+d.getSeconds() : d.getSeconds()));
+
+			var strDate=objFragment;
+			if (!isNaN(objFragment)){
+					var d= new Date(objFragment);
+					var strDate=''.concat(d.getDate(), '.', d.getMonth() + 1, '.' + d.getFullYear(), ' ', d.getHours(), ':',
+						(''.concat(d.getMinutes()).length === 1 ? '0'+d.getMinutes():d.getMinutes()), ':',
+						(''.concat(d.getSeconds()).length === 1 ? '0'+d.getSeconds() : d.getSeconds()));
+			}
 
 		objectTools.setValue(ctx.o,objPath,strDate);
 		callback();

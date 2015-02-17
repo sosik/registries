@@ -4,6 +4,7 @@
 	angular.module('x-registries', [
 		'ngRoute', 
 		'ngCookies',
+		'xpsui:filters',
 		'xpsui:services', 
 		'xpsui:directives', 
 		'xpsui:controllers',

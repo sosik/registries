@@ -4,6 +4,7 @@ var extend = require('extend');
 var crypto = require('crypto');
 var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
+var recaptcha = require('express-recaptcha');
 
 
 var log = require('./logging.js').getLogger('securityController.js');
@@ -22,7 +23,9 @@ var DEFAULT_CFG = {
 	loginNameCookie : 'loginName',
 	profileCookie : 'profile',
 	tokenExpiration : 3600000,
-	generatedPasswordLen : 8
+	generatedPasswordLen : 8,
+	capchaSite:'6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
+	capchaSecret:'6LfOUQITAAAAAMXVttdodZHJ1SbzKkQ00l43fzFl'
 };
 
 //
@@ -32,6 +35,8 @@ var transport = nodemailer.createTransport('Sendmail');
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
+
+	recaptcha.init(cfg.capchaSite,cfg.capchaSecret);
 
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.userCollection
@@ -738,6 +743,29 @@ this.updateSecurityProfile = function(req, resp) {
 		}
 
 	};
+
+
+	this.forgottenPassword = function(req,resp){
+		if (req.body.email)
+		{
+		}
+
+			req['g-recaptcha-response']=req.body.capcha.challenge;
+
+
+			recaptcha.verify(req,function(success,err){
+					if (success){
+						log.info('Capcha passed')
+					}
+					log.error(err);
+			});
+			var qf=QueryFilter.create();
+			qf.addCriterium("systemCredentials.login.email","eq",req.body.email);
+
+			userDao.find(qf, function(err, data) {
+				resp.json(data);
+			});
+	}
 
 	/**
 	 * method should be used to re-generate new password for user Method should

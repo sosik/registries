@@ -104,7 +104,7 @@ function bergerTable (teams,terms) {
 }
 	function saveBerger(entity,callback){
 
-		var saveSchema= schemaUtilFactory.encodeUri("uri://registries/refereeReport#views/refereeReport/new");
+		var saveSchema= schemaUtilFactory.encodeUri("uri://registries/refereeReports#views/refereeReports/new");
 		var saved=0;
 		var all=[];
 

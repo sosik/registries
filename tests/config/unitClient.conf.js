@@ -12,7 +12,6 @@ module.exports = function (config) {
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
 		frameworks: ['mocha', 'chai'],
 
-
 		// list of files / patterns to load in the browser
 		files: [
 			// Application
@@ -23,6 +22,9 @@ module.exports = function (config) {
 			'../build/client/lib/angular-cookies/angular-cookies.js',
 			'../build/client/lib/angular-translate/angular-translate.js',
 			'../build/client/lib/angular-translate-handler-log/angular-translate-handler-log.min.js',
+			'../build/client/lib/ace-builds/src-min-noconflict/ace.js',
+			'../build/client/lib/angular-ui-ace/ui-ace.js',
+			'../build/client/js/x-safeUrlEncoder.js',
 
 			// Mock
 			'../build/client/lib/angular-mocks/angular-mocks.js',

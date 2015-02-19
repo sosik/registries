@@ -46,6 +46,17 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						});
 					};
 
+					service.getForgotenPassword = function(email,capcha) {
+						return $http({
+							method : 'POST',
+							url : '/forgottenPassword/',
+							data : {
+								email : email,
+								capcha: capcha
+							}
+						});
+					};
+
 					service.getChangePassword = function(currentPassword, newPassword) {
 						return $http({
 							method : 'POST',
@@ -258,6 +269,27 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		SecurityService.getResetPassword($scope.user);
 	};
 } ])
+.controller('security.forgottenCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location,notificationFactory) {
+	// FIXME remove this in production
+	// $scope.user = 'johndoe';
+	// $scope.password = 'johndoe';
+	$scope.email = '';
+	$scope.capcha = '';
+
+	$scope.submit=function(){
+		console.log('XX',$scope.email,$scope.capcha);
+
+
+		SecurityService.getForgotenPassword($scope.email, $scope.capcha).success(function(data) {
+	var mes = {translationCode:'personal.change.password.password.changed'};
+	notificationFactory.info(mes);
+		}).error(function(err,data) {
+	var mes = {translationCode:'security.user.missing.permissions',translationData:data,time:3000};
+	notificationFactory.error(mes);
+		});
+	}
+} ])
+
 //
 .controller(
 		'security.logoutCtrl',

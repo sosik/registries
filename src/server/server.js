@@ -117,6 +117,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/info/accounting/club/:clubId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getClubInfo);
 
 	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req, res){securityCtrl.resetPassword(req, res);});
+	app.post('/forgottenPassword', bodyParser.json(),function(req, res){securityCtrl.forgottenPassword(req, res);});
 	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(),function(req, res){securityCtrl.changePassword(req, res);});
 
 	app.get('/security/permissions',securityService.authenRequired,function(req,res){securityCtrl.getPermissions(req,res);});

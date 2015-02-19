@@ -22,6 +22,12 @@ angular.module('registries')
 		"validation.field.not.unique":"Hodnota nie je unikátna.",
 		"validation.field.not.number":"Hodnota nie je číslo.",
 
+		"forgotten.password.title":"Zabudnuté heslo",
+		"forgotten.password.email":"Email",
+		"forgotten.password.verify":"Kontrola",
+		"forgotten.password.email.placeholder":"Registracny email",
+		"forgotten.password.submit":"Odoslať",
+
 		"menu.member.title": "Člen",
 		"menu.player.title": "Hráč",
 		"menu.fees.title": "Poplatok",
@@ -502,6 +508,13 @@ angular.module('registries')
 
 		"validation.field.not.unique":"Hodnota není unikátní.",
 		"validation.field.not.number":"Hodnota není číslo.",
+
+
+		"forgotten.password.title":"Zabudnuté heslo",
+		"forgotten.password.email":"Email",
+		"forgotten.password.verify":"Kontrola",
+		"forgotten.password.email.placeholder":"Registračný email",
+		"forgotten.password.submit":"Odeslat",
 
 
 		"menu.member.title": "Člen",

@@ -35,6 +35,7 @@
     "object-hash": "~0.3.0",
     "q": "^1.1.2",
     "readline": "0.0.3",
+    "recaptcha": "^1.2.0",
     "supervisor": "^0.6.0",
     "swig": "^1.4.1",
     "winston": "^0.7.3"

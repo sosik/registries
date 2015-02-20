@@ -1,5 +1,6 @@
 var operation = {
 	EXISTS: 'ex', // field exists in structure
+	NOT_EXISTS: 'nex', // field exists in structure
 	EQUAL: 'eq', // field value is equal
 	GREATER: 'gt',
 	GREATER_EQUAL: 'gte',
@@ -36,6 +37,9 @@ var QueryFilter = function() {
 				case operation.EXISTS:
 					c = {f: field, op: operation.EXISTS};
 					break;
+				case operation.NOT_EXISTS:
+						c = {f: field, op: operation.NOT_EXISTS};
+						break;
 				case operation.EQUAL:
 					c = {f: field, op: operation.EQUAL, v: val};
 					break;

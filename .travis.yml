@@ -6,8 +6,8 @@ env:
     - secure: AyQc+X5uNI0Pwibglf1iutu7ddJmE1J1zghK1HXtgVRBDW275C2RN9NUZw5dYihzNResgP7flJK5ol18ffwa8JnSgtRfSte/KfNaF/Fo1My8GMxBVbXbXnY0SLYNxepNXOUn0c9jbhgUPzakpS5SHhP8bXv6uy0FvsO+zCktqow=
 
 node_js:
+  - "0.12"
   - "0.11"
-  - "0.10"
 
 addons:
   sauce_connect: true

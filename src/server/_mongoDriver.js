@@ -213,6 +213,9 @@ module.exports = function(MongoClient, ObjectID, QueryFilter) {
 						query = {'$all': c.v};
 					}  else if (c.op === QueryFilter.operation.EXISTS) {
 						query = {'$exists' : true};
+					}
+					else if (c.op === QueryFilter.operation.NOT_EXISTS) {
+						query = {'$exists' : false};
 					} else {
 						throw new Error('Unsupported operation: ' + c.op);
 					}

@@ -24,7 +24,8 @@
 
 						<div class="form-group">
 							<label for="name" class="col-sm-3 control-label">{{'forgotten.password.verify'|translate}}</label>
-							<div re-captcha ng-model="capcha"></div>
+							<div id="capcha" re-captcha ng-model="capcha"
+							 on-success="setResponse(response)"></div>
 						</div>
 
 						<div class="form-group">

@@ -276,6 +276,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 	$scope.email = '';
 	$scope.capcha = '';
 
+	$scope.setResponse=function(res){
+		console.log(res);
+	}
+
 	$scope.submit=function(){
 		console.log('XX',$scope.email,$scope.capcha);
 

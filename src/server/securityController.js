@@ -4,7 +4,7 @@ var extend = require('extend');
 var crypto = require('crypto');
 var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
-var recaptcha = require('express-recaptcha');
+var Recaptcha = require('recaptcha').Recaptcha;
 
 
 var log = require('./logging.js').getLogger('securityController.js');
@@ -18,6 +18,7 @@ var DEFAULT_CFG = {
 	loginColumnName : 'systemCredentials.login.loginName',
 	groupCollection : 'groups',
 	tokenCollection : 'token',
+	forgottenTokens: 'forgottenTokens',
 	tokenIdColumnName : 'tokenId',
 	securityTokenCookie : 'securityToken',
 	loginNameCookie : 'loginName',
@@ -36,8 +37,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
-	recaptcha.init(cfg.capchaSite,cfg.capchaSecret);
-
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.userCollection
 	});
@@ -48,7 +47,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var renderService = new renderModule.RenderService();
 
-
 	var tokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.tokenCollection
 	});
@@ -57,6 +55,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		collectionName : cfg.groupCollection
 	});
 
+
+	var forgottenTokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
+			collectionName : cfg.forgottenTokens
+	});
+	var self=this;
 	this.getPermissions = function(req, resp) {
 
 		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
@@ -745,26 +748,87 @@ this.updateSecurityProfile = function(req, resp) {
 	};
 
 
-	this.forgottenPassword = function(req,resp){
-		if (req.body.email)
+	this.forgottenReset=function(req,resp,next){
+		if (!req.params.tokenId){
+			next('Missing attribute tokenId');
+			return;
+		}
+		var qf= QueryFilter.create();
+		qf.addCriterium("uuid",QueryFilter.operation.EQUAL,req.params.tokenId);
+		// qf.addCriterium("usedOn",QueryFilter.operation.NOT_EXISTS);
+
+		forgottenTokenDao.find(qf,function(err,data){
+
+			if (err){
+				next(err);
+				return;
+			}
+
+			if (data.length==0){
+				next('Token wasn\'t found '+ req.params.tokenId);
+				return;
+			}
+			var token=data[0];
+			token.usedOn=new Date().getTime();
+
+			forgottenTokenDao.save(token,function(err,data){
+				if (err){
+					next(err);
+					return;
+				}
+				var req={body:{userId:token.userId}};
+				self.resetPassword(req,resp);
+			});
+
+		});
+
+	}
+
+
+	this.forgottenPassword = function(req,resp,next){
+		if (!req.body.email)
 		{
+			next('Missing request property email');
+			return;
+		}
+		if (!req.body.capcha)
+		{
+			next('Missing request property capcha');
+			return;
 		}
 
-			req['g-recaptcha-response']=req.body.capcha.challenge;
+		req.body.capcha.remoteip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
+		var recaptcha = new Recaptcha(cfg.capchaSite,cfg.capchaSecret, req.body.capcha);
 
-			recaptcha.verify(req,function(success,err){
-					if (success){
-						log.info('Capcha passed')
+		recaptcha.verify(function(success, error_code) {
+			if (success) {
+				// resp.send('Recaptcha response valid.');
+				var qf=QueryFilter.create();
+				qf.addCriterium("systemCredentials.login.email","eq",req.body.email);
+
+				userDao.find(qf, function(err, data) {
+					if (data.length===0){
+						resp.status(400).json({message:'invalid.email'});
+						return;
 					}
-					log.error(err);
-			});
-			var qf=QueryFilter.create();
-			qf.addCriterium("systemCredentials.login.email","eq",req.body.email);
+					resp.json(data);
+					var uid=uuid.v4();
+					var token ={ userId:data[0].id,createdOn:new Date().getTime(),uuid:uid};
 
-			userDao.find(qf, function(err, data) {
-				resp.json(data);
-			});
+					forgottenTokenDao.save(token,function (err,saved){
+						self.sendForgottenPasswordMail(req.body.email,uid,data[0],cfg.webserverPublicUrl);
+					});
+
+				});
+			}
+			else {
+				// Redisplay the form.
+				next(error_code);
+			}
+		});
+
+
 	}
 
 	/**
@@ -826,9 +890,27 @@ this.updateSecurityProfile = function(req, resp) {
 			from : 'websupport@unionsoft.sk',
 			to : email,
 			subject : '[Registry] Your new password ',
-			text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{'userName':userName,'userPassword':newPass,'serviceUrl':serviceUrl})
+			text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{userName:userName,userPassword:newPass,serviceUrl:serviceUrl})
 		};
 //		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
+
+		log.verbose('Sending mail ', mailOptions);
+
+		transport.sendMail(mailOptions);
+
+	};
+
+	this.sendForgottenPasswordMail = function(email,tokenId,user,serviceUrl) {
+
+		var userName=user.systemCredentials.login.loginName;
+
+		var mailOptions = {
+			from : 'websupport@unionsoft.sk',
+			to : email,
+			subject : '[Registry] Your new password ',
+			html : renderService.render(renderModule.templates.MAIL_FORGOTEN_PASSWORD_HTML,{userName:userName,tokenId:tokenId,serviceUrl:serviceUrl})
+		};
+		//		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
 
 		log.verbose('Sending mail ', mailOptions);
 

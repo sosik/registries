@@ -34,7 +34,7 @@ module.exports = function(grunt) {
 
 	grunt.renameTask('clean', '_clean');
 	grunt.registerTask('clean', ['_clean:build']);
-	grunt.registerTask('mrpropper', ['clean', '_clean:node_modules', '_clean:bower_components', '_clean:coverage']);
+	grunt.registerTask('mrproper', ['clean', '_clean:node_modules', '_clean:bower_components', '_clean:coverage']);
 
 	grunt.registerTask('doc', 'yuidoc');
 

@@ -79,6 +79,8 @@
 				this.$actionEl.on('click', function(event){
 					self.onCloseButton(event);
 				});
+
+				this.$element.addClass('x-dropdown-action-enabled');
 			}
 		};
 

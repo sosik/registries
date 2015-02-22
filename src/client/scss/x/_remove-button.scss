@@ -1,0 +1,35 @@
+.x-remove-button{
+	.x-remove-button-action{
+		display: none;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		z-index: 1;
+		cursor: pointer;
+		line-height: $dropdown-height;
+		padding: 0px $dropdown-offset;
+
+		&:after{
+			@include icon-font($icon-remove);
+		}
+		&.x-show{
+			display: block;
+		}
+		span{
+			display: none;
+		}
+	}
+
+	&.x-dropdown-action-enabled{
+		.x-remove-button-action{
+			right: 16px + 2 * $dropdown-offset;
+		}
+	}
+	&.x-dropdown{
+		&.x-open{
+			.x-remove-button-action{
+				display: none;
+			}
+		}
+	}
+}

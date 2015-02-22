@@ -2,8 +2,15 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiObjectlink2Edit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', 'xpsui:SchemaUtil',
-	function(log, $parse, dropdownFactory, objectlink2Factory, dataFactory, schemaUtil) {
+	.directive('xpsuiObjectlink2Edit', [
+		'xpsui:logging',
+		'$parse', 
+		'xpsui:DropdownFactory', 
+		'xpsui:Objectlink2Factory',
+		'xpsui:SelectDataFactory', 
+		'xpsui:SchemaUtil',
+		'xpsui:RemoveButtonFactory',
+	function(log, $parse, dropdownFactory, objectlink2Factory, dataFactory, schemaUtil, removeButtonFactory) {
 		return {
 			restrict: 'A',
 			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiObjectlink2Edit'],
@@ -21,7 +28,7 @@
 				this.setup();
 			},
 			link: function(scope, elm, attrs, ctrls) {
-				log.group('String edit Link');
+				log.group('ObjectLink2 edit Link');
 
 				var ngModel = ctrls[0],
 					formControl = ctrls[1] || {},
@@ -30,6 +37,19 @@
 					parseSchemaFragment = $parse(attrs.xpsuiSchema),
 					schemaFragment = parseSchemaFragment(scope)
 				;
+
+				var removeButton = removeButtonFactory.create(elm,{
+					enabled: !!!schemaFragment.required,
+					input: input,
+					onClear: function(){
+						input.empty();
+						scope.$apply(function() {
+							ngModel.$setViewValue(
+								null
+							);
+						});
+					}
+				});
 
 				elm.addClass('x-control');
 				elm.addClass('x-select-edit x-objectlink2-edit');
@@ -44,6 +64,7 @@
 					input.empty();
 
 					if (data) {
+						removeButton.show();
 						schemaUtil.getFieldsSchemaFragment(
 							schemaUtil.concatUri(schemaFragment.$objectLink2.schema, 'new'), 
 							schemaFragment.$objectLink2.fields, 

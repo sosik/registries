@@ -723,13 +723,11 @@ this.updateSecurityProfile = function(req, resp) {
 								resp.status(500).send( err);
 								return;
 							}
-
 							resp.clearCookie(cfg.securityTokenCookie);
 							resp.clearCookie(cfg.loginNameCookie);
 							log.info('user log out ',token.user);
 							resp.send(200);
 						});
-
 					} else {
 						resp.status(500).send('Token does not exist.');
 						log.debug('logout','Token does not exist.',tokenId);
@@ -755,7 +753,7 @@ this.updateSecurityProfile = function(req, resp) {
 		}
 		var qf= QueryFilter.create();
 		qf.addCriterium("uuid",QueryFilter.operation.EQUAL,req.params.tokenId);
-		// qf.addCriterium("usedOn",QueryFilter.operation.NOT_EXISTS);
+		qf.addCriterium("usedOn",QueryFilter.operation.NOT_EXISTS);
 
 		forgottenTokenDao.find(qf,function(err,data){
 
@@ -765,7 +763,8 @@ this.updateSecurityProfile = function(req, resp) {
 			}
 
 			if (data.length==0){
-				next('Token wasn\'t found '+ req.params.tokenId);
+				resp.status(400);
+				resp.json({error:'Token wasn\'t found '+ req.params.tokenId,code:'security.forgotten.token.not.found'});
 				return;
 			}
 			var token=data[0];
@@ -785,7 +784,7 @@ this.updateSecurityProfile = function(req, resp) {
 	}
 
 
-	this.forgottenPassword = function(req,resp,next){
+	this.forgottenToken = function(req,resp,next){
 		if (!req.body.email)
 		{
 			next('Missing request property email');
@@ -809,22 +808,33 @@ this.updateSecurityProfile = function(req, resp) {
 
 				userDao.find(qf, function(err, data) {
 					if (data.length===0){
-						resp.status(400).json({message:'invalid.email'});
+						resp.status(400).json({message:'Mail wasn\'t found',code:'security.forgotten.mail.not.found'});
 						return;
 					}
-					resp.json(data);
 					var uid=uuid.v4();
 					var token ={ userId:data[0].id,createdOn:new Date().getTime(),uuid:uid};
 
-					forgottenTokenDao.save(token,function (err,saved){
-						self.sendForgottenPasswordMail(req.body.email,uid,data[0],cfg.webserverPublicUrl);
+					qf=QueryFilter.create();
+					qf.addCriterium("userId","eq",data[0].id);
+					forgottenTokenDao.delete(qf,function(err,result){
+						if(err){
+							next(err);
+							return;
+						}
+						forgottenTokenDao.save(token,function (err,saved){
+							if(err){
+								next(err);
+								return;
+							}
+							self.sendForgottenPasswordMail(req.body.email,uid,data[0],cfg.webserverPublicUrl);
+							resp.json(data);
+							log.info('Password restet token generated',data[0].id);
+						});
 					});
-
 				});
 			}
 			else {
-				// Redisplay the form.
-				next(error_code);
+				resp.status(400).json({error:'Captcha validation failed',code:'security.forgotten.captcha.validation.failed.'+error_code});
 			}
 		});
 
@@ -889,8 +899,8 @@ this.updateSecurityProfile = function(req, resp) {
 		var mailOptions = {
 			from : 'websupport@unionsoft.sk',
 			to : email,
-			subject : '[Registry] Your new password ',
-			text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{userName:userName,userPassword:newPass,serviceUrl:serviceUrl})
+			subject : '['+serviceUrl+'] Zmena hesla',
+			html : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET_HTML,{userName:userName,userPassword:newPass,serviceUrl:serviceUrl})
 		};
 //		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
 
@@ -907,8 +917,8 @@ this.updateSecurityProfile = function(req, resp) {
 		var mailOptions = {
 			from : 'websupport@unionsoft.sk',
 			to : email,
-			subject : '[Registry] Your new password ',
-			html : renderService.render(renderModule.templates.MAIL_FORGOTEN_PASSWORD_HTML,{userName:userName,tokenId:tokenId,serviceUrl:serviceUrl})
+			subject : '['+serviceUrl+'] Zmena hesla',
+			html : renderService.render(renderModule.templates.MAIL_FORGOTTEN_PASSWORD_HTML,{userName:userName,tokenId:tokenId,serviceUrl:serviceUrl})
 		};
 		//		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
 

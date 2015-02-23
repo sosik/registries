@@ -11,8 +11,9 @@ var DEFAULT_CFG = {
 
 
 var templates = {
-    MAIL_USER_PASSWORD_RESET: 'user-reset-password-txt.tmpl',
-	MAIL_FORGOTEN_PASSWORD_HTML: 'user-forgotten-password-html.tmpl'
+	MAIL_USER_PASSWORD_RESET: 'user-reset-password-txt.tmpl',
+	MAIL_USER_PASSWORD_RESET_HTML: 'user-reset-password-html.tmpl',
+	MAIL_FORGOTTEN_PASSWORD_HTML: 'user-forgotten-password-html.tmpl'
 };
 
 var RenderService = function( options) {

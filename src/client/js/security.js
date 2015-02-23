@@ -46,14 +46,21 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						});
 					};
 
-					service.getForgotenPassword = function(email,capcha) {
+					service.getForgotenToken = function(email,capcha) {
 						return $http({
 							method : 'POST',
-							url : '/forgottenPassword/',
+							url : '/forgotten/token/',
 							data : {
 								email : email,
 								capcha: capcha
 							}
+						});
+					};
+
+					service.getForgotenPasswordReset = function(token) {
+						return $http({
+							method : 'get',
+							url : '/forgotten/reset/'+token
 						});
 					};
 
@@ -269,29 +276,40 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		SecurityService.getResetPassword($scope.user);
 	};
 } ])
-.controller('security.forgottenCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location,notificationFactory) {
-	// FIXME remove this in production
-	// $scope.user = 'johndoe';
-	// $scope.password = 'johndoe';
+.controller('security.forgottenCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','$timeout','psui.notificationFactory','$window', function($scope, SecurityService, $rootScope, $location,$timeout,notificationFactory,$window) {
 	$scope.email = '';
 	$scope.capcha = '';
-
-	$scope.setResponse=function(res){
-		console.log(res);
-	}
-
+	$scope.done=false;
 	$scope.submit=function(){
-		console.log('XX',$scope.email,$scope.capcha);
+		SecurityService.getForgotenToken($scope.email, $scope.capcha).success(function(data) {
+			var mes = {translationCode:'security.forgotten.token.generated',time:3000};
 
+			notificationFactory.info(mes);
+			$scope.done=true;
 
-		SecurityService.getForgotenPassword($scope.email, $scope.capcha).success(function(data) {
-	var mes = {translationCode:'personal.change.password.password.changed'};
-	notificationFactory.info(mes);
+			$timeout(function(){	console.log('redirect');$location.path('/'); },5000);
 		}).error(function(err,data) {
-	var mes = {translationCode:'security.user.missing.permissions',translationData:data,time:3000};
-	notificationFactory.error(mes);
+			var mes = {translationCode:err.code,translationData:err.data,time:3000};
+			notificationFactory.error(mes);
+			$window.Recaptcha.reload();
 		});
 	}
+} ])
+.controller('security.forgottenResetCtrl', [ '$scope', 'security.SecurityService', '$routeParams', '$location','$timeout','psui.notificationFactory', function($scope, SecurityService, $routeParams, $location,$timeout,notificationFactory) {
+
+	var token=$routeParams.token;
+	$scope.done=false;
+
+	SecurityService.getForgotenPasswordReset(token).success(function(data) {
+		var mes = {translationCode:'security.forgotten.reset.done',time:3000};
+		notificationFactory.info(mes);
+		$timeout(function(){	$location.path('/');},5000);
+	}).error(function(err,data) {
+		var mes = {translationCode:err.code,translationData:err.data,time:3000};
+		notificationFactory.error(mes);
+	});
+
+
 } ])
 
 //

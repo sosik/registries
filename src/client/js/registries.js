@@ -30,11 +30,16 @@ angular.module('registries', [
 	$routeProvider.when('/statistics', {templateUrl: '/partials/registry-view.html', controller: 'statistics.viewCtrl', permissions:['Registry - read']});
 	$routeProvider.when('/massmailing', {templateUrl: '/partials/massmailing.html', controller: 'massmailing.editCtrl', permissions:['Registry - write']});
 	$routeProvider.when('/login', {templateUrl: '/partials/login.html', controller: 'security.loginCtrl'});
-	$routeProvider.when('/forgotten', {templateUrl: '/partials/forgotten.html', controller: 'security.forgottenCtrl'});
+
+
+
 	$routeProvider.when('/personal-change-password', {templateUrl: '/partials/personal-change-password.html', controller: 'security.personalChangePasswordCtrl', permissions:['System User']});
 	$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/security-group-edit.html', controller: 'security.groupEditCtrl', permissions:['Security - read']});
 	$routeProvider.when('/security/user/edit', {templateUrl: 'partials/security-user-edit.html', controller: 'security.userEditCtrl',permissions:['Security - read']});
 	$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/security-profile-edit.html', controller: 'security.profileEditCtrl',permissions:['Security - read']});
+	$routeProvider.when('/forgotten', {templateUrl: '/partials/forgotten.html', controller: 'security.forgottenCtrl'});
+	$routeProvider.when('/forgotten/reset/:token', {templateUrl: '/partials/forgottenReset.html', controller: 'security.forgottenResetCtrl'});
+
 	$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/registry-new.html', controller: 'registry.newCtrl',permissions:['Registry - write']});
 	$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/registry-view.html', controller: 'registry.viewCtrl',permissions:['Registry - read']});
 	$routeProvider.when('/registry/custom/:template/:schema/:id', {templateUrl: function(params) {

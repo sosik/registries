@@ -783,6 +783,10 @@ this.updateSecurityProfile = function(req, resp) {
 
 	}
 
+	this.captchaSiteKey=function(req,resp,next){
+		resp.json({key:cfg.capchaSite})
+	};
+
 
 	this.forgottenToken = function(req,resp,next){
 		if (!req.body.email)

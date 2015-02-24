@@ -59,10 +59,17 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 					service.getForgotenPasswordReset = function(token) {
 						return $http({
-							method : 'get',
+							method : 'GET',
 							url : '/forgotten/reset/'+token
 						});
 					};
+					service.getCaptchaKey = function(token) {
+						return $http({
+							method : 'GET',
+							url : '/captcha/sitekey/'
+						});
+					};
+
 
 					service.getChangePassword = function(currentPassword, newPassword) {
 						return $http({
@@ -276,12 +283,27 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		SecurityService.getResetPassword($scope.user);
 	};
 } ])
-.controller('security.forgottenCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','$timeout','psui.notificationFactory','$window', function($scope, SecurityService, $rootScope, $location,$timeout,notificationFactory,$window) {
+.controller('security.forgottenCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','$timeout','psui.notificationFactory','$window','reCAPTCHA', function($scope, SecurityService, $rootScope, $location,$timeout,notificationFactory,$window,reCAPTCHA) {
 	$scope.email = '';
 	$scope.capcha = '';
 	$scope.done=false;
+
+
+	SecurityService.getCaptchaKey().success(function(json){
+		reCAPTCHA.destroy();
+		reCAPTCHA.setPublicKey(json.key);
+		reCAPTCHA.create('captcha');
+		reCAPTCHA.reload();
+	}).error(
+		function(err,data) {
+			var mes = {translationCode:err.code,translationData:err.data,time:3000};
+			notificationFactory.error(mes);
+		}
+	);
+
+
 	$scope.submit=function(){
-		SecurityService.getForgotenToken($scope.email, $scope.capcha).success(function(data) {
+		SecurityService.getForgotenToken($scope.email, {challenge:reCAPTCHA.challenge(),response:reCAPTCHA.response()}).success(function(data) {
 			var mes = {translationCode:'security.forgotten.token.generated',time:3000};
 
 			notificationFactory.info(mes);

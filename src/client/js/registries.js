@@ -57,7 +57,7 @@ angular.module('registries', [
 }])
 .config(function (reCAPTCHAProvider) {
             // required: please use your own key :)
-            reCAPTCHAProvider.setPublicKey('6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS');
+            // reCAPTCHAProvider.setPublicKey('6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS');
 
             // optional: gets passed into the Recaptcha.create call
             reCAPTCHAProvider.setOptions({

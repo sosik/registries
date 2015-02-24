@@ -119,6 +119,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req, res){securityCtrl.resetPassword(req, res);});
 	app.post('/forgotten/token', bodyParser.json(),securityCtrl.forgottenToken);
 	app.get('/forgotten/reset/:tokenId', bodyParser.json(),securityCtrl.forgottenReset);
+	app.get('/captcha/sitekey',securityCtrl.captchaSiteKey);
 	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(),function(req, res){securityCtrl.changePassword(req, res);});
 
 	app.get('/security/permissions',securityService.authenRequired,function(req,res){securityCtrl.getPermissions(req,res);});

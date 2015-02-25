@@ -116,11 +116,14 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/info/accounting/user/:userId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getUserInfo);
 	app.get('/info/accounting/club/:clubId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getClubInfo);
 
-	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(),function(req, res){securityCtrl.resetPassword(req, res);});
-	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(),function(req, res){securityCtrl.changePassword(req, res);});
+	app.post('/resetPassword',securityService.hasPermFilter('Security - write').check, bodyParser.json(),securityCtrl.resetPassword);
+	app.post('/forgotten/token', bodyParser.json(),securityCtrl.forgottenToken);
+	app.get('/forgotten/reset/:tokenId', bodyParser.json(),securityCtrl.forgottenReset);
+	app.get('/captcha/sitekey',securityCtrl.captchaSiteKey);
+	app.post('/changePassword',securityService.hasPermFilter('System User').check, bodyParser.json(),securityCtrl.changePassword);
+	app.get('/security/permissions',securityService.authenRequired,securityCtrl.getPermissions);
+	app.get('/security/search/schemas',securityService.authenRequired,securityCtrl.getSearchSchemas);
 
-	app.get('/security/permissions',securityService.authenRequired,function(req,res){securityCtrl.getPermissions(req,res);});
-	app.get('/security/search/schemas',securityService.authenRequired,function(req,res){securityCtrl.getSearchSchemas(req,res);});
 	app.post('/massmailing/send',securityService.hasPermFilter('Registry - write').check,bodyParser.json(),function(req,res){massmailingCtr.sendMail(req,res);});
 
 	app.get('/statistics',securityService.hasPermFilter('Registry - read').check,function(req,res){statisticsCtrl.getStatistics(req,res);});

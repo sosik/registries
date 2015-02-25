@@ -4,6 +4,7 @@ var extend = require('extend');
 var crypto = require('crypto');
 var uuid = require('node-uuid');
 var nodemailer = require('nodemailer');
+var Recaptcha = require('recaptcha').Recaptcha;
 
 
 var log = require('./logging.js').getLogger('securityController.js');
@@ -17,18 +18,28 @@ var DEFAULT_CFG = {
 	loginColumnName : 'systemCredentials.login.loginName',
 	groupCollection : 'groups',
 	tokenCollection : 'token',
+	forgottenTokens: 'forgottenTokens',
 	tokenIdColumnName : 'tokenId',
 	securityTokenCookie : 'securityToken',
 	loginNameCookie : 'loginName',
 	profileCookie : 'profile',
 	tokenExpiration : 3600000,
-	generatedPasswordLen : 8
+	generatedPasswordLen : 8,
+	captchaSite:'6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
+	captchaSecret:'6LfOUQITAAAAAMXVttdodZHJ1SbzKkQ00l43fzFl'
 };
 
 //
 
 var transport = nodemailer.createTransport('Sendmail');
 
+/**
+* @module server
+* @submodule security
+* @class SecurityController
+* @constructor
+*
+*/
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
@@ -43,7 +54,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var renderService = new renderModule.RenderService();
 
-
 	var tokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
 		collectionName : cfg.tokenCollection
 	});
@@ -52,6 +62,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		collectionName : cfg.groupCollection
 	});
 
+
+	var forgottenTokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
+			collectionName : cfg.forgottenTokens
+	});
+	var self=this;
+
+	/**
+	* Method returns array of available permissions.
+	* <br> Permissions are loaded in schema uri://registries/security#permissions
+	* @method getPermissions
+	*/
 	this.getPermissions = function(req, resp) {
 
 		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
@@ -66,6 +87,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	};
 
 
+	/**
+	* Method returns array of available  security profiles.
+	* @method getProfiles
+	*/
 	this.getProfiles = function(req, resp) {
 
 		profileDao.list({},function(err,data){
@@ -77,6 +102,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 	};
 
+	/**
+	* Method returns permissions of url-specified user.
+	* @method getUserPermissions
+	*/
 	this.getUserPermissions = function(req, resp) {
 
 		var userId = req.url.substring(18);
@@ -105,6 +134,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	};
 
+	/**
+	* Method returns groups of url-specified user.
+	* @method getUserGroups
+	*/
 	this.getUserGroups = function(req, resp) {
 
 		var userId = req.url.substring(18, req.url.lenght);
@@ -141,6 +174,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		return false;
 	};
 
+	/**
+	* Method should be used to update users security settings.
+	* @method updateUserSecurity
+	*/
 	this.updateUserSecurity = function(req, resp) {
 
 		var userId = req.body.userId;
@@ -190,8 +227,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 
 	};
-
-this.updateSecurityProfile = function(req, resp) {
+	/**
+	* Method should be used to update security profile settings.
+	* @method updateSecurityProfile
+	*/
+	this.updateSecurityProfile = function(req, resp) {
 
 		var profileId = req.body.profileId;
 		profileDao.get(profileId, function(err, profile) {
@@ -286,10 +326,18 @@ this.updateSecurityProfile = function(req, resp) {
 		return false;
 	}
 
+	/**
+	* Method returns array of schemas that can be used for search.
+	* @method getSearchSchemas
+	*/
 	this.getSearchSchemas=function(req,resp){
 		resp.status(200).json(schemaRegistry.getSchemaNamesBySuffix('search'));
 	};
 
+	/**
+	* Method updates Security group settings.
+	* @method updateGroupSecurity
+	*/
 	this.updateGroupSecurity = function(req, resp) {
 
 		var groupId = req.body.oid;
@@ -339,8 +387,9 @@ this.updateSecurityProfile = function(req, resp) {
 	 * Does login based on provided password and login name. It queries DB and
 	 * if verification of crediatials successed it stores new security token
 	 * into DB and sets that token as cookies.
+	 * @method login
 	 */
-	this.login = function(req, resp) {
+	this.login = function(req, resp,next) {
 		log.debug('login atempt', req.body.login);
 
 		var t = this;
@@ -355,7 +404,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 			if (data.length !== 1) {
 				log.warn('Found more or less then 1 user with provided credentials', data.length);
-				resp.status(500).send( 'users found ' + data.length);
+				resp.next( 'users found ' + data.length);
 				return;
 			}
 
@@ -365,7 +414,7 @@ this.updateSecurityProfile = function(req, resp) {
 			t.verifyUserPassword(user, req.body.password, function(err) {
 				if (err) {
 					log.debug('Password verification failed', err);
-					resp.status(500).send('Not authenticated.');
+					resp.status(400).json({message:err,code:err});
 					return;
 				}
 
@@ -373,7 +422,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 					if (err) {
 						log.warn('Failed to resolvePermissions permissions', err);
-						resp.status(500).send('Internal Error');
+						resp.next('Internal Error');
 						return;
 					}
 					// if ('System User' in  permissions&&permissions['System User'] ){
@@ -381,7 +430,7 @@ this.updateSecurityProfile = function(req, resp) {
 							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
-									resp.status(500).send('Internal Error');
+									resp.next('Internal Error');
 									return;
 								}
 								t.setCookies(resp, token, user.systemCredentials.login.loginName);
@@ -389,11 +438,11 @@ this.updateSecurityProfile = function(req, resp) {
 
 								t.resolveProfiles(user,function(err,u){
 									if (err) {
-										resp.send(500,err);
+										resp.next(err);
 										return;
 									}
 
-									resp.status(200).json(deflateUser(u,permissions));
+									resp.json(deflateUser(u,permissions));
 								});
 
 								return;
@@ -410,7 +459,10 @@ this.updateSecurityProfile = function(req, resp) {
 			});
 		});
 	};
-
+	/**
+	* Method should be use to select actuall user profile.
+	* @method selectProfile
+	*/
 	this.selectProfile=function(req,resp){
 
 		log.silly('Selecting profile or user', req.loginName,req.body.profileId);
@@ -451,7 +503,9 @@ this.updateSecurityProfile = function(req, resp) {
 		});
 
 	};
-
+	/**
+	* selectProfile
+	*/
 	this.resolveProfiles=function (user,callback){
 
 		profileDao.list({},function(err,data){
@@ -578,6 +632,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 	/**
 	 * Returns current user for valid securityToken cookie see this.authFilter
+	 * @method getCurrentUser
 	 */
 	this.getCurrentUser = function(req, resp) {
 		var t = this;
@@ -685,8 +740,10 @@ this.updateSecurityProfile = function(req, resp) {
 		log.verbose('setProfileCookie',profile );
 	};
 
-
-	this.logout = function(req, resp) {
+	/**
+	* @method logout
+	*/
+	this.logout = function(req, resp, next) {
 
 		var tokenId = req.cookies.securityToken;
 
@@ -701,10 +758,10 @@ this.updateSecurityProfile = function(req, resp) {
 			}, function(err, tokens) {
 
 				if (err) {
-					resp.status(500).send(err);
+					next(err);
+					return;
 
 				} else {
-
 					if (tokens.length > 0) {
 						var token = tokens[0];
 						token.valid = false;
@@ -712,27 +769,23 @@ this.updateSecurityProfile = function(req, resp) {
 						tokenDao.update(token, function(err) {
 							if (err) {
 								log.error('Failed to update security token', err);
-								resp.status(500).send( err);
+								next(err);
 								return;
 							}
-
 							resp.clearCookie(cfg.securityTokenCookie);
 							resp.clearCookie(cfg.loginNameCookie);
 							log.info('user log out ',token.user);
-							resp.send(200);
+							resp.json();
 						});
-
 					} else {
-						resp.status(500).send('Token does not exist.');
+						next('Token does not exist.');
 						log.debug('logout','Token does not exist.',tokenId);
 						return;
 					}
-
 				}
-
 			});
 		} else {
-			resp.status(500).send('SecurityToken missings.');
+			resp.nexts('SecurityToken missings.');
 			log.debug('logout','SecurityToken missings.',tokenId);
 			return;
 		}
@@ -740,19 +793,154 @@ this.updateSecurityProfile = function(req, resp) {
 	};
 
 	/**
+	* Method is called to restet user password by 'forgotten-passwort-reset-token'.
+	* Method uses uri parameter tokenId to find valid token to reset user password.
+	* <br> Limitations: <li> Token can be usede only once.
+					<li> only single active token for single user
+	* @method forgottenReset
+	*/
+	this.forgottenReset=function(req,resp,next){
+		if (!req.params.tokenId){
+			next('Missing attribute tokenId');
+			return;
+		}
+		var qf= QueryFilter.create();
+		qf.addCriterium("uuid",QueryFilter.operation.EQUAL,req.params.tokenId);
+		qf.addCriterium("usedOn",QueryFilter.operation.NOT_EXISTS);
+
+		forgottenTokenDao.find(qf,function(err,data){
+
+			if (err){
+				next(err);
+				return;
+			}
+
+			if (data.length==0){
+				resp.status(400);
+				resp.json({error:'Token wasn\'t found '+ req.params.tokenId,code:'security.forgotten.token.not.found'});
+				return;
+			}
+			var token=data[0];
+			token.usedOn=new Date().getTime();
+
+			forgottenTokenDao.save(token,function(err,data){
+				if (err){
+					next(err);
+					return;
+				}
+				var req={body:{userId:token.userId}};
+				self.resetPassword(req,resp);
+			});
+
+		});
+
+	}
+
+	/**
+	* Method is used to get Captcha-Site-Key  from backend configuration.
+	* Value is return in json object {key:"--captha_site_key--"}
+	* @method captchaSiteKey
+	*/
+
+	this.captchaSiteKey=function(req,resp,next){
+		resp.json({key:cfg.captchaSite})
+	};
+
+	/**
+	* Method can be used to validate captcha request. Validation delegates call to googles recaptcha.
+	* Call uses captcha-key-pair read from configuration properties ()
+
+	*
+	*/
+
+	this.verifyCaptcha=function(captcha,cb){
+
+		var recaptcha = new Recaptcha(cfg.captchaSite,cfg.captchaSecret, captcha);
+		recaptcha.verify(cb);
+	};
+
+	/**
+	* Method is uset to create forgotten-password-reset-token for user with specified 'registration email'.
+	* Method uses parameters send in json body  in form {email:"v1",captcha:{challenge:"v2",resutl:"v3"}}.
+	* Methods removes users previous reset tokens. New tokens in mail to specified email address.
+
+	* <br> Method validates:
+	* <li> existence of user with registration-email
+	* <li> captcha result
+	* @method forgottenToken
+	*/
+	this.forgottenToken = function(req,resp,next){
+		if (!req.body.email)
+		{
+			next('Missing request property email');
+			return;
+		}
+		if (!req.body.captcha)
+		{
+			next('Missing request property captcha');
+			return;
+		}
+
+		req.body.captcha.remoteip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+
+
+		self.verifyCaptcha(req.body.captcha,function(success, error_code) {
+			if (success) {
+				// resp.send('Recaptcha response valid.');
+				var qf=QueryFilter.create();
+				qf.addCriterium("systemCredentials.login.email","eq",req.body.email);
+
+				userDao.find(qf, function(err, data) {
+					if (data.length===0){
+						resp.status(400).json({message:'Mail wasn\'t found',code:'security.forgotten.mail.not.found'});
+						return;
+					}
+					var uid=uuid.v4();
+					var token ={ userId:data[0].id,createdOn:new Date().getTime(),uuid:uid};
+
+					qf=QueryFilter.create();
+					qf.addCriterium("userId","eq",data[0].id);
+					forgottenTokenDao.delete(qf,function(err,result){
+						if(err){
+							next(err);
+							return;
+						}
+						forgottenTokenDao.save(token,function (err,saved){
+							if(err){
+								next(err);
+								return;
+							}
+							self.sendForgottenPasswordMail(req.body.email,uid,data[0],cfg.webserverPublicUrl);
+							resp.json();
+							log.info('Password restet token generated',data[0].id);
+						});
+					});
+				});
+			}
+			else {
+				resp.status(400).json({error:'Captcha validation failed',code:'security.forgotten.captcha.validation.failed.'+error_code});
+			}
+		});
+
+
+	}
+
+	/**
 	 * method should be used to re-generate new password for user Method should
 	 * be used by authorized person ( no 'accidental' password resets)
+	 * @method resetPassword
 	 */
-	this.resetPassword = function(req, resp) {
+	this.resetPassword = function(req, resp,next) {
 
 		// FIXME construct criteria bt QueryFilter
 		var t = this;
 		userDao.get(req.body.userId, function(err, data) {
 
 			if (err) {
-				resp.status(500).send(err);
+				resp.next(err);
 				log.error('resetPassword',err);
-				throw err;
+				return;
 			}
 
 			var randomPass = t.generatePassword();
@@ -769,7 +957,8 @@ this.updateSecurityProfile = function(req, resp) {
 
 					userDao.update(user, function(err) {
 						if (err) {
-							resp.status(500).send(err);
+							resp.next(err);
+							return;
 						}
 
 						log.info('User password reset',user.systemCredentials.login);
@@ -777,13 +966,13 @@ this.updateSecurityProfile = function(req, resp) {
 						// parameter
 						t.sendResetPasswordMail(user.systemCredentials.login.email,randomPass,user,cfg.webserverPublicUrl);
 
-						resp.status(200).json({email:user.systemCredentials.login.email});
+						resp.json({email:user.systemCredentials.login.email});
 					});
 				});
 
 			} else {
 				log.debug('resetPassword',  'User mail not specified',user.systemCredentials.login );
-				resp.status(500).send('User mail not specified.');
+				resp.next('User mail not specified.');
 			}
 
 		});
@@ -797,8 +986,8 @@ this.updateSecurityProfile = function(req, resp) {
 		var mailOptions = {
 			from : 'websupport@unionsoft.sk',
 			to : email,
-			subject : '[Registry] Your new password ',
-			text : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET,{'userName':userName,'userPassword':newPass,'serviceUrl':serviceUrl})
+			subject : '['+serviceUrl+'] Zmena hesla',
+			html : renderService.render(renderModule.templates.MAIL_USER_PASSWORD_RESET_HTML,{userName:userName,userPassword:newPass,serviceUrl:serviceUrl})
 		};
 //		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
 
@@ -808,33 +997,53 @@ this.updateSecurityProfile = function(req, resp) {
 
 	};
 
+	this.sendForgottenPasswordMail = function(email,tokenId,user,serviceUrl) {
+
+		var userName=user.systemCredentials.login.loginName;
+
+		var mailOptions = {
+			from : 'websupport@unionsoft.sk',
+			to : email,
+			subject : '['+serviceUrl+'] Zmena hesla',
+			html : renderService.render(renderModule.templates.MAIL_FORGOTTEN_PASSWORD_HTML,{userName:userName,tokenId:tokenId,serviceUrl:serviceUrl})
+		};
+		//		html : '<h3>New Password</h3><h4> Your new password is: <b>' + newPass + ' </b> </h4>'
+
+		log.verbose('Sending mail ', mailOptions);
+
+		transport.sendMail(mailOptions);
+
+	};
+
 	/**
-	 * method should be used to re-generate new password for user Method should
-	 * be used by authorized person ( no 'accidental' password resets)
-	 */
-	this.changePassword = function(req, resp) {
+	* method should be used to re-generate new password for user Method should
+	* be used by authorized person ( no 'accidental' password resets)
+	* @method changePassword
+	*/
+	this.changePassword = function(req, resp, next) {
 		log.silly('Changing password for user', req.loginName);
 		if (!req.loginName) {
-			resp.status(500).send('User must be logged in for password change');
-			throw 'User must be logged in for password change';
+			next('User must be logged in for password change');
+			return;
 		}
 
 		var t = this;
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 
 			if (err) {
-				resp.status(500).send(err);
+				next(err);
+				return;
 			} else {
 
 				if (data.length != 1) {
-					resp.status(500).send('user not found');
+					next('user not found');
 					return;
 				} else {
 					var user = data[0];
 					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
 						if (err) {
 							log.debug('Old passwrod does not match!');
-							resp.status(500).send('Old password does not match!');
+							resp.status(400).send({message:'Old password does not match!',code:'security.password.does.not.match'});
 							return;
 						} else {
 
@@ -846,11 +1055,11 @@ this.updateSecurityProfile = function(req, resp) {
 								user.systemCredentials.login.salt = newsalt;
 								userDao.update(user, function(err) {
 									if (err) {
-										resp.status(500).send(err);
+										next(err);
 										return;
 									} else {
 										log.info('Password successfully changed',user.systemCredentials.login.loginName);
-										resp.send(200);
+										resp.json();
 										return;
 									}
 								});
@@ -932,9 +1141,6 @@ this.updateSecurityProfile = function(req, resp) {
 								}
 								log.debug('profile set to' , profileId);
 							});
-
-
-
 
 							t.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
 								if (err) {

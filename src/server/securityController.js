@@ -33,6 +33,13 @@ var DEFAULT_CFG = {
 
 var transport = nodemailer.createTransport('Sendmail');
 
+/**
+* @module server
+* @submodule security
+* @class SecurityController
+* @constructor
+*
+*/
 var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
@@ -60,6 +67,12 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			collectionName : cfg.forgottenTokens
 	});
 	var self=this;
+
+	/**
+	* Method returns array of available permissions.
+	* <br> Permissions are loaded in schema uri://registries/security#permissions
+	* @method getPermissions
+	*/
 	this.getPermissions = function(req, resp) {
 
 		var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
@@ -74,6 +87,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	};
 
 
+	/**
+	* Method returns array of available  security profiles.
+	* @method getProfiles
+	*/
 	this.getProfiles = function(req, resp) {
 
 		profileDao.list({},function(err,data){
@@ -85,6 +102,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 	};
 
+	/**
+	* Method returns permissions of url-specified user.
+	* @method getUserPermissions
+	*/
 	this.getUserPermissions = function(req, resp) {
 
 		var userId = req.url.substring(18);
@@ -113,6 +134,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	};
 
+	/**
+	* Method returns groups of url-specified user.
+	* @method getUserGroups
+	*/
 	this.getUserGroups = function(req, resp) {
 
 		var userId = req.url.substring(18, req.url.lenght);
@@ -149,6 +174,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		return false;
 	};
 
+	/**
+	* Method should be used to update users security settings.
+	* @method updateUserSecurity
+	*/
 	this.updateUserSecurity = function(req, resp) {
 
 		var userId = req.body.userId;
@@ -198,8 +227,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 
 	};
-
-this.updateSecurityProfile = function(req, resp) {
+	/**
+	* Method should be used to update security profile settings.
+	* @method updateSecurityProfile
+	*/
+	this.updateSecurityProfile = function(req, resp) {
 
 		var profileId = req.body.profileId;
 		profileDao.get(profileId, function(err, profile) {
@@ -294,10 +326,18 @@ this.updateSecurityProfile = function(req, resp) {
 		return false;
 	}
 
+	/**
+	* Method returns array of schemas that can be used for search.
+	* @method getSearchSchemas
+	*/
 	this.getSearchSchemas=function(req,resp){
 		resp.status(200).json(schemaRegistry.getSchemaNamesBySuffix('search'));
 	};
 
+	/**
+	* Method updates Security group settings.
+	* @method updateGroupSecurity
+	*/
 	this.updateGroupSecurity = function(req, resp) {
 
 		var groupId = req.body.oid;
@@ -347,6 +387,7 @@ this.updateSecurityProfile = function(req, resp) {
 	 * Does login based on provided password and login name. It queries DB and
 	 * if verification of crediatials successed it stores new security token
 	 * into DB and sets that token as cookies.
+	 * @method login
 	 */
 	this.login = function(req, resp) {
 		log.debug('login atempt', req.body.login);
@@ -418,7 +459,10 @@ this.updateSecurityProfile = function(req, resp) {
 			});
 		});
 	};
-
+	/**
+	* Method should be use to select actuall user profile.
+	* @method selectProfile
+	*/
 	this.selectProfile=function(req,resp){
 
 		log.silly('Selecting profile or user', req.loginName,req.body.profileId);
@@ -459,7 +503,9 @@ this.updateSecurityProfile = function(req, resp) {
 		});
 
 	};
-
+	/**
+	* selectProfile
+	*/
 	this.resolveProfiles=function (user,callback){
 
 		profileDao.list({},function(err,data){
@@ -586,6 +632,7 @@ this.updateSecurityProfile = function(req, resp) {
 
 	/**
 	 * Returns current user for valid securityToken cookie see this.authFilter
+	 * @method getCurrentUser
 	 */
 	this.getCurrentUser = function(req, resp) {
 		var t = this;
@@ -693,7 +740,9 @@ this.updateSecurityProfile = function(req, resp) {
 		log.verbose('setProfileCookie',profile );
 	};
 
-
+	/**
+	* @method logout
+	*/
 	this.logout = function(req, resp) {
 
 		var tokenId = req.cookies.securityToken;
@@ -745,7 +794,13 @@ this.updateSecurityProfile = function(req, resp) {
 
 	};
 
-
+	/**
+	* Method is called to restet user password by 'forgotten-passwort-reset-token'.
+	* Method uses uri parameter tokenId to find valid token to reset user password.
+	* <br> Limitations: <li> Token can be usede only once.
+					<li> only single active token for single user
+	* @method forgottenReset
+	*/
 	this.forgottenReset=function(req,resp,next){
 		if (!req.params.tokenId){
 			next('Missing attribute tokenId');
@@ -783,11 +838,26 @@ this.updateSecurityProfile = function(req, resp) {
 
 	}
 
+	/**
+	* Method is used to get Captcha-Site-Key  from backend configuration.
+	* Value is return in json object {key:"--captha_site_key--"}
+	* @method captchaSiteKey
+	*/
+
 	this.captchaSiteKey=function(req,resp,next){
 		resp.json({key:cfg.capchaSite})
 	};
 
+	/**
+	* Method is uset to create forgotten-password-reset-token for user with specified 'registration email'.
+	* Method uses parameters send in json body  in form {email:"v1",captcha:{challenge:"v2",resutl:"v3"}}.
+	* Methods removes users previous reset tokens. New tokens in mail to specified email address.
 
+	* <br> Method validates:
+	* <li> existence of user with registration-email
+	* <li> captcha result
+	* @method forgottenToken
+	*/
 	this.forgottenToken = function(req,resp,next){
 		if (!req.body.email)
 		{
@@ -831,7 +901,7 @@ this.updateSecurityProfile = function(req, resp) {
 								return;
 							}
 							self.sendForgottenPasswordMail(req.body.email,uid,data[0],cfg.webserverPublicUrl);
-							resp.json(data);
+							resp.send();
 							log.info('Password restet token generated',data[0].id);
 						});
 					});
@@ -848,6 +918,7 @@ this.updateSecurityProfile = function(req, resp) {
 	/**
 	 * method should be used to re-generate new password for user Method should
 	 * be used by authorized person ( no 'accidental' password resets)
+	 * @method resetPassword
 	 */
 	this.resetPassword = function(req, resp) {
 
@@ -933,9 +1004,10 @@ this.updateSecurityProfile = function(req, resp) {
 	};
 
 	/**
-	 * method should be used to re-generate new password for user Method should
-	 * be used by authorized person ( no 'accidental' password resets)
-	 */
+	* method should be used to re-generate new password for user Method should
+	* be used by authorized person ( no 'accidental' password resets)
+	* @method changePassword
+	*/
 	this.changePassword = function(req, resp) {
 		log.silly('Changing password for user', req.loginName);
 		if (!req.loginName) {

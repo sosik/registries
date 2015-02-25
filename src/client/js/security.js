@@ -52,13 +52,13 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 						});
 					};
 
-					service.getForgotenToken = function(email,capcha) {
+					service.getForgotenToken = function(email,captcha) {
 						return $http({
 							method : 'POST',
 							url : '/forgotten/token/',
 							data : {
 								email : email,
-								capcha: capcha
+								captcha: captcha
 							}
 						});
 					};
@@ -328,7 +328,7 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 			notificationFactory.info(mes);
 			$scope.done=true;
 
-			$timeout(function(){	console.log('redirect');$location.path('/'); },5000);
+			$timeout(function(){$location.path('/'); },5000);
 		}).error(function(err,data) {
 			var mes = {translationCode:err.code,translationData:err.data,time:3000};
 			notificationFactory.error(mes);

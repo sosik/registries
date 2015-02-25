@@ -25,8 +25,8 @@ var DEFAULT_CFG = {
 	profileCookie : 'profile',
 	tokenExpiration : 3600000,
 	generatedPasswordLen : 8,
-	capchaSite:'6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
-	capchaSecret:'6LfOUQITAAAAAMXVttdodZHJ1SbzKkQ00l43fzFl'
+	captchaSite:'6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
+	captchaSecret:'6LfOUQITAAAAAMXVttdodZHJ1SbzKkQ00l43fzFl'
 };
 
 //
@@ -389,7 +389,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	 * into DB and sets that token as cookies.
 	 * @method login
 	 */
-	this.login = function(req, resp) {
+	this.login = function(req, resp,next) {
 		log.debug('login atempt', req.body.login);
 
 		var t = this;
@@ -404,7 +404,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (data.length !== 1) {
 				log.warn('Found more or less then 1 user with provided credentials', data.length);
-				resp.status(500).send( 'users found ' + data.length);
+				resp.next( 'users found ' + data.length);
 				return;
 			}
 
@@ -414,7 +414,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			t.verifyUserPassword(user, req.body.password, function(err) {
 				if (err) {
 					log.debug('Password verification failed', err);
-					resp.status(500).send('Not authenticated.');
+					resp.status(400).json({message:err,code:err});
 					return;
 				}
 
@@ -422,7 +422,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 					if (err) {
 						log.warn('Failed to resolvePermissions permissions', err);
-						resp.status(500).send('Internal Error');
+						resp.next('Internal Error');
 						return;
 					}
 					// if ('System User' in  permissions&&permissions['System User'] ){
@@ -430,7 +430,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
-									resp.status(500).send('Internal Error');
+									resp.next('Internal Error');
 									return;
 								}
 								t.setCookies(resp, token, user.systemCredentials.login.loginName);
@@ -438,11 +438,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 								t.resolveProfiles(user,function(err,u){
 									if (err) {
-										resp.send(500,err);
+										resp.next(err);
 										return;
 									}
 
-									resp.status(200).json(deflateUser(u,permissions));
+									resp.json(deflateUser(u,permissions));
 								});
 
 								return;
@@ -743,7 +743,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	/**
 	* @method logout
 	*/
-	this.logout = function(req, resp) {
+	this.logout = function(req, resp, next) {
 
 		var tokenId = req.cookies.securityToken;
 
@@ -758,10 +758,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			}, function(err, tokens) {
 
 				if (err) {
-					resp.status(500).send(err);
+					next(err);
+					return;
 
 				} else {
-
 					if (tokens.length > 0) {
 						var token = tokens[0];
 						token.valid = false;
@@ -769,25 +769,23 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						tokenDao.update(token, function(err) {
 							if (err) {
 								log.error('Failed to update security token', err);
-								resp.status(500).send( err);
+								next(err);
 								return;
 							}
 							resp.clearCookie(cfg.securityTokenCookie);
 							resp.clearCookie(cfg.loginNameCookie);
 							log.info('user log out ',token.user);
-							resp.send(200);
+							resp.json();
 						});
 					} else {
-						resp.status(500).send('Token does not exist.');
+						next('Token does not exist.');
 						log.debug('logout','Token does not exist.',tokenId);
 						return;
 					}
-
 				}
-
 			});
 		} else {
-			resp.status(500).send('SecurityToken missings.');
+			resp.nexts('SecurityToken missings.');
 			log.debug('logout','SecurityToken missings.',tokenId);
 			return;
 		}
@@ -845,7 +843,20 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	*/
 
 	this.captchaSiteKey=function(req,resp,next){
-		resp.json({key:cfg.capchaSite})
+		resp.json({key:cfg.captchaSite})
+	};
+
+	/**
+	* Method can be used to validate captcha request. Validation delegates call to googles recaptcha.
+	* Call uses captcha-key-pair read from configuration properties ()
+
+	*
+	*/
+
+	this.verifyCaptcha=function(captcha,cb){
+
+		var recaptcha = new Recaptcha(cfg.captchaSite,cfg.captchaSecret, captcha);
+		recaptcha.verify(cb);
 	};
 
 	/**
@@ -864,17 +875,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			next('Missing request property email');
 			return;
 		}
-		if (!req.body.capcha)
+		if (!req.body.captcha)
 		{
-			next('Missing request property capcha');
+			next('Missing request property captcha');
 			return;
 		}
 
-		req.body.capcha.remoteip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+		req.body.captcha.remoteip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-		var recaptcha = new Recaptcha(cfg.capchaSite,cfg.capchaSecret, req.body.capcha);
 
-		recaptcha.verify(function(success, error_code) {
+
+		self.verifyCaptcha(req.body.captcha,function(success, error_code) {
 			if (success) {
 				// resp.send('Recaptcha response valid.');
 				var qf=QueryFilter.create();
@@ -901,7 +912,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								return;
 							}
 							self.sendForgottenPasswordMail(req.body.email,uid,data[0],cfg.webserverPublicUrl);
-							resp.send();
+							resp.json();
 							log.info('Password restet token generated',data[0].id);
 						});
 					});
@@ -920,16 +931,16 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	 * be used by authorized person ( no 'accidental' password resets)
 	 * @method resetPassword
 	 */
-	this.resetPassword = function(req, resp) {
+	this.resetPassword = function(req, resp,next) {
 
 		// FIXME construct criteria bt QueryFilter
 		var t = this;
 		userDao.get(req.body.userId, function(err, data) {
 
 			if (err) {
-				resp.status(500).send(err);
+				resp.next(err);
 				log.error('resetPassword',err);
-				throw err;
+				return;
 			}
 
 			var randomPass = t.generatePassword();
@@ -946,7 +957,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 					userDao.update(user, function(err) {
 						if (err) {
-							resp.status(500).send(err);
+							resp.next(err);
+							return;
 						}
 
 						log.info('User password reset',user.systemCredentials.login);
@@ -954,13 +966,13 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						// parameter
 						t.sendResetPasswordMail(user.systemCredentials.login.email,randomPass,user,cfg.webserverPublicUrl);
 
-						resp.status(200).json({email:user.systemCredentials.login.email});
+						resp.json({email:user.systemCredentials.login.email});
 					});
 				});
 
 			} else {
 				log.debug('resetPassword',  'User mail not specified',user.systemCredentials.login );
-				resp.status(500).send('User mail not specified.');
+				resp.next('User mail not specified.');
 			}
 
 		});
@@ -1008,29 +1020,30 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	* be used by authorized person ( no 'accidental' password resets)
 	* @method changePassword
 	*/
-	this.changePassword = function(req, resp) {
+	this.changePassword = function(req, resp, next) {
 		log.silly('Changing password for user', req.loginName);
 		if (!req.loginName) {
-			resp.status(500).send('User must be logged in for password change');
-			throw 'User must be logged in for password change';
+			next('User must be logged in for password change');
+			return;
 		}
 
 		var t = this;
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 
 			if (err) {
-				resp.status(500).send(err);
+				next(err);
+				return;
 			} else {
 
 				if (data.length != 1) {
-					resp.status(500).send('user not found');
+					next('user not found');
 					return;
 				} else {
 					var user = data[0];
 					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
 						if (err) {
 							log.debug('Old passwrod does not match!');
-							resp.status(500).send('Old password does not match!');
+							resp.status(400).send({message:'Old password does not match!',code:'security.password.does.not.match'});
 							return;
 						} else {
 
@@ -1042,11 +1055,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								user.systemCredentials.login.salt = newsalt;
 								userDao.update(user, function(err) {
 									if (err) {
-										resp.status(500).send(err);
+										next(err);
 										return;
 									} else {
 										log.info('Password successfully changed',user.systemCredentials.login.loginName);
-										resp.send(200);
+										resp.json();
 										return;
 									}
 								});
@@ -1128,9 +1141,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								}
 								log.debug('profile set to' , profileId);
 							});
-
-
-
 
 							t.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
 								if (err) {

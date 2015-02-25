@@ -1,6 +1,12 @@
 'use strict';
 angular.module('security', [ 'generic-search', 'schema-utils'])
 //
+/**
+* Set of functionality to support security pages.
+* @module client
+* @submodule security
+* @class SecurityControllers
+*/
 .factory(
 		'security.SecurityService',
 		[
@@ -235,7 +241,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 					return service;
 				} ])
-//
+/**
+* Login page controller
+* @method security.loginCtrl
+*/
 .controller('security.loginCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','psui.notificationFactory', function($scope, SecurityService, $rootScope, $location,notificationFactory) {
 	// FIXME remove this in production
 	// $scope.user = 'johndoe';
@@ -283,6 +292,16 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		SecurityService.getResetPassword($scope.user);
 	};
 } ])
+/**
+* Controller used to handele Forgotten Password Page.
+* Page Form reads user email and recaptcha.
+* <br> Controller does:
+* <li> reads Captcha Site Key
+* <li> recreates captcha compoment
+* <li> handles submit to send captha and email address
+* <li> handles potential backend validation  errors
+* @method security.forgottenCtrl
+*/
 .controller('security.forgottenCtrl', [ '$scope', 'security.SecurityService', '$rootScope', '$location','$timeout','psui.notificationFactory','$window','reCAPTCHA', function($scope, SecurityService, $rootScope, $location,$timeout,notificationFactory,$window,reCAPTCHA) {
 	$scope.email = '';
 	$scope.capcha = '';
@@ -317,6 +336,14 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 		});
 	}
 } ])
+/**
+* Controller used to handle Forgotten Password Reset.
+* Page reads tokenId from page url.
+* <br> Controller does:
+* <li> calls backend service
+* <li> handles potential backend validation  errors
+* @method security.forgottenResetCtrl
+*/
 .controller('security.forgottenResetCtrl', [ '$scope', 'security.SecurityService', '$routeParams', '$location','$timeout','psui.notificationFactory', function($scope, SecurityService, $routeParams, $location,$timeout,notificationFactory) {
 
 	var token=$routeParams.token;
@@ -334,7 +361,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 } ])
 
-//
+/**
+* Login out controller
+* @method security.logoutCtrl
+*/
 .controller(
 		'security.logoutCtrl',
 		[ '$scope', 'security.SecurityService', '$location',
@@ -348,6 +378,11 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 				}
 		])
 //
+
+/**
+* Security group edit page controller
+* @method security.groupEditCtrl
+*/
 .controller(
 		'security.groupEditCtrl',
 		[
@@ -443,7 +478,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 				} ])
 
-//
+/**
+* User Security edit page controller
+* @method security.userEditCtrl
+*/
 .controller(
 		'security.userEditCtrl',
 		[ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory',
@@ -641,7 +679,11 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					};
 
 				} ])
-//
+
+/**
+* Security Profile edit page controller
+* @method security.profileEditCtrl
+*/
 .controller(
 		'security.profileEditCtrl',
 		[ '$scope', '$routeParams', 'security.SecurityService', 'generic-search.GenericSearchFactory', 'schema-utils.SchemaUtilFactory',
@@ -914,7 +956,10 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 					};
 
 				} ])
-//
+/**
+* User password change page controller
+* @method security.personalChangePasswordCtrl
+*/
 .controller(
 		'security.personalChangePasswordCtrl',
 		[ '$scope', 'security.SecurityService', '$rootScope', '$location', 'psui.notificationFactory',
@@ -937,4 +982,5 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 							});
 						}
 					};
-				} ]);
+				}
+]);

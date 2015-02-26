@@ -154,6 +154,7 @@ angular.module('registries')
 		"security.user.edit.added.profiles":"Pridelené profily",
 		"security.user.edit.available.profiles":"Dostupné profily",
 		"security.profile.edit.modification.done":"Úspešne uložené",
+		"security.current.password.does.not.match": "Heslo sa nezhoduje.",
 
 		"schema.editor.save": "Uložiť",
 		"schema.editor.edit": "Upraviť",
@@ -678,6 +679,7 @@ angular.module('registries')
 		"date.nov": "Lis",
 		"date.dec": "Pro",
 		"date.current.day": "Dnešní den",
+
 		"security.user.edit.searching": "Vyhledávání",
 		"security.user.edit.value": "Hodnota",
 		"security.user.edit.operator": "Operátor",
@@ -697,6 +699,8 @@ angular.module('registries')
 		"security.user.edit.cancel": "Zrušit",
 		"security.user.edit.reset.password":"Resetovat heslo",
 		"security.user.missing.permissions":"Nedostatečná práva {{data}}",
+		"security.current.password.does.not.match": "Heslo sa nezhoduje.",
+
 		"errors.validation.required": "Povinné pole",
 		"errors.validation.psuiUnique": "Hodnota už v systéme existuje",
 		"security.user.edit.login.data":"Přihlašovací údaje",

@@ -392,33 +392,33 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	this.login = function(req, resp,next) {
 		log.debug('login atempt', req.body.login);
 
-		var t = this;
 
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
 			if (err) {
 				log.warn('Failed to list users from DB', err);
-				resp.send(500, err);
+				next(err);
 				return;
 			}
 
 
 			if (data.length !== 1) {
 				log.warn('Found more or less then 1 user with provided credentials', data.length);
-				resp.next( 'users found ' + data.length);
+				// next( 'users found ' + data.length);
+				resp.status(400).json({code:'login.authentication.failed'});
 				return;
 			}
 
 			// we are sure there is exactly one user
 			var user = data[0];
 
-			t.verifyUserPassword(user, req.body.password, function(err) {
+			self.verifyUserPassword(user, req.body.password, function(err) {
 				if (err) {
 					log.debug('Password verification failed', err);
 					resp.status(400).json({message:err,code:err});
 					return;
 				}
 
-				t.resolvePermissions(user,req.selectedProfileId,function (err,permissions){
+				self.resolvePermissions(user,req.selectedProfileId,function (err,permissions){
 
 					if (err) {
 						log.warn('Failed to resolvePermissions permissions', err);
@@ -426,17 +426,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						return;
 					}
 					// if ('System User' in  permissions&&permissions['System User'] ){
-						t.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
-							t.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
+						self.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
+							self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
 									resp.next('Internal Error');
 									return;
 								}
-								t.setCookies(resp, token, user.systemCredentials.login.loginName);
+								self.setCookies(resp, token, user.systemCredentials.login.loginName);
 								log.info('user logged in',user.id);
 
-								t.resolveProfiles(user,function(err,u){
+								self.resolveProfiles(user,function(err,u){
 									if (err) {
 										resp.next(err);
 										return;
@@ -471,7 +471,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			throw 'User must be logged in for password change';
 		}
 
-		var t = this;
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, users) {
 
 			if (err) {
@@ -497,7 +496,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				return;
 			}
 
-			t.setProfileCookie(resp,req.body.profileId);
+			self.setProfileCookie(resp,req.body.profileId);
 			resp.sendStatus(200);
 
 		});
@@ -540,7 +539,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			callback(null,[]);
 			return;
 		}
-		var t = this;
 		if (!selectedProfileId){
 			callback(null,[]);
 			return;
@@ -635,7 +633,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	 * @method getCurrentUser
 	 */
 	this.getCurrentUser = function(req, resp) {
-		var t = this;
 		//FIXME use userId
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 			if (err) {
@@ -650,7 +647,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				return;
 			}
 			var user = data[0];
-			t.resolvePermissions(user,req.selectedProfileId, function(err, permissions) {
+			self.resolvePermissions(user,req.selectedProfileId, function(err, permissions) {
 				if (err) {
 					resp.status(500).send(err);
 					return;
@@ -934,7 +931,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	this.resetPassword = function(req, resp,next) {
 
 		// FIXME construct criteria bt QueryFilter
-		var t = this;
 		userDao.get(req.body.userId, function(err, data) {
 
 			if (err) {
@@ -943,13 +939,13 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				return;
 			}
 
-			var randomPass = t.generatePassword();
-			var newsalt = t.generatePassword();
+			var randomPass = self.generatePassword();
+			var newsalt = self.generatePassword();
 
 			var user = data;
 			if (user.systemCredentials.login.email) {
 
-				t.hashPassword(newsalt, randomPass, function(err, passwordHash) {
+				self.hashPassword(newsalt, randomPass, function(err, passwordHash) {
 
 					user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
 
@@ -964,7 +960,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						log.info('User password reset',user.systemCredentials.login);
 						// FIXME make mail address field as configurable
 						// parameter
-						t.sendResetPasswordMail(user.systemCredentials.login.email,randomPass,user,cfg.webserverPublicUrl);
+						self.sendResetPasswordMail(user.systemCredentials.login.email,randomPass,user,cfg.webserverPublicUrl);
 
 						resp.json({email:user.systemCredentials.login.email});
 					});
@@ -1027,7 +1023,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			return;
 		}
 
-		var t = this;
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName), function(err, data) {
 
 			if (err) {
@@ -1040,17 +1035,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					return;
 				} else {
 					var user = data[0];
-					t.verifyUserPassword(user, req.body.currentPassword, function(err) {
+					self.verifyUserPassword(user, req.body.currentPassword, function(err) {
 						if (err) {
 							log.debug('Old passwrod does not match!');
-							resp.status(400).send({message:'Old password does not match!',code:'security.password.does.not.match'});
+							resp.status(400).send({message:'Old password does not match!',code:'security.current.password.does.not.match'});
 							return;
 						} else {
 
 							var newPass = req.body.newPassword;
-							var newsalt = t.generatePassword();
+							var newsalt = self.generatePassword();
 
-							t.hashPassword(newsalt, newPass, function(err, passwordHash) {
+							self.hashPassword(newsalt, newPass, function(err, passwordHash) {
 								user.systemCredentials.login.passwordHash = passwordHash.toString('base64');
 								user.systemCredentials.login.salt = newsalt;
 								userDao.update(user, function(err) {
@@ -1086,7 +1081,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		crypto.pbkdf2(password, salt.toString('base64'), 1000, 256, callback);
 	};
 
-	var t = this;
 	this.authFilter = function(req, res, next) {
 
 		req.authenticated = false;
@@ -1142,7 +1136,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								log.debug('profile set to' , profileId);
 							});
 
-							t.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
+							self.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
 								if (err) {
 									log.error(err);
 									next(err);

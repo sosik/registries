@@ -108,10 +108,10 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchemaCount);
 	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchema);
 
-	app.post('/login', bodyParser.json(), function(req, res){securityCtrl.login(req, res);});
-	app.get('/logout', bodyParser.json(), function(req, res){securityCtrl.logout(req, res);});
-	app.get('/user/current',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.getCurrentUser(req, res);});
-	app.post('/user/profile',securityService.authenRequired, bodyParser.json(), function(req, res){securityCtrl.selectProfile(req, res);});
+	app.post('/login', bodyParser.json(),securityCtrl.login);
+	app.get('/logout', bodyParser.json(),securityCtrl.logout);
+	app.get('/user/current',securityService.authenRequired, bodyParser.json(),securityCtrl.getCurrentUser);
+	app.post('/user/profile',securityService.authenRequired, bodyParser.json(), securityCtrl.selectProfile);
 
 	app.get('/info/accounting/user/:userId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getUserInfo);
 	app.get('/info/accounting/club/:clubId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getClubInfo);

@@ -970,15 +970,15 @@ angular.module('security', [ 'generic-search', 'schema-utils'])
 
 					$scope.changePassword = function() {
 						if ($scope.newPassword !== $scope.newPasswordCheck) {
-					var mes = {translationCode:'personal.change.password.passwords.not.equal'};
-					notificationFactory.warn(mes);
+							var mes = {translationCode:'personal.change.password.passwords.not.equal',time:3000};
+							notificationFactory.error(mes);
 						} else {
 							SecurityService.getChangePassword($scope.currentPassword, $scope.newPassword).success(function(data) {
-						var mes = {translationCode:'personal.change.password.password.changed'};
-						notificationFactory.info(mes);
+								var mes = {translationCode:'personal.change.password.password.changed',time:3000};
+								notificationFactory.info(mes);
 							}).error(function(err,data) {
-						var mes = {translationCode:'security.user.missing.permissions',translationData:data,time:3000};
-						notificationFactory.error(mes);
+								var mes = {translationCode: err.code || 'security.user.missing.permissions',translationData:data,time:3000};
+								notificationFactory.error(mes);
 							});
 						}
 					};

@@ -87,7 +87,6 @@ body{
 
 #login-form {
 	fieldset {
-		color: $color-text;
 		border: none;
 		width: 16 * $fixed-header-height;
 		margin-top: $fixed-header-height * 2;
@@ -95,76 +94,27 @@ body{
 		margin-right: auto;
 		position: relative;
 
-		a, a:HOVER, a:VISITED {
-			color: $color-main;
-		}
-
-		.login-form-title {
-			text-transform: uppercase;
-			display: block;
-			padding: 10px 0px;
-			margin-bottom: 7.5px;
-			border-bottom: 1px solid #b0b0b0;
-			font-weight: bold;
-			font-size: $font-size-middle;
-		}
-	
 		.login-form-lang {
 			position: absolute;
 			right: 13px;
 			top: 20px;
 		}
-
-		button {
-			color: $color-main-reverse;
-			background-color: $color-main;
-			border-color: $color-main-darker;
-			padding: 6px 12px;
-			border: 1px solid transparent;
-			white-space: nowrap;
-			padding: 6px 12px;
-			font-weight: normal;
-			text-align: center;
-			vertical-align: middle;
-			cursor: pointer;
-			font-size: $font-size-middle;
-			line-height: 1.42857;
-		}
-		
-		button:hover, button:active {
-			background-color: $color-main-highlight;
-			border-color: $color-main-highlight-darker;
-		}
-
-		div.col-login-row {
-			clear: both;
-			margin-bottom: 4px;
-			position: relative;
-
-			div.col-login-label {
-				width: 33%;
-				float: left;
-				position: relative;
-				padding-top: 9px;
-			}
-	
-			div.col-login-value {
-				width: 66%;
-				float: right;
-				position: relative;
-				
-				input {
-					width: 100%;
-					padding: 4px 12px;
-					background-color: #fafafa;
-					box-shadow: none !important;
-					border: 1px solid #b0b0b0;
-					color: #555555;
-					height: 34px;
-				}
-			}
-		}
-
 	}
+}
 
+button.btn-primary {
+	padding: 6px 12px;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 6px 12px;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	font-size: $font-size-middle;
+	line-height: 1.42857;
+}
+
+a:HOVER {
+	text-decoration: underline;
 }

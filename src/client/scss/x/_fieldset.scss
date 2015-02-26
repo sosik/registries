@@ -14,31 +14,44 @@
 	margin-bottom: $fieldset-offset;
 }
 
-.x-fieldset-content {
-	display: table;
+.x-fieldset-title {
+	text-transform: uppercase;
+	display: block;
+	font-weight: bold;
+	font-size: $font-size-middle;
+	padding: 10px 0px;
+	margin-bottom: 7.5px;
+	border-bottom: 1px solid #b0b0b0;
+}
+
+div.x-fieldset-row {
+	clear: both;
+	position: relative;
 	width: 100%;
-}
 
-.x-fieldset-row {
-	display: table-row;
-	box-sizing: border-box;
-}
+	div.x-fieldset-label {
+		width: 33%;
+		float: left;
+		position: relative;
+		padding-top: 9px;
+	}
 
-.x-fieldset-label {
-	display: table-cell;
-	box-sizing: border-box;
-	min-width: 150px;
-	font-style: oblique;
-	line-height: em($line-height);
-	padding: $fieldset-offset 0px;
-	vertical-align: middle;
-	// min-height: $fieldset-lebel-min-width;
+	div.x-fieldset-value {
+		width: 66%;
+		float: right;
+		position: relative;
+		margin-bottom: 8px;
 
-}
-.x-fieldset-value {
-	display: table-cell;
-	width: 100%;
-	// min-height: $fieldset-lebel-min-width;
+		input {
+			width: 100%;
+			padding: 4px 12px;
+			background-color: #fafafa;
+			box-shadow: none !important;
+			border: 1px solid #b0b0b0;
+			color: #555555;
+			height: 34px;
+		}
+	}
 }
 
 @media screen and (max-width: $screen-sm-max) and (min-width: $screen-sm) {

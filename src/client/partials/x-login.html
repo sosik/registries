@@ -3,28 +3,25 @@
 		<div>
 			<div>
 				<fieldset>
-					<span class="login-form-title">{{'login.title'|translate}}</span>
+					<span class="x-fieldset-title">{{'login.title'|translate}}</span>
 					<div ng-controller="langSelectCtrl" class="login-form-lang"><a href="#" ng-click="setLang('sk')">SK</a> | <a href="#" ng-click="setLang('cz')">CZ</a></div>
 
-					<div ng-disabled="profiles" class="col-login-row">
-						<div class="col-login-label">
+					<div ng-disabled="profiles" class="x-fieldset-row">
+						<div class="x-fieldset-label">
 							<label for="name">{{'login.loginName' | translate}}</label>
 						</div>
-						<div class="col-login-value">
+						<div class="x-fieldset-value">
 							<input ng-disabled="profiles" type="text" ng-model="user"
 								placeholder="{{'login.loginName' | translate}}"
 								autocomplete="off">
 						</div>
 					</div>
 
-					<div ng-disabled="profiles" class="col-login-row">
-					</div>
-
-					<div class="col-login-row">
-						<div class="col-login-label">
+					<div class="x-fieldset-row">
+						<div class="x-fieldset-label">
 							<label for="password">{{'login.password' | translate}}</label>
 						</div>
-						<div class="col-login-value">
+						<div class="x-fieldset-value">
 							<input ng-disabled="profiles" type="password" ng-model="password" ng-keyup="$event.keyCode == 13 && login()"
 								placeholder="{{'login.password' | translate}}"
 								autocomplete="off">
@@ -41,15 +38,12 @@
 						</div>
 					</div>
 
-					<div ng-disabled="profiles" class="col-login-row">
-					</div>
-
-					<div ng-disabled="profiles" class="col-login-row">
-						<div class="col-login-label">&nbsp;</div>
-						<div class="col-login-value">
+					<div ng-disabled="profiles" class="x-fieldset-row">
+						<div class="x-fieldset-label">&nbsp;</div>
+						<div class="x-fieldset-value">
 							<div>
-								<button ng-show="profiles" ng-click="selectProfile()"><i></i> {{'login.selected.profile.continue' | translate}}</button>
-								<button ng-show="!profiles" ng-click="login()"><i></i> {{'login.title' | translate}}</button>
+								<button ng-show="profiles" ng-click="selectProfile()" class="btn-primary"><i></i> {{'login.selected.profile.continue' | translate}}</button>
+								<button ng-show="!profiles" ng-click="login()" class="btn-primary"><i></i> {{'login.title' | translate}}</button>
 							</div>
 						</div>
 					</div>

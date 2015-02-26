@@ -153,7 +153,8 @@ var SchemaTools = function() {
 	this.getSchemaNamesBySuffix = function(suffix) {
 		//TODO do traversing in schema structure URI and fragment information
 		var retVal=[];
-		var suffix2='#'+suffix;
+		// var suffix2='#'+suffix;
+		var suffix2=suffix;
 		for (var schemaUrl in schemasCache) {
 				if (schemaUrl.indexOf(suffix2, schemaUrl.length - suffix2.length) !== -1){
 					retVal.push(schemaUrl.toString());

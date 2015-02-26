@@ -6,18 +6,18 @@
 				<div>
 
 					<fieldset>
-						<legend>{{'generic.search.searching' | translate}} ({{entity}})</legend>
+						<span class="x-fieldset-title">{{'generic.search.searching' | translate}} ({{entity}})</span>
 
 
-						<div ng-repeat="crit in searchCrit">
+						<div ng-repeat="crit in searchCrit" class="x-fieldset-row">
 
-							<div>
+							<div class="x-fieldset-col-4">
 								<select ng-change="selectedCritAttribute(crit)"
 									ng-model="crit.attribute"
 									ng-options="att.title group by att.group for att in searchDef.attributes"></select>
 							</div>
 
-							<div>
+							<div class="x-fieldset-col-2">
 								<select
 									ng-model="crit.operator"
 									ng-Init="crit.operator=searchDef.operators[0]"
@@ -26,31 +26,33 @@
 								</select>
 							</div>
 
-							<div ng-show="!crit.attribute.render">
+							<div ng-show="!crit.attribute.render" class="x-fieldset-col-4">
 								<input type="text" id="name" name="name" ng-model="crit.value"
 									placeholder="" class="ng-pristine ng-valid"
 									autocomplete="off">
 							</div>
 
-							<div ng-show="crit.attribute.render.objectLink">
+							<div ng-show="crit.attribute.render.objectLink" class="x-fieldset-col-4">
 								<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
 							</div>
 
-							<div ng-show="crit.attribute.render.datepicker">
+							<div ng-show="crit.attribute.render.datepicker" class="x-fieldset-col-4">
 								<input psui-datepicker schema-fragment="crit.attribute.schemaFragment" ng-model="crit.value" />
 							</div>
 
-							<div>
-								<button ng-click="removeCrit($index)" type="button"><i class="glyphicon-remove"></i>{{'generic.search.remove' | translate}}</button>
+							<div class="x-fieldset-col-2 pull-right">
+								<button ng-click="removeCrit($index)" type="button" class="btn-clear"><i class="icon-remove"></i> {{'generic.search.remove' | translate}}</button>
 							</div>
 						</div>
 
-						<div>
-							<div>
-								<button ng-click="addCrit()" type="button"><i class="glyphicon-plus"></i>{{'generic.search.add' | translate}}</button>
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-col-4">
+								<button ng-click="addCrit()" type="button" class="btn-secondary"><i class="icon-add"></i> {{'generic.search.add' | translate}}</button>
 							</div>
-							<div>
-								<button ng-disabled="disabledSearch" ng-click="search()"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
+							<div class="x-fieldset-col-2">&nbsp;</div>
+							<div class="x-fieldset-col-2">&nbsp;</div>
+							<div class="x-fieldset-col-4 pull-right">
+								<button ng-disabled="disabledSearch" ng-click="search()" class="btn-primary"><i class="icon-search"></i> {{'generic.search.search' | translate}}</button>
 							</div>
 						</div>
 					</fieldset>
@@ -61,22 +63,25 @@
 				<div ng-show="data!=null">
 
 					<fieldset>
-						<legend>{{'generic.search.result.of.searching' | translate}}</legend>
+						<span class="x-fieldset-title">{{'generic.search.result.of.searching' | translate}}</span>
 						<div>
-							<table>
+							<table >
 								<thead>
 									<tr>
-										<th  ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
+										<th  ng-class=" {'action-sort':true, 'icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" 
+												ng-repeat="header in headers" 
+												class="data-col"
+												ng-click="setSortBy(header)">{{header.title}} </th>
 										<th></th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr ng-show="data.length>0" ng-repeat="obj in data"
 										>
-										<td ng-repeat="header in headers">{{getVal(header.field, $eval('obj.'+header.field))}}</td>
+										<td ng-repeat="header in headers" >{{getVal(header.field, $eval('obj.'+header.field))}}</td>
 										<td class="psui-actions-holder">
 											<a ng-href="{{getLink($index)}}" class="psui-btn psui-view-btn">
-												<i></i><span>{{'generic.search.view' | translate}}</span>
+												<i class="icon-open"></i> <span>{{'generic.search.view' | translate}}</span>
 											</a>
 										</td>
 									</tr>
@@ -90,9 +95,14 @@
 							</table>
 						</div>&nbsp;
 						<div/>
-						<div>
-							<button ng-show="data" ng-click='exportCsv()'> {{'generic.search.export.csv' | translate}} </button>
-							<button ng-show="data" ng-click='searchNext()'> >>> </button>
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-col-4">
+								<button ng-show="data" ng-click='exportCsv()' class="btn-secondary"> {{'generic.search.export.csv' | translate}} </button>
+							</div>
+							<div class="x-fieldset-col-4">&nbsp;</div>
+							<div class="x-fieldset-col-4 pull-right">
+								<button ng-show="data" ng-click='searchNext()' class="btn-secondary"> >>> </button>
+							</div>
 						</div>
 					</fieldset>
 				</div>

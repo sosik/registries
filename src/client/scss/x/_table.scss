@@ -1,0 +1,52 @@
+table {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-spacing: 0px;
+	border-collapse: collapse;
+
+	thead {
+		background: $color-secondary;
+		color: $color-main-reverse;
+
+		th {
+			padding: 8px;
+			font-weight: normal;
+			text-align: left;
+		}
+
+		th.data-col:HOVER {
+			background-color: $color-main;
+			cursor: pointer;
+		}
+
+		th.data-colXXX:after {
+			position: absolute;
+			right: 4px;
+			top: 50%;
+			margin-top: -7px;
+		}
+	}
+
+	tbody {
+		tr:nth-child(2n) {
+			background-color: $color-background-soft;
+		}
+
+		tr:HOVER {
+			background-color: $color-main;
+		}
+		
+		td {
+			padding: 8px;
+			line-height: 1.42857;
+			vertical-align: top;
+			border-top: 1px solid $color-border;
+			border-bottom: 1px solid $color-border;
+		}
+
+		a, a:VISITED, a:HOVER {
+			color: $color-text;
+		}
+	}
+}

@@ -22,12 +22,23 @@ button.btn-primary {
 	border-color: $color-main-darker;
 }
 
-button:hover, button:active {
+button.btn-primary:hover, button.btn-primary:active {
 	background-color: $color-main-highlight;
 	border-color: $color-main-highlight-darker;
 }
 
-#login-form {
+button.btn-secondary {
+	color: $color-main-reverse;
+	background-color: $color-secondary;
+	border-color: $color-secondary-darker;
+}
+
+button.btn-secondary:hover, button.btn-secondary:active {
+	background-color: $color-secondary-highlight;
+	border-color: $color-secondary-highlight-darker;
+}
+
+#login-form, #SearchPage {
 	fieldset {
 		color: $color-text;
 	}

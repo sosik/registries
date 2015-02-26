@@ -102,6 +102,15 @@ body{
 	}
 }
 
+#SearchPage {
+	fieldset {
+		border: none;
+		width: 16 * $fixed-header-height;
+		margin-top: $fixed-header-height;
+		position: relative;
+	}
+}
+
 button.btn-primary {
 	padding: 6px 12px;
 	border: 1px solid transparent;
@@ -115,6 +124,37 @@ button.btn-primary {
 	line-height: 1.42857;
 }
 
+button.btn-secondary {
+	padding: 6px 12px;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 6px 12px;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	font-size: $font-size-middle;
+	line-height: 1.42857;
+}
+
+button.btn-clear {
+	padding: 6px 12px;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 6px 12px;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	font-size: $font-size-middle;
+	line-height: 1.42857;
+	background: none;
+}
+
 a:HOVER {
 	text-decoration: underline;
+}
+
+.pull-right {
+	text-align: right;
 }

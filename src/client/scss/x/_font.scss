@@ -22,6 +22,11 @@ $icon-chevron-up: $fa-var-chevron-up !default;
 $icon-search: $fa-var-search !default;
 $icon-refresh: $fa-var-refresh !default;
 $icon-remove: $fa-var-remove !default;
+$icon-sign-in: $fa-var-sign-in !default;
+$icon-remove: $fa-var-times !default;
+$icon-add: $fa-var-plus !default;
+$icon-search: $fa-var-search !default;
+$icon-open: $fa-var-eye !default;
 
 // icons
 // -------------------------
@@ -29,3 +34,10 @@ $icon-remove: $fa-var-remove !default;
 .icon-user:before { content: $icon-user; }
 .icon-power-off:before { content: $icon-power-off; }
 .icon-pencil{ content: $icon-pencil; }
+.icon-login:before { content: $icon-sign-in }
+.icon-remove:before { content: $icon-remove }
+.icon-add:before { content: $icon-add }
+.icon-search:before { content: $icon-search }
+.icon-open:before { content: $icon-open }
+.icon-chevron-up:before { content: $icon-chevron-up }
+.icon-chevron-down:before { content: $icon-chevron-down }

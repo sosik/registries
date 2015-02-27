@@ -49,6 +49,15 @@ body{
 	overflow-x: auto;
 }
 
+.login-page{
+	.x-main-content {
+		left: 0px;
+	}
+	.x-logo{
+		margin-left: 0px;
+	}
+}
+
 .x-form {
 }
 
@@ -88,7 +97,7 @@ body{
 #login-form {
 	fieldset {
 		border: none;
-		width: 16 * $fixed-header-height;
+		max-width: 16 * $fixed-header-height;
 		margin-top: $fixed-header-height * 2;
 		margin-left: auto;
 		margin-right: auto;

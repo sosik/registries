@@ -39,7 +39,7 @@
 	<script src="js/x-safeUrlEncoder.js"></script>
 
 </head>
-<body ng-app="x-registries">
+<body ng-app="x-registries" ng-class="{'login-page': !security.currentUser.systemCredentials.login.loginName}">
 
 <div xpsui-notification></div>
 
@@ -53,13 +53,13 @@
 			<li ng-show="security.currentUser.systemCredentials.login.loginName"><span class="text-block"
 				><span>{{security.currentUser.systemCredentials.login.loginName}}</span><i class="icon-user"></i></span
 			></li>
-			<li ng-show="security.currentUser.systemCredentials.login.loginName" class=""><a 
-				href="#"><span>Odhlásit se</span><i class="icon-power-off"></i></a
+			<li ng-show="security.currentUser.systemCredentials.login.loginName" class="" ng-controller="xpsui:SecurityLogoutCtrl"><a 
+				href="#" ng-click="logout();"><span>{{'header.log.out' | translate}}</span><i class="icon-power-off"></i></a
 			></li>
 		</ul>
 	</nav>
 </div>
-<div xpsui-menu class="x-main-menu x-modalview">
+<div xpsui-menu class="x-main-menu x-modalview" ng-show="security.currentUser.systemCredentials.login.loginName">
 	<div class="x-main-menu-toggle"></div>
 	<div class="x-modalview-window">
 		<span class="x-modalview-header">Menu</span>

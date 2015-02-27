@@ -94,6 +94,10 @@ body{
 	}
 }
 
+fieldset {
+	border: none;
+}
+
 #login-form {
 	fieldset {
 		border: none;
@@ -108,6 +112,17 @@ body{
 			right: 13px;
 			top: 20px;
 		}
+	}
+}
+
+#LoginForm {
+	fieldset {
+		border: none;
+		width: 16 * $fixed-header-height;
+		margin-top: $fixed-header-height * 2;
+		margin-left: auto;
+		margin-right: auto;
+		position: relative;
 	}
 }
 

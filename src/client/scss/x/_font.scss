@@ -27,6 +27,7 @@ $icon-remove: $fa-var-times !default;
 $icon-add: $fa-var-plus !default;
 $icon-search: $fa-var-search !default;
 $icon-open: $fa-var-eye !default;
+$icon-check: $fa-var-check !default;
 
 // icons
 // -------------------------
@@ -41,3 +42,4 @@ $icon-open: $fa-var-eye !default;
 .icon-open:before { content: $icon-open }
 .icon-chevron-up:after { content: $icon-chevron-up }
 .icon-chevron-down:after { content: $icon-chevron-down }
+.icon-check:before { content: $icon-check }

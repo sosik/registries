@@ -133,6 +133,53 @@ fieldset {
 		margin-top: $fixed-header-height;
 		position: relative;
 	}
+
+	.item-clickable:HOVER {
+		cursor: pointer;
+	}
+}
+
+#SelectedUser {
+	width: 9 * $fixed-header-height;
+	position: fixed;
+	top: $fixed-header-height;
+	right: 10px;
+
+	fieldset {
+		width: 9 * $fixed-header-height;
+	}
+	fieldset.in-sequence {
+		margin-top: 0.4 * $fixed-header-height;
+	}
+
+	.permissions {
+		border: 1px solid #b0b0b0;
+		padding: 0px;
+		margin: 0px;
+		width: 50%;
+		float: left;
+		
+		header {
+			position: relative;
+			background-color: #b0b0b0;
+			padding: 4px 12px;
+			color: #ffffff;
+		}
+		
+		section {
+			height: 150px;
+			overflow: auto;
+			
+			div {
+				display: block;
+				padding: 4px 12px 4px 12px;
+				border-bottom: 1px dotted #ffffff;
+				cursor: pointer;
+				color: #666666;
+				line-height: 1.42857;
+			}
+		}
+	}
 }
 
 button.btn-primary {

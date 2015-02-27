@@ -2,12 +2,14 @@
 	<form novalidate name="newForm">
 		<div xpsui-form="edit" xpsui-model="model.obj" xpsui-schema="schemaFormOptions.schema"></div>
 
-		<button type="button" class="btn btn-primary btn-cancel" ng-click="cancel()" >
-			<i class="glyphicon-remove"></i>{{'registry.new.cancel' | translate}}
-		</button>
-		<button type="button" class="btn btn-primary btn-ok" ng-click="save()" ng-disabled="newForm.$pristine">
-			<i class="glyphicon-ok"></i>{{'registry.new.send' | translate}}
-		</button>
+		<div class="x-fieldset-row">
+			<button type="button" class="btn btn-primary btn-cancel" ng-click="cancel()" >
+				<i class="glyphicon-remove"></i>{{'registry.new.cancel' | translate}}
+			</button>
+			<button type="button" class="btn btn-primary btn-ok" ng-click="save()" ng-disabled="newForm.$pristine">
+				<i class="glyphicon-ok"></i>{{'registry.new.send' | translate}}
+			</button>
+		</div>
 	</form>
 </div>
 

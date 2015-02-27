@@ -1,50 +1,57 @@
-<div>
+<div id="SearchPage">
 	<div>
 		<div>
 			<form>
 				<fieldset>
-				<legend>{{'security.profile.edit.searching' |translate}} ({{entity}})</legend>
+					<span class="x-fieldset-title">{{'security.profile.edit.searching' |translate}} ({{entity}})</span>
 
-					<div ng-repeat="crit in searchCrit">
+					<div ng-repeat="crit in searchCrit" class="x-fieldset-row">
 
-						<div>
+						<div class="x-fieldset-col-4">
 							<select ng-model="crit.attribute"
 								ng-options="att.title for att in searchDef.attributes"></select>
 						</div>
-						<div>
+						<div class="x-fieldset-col-2">
 							<select
 								ng-model="crit.operator"
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div ng-show="!crit.objectLink">
+						<div ng-show="!crit.objectLink" class="x-fieldset-col-4">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid"
 								autocomplete="off">
 
 						</div>
-						<div ng-show="crit.objectLink">
+						<div ng-show="crit.objectLink" class="x-fieldset-col-4">
 							<input
 								type="text" id="name" name="name" ng-model="crit.selectedObject"
 								placeholder="value" class="ng-pristine ng-valid"
 								autocomplete="off">
-
 						</div>
 
-						<div>
-							<button ng-click="removeCrit($index)">
-						<i class="glyphicon-remove"></i>{{'security.profile.edit.cancel' |translate}}
+						<div class="x-fieldset-col-2">
+							<button ng-click="removeCrit($index)" class="btn-clear">
+								<i class="icon-remove"></i>
+								{{'security.profile.edit.cancel' |translate}}
 							</button>
 						</div>
 					</div>
 
-					<div >
-						<div>
-							<button ng-click="addCrit()"><i class="glyphicon-plus"></i>{{'security.profile.edit.add' |translate}}</button>
+					<div class="x-fieldset-row">
+						<div class="x-fieldset-col-4">
+							<button ng-click="addCrit()" class="btn-secondary">
+								<i class="icon-add"></i> 
+								{{'security.profile.edit.add' |translate}}
+							</button>
 						</div>
-						<div>
-							<button ng-click="search()" ><i class="glyphicon-search"></i>{{'security.profile.edit.search' |translate}}</button>
+						<div class="x-fieldset-col-4">&nbsp;</div>
+						<div class="x-fieldset-col-4 pull-right">
+							<button ng-click="search()" class="btn-primary">
+								<i class="icon-search"></i>
+								{{'security.profile.edit.search' |translate}}
+							</button>
 						</div>
 					</div>
 				</fieldset>

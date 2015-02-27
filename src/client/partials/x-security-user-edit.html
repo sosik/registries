@@ -1,42 +1,44 @@
-<div>
+<div id="SearchPage">
 	<div>
 		<div>
 			<form>
 				<fieldset>
-				<legend>{{'security.user.edit.searching' |translate}} ({{entity}})</legend>
-				
-					<div ng-repeat="crit in searchCrit">
+					<span class="x-fieldset-title">{{'security.user.edit.searching' |translate}} ({{entity}})</span>
 
-						<div>
+					<div ng-repeat="crit in searchCrit" class="x-fieldset-row">
+
+						<div class="x-fieldset-col-4">
 							<select ng-model="crit.attribute"
 								ng-options="att.title for att in searchDef.attributes"></select>
 						</div>
-						<div>
+						<div class="x-fieldset-col-2">
 							<select
 								ng-model="crit.operator"
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="col-sm-3">
+						<div class="x-fieldset-col-4">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid"
 								autocomplete="off">
 
 						</div>
-						<div>
-							<button ng-click="removeCrit($index)">
-						<i class="glyphicon-remove"></i>{{'security.user.edit.cancel' |translate}}
+						<div class="x-fieldset-col-2">
+							<button ng-click="removeCrit($index)" class="btn-clear">
+								<i class="icon-remove"></i> {{'security.user.edit.cancel' |translate}}
 							</button>
 						</div>
 					</div>
 
-					<div>
-						<div>
-							<button ng-click="addCrit()"><i class="glyphicon-plus"></i>{{'security.user.edit.add' |translate}}</button>
-						</div>
-						<div>
-							<button ng-click="search()" ><i class="glyphicon-search"></i>{{'security.user.edit.search' |translate}}</button>
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-col-4">
+								<button ng-click="addCrit()" class="btn-secondary"><i class="icon-add"></i> {{'security.user.edit.add' |translate}}</button>
+							</div>
+							<div class="x-fieldset-col-4">&nbsp;</div>
+							<div class="x-fieldset-col-4 pull-right">
+								<button ng-click="search()" class="btn-primary"><i class="icon-search"></i> {{'security.user.edit.search' |translate}}</button>
+							</div>
 						</div>
 					</div>
 				</fieldset>
@@ -50,7 +52,7 @@
 							<thead>
 								<tr>
 									<th ng-repeat="header in headers">{{header.title}}</th>
-						<th>{{'security.user.edit.actions' |translate}}</th>
+									<th>{{'security.user.edit.actions' |translate}}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -59,8 +61,8 @@
 										header.field)}} {{$eval("obj."+header.field)}}</td>
 
 									<td>
-										<span ng-click='selectUser(obj)'>
-											<i></i><span>{{'security.user.edit.edit' |translate}}</span>
+										<span ng-click='selectUser(obj)' class="item-clickable">
+											<i class="icon-pencil"></i> <span>{{'security.user.edit.edit' |translate}}</span>
 										</span>
 									</td>
 								</tr>
@@ -68,46 +70,42 @@
 						</table>
 					</div>
 				</fieldset>
-			<button ng-click='searchNext()'> >>> </button>
+			<button ng-click='searchNext()' class="btn-secondary"> >>> </button>
 			</div>
 		</div>
 
-		<div ng-show="selectedUser">
+		<div ng-show="selectedUser" id="SelectedUser">
 				<div  >
 					<fieldset>
-						<legend>{{'security.user.edit.login.data' |translate}} - {{selectedUser.baseData.name}} {{selectedUser.baseData.surName}} </legend>
-						<div>
-							<label for="name">{{'security.user.edit.login' |translate}}</label>
-							<div>
+						<span class="x-fieldset-title">{{'security.user.edit.login.data' |translate}} - {{selectedUser.baseData.name}} {{selectedUser.baseData.surName}}</span>
+
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-label">
+								<label for="name">{{'security.user.edit.login' |translate}}</label>
+							</div>
+							<div class="x-fieldset-value">
 								<input type="text" id="name" name="name"
 									ng-model="selectedUser.systemCredentials.login.loginName" placeholder=""
 									class="ng-pristine ng-valid" autocomplete="off">
 							</div>
 						</div>
-						<div>
-							<label for="name">{{'security.user.edit.email' |translate}}</label>
-							<div>
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-label">
+								<label for="name">{{'security.user.edit.email' |translate}}</label>
+							</div>
+							<div class="x-fieldset-value">
 								<input type="text" id="name" name="name"
 									ng-model="selectedUser.systemCredentials.login.email" placeholder=""
 									class="ng-pristine ng-valid" autocomplete="off">
 							</div>
 						</div>
-
-						<div>
-							
-						</div>
-						
 					</fieldset>
 				</div>
-		
-			
-			<div  >
-				
-
-				<fieldset>
-					<legend>
+			<div>
+				<fieldset class="in-sequence">
+					<span class="x-fieldset-title">
 						{{'security.user.edit.profile' |translate}}
-					</legend>
+					</span>
 					
 					<div>
 						<div>
@@ -116,7 +114,7 @@
 									<header>{{'security.user.edit.added.profiles' |translate}}</header>
 									<section>
 										<div ng-repeat="profile in user.profiles" ng-click="removeProfile(profile)">
-											<i class="glyphicon-minus"></i><span>{{profile.baseData.name}}</span>
+											<i class="icon-minus"></i> <span>{{profile.baseData.name}}</span>
 										</div>
 									</section>
 								</div>
@@ -124,7 +122,7 @@
 									<header>{{'security.user.edit.available.profiles' |translate}}</header>
 									<section>
 										<div ng-repeat="profile in profiles" ng-click="addProfile(profile)">
-											<i class="glyphicon-plus"></i><span>{{profile.baseData.name}}</span>
+											<i class="icon-add"></i> <span>{{profile.baseData.name}}</span>
 										</div>
 									</section>
 								</div>
@@ -132,12 +130,12 @@
 						</div>
 					</div>
 				</fieldset>
-				
+
 				<div>
 					<div>
 						<div>
-							<button ng-click="resetPassword() ">Resetnúť heslo</button>
-							<button ng-click="updateUserSecurity()">
+							<button ng-click="resetPassword() " class="btn-secondary">Resetnúť heslo</button>
+							<button ng-click="updateUserSecurity()" class="btn-primary">
 								<i class="glyphicon-ok"></i>{{'security.user.edit.save' |translate}}
 							</button>
 						</div>
@@ -148,4 +146,3 @@
 	</div>
 
 </div>
-

@@ -68,10 +68,13 @@
 							<table >
 								<thead>
 									<tr>
-										<th  ng-class=" {'action-sort':true, 'icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" 
+										<th  ng-class=" {'action-sort':true}" 
 												ng-repeat="header in headers" 
 												class="data-col"
-												ng-click="setSortBy(header)">{{header.title}} </th>
+												ng-click="setSortBy(header)">
+													{{header.title}}
+													<icon ng-class="{'icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}"></icon>
+										</th>
 										<th></th>
 									</tr>
 								</thead>

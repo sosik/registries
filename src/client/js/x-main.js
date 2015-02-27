@@ -32,7 +32,7 @@
 
 		$routeProvider.when('/schema/edit', {templateUrl: 'partials/x-schema-editor.html', controller: 'xpsui:SchemaEditCtrl' ,permissions:['System Admin']});
 		
-		$routeProvider.otherwise({templateUrl: '/partials/login.html', controller: 'xpsui:SecurityLoginCtrl'});
+		$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		
 		loggingProvider.setLevel(5);
 	}])

@@ -39,5 +39,5 @@ $icon-open: $fa-var-eye !default;
 .icon-add:before { content: $icon-add }
 .icon-search:before { content: $icon-search }
 .icon-open:before { content: $icon-open }
-.icon-chevron-up:before { content: $icon-chevron-up }
-.icon-chevron-down:before { content: $icon-chevron-down }
+.icon-chevron-up:after { content: $icon-chevron-up }
+.icon-chevron-down:after { content: $icon-chevron-down }

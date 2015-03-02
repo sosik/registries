@@ -59,7 +59,8 @@
 
 			<div ng-show='profileList'>
 				<fieldset>
-				<legend>{{'security.profile.edit.result' |translate}} ({{entity}})</legend>
+					<span class="x-fieldset-title">{{'security.profile.edit.result' |translate}} ({{entity}})</span>
+
 					<div>
 						<table>
 							<thead>
@@ -75,8 +76,8 @@
 										header.field)}} {{$eval("obj."+header.field)}}</td>
 
 									<td>
-										<span ng-click='selectProfile(obj)'>
-											<i></i><span>{{'security.profile.edit.edit' |translate}}</span>
+										<span ng-click='selectProfile(obj)' class="item-clickable">
+											<i class="icon-pencil"></i> <span>{{'security.profile.edit.edit' |translate}}</span>
 										</span>
 									</td>
 								</tr>
@@ -89,13 +90,16 @@
 		</div>
 	</div>
 	<div>
-		<div ng-show="selectedProfile">
+		<div ng-show="selectedProfile" id="SelectedProfile">
 				<div>
 					<fieldset>
-						<legend>{{'security.profile.edit.name.data' |translate}} - {{selectedProfile.baseData.name}}</legend>
-						<div>
-							<label for="name">{{'security.profile.edit.name' |translate}}</label>
-							<div class="col-sm-8">
+						<span class="x-fieldset-title">{{'security.profile.edit.name.data' |translate}} - {{selectedProfile.baseData.name}}</span>
+
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-label">
+								<label for="name">{{'security.profile.edit.name' |translate}}</label>
+							</div>
+							<div class="x-fieldset-value">
 								<input type="text" id="name" name="name"
 									ng-model="selectedProfile.baseData.name" placeholder=""
 									class="ng-pristine ng-valid" autocomplete="off">
@@ -110,26 +114,26 @@
 
 			<div>
 				<fieldset>
-					<legend>
+					<span class="x-fieldset-title">
 						{{'security.profile.edit.groups' |translate}} - {{selectedProfile.baseData.name}}
-					</legend>
+					</span>
 
 					<div>
 						<div>
 							<div>
-								<div >
+								<div class="permissions">
 									<header>{{'security.profile.edit.added.groups' |translate}}</header>
 									<section >
 										<div ng-repeat="group in profile.groups" ng-click="removeGroup(group)">
-											<i class="glyphicon-minus"></i><span>{{group.baseData.name}}</span>
+											<i class="icon-minus"></i> <span>{{group.baseData.name}}</span>
 										</div>
 									</section>
 								</div>
-								<div >
+								<div class="permissions">
 									<header>{{'security.profile.edit.available.groups' |translate}}</header>
 									<section>
 										<div ng-repeat="group in groups" ng-click="addGroup(group)">
-											<i class="glyphicon-plus"></i><span>{{group.baseData.name}}</span>
+											<i class="icon-add"></i> <span>{{group.baseData.name}}</span>
 										</div>
 									</section>
 								</div>
@@ -141,27 +145,27 @@
 
 			<div>
 				<fieldset>
-					<legend>
+					<span class="x-fieldset-title">
 						{{'security.profile.edit.permissions' |translate}} -
 							{{selectedProfile.baseData.name}}
-					</legend>
+					</span>
 
 					<div>
 						<div>
 							<div>
-								<div >
+								<div class="permissions">
 									<header>{{'security.profile.edit.added.permissions' |translate}}</header>
 									<section >
 										<div ng-repeat="perm in profile.permissions" ng-click="removePermission(perm)">
-											<i class="glyphicon-minus"></i><span>{{perm}}</span>
+											<i class="icon-minus"></i> <span>{{perm}}</span>
 										</div>
 									</section>
 								</div>
-								<div >
+								<div class="permissions">
 									<header>{{'security.profile.edit.available.permissions' |translate}}</header>
 									<section>
 										<div ng-repeat="perm in permissions" ng-click="addPermission(perm)">
-											<i class="glyphicon-plus"></i><span>{{perm}}</span>
+											<i class="icon-add"></i> <span>{{perm}}</span>
 										</div>
 									</section>
 								</div>
@@ -171,55 +175,65 @@
 				</fieldset>
 
 				<fieldset>
-				<legend>{{'security.profile.edit.data.criteria' |translate}} - {{selectedProfile.baseData.name}}</legend>
+					<span class="x-fieldset-title">
+						{{'security.profile.edit.data.criteria' |translate}} - {{selectedProfile.baseData.name}}
+					</span>
 
-					<div ng-repeat="crit in profileCrit">
-						<div>
+					<div ng-repeat="crit in profileCrit" class="x-fieldset-row">
+						<div class="x-fieldset-col-4">
 							<select ng-model="crit.schema"
 								ng-options="schema for schema in searchSchemas"  ng-change="schemaChange(crit)" ></select>
 						</div>
-						<div>
+						<div class="x-fieldset-col-2">
 							<select ng-model="crit.attribute"
 								ng-options="att.title for att in crit.attDef.attributes"></select>
 						</div>
-						<div>
+						<div class="x-fieldset-col-2">
 							<select
 								ng-model="crit.operator"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div ng-show="!crit.attribute.render">
+						<div ng-show="!crit.attribute.render" class="x-fieldset-col-2">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid"
 								autocomplete="off">
 						</div>
 
-						<div ng-show="crit.attribute.render.objectLink">
+						<div ng-show="crit.attribute.render.objectLink" class="x-fieldset-col-2">
 							<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
 						</div>
 
-						<div>
-							<button ng-click="removeProfileCrit($index)">
-						<i class="glyphicon-remove"></i>{{'security.profile.edit.cancel' |translate}}
+						<div class="x-fieldset-col-2">
+							<button ng-click="removeProfileCrit($index)" class="btn-clear">
+								<i class="icon-remove"></i> {{'security.profile.edit.cancel' |translate}}
 							</button>
 						</div>
 					</div>
-					<div >
-						<div>
-							<button ng-click="addProfileCrit()"><i class="glyphicon-plus"></i>{{'security.profile.edit.add' |translate}}</button>
+					<div class="x-fieldset-row">
+						<div class="x-fieldset-col-4">
+							<button ng-click="addProfileCrit()" class="btn-secondary">
+								<i class="icon-add"></i> {{'security.profile.edit.add' |translate}}
+							</button>
 						</div>
 					</div>
 				</fieldset>
 
-				<div>
-					<div>
-						<div class="btn-group pull-right">
+				<fieldset>
+					<div class="x-fieldset-row">
+						<div class="x-fieldset-col-4">
+							&nbsp;
+						</div>
+						<div class="x-fieldset-col-4">
+							&nbsp;
+						</div>
+						<div class="x-fieldset-col-4 pull-right">
 							<button ng-click="updateProfileSecurity()" class="btn btn-primary">
 								<i class="glyphicon-ok"></i>{{'security.profile.edit.save' |translate}}
 							</button>
 						</div>
 					</div>
-				</div>
+				</fieldset>
 			</div>
 
 

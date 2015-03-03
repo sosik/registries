@@ -1,0 +1,86 @@
+.xpsui-uploadable-image {
+	cursor: pointer;
+	text-align: center;
+	display: inline-block;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+/*
+	border: 1px solid $input-border-color;
+	margin: ($field-padding-vertical) 0px ($field-padding-vertical) ($padding-base-horizontal);
+*/
+
+	.xpsui-modal-dialog {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		z-index: 50;
+		background-color: rgba(0, 0, 0, 0.5);
+		top: 0px;
+		left: 0px;
+	}
+
+	.xpsui-buttons-holder {
+		position: fixed;
+		top: $fixed-header-height;
+		right: 40%;
+		z-index: 100;
+
+		.btn {
+			margin-right: 0px;
+			font-size: 14px;
+			line-height: 24px;
+			border: 0px;
+			background: none;
+			padding: 4px 6px;
+			color: #fafafa;
+		}
+		
+		.xpsui-icon-rotate:before {
+			content: '';
+		}
+
+		.xpsui-icon-ok:before {
+			content: '';
+		}
+	}
+
+}
+
+.xpsui-uploadable-image.x-hidden {
+	display: none;
+}
+
+.xpsui-uploadable-image-fbutton {
+	visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: -5000px;
+}
+
+.psui-imageresizor-resizor {
+	.psui-buttons-holder {
+		.btn {
+			color: $color-secondary;
+		}
+	}
+	
+	.psui-modal-dialog {
+	}
+
+	.psui-modal-content{
+		background-color: #000000;
+		canvas{
+			cursor: move;
+		}
+	}
+}
+
+.psui-imageresizor-result {
+	position:absolute;
+	/*
+	left: $padding-base-horizontal;
+	top: $field-padding-vertical;
+	*/
+	z-index:10;
+}

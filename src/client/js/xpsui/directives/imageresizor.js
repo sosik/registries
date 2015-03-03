@@ -61,10 +61,10 @@
 				var buttonsHolder = angular.element('<div class="xpsui-buttons-holder"></div>');
 				modalContentEl.append(buttonsHolder);
 				
-				var buttonRotate = $compile(angular.element('<button type="button" class="btn xpsui-icon-rotate"><span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
+				var buttonRotate = $compile(angular.element('<button type="button" class="btn xpsui-icon-rotate"><icon class="icon-rotate"></icon> <span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
 				buttonsHolder.append(buttonRotate);
 				
-				var buttonOk = $compile(angular.element('<button type="button" class="btn xpsui-icon-ok"><span>{{\'psui.imageresizor.ok\' | translate}}</span></button>'))(scope);
+				var buttonOk = $compile(angular.element('<button type="button" class="btn xpsui-icon-ok"><icon class="icon-check"></icon> <span>{{\'psui.imageresizor.ok\' | translate}}</span></button>'))(scope);
 				buttonsHolder.append(buttonOk);
 
 				var numberOfRot = 0;
@@ -80,6 +80,8 @@
 					resize = 1;
 					
 					draw(context,context2);
+					evt.stopPropagation();
+					return false;
 				})
 				
 				var context = resizorCanvas[0].getContext("2d");
@@ -170,7 +172,7 @@
 					imgCtrl.srcElm = img;
 				}
 
-				buttonOk.on('click', function() {
+				buttonOk.on('click', function(evt) {
 					if (canvasResult[0].toBlob) {
 						canvasResult[0].toBlob(imgCtrl.imageProcessed, 'image/jpeg');
 					} else {
@@ -193,6 +195,8 @@
 
 					canvasResult.addClass('x-hidden');
 					modalEl.addClass('x-hidden');
+					evt.stopPropagation();
+					return false;
 				});
 					
 				resizorCanvas.on('mousewheel', function(evt){
@@ -203,9 +207,6 @@
 						resize = resize - 0.1;	
 					}
 					draw(context,context2);
-					
-					
-					
 				})
 				
 				resizorCanvas.on('DOMMouseScroll', function(evt){
@@ -241,16 +242,27 @@
 					y = clientY;
 				}
 				
+				resizorCanvas.on('click',function(evt){
+					evt.stopPropagation();
+					return false;
+				})
+
 				resizorCanvas.on('mousedown',function(evt){
 					state = 1;
+					evt.stopPropagation();
+					return false;
 				})
 				
 				resizorCanvas.on('mouseup mouseleave',function(evt){
 					state = 0;
+					evt.stopPropagation();
+					return false;
 				})
 				
 				resizorCanvas.on('mousemove',function(evt){
 					moveImg(evt.clientX, evt.clientY);
+					evt.stopPropagation();
+					return false;
 				})
 				
 			

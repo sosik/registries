@@ -12,7 +12,27 @@ $color-black: #333333;
 $color-white: #ffffff;
 $color-grey: #dddddd;
 $color-grey-light: #eeeeee;
+
+$color-main: #fdb730;
+$color-main-darker: #fdae17;
+$color-main-highlight: #fda908;
+$color-main-highlight-darker: #d48c02;
+$color-text: #333333;
+$color-main-reverse: #ffffff;
+
+$color-secondary: #b0b0b0;
+$color-secondary-darker: #a3a3a3;
+$color-secondary-highlight: #9c9c9c;
+$color-secondary-highlight-darker: #858585;
+
+$color-background-soft: #fafafa;
+$color-border: #ddd;
+
 $color-active: $color1;
+$color-error: #ff0000 !default;
+
+// font colors
+$font-color-base: $color-text;
 
 
 // modalview
@@ -35,12 +55,13 @@ $main-item-hover-color: $color1;
 $main-item-active-bg-color: lighten($color-black, 10%);
 
 // string menu
-$string-border-color: $color-grey; 
+$string-border-color: $color-secondary; 
 $string-background-color: transparent; 
 
 // inline edit
 $inlineedit-background: $string-border-color;
 $inlineedit-pencil-background: rgba(red($string-border-color),green($string-border-color),blue($string-border-color),.3);
+$inlineedit-active-border-color: $color-secondary;
 
 //dropdown
 $dropdown-border-color: $color-grey; 
@@ -57,3 +78,9 @@ $calendar-current-background-color: $color4;
 
 // selectbox
 $selectbox-background-color: $string-border-color;
+
+// validation mark component
+$validation-mark-color: $color-error;
+$validation-mark-bg: $color-white;
+$validation-mark-popup-01: rgba(250, 250, 250, 0);
+$validation-mark-popup-02: rgba(208, 208, 208, 0);

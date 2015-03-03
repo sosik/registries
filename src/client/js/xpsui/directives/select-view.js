@@ -10,6 +10,8 @@
 				var schemaFragment = null;
 				var data = [];
 
+				elm.addClass('x-select-view');
+
 				if (attrs.xpsuiSchema) {
 					schemaFragment = scope.$eval(attrs.xpsuiSchema);
 

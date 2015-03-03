@@ -30,6 +30,10 @@ $line-height: 20px !default;
 // ----------------------------------------
 $fixed-header-height: 40px !default;
 
+// content
+// ----------------------------------------
+$content-offset: 15px;
+
 // menu
 // ----------------------------------------
 $menu-width: 250px !default;
@@ -48,6 +52,7 @@ $modalview-body-offset: 10px !default;
 // fieldset
 // ----------------------------------------
 $fieldset-item-min-height: 34px !default;
+$fieldset-content-offset: $content-offset;
 $fieldset-offset: 6px !default;
 $fieldset-offset-sm: 14px !default;
 
@@ -105,3 +110,9 @@ $color-secondary-highlight-darker: #858585;
 
 $color-background-soft: #fafafa;
 $color-border: #ddd;
+
+// objectlink2 component
+//-----------------------------------------
+$validation-mark-icon-size: 30px;
+$validation-mark-color: red;
+$validation-mark-bg: white;

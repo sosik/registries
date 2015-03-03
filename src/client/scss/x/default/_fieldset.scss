@@ -1,0 +1,7 @@
+div.x-fieldset-row {
+	div.x-fieldset-label {
+		&.x-required:after {
+			color: $color-error;
+		}
+	}
+}

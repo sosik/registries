@@ -22,7 +22,7 @@
 
 		FormGenerator.prototype.generateLabel = function(schemaFragment) {
 			// TODO translation
-			var isRequired = (schemaFragment.required ? ' xpsui-required': '');
+			var isRequired = (schemaFragment.required ? ' x-required': '');
 			return angular.element('<div class="x-fieldset-label ' + isRequired + '" ><span>' + schemaFragment.title + '</span></div>');
 		};
 

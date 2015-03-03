@@ -29,6 +29,8 @@ $icon-minus: $fa-var-minus !default;
 $icon-search: $fa-var-search !default;
 $icon-open: $fa-var-eye !default;
 $icon-check: $fa-var-check !default;
+$icon-error: $fa-var-exclamation-circle !default;
+
 
 // icons
 // -------------------------
@@ -45,3 +47,4 @@ $icon-check: $fa-var-check !default;
 .icon-chevron-up:after { content: $icon-chevron-up }
 .icon-chevron-down:after { content: $icon-chevron-down }
 .icon-check:before { content: $icon-check }
+.icon-warning-sign:after{ content: $icon-error }

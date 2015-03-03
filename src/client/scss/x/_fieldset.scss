@@ -2,7 +2,7 @@
 	display: table;
 	width: 50%;
 	float: left;
-	padding: 3px 3px 3px 3px;
+	padding: $fieldset-content-offset;
 }
 
 .x-fieldset-title {
@@ -52,6 +52,11 @@ div.x-fieldset-row {
 		float: left;
 		position: relative;
 		padding-top: 9px;
+
+		&.x-required:after {
+			content: '*';
+			margin-left: 5px;
+		}
 	}
 
 	div.x-fieldset-value {

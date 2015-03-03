@@ -45,7 +45,7 @@ body{
 		left: $menu-width;
 	}
 
-	padding: 5px 5px 5px 5px;
+	padding: $content-offset;
 	overflow-x: auto;
 }
 
@@ -64,8 +64,9 @@ body{
 .x-form-title {
 	font-size: 200%;
 	font-weight: bold;
-	padding-top: 10px;
-	padding-bottom: 10px;
+	padding-top: $content-offset;
+	padding-bottom: $content-offset;
+	padding-left: $content-offset;
 }
 
 .x-component-button {

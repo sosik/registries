@@ -1,6 +1,10 @@
-// .x-date-view {
-// 	@include inline-view();
-// }
+.x-select-view {
+	@include inline-view();
+	div{
+		// fix min height
+		display: inline-block;
+	}
+}
 
 .x-select-edit {
 	@include inline-edit();

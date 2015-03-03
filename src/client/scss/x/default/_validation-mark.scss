@@ -1,0 +1,27 @@
+.xpsui-validation-mark{
+
+	> i{
+		color: $validation-mark-color;
+	}
+
+
+	.xpsui-errors{
+		
+		background: $validation-mark-bg;
+		border: 1px solid $validation-mark-color;
+		@include box-shadow(0 5px 10px rgba(0,0,0,.3));
+		
+		div{
+			color: $validation-mark-color;
+		}
+
+		&:after {
+			border-color: $validation-mark-popup-01;
+			border-left-color:  $validation-mark-bg;
+		}
+		&:before {
+			border-color: $validation-mark-popup-02;
+			border-left-color: $validation-mark-color;
+		}
+	}
+}

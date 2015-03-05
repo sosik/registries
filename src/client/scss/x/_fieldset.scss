@@ -75,6 +75,35 @@ div.x-fieldset-row {
 		color: #555555;
 		height: 34px;
 	}
+
+	@media (max-width: $screen-sm) {
+		div.x-fieldset-col-2 {
+			width: auto;
+			float: none;
+			margin-bottom: 8px;
+		}
+	
+		div.x-fieldset-col-4 {
+			width: auto;
+			float: none;
+			margin-bottom: 8px;
+		}
+
+		div.x-fieldset-label {
+			width: auto;
+			float: none;
+			position: relative;
+			padding-top: 9px;
+		}
+
+		div.x-fieldset-value {
+			width: auto;
+			float: none;
+			position: relative;
+			margin-top: 9px;
+			margin-bottom: 8px;
+		}
+	}
 }
 
 @media screen and (max-width: $screen-sm-max) and (min-width: $screen-sm) {

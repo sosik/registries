@@ -125,6 +125,17 @@ fieldset {
 		margin-right: auto;
 		position: relative;
 	}
+
+	@media (max-width: $screen-sm) {
+		fieldset {
+			border: none;
+			width: auto;
+			margin-top: $fixed-header-height * 2;
+			margin-left: 0px;
+			margin-right: 0px;
+		}
+	}
+
 }
 
 #SearchPage {
@@ -135,8 +146,19 @@ fieldset {
 		position: relative;
 	}
 
+	fieldset.narrow {
+		width: 10 * $fixed-header-height;
+	}
+
 	.item-clickable:HOVER {
 		cursor: pointer;
+	}
+
+	@media (max-width: $screen-sm) {
+		fieldset, fieldset.narrow {
+			width: auto;
+			margin-top: $fixed-header-height;
+		}
 	}
 }
 
@@ -152,9 +174,57 @@ fieldset {
 	fieldset.in-sequence {
 		margin-top: 0.4 * $fixed-header-height;
 	}
+
+	@media (max-width: 1267px) {
+		width: auto;
+		position: relative;
+		top: 0px;
+		right: 0px;
+
+		fieldset {
+			margin-top: 0px;
+			width: 16 * $fixed-header-height;
+		}
+	}
+	@media (max-width: $screen-sm) {
+		fieldset {
+			width: auto;
+		}
+	}
 }
 
-#SelectedUser, #SelectedProfile {
+#SelectedGroup {
+	width: 15 * $fixed-header-height;
+	position: fixed;
+	top: $fixed-header-height;
+	right: 10px;
+
+	fieldset {
+		width: 15 * $fixed-header-height;
+	}
+	fieldset.in-sequence {
+		margin-top: 0.4 * $fixed-header-height;
+	}
+
+	@media (max-width: 1267px) {
+		width: auto;
+		position: relative;
+		top: 0px;
+		right: 0px;
+
+		fieldset {
+			margin-top: 0px;
+			width: 10 * $fixed-header-height;
+		}
+	}
+	@media (max-width: $screen-sm) {
+		fieldset {
+			width: auto;
+		}
+	}
+}
+
+#SelectedUser, #SelectedProfile, #SelectedGroup {
 
 
 	.permissions {
@@ -163,7 +233,7 @@ fieldset {
 		margin: 0px;
 		width: 50%;
 		float: left;
-		
+
 		header {
 			position: relative;
 			background-color: #b0b0b0;
@@ -234,3 +304,4 @@ a:HOVER {
 .pull-right {
 	text-align: right;
 }
+

@@ -1,16 +1,17 @@
-<div>
+<div id="SearchPage">
 	<div>
 		<div>
-			<fieldset>
-				<span class="x-fieldset-title">{{'security.group.edit.list.of.security.groups' | translate}}</span>
-			</fieldset>
-			<div >
+			<fieldset class="narrow">
+				<span class="x-fieldset-title">
+					{{'security.group.edit.list.of.security.groups' | translate}}
+				</span>
+
 				<table>
 					<thead>
 						<tr>
-						<th>{{'security.group.edit.id' | translate}}</th>
-						<th>{{'security.group.edit.name' | translate}}</th>
-						<th>{{'security.group.edit.actions' | translate}}</th>
+							<th>{{'security.group.edit.id' | translate}}</th>
+							<th>{{'security.group.edit.name' | translate}}</th>
+							<th>{{'security.group.edit.actions' | translate}}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -18,41 +19,47 @@
 							<td>{{$index + 1}}</td>
 							<td>{{group.baseData.name}}</td>
 							<td>
-								<span class="psui-btn psui-edit-btn" ng-click="selectGroup(group)">
-									<i></i><span>{{'security.group.edit.edit' | translate}}</span>
+								<span class="psui-btn psui-edit-btn item-clickable" ng-click="selectGroup(group)">
+									<i class="icon-pencil"></i> <span>{{'security.group.edit.edit' | translate}}</span>
 								</span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			</div>
+			</fieldset>
 		</div>
 
 		<div>
-			<div ng-show="selectedGroup">
+			<div ng-show="selectedGroup" id="SelectedGroup">
 				<div>
 					<fieldset>
-							<legend>{{'security.group.edit.modification.of.security.group' | translate}} - {{selectedGroup.baseData.name}}</legend>
-						<div>
-						<label for="name">{{'security.group.edit.id.of.group' | translate}}</label>
-							<div>
+						<span class="x-fieldset-title">{{'security.group.edit.modification.of.security.group' | translate}} - {{selectedGroup.baseData.name}}</span>
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-label">
+								<label for="name">{{'security.group.edit.id.of.group' | translate}}</label>
+							</div>
+							<div class="x-fieldset-value">
 								<input type="text" id="name" name="name"
 									ng-model="selectedGroup.baseData.id" placeholder=""
 									class="ng-pristine ng-valid" autocomplete="off">
 							</div>
 						</div>
-						<div>
-						<label for="name">{{'security.group.edit.name.of.group' | translate}}</label>
-							<div>
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-label">
+								<label for="name">{{'security.group.edit.name.of.group' | translate}}</label>
+							</div>
+							<div class="x-fieldset-value">
 								<input type="text" id="name" name="name"
 									ng-model="selectedGroup.baseData.name" placeholder=""
 									class="ng-pristine ng-valid" autocomplete="off">
 							</div>
 						</div>
 						
-						<div>
-							<label for="name">{{'security.group.edit.parent.group' | translate}}</label>
-							<div>
+						<div class="x-fieldset-row">
+							<div class="x-fieldset-label">
+								<label for="name">{{'security.group.edit.parent.group' | translate}}</label>
+							</div>
+							<div class="x-fieldset-value">
 								<div xpsui-objectlink2-edit="" xpsui-schema="schemaFormOptions.schema.properties.baseData.properties.parent" ng-model="selectedGroup.baseData.parent" ></div>
 							</div>
 						</div>
@@ -61,7 +68,9 @@
 				
 				<div >
 					<fieldset>
-							<legend>{{'security.group.edit.permissions' | translate}} - {{selectedGroup.baseData.name}}</legend>
+						<span class="x-fieldset-title">
+							{{'security.group.edit.permissions' | translate}} - {{selectedGroup.baseData.name}}
+						</span>
 						<div>
 							<div>
 								<div>
@@ -69,7 +78,7 @@
 										<header>{{'security.group.edit.added.permissions' | translate}}</header>
 										<section>
 											<div ng-repeat="perm in group.permissions" class="psui-list-item" ng-click="removePermission(perm)">
-												<i class="glyphicon-minus"></i><span>{{perm}}</span>
+												<i class="icon-minus"></i> <span>{{perm}}</span>
 											</div>
 										</section>
 									</div>
@@ -77,7 +86,7 @@
 										<header>{{'security.group.edit.available.permissions' | translate}}</header>
 										<section>
 											<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
-												<i class="glyphicon-plus"></i><span>{{perm}}</span>
+												<i class="icon-add"></i> <span>{{perm}}</span>
 											</div>
 										</section>
 									</div>
@@ -88,8 +97,8 @@
 					
 					<div>
 						<div>
-							<button ng-click="updateGroupPermissions()">
-								<i class="glyphicon-ok"></i>{{'security.group.edit.save' | translate}}
+							<button ng-click="updateGroupPermissions()" class="btn-primary">
+								<i class="icon-check"></i> {{'security.group.edit.save' | translate}}
 							</button>
 						</div>
 					</div>

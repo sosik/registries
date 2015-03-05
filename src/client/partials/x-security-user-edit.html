@@ -47,7 +47,7 @@
 			<div ng-show='userList'>
 				<fieldset>
 				<legend>{{'security.user.edit.result' |translate}} ({{entity}})</legend>
-					<div>
+					<div class="table-container">
 						<table>
 							<thead>
 								<tr>
@@ -136,7 +136,7 @@
 						<div>
 							<button ng-click="resetPassword() " class="btn-secondary">Resetnúť heslo</button>
 							<button ng-click="updateUserSecurity()" class="btn-primary">
-								<i class="glyphicon-ok"></i>{{'security.user.edit.save' |translate}}
+								<i class="icon-check"></i> {{'security.user.edit.save' |translate}}
 							</button>
 						</div>
 					</div>

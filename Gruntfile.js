@@ -24,7 +24,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('unitTest', ['env:test', 'mochaTest:unitServer', 'mochaTest:unitShared', 'karma']);
 	grunt.registerTask('integrationTest', ['env:test', 'build', 'mochaTest:integration']);
 	grunt.registerTask('coverage', ['env:test', 'build', 'mocha_istanbul']);
-	
+
 	grunt.registerTask('e2e', [ 'env:test', 'build', 'x', 'express', 'e2e:tests' ]);
 	grunt.registerTask('e2e:tests', [ 'protractor:e2e-chrome', /*'protractor:e2e-firefox'*/ ]);
 
@@ -253,7 +253,7 @@ module.exports = function(grunt) {
 		yuidoc: {
 			compile: {
 				options: {
-					paths: ['src/server/', 'src/client/js/', 'src/shared/js'],
+					paths: ['src/server/', 'src/client/js/', 'src/shared/js','data/js'],
 					outdir: 'doc'
 				}
 			}

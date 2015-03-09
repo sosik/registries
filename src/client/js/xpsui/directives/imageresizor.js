@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiImageresizor', ['$compile', function ($compile) {
+	.directive('xpsuiImageresizor', ['$compile', '$translate', function ($compile, $translate) {
 		return {
 			restrict: 'A',
 			require: ['?xpsuiUploadableImage'],
@@ -36,17 +36,30 @@
 				var difY = 0;
 				var originImgWidth;
 				var originImgHeight;
+
+				if (window.innerWidth < imgWidth) {
+					imgWidth = window.innerWidth;
+					imgHeight = Math.round(imgHeight * (window.innerWidth/imgWidth));
+				}
+				if (window.innerHeight < imgHeight) {
+					imgHeight = window.innerHeight;
+					imgWidth = Math.round(imgWidth * (window.innerHeight/imgHeight));
+				}
 				
 				var modalEl = angular.element('<div class="xpsui-imageresizor-resizor" ></div>');
-				modalEl.addClass('xpsui-modal x-hidden');
+				modalEl.addClass('x-modalview');
 				wrapper.append(modalEl);
 				
 				var modalContentWrapperEl =  angular.element('<div></div>');
-				modalContentWrapperEl.addClass('xpsui-modal-dialog');
+				modalContentWrapperEl.addClass('x-modalview-window');
 				modalEl.append(modalContentWrapperEl);
+
+				var labelTranslated = $translate.instant(scope.$eval(attrs.xpsuiSchema.concat('.transCode')));
+				var modalHeader = $compile(angular.element('<div class="x-modalview-header"><span>' + labelTranslated + '</span></div>'))(scope);
+				modalContentWrapperEl.append(modalHeader);
 				
 				var modalContentEl =  angular.element('<div></div>');
-				modalContentEl.addClass('xpsui-modal-content');
+				modalContentEl.addClass('x-modalview-body');
 				modalContentWrapperEl.append(modalContentEl);
 				
 				var resizorCanvas = angular.element('<canvas ></canvas>');
@@ -59,12 +72,12 @@
 				wrapper.append(canvasResult);
 				
 				var buttonsHolder = angular.element('<div class="xpsui-buttons-holder"></div>');
-				modalContentEl.append(buttonsHolder);
+				modalHeader.append(buttonsHolder);
 				
-				var buttonRotate = $compile(angular.element('<button type="button" class="btn xpsui-icon-rotate"><icon class="icon-rotate"></icon> <span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
+				var buttonRotate = $compile(angular.element('<button type="button" class="btn btn-primary xpsui-icon-rotate"><icon class="icon-rotate"></icon> <span>{{\'psui.imageresizor.rotate\' | translate}}</span></button>'))(scope);
 				buttonsHolder.append(buttonRotate);
 				
-				var buttonOk = $compile(angular.element('<button type="button" class="btn xpsui-icon-ok"><icon class="icon-check"></icon> <span>{{\'psui.imageresizor.ok\' | translate}}</span></button>'))(scope);
+				var buttonOk = $compile(angular.element('<button type="button" class="btn btn-primary xpsui-icon-ok"><icon class="icon-check"></icon> <span>{{\'psui.imageresizor.ok\' | translate}}</span></button>'))(scope);
 				buttonsHolder.append(buttonOk);
 
 				var numberOfRot = 0;
@@ -164,7 +177,8 @@
 					originImgWidth = img.width;
 					originImgHeight = img.height;
 					canvasResult.removeClass('x-hidden');
-					modalEl.removeClass('x-hidden');
+					document.querySelector('body').classList.add('x-dropdown-open');
+					modalEl.addClass('x-open');
 					draw(context,context2);
 				};
 
@@ -194,7 +208,8 @@
 					}
 
 					canvasResult.addClass('x-hidden');
-					modalEl.addClass('x-hidden');
+					document.querySelector('body').classList.remove('x-dropdown-open');
+					modalEl.removeClass('x-open');
 					evt.stopPropagation();
 					return false;
 				});

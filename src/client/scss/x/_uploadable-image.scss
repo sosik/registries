@@ -20,22 +20,16 @@
 		left: 0px;
 	}
 
+	.x-modalview-header {
+		text-align: left;
+	}
+
 	.xpsui-buttons-holder {
-		position: fixed;
-		top: $fixed-header-height;
-		right: 40%;
+		position: absolute;
+		top: 0px;
+		right: 33px;
 		z-index: 100;
 
-		.btn {
-			margin-right: 0px;
-			font-size: 14px;
-			line-height: 24px;
-			border: 0px;
-			background: none;
-			padding: 4px 6px;
-			color: #fafafa;
-		}
-		
 		.xpsui-icon-rotate:before {
 			content: '';
 		}
@@ -45,6 +39,83 @@
 		}
 	}
 
+	@media (min-width: $screen-md) {
+		.x-modalview.x-open {
+			background-color: rgba(0, 0, 0, 0.5);
+			position: fixed;
+			z-index: 100;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			height: auto;
+			width: auto;
+		}
+
+		.x-modalview.x-open .x-modalview-window,
+				.x-modalview.x-open .x-modalview-window a {
+			color: #ffffff;
+		}
+
+		.x-modalview.x-open .x-modalview-window {
+			background-color: #333333;
+		}
+
+		.x-modalview .x-modalview-window {
+			visibility: hidden;
+			position: absolute;
+			width: 90%;
+			height: 90%;
+			top: 5%;
+			left: 0px;
+			right: 0px;
+			margin: 0px auto;
+			background-color: #333333;
+			box-sizing: border-box;
+		}
+
+		.x-modalview.x-open .x-modalview-window {
+			visibility: visible;
+		}
+
+		.x-modalview.x-open .x-modalview-header, .x-modalview.x-open .x-modalview-close {
+			color: #333333;
+		}
+		
+		.x-modalview.x-open .x-modalview-header {
+			background-color: #FFCE0D;
+		}
+
+		.x-modalview .x-modalview-header {
+			display: block;
+			font-size: 1em;
+			line-height: 2.5em;
+			height: 40px;
+			font-weight: bold;
+			padding-right: 40px;
+			box-sizing: border-box;
+			margin-top: 0px;
+			padding-left: 10px;
+			background-color: transparent;
+			color: #ffffff;
+		}
+
+		.x-modalview-body {
+			position: absolute;
+			top: 40px;
+			bottom: 0px;
+			width: 100%;
+			padding: 10px;
+			overflow-y: auto;
+			box-sizing: border-box;
+		}
+	}
+}
+
+@media (min-width: $screen-md) {
+	.x-dropdown-open .x-main-menu {
+		z-index: 0;
+	}
 }
 
 .xpsui-uploadable-image.x-hidden {

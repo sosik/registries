@@ -17,7 +17,8 @@
 			clsOpen: 'x-open',
 			bodyClsOpen: 'x-dropdown-open',
 			allowClose: true,
-			showDropdownAction: true
+			showDropdownAction: true,
+			titleTransCode: null
 		};
 		
 		Dropdown.prototype.getElement =  function(){
@@ -55,7 +56,7 @@
 				this.$contentInnerEl = angular.element('<div class="x-dropdown-content-inner"></div>');
 				this.$contentEl.append(this.$contentInnerEl);
 
-				this.$titleEl = angular.element('<div class="x-dropdown-header">' + this.getElementTitle() + '</div>');
+				this.$titleEl = angular.element('<div class="x-dropdown-header">' + this.getTitle() + '</div>');
 				this.$contentInnerEl.append(this.$titleEl);
 				this.$closeEl = angular.element('<a href="#" class="x-dropdown-close"></a>');
 				this.$contentInnerEl.append(this.$closeEl);
@@ -84,10 +85,9 @@
 			}
 		};
 
-		Dropdown.prototype.getElementTitle = function(){
-			var schemaFragment = this.$element.data('schemaFragment');
-			if(schemaFragment){
-				return schemaFragment.title;
+		Dropdown.prototype.getTitle = function(){
+			if(this.options.titleTransCode){
+				return $translate.instant(this.options.titleTransCode);
 			}
 			return '';
 		}

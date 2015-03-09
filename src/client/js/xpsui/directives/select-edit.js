@@ -26,6 +26,7 @@
 				var formControl = ctrls[1] || {};
 				var selfControl = ctrls[2];
 				var input = selfControl.getInput();
+				//scope.$eval(attrs.xpsuiSchema)
 				var parseSchemaFragment = $parse(attrs.xpsuiSchema);
 				var schemaFragment = parseSchemaFragment(scope);
 
@@ -46,9 +47,9 @@
 
 				// dropdown
 				var dropdown = dropdownFactory.create(elm,{
-					// showDropdownAction: false
-					//allowClose: false
+					titleTransCode: schemaFragment.transCode
 				});
+				
 				dropdown.setInput(selfControl.getInput())
 					.render()
 				;

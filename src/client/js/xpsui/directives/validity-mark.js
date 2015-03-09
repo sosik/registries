@@ -29,6 +29,19 @@
 					errors.addClass('x-hidden');
 				});
 
+				validationMark.on('touchstart',function(evt){
+					errors.removeClass('x-hidden')
+					evt.preventDefault();
+					return false;
+				})
+				
+				validationMark.on('touchend',function(evt){
+					errors.addClass('x-hidden');
+					evt.preventDefault();
+					return false;
+				})
+
+
 				if (ngModel) {
 					scope.$watch(function(scope) {return ngModel.$invalid;}, function(nv, ov) {
 						if (nv) {

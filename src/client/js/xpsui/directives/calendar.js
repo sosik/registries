@@ -615,7 +615,10 @@
 				var ngModel = ctrls[0];
 				var xpsuiDatapickerCtrl = ctrls[1];
 				var xpsuiTextInputCtrl = ctrls[2];
-				var dropdown = dropdownFactory.create(elm);
+				var schemaFragment = scope.$eval(attrs.xpsuiSchema);
+				var dropdown = dropdownFactory.create(elm,{
+					titleTransCode: schemaFragment.transCode
+				});
 
 				dropdown.setInput(xpsuiTextInputCtrl.getInput())
 					.render()

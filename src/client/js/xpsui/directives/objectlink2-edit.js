@@ -87,7 +87,10 @@
 				});
 
 				// dropdown
-				var dropdown = dropdownFactory.create(elm);
+				var dropdown = dropdownFactory.create(elm,{
+					titleTransCode: schemaFragment.transCode
+				});
+				
 				dropdown.setInput(selfControl.getInput())
 					.render()
 				;

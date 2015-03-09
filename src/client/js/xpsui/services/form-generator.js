@@ -10,7 +10,7 @@
 	 * @module client
 	 * @submodule services
 	 */
-	.factory('xpsui:FormGenerator', ['xpsui:logging', '$compile', 'xpsui:ComponentGenerator', '$timeout', function(log, $compile, componentGenerator, $timeout) {
+	.factory('xpsui:FormGenerator', ['xpsui:logging', '$compile', 'xpsui:ComponentGenerator', '$timeout', '$translate', function(log, $compile, componentGenerator, $timeout, $translate) {
 		function FormGenerator() {
 		}
 
@@ -23,7 +23,12 @@
 		FormGenerator.prototype.generateLabel = function(schemaFragment) {
 			// TODO translation
 			var isRequired = (schemaFragment.required ? ' x-required': '');
-			return angular.element('<div class="x-fieldset-label ' + isRequired + '" ><span>' + schemaFragment.title + '</span></div>');
+			
+			return angular.element('<div class="x-fieldset-label ' + isRequired + '" >' 
+				+ '<span>' + (schemaFragment.transCode ?
+					$translate.instant(schemaFragment.transCode) : schemaFragment.title
+				) + '</span>' 
+			+ '</div>');
 		};
 
 		FormGenerator.prototype.generateField = function(schemaFragment, schemaPath, modelPath, mode) {

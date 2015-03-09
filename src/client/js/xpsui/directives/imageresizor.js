@@ -186,6 +186,11 @@
 					imgCtrl.srcElm = img;
 				}
 
+				modalEl.on('click', function(evt) {
+					evt.stopPropagation();
+					return false;
+				});
+
 				buttonOk.on('click', function(evt) {
 					if (canvasResult[0].toBlob) {
 						canvasResult[0].toBlob(imgCtrl.imageProcessed, 'image/jpeg');

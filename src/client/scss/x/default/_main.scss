@@ -40,6 +40,13 @@ button.btn-secondary:hover, button.btn-secondary:active {
 	border-color: $color-secondary-highlight-darker;
 }
 
+button[disabled="disabled"], 
+		button[disabled="disabled"]:hover,
+		button[disabled="disabled"]:visited {
+	background-color: $color-grey;
+	border-color: $color-grey-light;
+}
+
 #login-form, #SearchPage {
 	fieldset {
 		color: $color-text;

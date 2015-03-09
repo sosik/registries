@@ -1,0 +1,30 @@
+table {
+
+	thead {
+		background: $color-secondary;
+		color: $color-main-reverse;
+
+		th.data-col:HOVER {
+			background-color: $color-main;
+		}
+	}
+
+	tbody {
+		tr:nth-child(2n) {
+			background-color: $color-background-soft;
+		}
+
+		tr:HOVER {
+			background-color: $color-main;
+		}
+		
+		td {
+			border-top: 1px solid $color-border;
+			border-bottom: 1px solid $color-border;
+		}
+
+		a, a:VISITED, a:HOVER {
+			color: $color-text;
+		}
+	}
+}

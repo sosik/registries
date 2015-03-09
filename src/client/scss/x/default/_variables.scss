@@ -3,15 +3,13 @@ $fixed-header-height: 40px;
 $menu-width: 100px;
 
 // color
-$color1: #FFCE0D;
-$color2: #E8A50C;
-$color3: #FF9800;
-$color4: #E8700C;
-$color5: #FF580D;
+$color-yellow: #FFCE0D;
 $color-black: #333333;
 $color-white: #ffffff;
 $color-grey: #dddddd;
 $color-grey-light: #eeeeee;
+
+$color-component-background: #E8700C;
 
 $color-main: #fdb730;
 $color-main-darker: #fdae17;
@@ -28,7 +26,7 @@ $color-secondary-highlight-darker: #858585;
 $color-background-soft: #fafafa;
 $color-border: #ddd;
 
-$color-active: $color1;
+$color-active: $color-yellow;
 $color-error: #ff0000 !default;
 
 // font colors
@@ -39,10 +37,10 @@ $font-color-base: $color-text;
 $modlaview-bg-color: rgba(0,0,0,0.5);
 $modalview-body-bg-color: $color-black;
 $modalview-color: $color-white;
-$modalview-header-bg: $color1;
+$modalview-header-bg: $color-yellow;
 
 // header
-$header-bg: $color1;
+$header-bg: $color-yellow;
 
 // header navigation
 $header-navigation-color: $color-black;
@@ -51,7 +49,7 @@ $header-navigation-link-active: lighten($header-bg, 30%);
 // main menu
 $main-menu-bg: $color-black;
 $main-menu-color: $color-white;
-$main-item-hover-color: $color1;
+$main-item-hover-color: $color-yellow;
 $main-item-active-bg-color: lighten($color-black, 10%);
 
 // string menu
@@ -70,11 +68,11 @@ $dropdown-shadow-color: 0 5px 10px rgba(red($string-border-color),green($string-
 //calendar
 $calendar-controll-background-color: $color-grey;
 $calendar-other-color: $color-grey;
-$calendar-hover-color: $color1;
+$calendar-hover-color: $color-yellow;
 $calendar-selected-background-color: $color-black;
 $calendar-selected-color: $color-white;
 $calendar-current-color: $color-white;
-$calendar-current-background-color: $color4;
+$calendar-current-background-color: $color-component-background;
 
 // selectbox
 $selectbox-background-color: $string-border-color;

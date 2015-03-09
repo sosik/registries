@@ -1,15 +1,15 @@
 @media (max-width: $screen-md) {
 	.table-container {
 		width: 100%;
-		overflow-x: scroll;
+		overflow-y: hidden;
+		overflow-x: auto;
 		position: relative;
-		height: 300px;
 
-		table {
+		/*table {
 			position: absolute;
 			left: 0px;
 			top: 0px;
-		}
+		}*/
 	}
 }
 
@@ -26,6 +26,7 @@ table {
 			padding: 8px;
 			font-weight: normal;
 			text-align: left;
+			white-space: nowrap;
 		}
 
 		th.data-col:HOVER {
@@ -46,6 +47,7 @@ table {
 			padding: 8px;
 			line-height: 1.42857;
 			vertical-align: top;
+			white-space: nowrap;
 		}
 	}
 }

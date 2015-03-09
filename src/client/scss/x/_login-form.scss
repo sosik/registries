@@ -1,0 +1,47 @@
+.login-page{
+	.x-main-content {
+		left: 0px;
+	}
+	.x-logo{
+		margin-left: 0px;
+	}
+}
+
+#login-form {
+	fieldset {
+		border: none;
+		max-width: 16 * $fixed-header-height;
+		margin-top: $fixed-header-height * 2;
+		margin-left: auto;
+		margin-right: auto;
+		position: relative;
+
+		.login-form-lang {
+			position: absolute;
+			right: 13px;
+			top: 20px;
+		}
+	}
+}
+
+#LoginForm {
+	fieldset {
+		border: none;
+		width: 16 * $fixed-header-height;
+		margin-top: $fixed-header-height * 2;
+		margin-left: auto;
+		margin-right: auto;
+		position: relative;
+	}
+
+	@media (max-width: $screen-sm) {
+		fieldset {
+			border: none;
+			width: auto;
+			margin-top: $fixed-header-height * 2;
+			margin-left: 0px;
+			margin-right: 0px;
+		}
+	}
+
+}

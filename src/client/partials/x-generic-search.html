@@ -46,12 +46,10 @@
 						</div>
 
 						<div class="x-fieldset-row">
-							<div class="x-fieldset-col-4">
+							<div class="pull-left">
 								<button ng-click="addCrit()" type="button" class="btn-secondary"><i class="icon-add"></i> {{'generic.search.add' | translate}}</button>
 							</div>
-							<div class="x-fieldset-col-2">&nbsp;</div>
-							<div class="x-fieldset-col-2">&nbsp;</div>
-							<div class="x-fieldset-col-4 pull-right">
+							<div class="pull-right">
 								<button ng-disabled="disabledSearch" ng-click="search()" class="btn-primary"><i class="icon-search"></i> {{'generic.search.search' | translate}}</button>
 							</div>
 						</div>
@@ -62,7 +60,7 @@
 			<div>
 				<div ng-show="data!=null">
 
-					<fieldset>
+					<div class="x-fieldset">
 						<span class="x-fieldset-title">{{'generic.search.result.of.searching' | translate}}</span>
 						<div class="table-container">
 							<table >
@@ -99,15 +97,14 @@
 						</div>&nbsp;
 						<div/>
 						<div class="x-fieldset-row">
-							<div class="x-fieldset-col-4">
+							<div class="pull-left">
 								<button ng-show="data" ng-click='exportCsv()' class="btn-secondary"> {{'generic.search.export.csv' | translate}} </button>
 							</div>
-							<div class="x-fieldset-col-4">&nbsp;</div>
-							<div class="x-fieldset-col-4 pull-right">
+							<div class="pull-right">
 								<button ng-show="data" ng-click='searchNext()' class="btn-secondary"> >>> </button>
 							</div>
 						</div>
-					</fieldset>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -1,0 +1,38 @@
+#SearchPage {
+	fieldset, .x-fieldset{
+		width: 16 * $fixed-header-height;
+	}
+
+	fieldset {
+		@include clearfix();
+		border: none;
+		//margin-top: $fixed-header-height;
+		position: relative;
+	}
+
+	fieldset.narrow {
+		width: 10 * $fixed-header-height;
+	}
+
+	.item-clickable:HOVER {
+		cursor: pointer;
+	}
+
+	@media (max-width: $screen-md) {
+		fieldset, .x-fieldset {
+			width: auto;
+		}
+
+		.x-fieldset{
+			display: block;
+			float: none;
+		}
+	}
+
+	@media (max-width: $screen-sm) {
+		fieldset.narrow {
+			width: auto;
+			//margin-top: $fixed-header-height;
+		}
+	}
+}

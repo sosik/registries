@@ -50,6 +50,16 @@
 			list-style: none;
 			display: block;
 		}
+		ul{
+			a{
+				span{
+					white-space: nowrap;
+					display: block;
+					text-overflow: ellipsis;
+					overflow: hidden;
+				}
+			}
+		}
 		a{
 			text-decoration: none;
 			display: block;

@@ -1,10 +1,10 @@
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-12 col-lg-5">
-			<fieldset>
-				<legend>{{'schema.editor.list.of.schemas.for.editation' | translate}}</legend>
+<div class="x-schema-editor">
+	<div class="">
+		<div class="">
+			<div class="x-fieldset">
+				<span  class="x-fieldset-title">{{'schema.editor.list.of.schemas.for.editation' | translate}}</span>
 				
-				<div class="table-responsive">
+				<div class="table-container">
 					<table class="table">
 						<thead>
 							<tr>
@@ -29,13 +29,13 @@
 						</tbody>
 					</table>
 				</div>
-			</fieldset>
+			</div>
 		</div>
 
 		<div class="col-md-12 col-lg-7">
 			<div class="form form-horizontal" ng-show="selectedSchema" >
 				<fieldset>
-					<legend>{{'schema.editor.schema.editing' | translate}}</legend>
+					<span  class="x-fieldset-title">{{'schema.editor.schema.editing' | translate}}</span>
 					
 					<div class="form-group">
 						<section class="col-md-12" ng-show="selectedSchema" id="editor"  ng-cloak >
@@ -54,14 +54,16 @@
 							</div>
 						</section>
 					</div>
-				</fieldset>
-				<div class="form-group">
-					<div class="col-md-12">
-						<button ng-click="postData(aceModel)" class="btn btn-primary pull-right">
-							<i class="glyphicon-ok"></i>{{'schema.editor.save' | translate}}
-						</button>
+
+					<div class="form-group">
+						<div class="col-md-12">
+							<button ng-click="postData(aceModel)" class="btn btn-primary pull-right">
+								<i class="glyphicon-ok"></i>{{'schema.editor.save' | translate}}
+							</button>
+						</div>
 					</div>
-				</div>
+				</fieldset>
+				
 			</div>
 		</div>
 		

@@ -1,0 +1,17 @@
+.x-schema-editor{
+	fieldset, .x-fieldset{
+		width: 16 * $fixed-header-height;
+	}
+
+	.x-fieldset{
+		display: block;
+		float: none;
+	}
+
+	@media (max-width: $screen-md) {
+		fieldset, .x-fieldset {
+			width: auto;
+		}
+	}
+	
+}

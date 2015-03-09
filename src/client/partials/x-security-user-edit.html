@@ -32,11 +32,10 @@
 					</div>
 
 						<div class="x-fieldset-row">
-							<div class="x-fieldset-col-4">
+							<div class="pull-left">
 								<button ng-click="addCrit()" class="btn-secondary"><i class="icon-add"></i> {{'security.user.edit.add' |translate}}</button>
 							</div>
-							<div class="x-fieldset-col-4">&nbsp;</div>
-							<div class="x-fieldset-col-4 pull-right">
+							<div class="pull-right">
 								<button ng-click="search()" class="btn-primary"><i class="icon-search"></i> {{'security.user.edit.search' |translate}}</button>
 							</div>
 						</div>
@@ -45,8 +44,8 @@
 			</form>
 			
 			<div ng-show='userList'>
-				<fieldset>
-				<legend>{{'security.user.edit.result' |translate}} ({{entity}})</legend>
+				<div class="x-fieldset">
+				<spam class="x-fieldset-title">{{'security.user.edit.result' |translate}} ({{entity}})</spam>
 					<div class="table-container">
 						<table>
 							<thead>
@@ -61,16 +60,24 @@
 										header.field)}} {{$eval("obj."+header.field)}}</td>
 
 									<td>
-										<span ng-click='selectUser(obj)' class="item-clickable">
+										<a href="#" ng-click='selectUser(obj)' class="item-clickable">
 											<i class="icon-pencil"></i> <span>{{'security.user.edit.edit' |translate}}</span>
-										</span>
+										</a>
 									</td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-				</fieldset>
-			<button ng-click='searchNext()' class="btn-secondary"> >>> </button>
+					<div>
+						<div class="x-fieldset-row">
+							<div class="pull-right">
+								<button ng-click='searchNext()' class="btn-secondary"> >>> </button>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			
 			</div>
 		</div>
 

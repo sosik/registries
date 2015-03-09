@@ -49,14 +49,7 @@ body{
 	overflow-x: auto;
 }
 
-.login-page{
-	.x-main-content {
-		left: 0px;
-	}
-	.x-logo{
-		margin-left: 0px;
-	}
-}
+
 
 .x-form {
 }
@@ -92,73 +85,6 @@ body{
 		vertical-align: middle;
 		position: relative;
 		top: -2px;
-	}
-}
-
-fieldset {
-	border: none;
-}
-
-#login-form {
-	fieldset {
-		border: none;
-		max-width: 16 * $fixed-header-height;
-		margin-top: $fixed-header-height * 2;
-		margin-left: auto;
-		margin-right: auto;
-		position: relative;
-
-		.login-form-lang {
-			position: absolute;
-			right: 13px;
-			top: 20px;
-		}
-	}
-}
-
-#LoginForm {
-	fieldset {
-		border: none;
-		width: 16 * $fixed-header-height;
-		margin-top: $fixed-header-height * 2;
-		margin-left: auto;
-		margin-right: auto;
-		position: relative;
-	}
-
-	@media (max-width: $screen-sm) {
-		fieldset {
-			border: none;
-			width: auto;
-			margin-top: $fixed-header-height * 2;
-			margin-left: 0px;
-			margin-right: 0px;
-		}
-	}
-
-}
-
-#SearchPage {
-	fieldset {
-		border: none;
-		width: 16 * $fixed-header-height;
-		margin-top: $fixed-header-height;
-		position: relative;
-	}
-
-	fieldset.narrow {
-		width: 10 * $fixed-header-height;
-	}
-
-	.item-clickable:HOVER {
-		cursor: pointer;
-	}
-
-	@media (max-width: $screen-sm) {
-		fieldset, fieldset.narrow {
-			width: auto;
-			margin-top: $fixed-header-height;
-		}
 	}
 }
 
@@ -303,5 +229,9 @@ a:HOVER {
 
 .pull-right {
 	text-align: right;
+}
+
+.pull-left {
+	text-align: left;
 }
 

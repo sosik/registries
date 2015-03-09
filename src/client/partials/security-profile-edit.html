@@ -3,7 +3,7 @@
 		<div class="psui-search col-md-12 col-lg-8 ">
 			<form class="form form-horizontal">
 				<fieldset>
-				<legend>{{'security.profile.edit.searching' |translate}} ({{entity}})</legend>
+				<legend>{{'security.profile.edit.searching' |translate}} ({{'security.profile.edit.entity' |translate}})</legend>
 
 					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
@@ -52,13 +52,13 @@
 
 			<div ng-show='profileList'>
 				<fieldset>
-				<legend>{{'security.profile.edit.result' |translate}} ({{entity}})</legend>
+				<legend>{{'security.profile.edit.result' |translate}} ({{'security.profile.edit.entity' |translate}})</legend>
 					<div class="table-responsive">
 						<table class="table">
 							<thead>
 								<tr>
 									<th ng-repeat="header in headers">{{header.title}}</th>
-						<th>{{'security.profile.edit.actions' |translate}}</th>
+									<th>{{'security.profile.edit.actions' |translate}}</th>
 								</tr>
 							</thead>
 							<tbody>

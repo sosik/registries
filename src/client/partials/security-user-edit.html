@@ -3,7 +3,7 @@
 		<div class="psui-search col-md-12 col-lg-8 ">
 			<form class="form form-horizontal">
 				<fieldset>
-				<legend>{{'security.user.edit.searching' |translate}} ({{entity}})</legend>
+				<legend>{{'security.user.edit.searching' |translate}} ({{'security.user.edit.entity' |translate}})</legend>
 				
 					<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
 
@@ -44,13 +44,13 @@
 			
 			<div ng-show='userList'>
 				<fieldset>
-				<legend>{{'security.user.edit.result' |translate}} ({{entity}})</legend>
+				<legend>{{'security.user.edit.result' |translate}} ({{'security.user.edit.entity' |translate}})</legend>
 					<div class="table-responsive">
 						<table class="table">
 							<thead>
 								<tr>
-									<th ng-repeat="header in headers">{{header.title}}</th>
-						<th>{{'security.user.edit.actions' |translate}}</th>
+									<th ng-repeat="header in headers">{{header.transCode |translate}}</th>
+									<th>{{'security.user.edit.actions' |translate}}</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -137,7 +137,7 @@
 				<div class="form-group">
 					<div class="col-md-12">
 						<div class="btn-group pull-right">
-							<button ng-click="resetPassword() " class="btn btn-secondary">Resetnúť heslo</button>
+							<button ng-click="resetPassword() " class="btn btn-secondary">{{'security.user.edit.reset.password' |translate}}</button>
 							<button ng-click="updateUserSecurity()" class="btn btn-primary">
 								<i class="glyphicon-ok"></i>{{'security.user.edit.save' |translate}}
 							</button>

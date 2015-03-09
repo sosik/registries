@@ -95,6 +95,8 @@
 						formControl.releaseFocus(elm);
 					}
 
+					formControl.releaseFocus(elm);
+
 					return false;
 				};
 
@@ -106,6 +108,8 @@
 					scope.$apply(function() {
 						$parse(modelPath).assign(scope, oldValue); 
 					});
+
+					formControl.releaseFocus(elm);
 				}
 
 				var rollbackClickHandler = function(evt) {

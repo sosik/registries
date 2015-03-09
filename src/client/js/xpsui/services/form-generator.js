@@ -98,6 +98,8 @@
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.$uploadableImage){
 					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
+					field.attr('width', schemaFragment.$uploadableImage.width);
+					field.attr('height', schemaFragment.$uploadableImage.height);
 				} else if( schemaFragment.type === "string"
 					|| schemaFragment.type === "Decimal"
 				){

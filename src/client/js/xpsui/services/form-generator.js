@@ -49,14 +49,24 @@
 				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.$uploadableImage){
+				} else if(schemaFragment.$uploadableImage
+					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
 					field = angular.element('<div xpsui-uploadable-image xpsui-imageresizor /></div>');
 					field.attr('xpsui-schema', schemaPath);
-					field.attr('psui-imageresizor-width', schemaFragment.$uploadableImage.width);
-					field.attr('psui-imageresizor-height', schemaFragment.$uploadableImage.height);
-					field.attr('style', (schemaFragment.$uploadableImage.width ? 'width:'+ schemaFragment.$uploadableImage.width+'px !important;':'')
-						+ (schemaFragment.$uploadableImage.height ? 'height:'+schemaFragment.$uploadableImage.height+'px !important;':'')
+					var width = schemaFragment.$uploadableImage ? 
+						schemaFragment.$uploadableImage.width : schemaFragment.render.width;
+					var height = schemaFragment.$uploadableImage ? 
+						schemaFragment.$uploadableImage.height : schemaFragment.render.height;
+
+					field.attr('psui-imageresizor-width', width);
+					field.attr('psui-imageresizor-height', height);
+					field.attr('style', (width ? 'width:'+ width+'px !important;':'')
+						+ (height ? 'height:'+height+'px !important;':'')
 					);
+				} else if(schemaFragment.type === "date" 
+					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
+					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>'); 
+					field.attr('xpsui-schema', schemaPath);
 				} else if( schemaFragment.type === "string"
 					|| schemaFragment.type === "Decimal"
 				){
@@ -66,9 +76,6 @@
 					} else {
 						field = angular.element('<div xpsui-string-edit></div>');
 					}
-				} else if(schemaFragment.type === "date"){
-					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>'); 
-					field.attr('xpsui-schema', schemaPath);
 				}
 				
 				field.attr('ng-model', modelPath);
@@ -96,10 +103,19 @@
 				if(schemaFragment.$objectLink2){
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.$uploadableImage){
+				} else if(schemaFragment.$uploadableImage
+					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
 					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
-					field.attr('width', schemaFragment.$uploadableImage.width);
-					field.attr('height', schemaFragment.$uploadableImage.height);
+					var width = schemaFragment.$uploadableImage ? 
+						schemaFragment.$uploadableImage.width : schemaFragment.render.width;
+					var height = schemaFragment.$uploadableImage ? 
+						schemaFragment.$uploadableImage.height : schemaFragment.render.height;
+
+					field.attr('width', width);
+					field.attr('height', height);
+				} else if(schemaFragment.type === "date" 
+					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
+					field = angular.element('<div xpsui-date-view></div>');
 				} else if( schemaFragment.type === "string"
 					|| schemaFragment.type === "Decimal"
 				){
@@ -109,8 +125,6 @@
 					} else {
 						field = angular.element('<div xpsui-string-view></div>');
 					}
-				} else if(schemaFragment.type === "date"){
-					field = angular.element('<div xpsui-date-view></div>');
 				}
 
 				field.attr('ng-model', modelPath);

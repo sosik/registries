@@ -1,5 +1,5 @@
 (function(angular) {
-	'use strict';
+	//'use strict';
 
 	angular.module('x-registries')
 	.config(['$translateProvider', function($translateProvider) {
@@ -78,6 +78,8 @@
 			"menu.massmailing.search.lower.level":"Vyhľadáť",
 			"menu.massmailing.send.title":"Odoslať",
 			"massmailing.send":"Odoslať",
+			"massmailing.sent":"Správa bola odoslaná.",
+
 			"massmail.predefined.template": "Preddefinované vzory",
 			"massmail.plaintext.template":"Text správy",
 			"massmail.subject.template":"Predment správy",
@@ -106,7 +108,7 @@
 			"registry.new.new": "Nový",
 			"registry.new.cancel": "Zrušiť",
 			"registry.new.send": "Odoslať",
-			"registry.succesfully.generated":"Stretnutia boli úspešne vygenerované",
+			"registry.succesfully.generated":"Obsah stránky úspešne vypočítaný",
 			"security.group.edit.list.of.security.groups": "Zoznam bezpečnostných skupín",
 			"security.group.edit.id": "ID",
 			"security.group.edit.edit": "Upraviť",
@@ -488,8 +490,18 @@
 			"login.authentication.failed": "Přihlášení selhalo",
 			"login.selected.profile.continue":"Pokračovat s profilem",
 			"login.profile":"Profil",
+
+			"enum.active.A":"Aktívny",
+			"enum.active.I":"Neaktívny",
+
+			"enum.boolean.true":"Áno",
+			"enum.boolean.false":"Nie",
+
 			"enum.gender.M":"Muž",
 			"enum.gender.F":"Žena",
+
+			"validation.field.not.unique":"Hodnota nie je unikátna.",
+			"validation.field.not.number":"Hodnota nie je číslo.",
 
 			"validation.field.not.unique":"Hodnota není unikátní.",
 			"validation.field.not.number":"Hodnota není číslo.",
@@ -553,6 +565,7 @@
 			"massmail.search.recipient":"Vyhledat příjemce",
 			"massmail.send.view":"Hromadní pošta",
 			"massmailing.send":"Odeslat",
+			"massmailing.sent":"Správa byla odeslaná.",
 			"massmail.selection.all":"Podle filtra",
 			"header.settings": "Nastavení",
 			"header.log.out": "Odhlásit se",
@@ -574,7 +587,7 @@
 			"registry.new.new": "Nový",
 			"registry.new.cancel": "Zrušit",
 			"registry.new.send": "Odeslat",
-			"registry.succesfully.generated":"Stretnutia boli úspešne vygenerované",
+			"registry.succesfully.generated":"Obsah úspešne vygenerovaný",
 			"security.group.edit.list.of.security.groups": "Seznam bezpečnostních skupin",
 			"security.group.edit.id": "ID",
 			"security.group.edit.edit": "Upravit",

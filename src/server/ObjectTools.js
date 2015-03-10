@@ -32,7 +32,7 @@ var ObjectTools = function() {
 				var nextLocalPath = localPath + prop;
 
 				if (propertyPathRegexp.test(nextLocalPath)) {
-					visitor(nextLocalObj, nextLocalPath, obj);
+					visitor(nextLocalObj, nextLocalPath, obj,localObj);
 				}
 
 				this.propertyVisitor(obj, propertyPathRegexp, visitor, nextLocalPath + '.', nextLocalObj);

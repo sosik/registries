@@ -191,6 +191,8 @@ angular.module('generic-search', ['schema-utils','pascalprecht.translate', 'xpsu
 					$scope.disabledSearch=false;
 				}
 			});
+		}else {
+			$scope.disabledSearch=false;
 		}
 
 

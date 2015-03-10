@@ -1,11 +1,11 @@
 'use strict';
 
 /**
- * Tools for schemas parsing, compilation and management.
- *
- * @module server
- * @submodule SchemaTools
- */
+* Tools for schemas parsing, compilation and management.
+*
+* @module server
+* @submodule SchemaTools
+*/
 var log = require('./logging.js').getLogger('SchemaTools.js');
 var URL = require('url');
 var path = require('path');
@@ -15,11 +15,11 @@ var schemaConstants = require('./SchemaConstants.js');
 var objectTools = require('./ObjectTools.js');
 
 /**
- * SchemaTools class. Used as main schemas manipulation class.
- *
- * @class SchemaTools
- * @constructor
- */
+* SchemaTools class. Used as main schemas manipulation class.
+*
+* @class SchemaTools
+* @constructor
+*/
 //TODO honor JSON pointer reference
 //TODO honor JSON reference reference
 //TODO honor URI reference for URI validation
@@ -55,8 +55,8 @@ var SchemaTools = function() {
 	var schemasCache = {};
 
 	/**
-	 * Helper function that normalizes URI to common format
-	 */
+	* Helper function that normalizes URI to common format
+	*/
 	var normalizeURL = function(url) {
 		//TODO do path normalization
 		if (!url) {
@@ -74,15 +74,15 @@ var SchemaTools = function() {
 	};
 
 	/**
-	 * Add schema to schema cache for uri resolution.
-	 * If URI does not contain fragment (#) identification, # is appended to
-	 * the end of URI.
-	 *
-	 * @method registerSchema
-	 * @param {string} uri - resolution uri
-	 * @param {string|object} schema - schema as string or json object
-	 * @param {boolean} override - true if new schema should override old one
-	 */
+	* Add schema to schema cache for uri resolution.
+	* If URI does not contain fragment (#) identification, # is appended to
+	* the end of URI.
+	*
+	* @method registerSchema
+	* @param {string} uri - resolution uri
+	* @param {string|object} schema - schema as string or json object
+	* @param {boolean} override - true if new schema should override old one
+	*/
 	this.registerSchema = function(uri, schema, override) {
 		var schemaObj = null;
 
@@ -129,27 +129,27 @@ var SchemaTools = function() {
 	};
 
 	/**
-	 * Get registered schema. If there is no schema with coresponding uri,
-	 * it returns null. It does deep uri identification and traversing so it
-	 * can return subschema of larger schema registered by registerSchema method.
-	 *
-	 * @method getSchema
-	 * @param {String} uri uri of schema
-	 * @return {Object} schema object or null it there no such schema registered
-	 */
+	* Get registered schema. If there is no schema with coresponding uri,
+	* it returns null. It does deep uri identification and traversing so it
+	* can return subschema of larger schema registered by registerSchema method.
+	*
+	* @method getSchema
+	* @param {String} uri uri of schema
+	* @return {Object} schema object or null it there no such schema registered
+	*/
 	this.getSchema = function(uri) {
-		//TODO do traversing in schema structure URI and fragment information
 		var url = URL.parse(normalizeURL(URL.parse(uri)));
+		// console.log('getSch',URL.format(url),JSON.stringify( schemasCache[URL.format(url)]));
 		return schemasCache[URL.format(url)] || null;
 	};
 
 
 	/**
-	 * finds schema-fragments that ends with specified suffix
-	 *
-	 * @method getSchemaNamesBySuffix
-	 * @param {String} suffix suffix to look for
-	 */
+	* finds schema-fragments that ends with specified suffix
+	*
+	* @method getSchemaNamesBySuffix
+	* @param {String} suffix suffix to look for
+	*/
 	this.getSchemaNamesBySuffix = function(suffix) {
 		//TODO do traversing in schema structure URI and fragment information
 		var retVal=[];
@@ -201,10 +201,10 @@ var SchemaTools = function() {
 	};
 
 	/**
-	 * Parses all registred schema
-	 *
-	 * @method parse
-	 */
+	* Parses all registred schema
+	*
+	* @method parse
+	*/
 	this.parse = function() {
 		// TODO consider property ID only if it is defined in main structure not in "properties"
 		for (var schemaUri in schemasCache) {
@@ -213,15 +213,15 @@ var SchemaTools = function() {
 	};
 
 	/**
-	 * Internal schema compilation function, Recursively traverses aobject and does
-	 * compilation of schema.
-	 * This function directly modifies obj parameter. It does not check obj parameter for
-	 * validity.
-	 *
-	 * @param {object} obj parsed definition of schema
-	 * @return {object} in form of {done: true/false, val: computed value}
-	 * @throws exceptions
-	 */
+	* Internal schema compilation function, Recursively traverses aobject and does
+	* compilation of schema.
+	* This function directly modifies obj parameter. It does not check obj parameter for
+	* validity.
+	*
+	* @param {object} obj parsed definition of schema
+	* @return {object} in form of {done: true/false, val: computed value}
+	* @throws exceptions
+	*/
 	var self = this;
 	var compileInternal = function(obj) {
 		var p, compiled, refSchema, compiledSchema, errMessage, res, props, propName;
@@ -290,35 +290,7 @@ var SchemaTools = function() {
 					}
 				}
 
-				// $extends
-				if (obj.hasOwnProperty(schemaConstants.EXTENDS_KEYWORD)) {
 
-					refSchema = self.getSchema(obj[schemaConstants.EXTENDS_KEYWORD]);
-					if (refSchema === null) {
-						// there is no such schema registered
-						errMessage = util.format('Referenced schema not found %s', obj[schemaConstants.EXTENDS_KEYWORD]);
-						log.silly(errMessage);
-						throw new Error(errMessage);
-					}
-
-					compiledSchema = refSchema.compiled;
-
-					if (typeof compiledSchema === 'undefined' || compiledSchema === null) {
-						// ref schema is not compiled
-						log.silly('Referenced schema not compiled %s', obj[schemaConstants.EXTENDS_KEYWORD]);
-						return {done:false, val: null};
-					}
-
-					// we are done with whole object as $ref can be only property
-					// console.log("before extend",JSON.stringify(obj));
-					delete obj[schemaConstants.EXTENDS_KEYWORD];
-					var extended=extend(true,{},compiledSchema,obj);
-
-					objectTools.removeNullProperties(extended);
-					// console.log("after extend",JSON.stringify(extended));
-
-					return {done: true, val: extended};
-				}
 
 				return {done: true, val: obj};
 			}
@@ -329,13 +301,13 @@ var SchemaTools = function() {
 	};
 
 	/**
-	 * Compiles all registered schemas into one uberSchema and
-	 * each schema individually.
-	 * Schema compilation means replacing of all $ref objects by instance
-	 * of full schema definitioin registered by related uri.
-	 *
-	 * @method compile
-	 */
+	* Compiles all registered schemas into one uberSchema and
+	* each schema individually.
+	* Schema compilation means replacing of all $ref objects by instance
+	* of full schema definitioin registered by related uri.
+	*
+	* @method compile
+	*/
 	this.compile = function() {
 		for (var schemaUrl in schemasCache) {
 			// first clear previous compilations
@@ -362,15 +334,108 @@ var SchemaTools = function() {
 				}
 			}
 		}
+
+		resolveExtends(schemasCache);
+
 	};
 
 	/**
-	 * Creates empty object by schema definition
-	 *
-	 * @method createDefaultObject
-	 * @param {String} uri uri of schema to use as object definition
-	 * @return {Object} empty object definded by schema
-	 */
+		Method verifies if string ends with specified suffix.
+		@method endsWith
+	*/
+	function endsWith(str,suffix) {
+		return str.indexOf(suffix, str.length - suffix.length) !== -1;
+	};
+
+	/**
+	* Method resolves schemas extends.
+	* Limitation: Resolving can end with unresolved extends or can run to stack overflow for cyclic schema.
+	* @method resolveExtends
+	*/
+	function resolveExtends(schemasCache) {
+			debugger;
+			var schemasToResolve={};
+			var resolved={};
+
+			for (var schemaUrl in schemasCache) {
+				if (endsWith(schemaUrl.toString(),'#')){
+					schemasToResolve[schemaUrl]=schemasCache[schemaUrl].compiled;
+				}
+			}
+
+			var solved=1;
+
+			var  exts=[];
+
+			// cycle while able to solve
+			while (solved>0){
+				var solved=0;
+
+				//search for extends
+				exts=findExtends(schemasToResolve);
+				exts.forEach(function(ext){
+					var subExts=findExtends(ext.local);
+					// no child extends (1 is current extend)
+					if (subExts.length===1){
+						var extSchema=self.getSchema(ext.val);
+						var refExts=findExtends(extSchema.compiled);
+						log.silly('resolving extend',ext.path,ext.val,refExts.length);
+						// referenced schema should be resolved too.
+						if (refExts.length===0){
+							var extended=solveExtend(ext.local,extSchema.compiled);
+							solved++;
+							var index=ext.path.indexOf('#')
+							var url=ext.path.substring(0,index+1);
+							updateRegistry( url,schemasCache[url].compiled,schemasCache);
+							log.silly('resolved extend',ext.path,ext.val);
+						}
+					}
+				})
+				log.info('extends solved',solved,'/',exts.length );
+
+			}
+
+			// for (var schemaUrl in  schemasToResolve) {
+			// 	if (schemasToResolve.hasOwnProperty(schemaUrl)){
+			// 		updateRegistry( schemaUrl,schemasCache[schemaUrl].compiled,schemasCache);
+			// 	}
+			// }
+	}
+
+	/**
+	Method updates schema registry links to all elements in schema.
+	*/
+	function updateRegistry(schemaUrl,schemaObj,cache){
+		objectTools.propertyVisitor(schemaObj, /.*$/, function(val, path, obj,local) {
+			objectTools.setValue(cache,schemaUrl+path.replace(/\./g,"/")+".compiled",val);
+		});
+	}
+	function solveExtend(obj,refSchema){
+		delete obj[schemaConstants.EXTENDS_KEYWORD];
+		var extended=extend(true,{},refSchema,obj);
+		delete extended[schemaConstants.EXTENDS_KEYWORD];
+		extend(true,obj,extended);
+		objectTools.removeNullProperties(obj);
+		return extended;
+	}
+
+	function findExtends(schemaObj){
+		var exts=[];
+		objectTools.propertyVisitor(schemaObj, /extends$/, function(val, path, obj,local) {
+			exts.push({path:path,val:val,local:local});
+		});
+
+		return exts;
+	};
+
+
+	/**
+	* Creates empty object by schema definition
+	*
+	* @method createDefaultObject
+	* @param {String} uri uri of schema to use as object definition
+	* @return {Object} empty object definded by schema
+	*/
 	this.createDefaultObject = function(uri) {
 		var compiledSchema = schemasCache[uri];
 

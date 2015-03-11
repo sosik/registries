@@ -1,0 +1,112 @@
+<section id="SearchPage" ng-app="doc.ui-ace" class="ng-scope">
+	<form novalidate class="ng-pristine ng-valid form">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-8">
+					<fieldset>
+						<legend>{{'massmail.send.view' | translate}}</legend>
+					
+						<div class="form-group">
+							<label for="name" class="control-label">{{'massmail.predefined.template' | translate}}</label>
+							<select class="form-control"
+								ng-model="selectedTemplate" ng-change="changed()"
+								ng-options="template.baseData.name for template in templates"></select>
+						</div>
+
+						<div class="form-group">
+							<label for="name" class="control-label">{{'massmail.subject.template' | translate}}</label>
+							<input type="text" class="form-control col-md-4"  cols="80" rows="7" ng-model="selectedTemplate.baseData.subjectTemplate" />
+						</div>
+						<div class="form-group">
+							<label for="name" class="control-label">{{'massmail.plaintext.template' | translate}}</label>
+							<textarea class="form-control"  cols="80" rows="7" ng-model="selectedTemplate.baseData.textTemplate"></textarea>
+						</div>
+							<div psui-contenteditable ng-model="selectedTemplate.baseData.htmlTemplate" />
+					</fieldset>
+									</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-8 psui-search">
+
+					<fieldset>
+						<legend>{{'massmail.search.recipient' | translate}}</legend>
+
+						<div class="row form-group psui-search-condition" ng-repeat="crit in searchCrit">
+
+							<div class="col-sm-4">
+								<select class="form-control"
+									ng-model="crit.attribute"
+									ng-options="att.title for att in searchDef.attributes"></select>
+							</div>
+							<div class="col-sm-2">
+								<select class="form-control"
+									ng-model="crit.operator"
+									ng-Init="crit.operator=searchDef.operators[0]"
+									ng-options="op.title for op in searchDef.operators"></select>
+							</div>
+							
+							<div class="col-sm-4">
+								<input  type="text" id="name" name="name" ng-model="crit.value"
+									placeholder="" class="ng-pristine ng-valid form-control"
+									autocomplete="off">
+							</div>
+							<div class="col-sm-2">
+								<button ng-click="removeCrit($index)" class="btn btn-secundary pull-right"><i class="glyphicon-remove"></i>{{'generic.search.remove' | translate}}</button>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-xs-9">
+								<button ng-click="addCrit()" class="btn btn-secondary"><i class="glyphicon-plus"></i>{{'generic.search.add' | translate}}</button>
+							</div>
+							<div class="col-xs-3">
+								<button ng-click="search()" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'generic.search.search' | translate}}</button>
+							</div>
+						</div>
+					</fieldset>
+
+
+				</div>
+			</div>
+			<div class="row">
+				<div ng-show="data" class="col-lg-8">
+
+					<fieldset>
+						<legend>{{'generic.search.result.of.searching' | translate}}</legend>
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr class="list-header">
+										<th>
+												<input type="checkbox" ng-model="selectAll">&nbsp;{{'massmail.selection.all' | translate}} ({{recipientCount()}})</input>
+										</th>
+										<th ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="obj in data" ng-click="goView($index)"
+										class="list-row">
+										<td><input ng-show="!selectAll" type="checkbox" ng-model="obj.selected"></td>
+										<td ng-repeat="header in headers">{{getVal("obj." +
+											header.field)}} {{$eval("obj."+header.field)}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<button class="btn btn-secundary pull-right" ng-click='searchNext()'> >>> </button>
+					</fieldset>
+					<div class="row form-group">
+						<div class="col-xs-12">
+							
+						</div>
+						
+						<div class="col-xs-12">
+							<button ng-disabled="recipientCount()<1" confirmed-click="sendMail()" ng-confirm-click="Realy want to send ?" class="btn btn-primary pull-right"><i class="glyphicon-search"></i>{{'massmailing.send' | translate}} ({{recipientCount()}}x)</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</section>

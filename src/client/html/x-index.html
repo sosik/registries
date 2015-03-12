@@ -18,9 +18,10 @@
 	<link rel="stylesheet" href="css/x-default.css" />
 	<link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="img/icon.ico" />
+
 	<link rel="stylesheet" href="css/portal-editor.css" />
 	<link rel="stylesheet" href="portal/css/portal.css" />
-	
+
 	<!-- javascript global -->
 	<script src="lib/angular/angular.js"></script>
 	<script src="lib/angular-route/angular-route.js"></script>
@@ -29,13 +30,14 @@
 	<script src="lib/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
 	<script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
 	<script src="lib/angular-ui-ace/ui-ace.js"></script>
-	
+
 	<!-- javascript new libs-->
 	<script src="js/xpsui.min.js"></script>
 	<script src="js/x-main.min.js"></script>
 
 	<!-- javascript data libs -->
-	<script src="dataset/get/js/x-translations.js"></script>
+	<script src="dataset/get/js/translations.js"></script>
+	<script src="js/translations.js"></script>
 
 	<!-- javascript shared libs -->
 	<script src="js/x-safeUrlEncoder.js"></script>
@@ -55,56 +57,17 @@
 			<li ng-show="security.currentUser.systemCredentials.login.loginName"><span class="text-block"
 				><span>{{security.currentUser.systemCredentials.login.loginName}}</span><i class="icon-user"></i></span
 			></li>
-			<li ng-show="security.currentUser.systemCredentials.login.loginName" class="" ng-controller="xpsui:SecurityLogoutCtrl"><a 
+			<li ng-show="security.currentUser.systemCredentials.login.loginName" class="" ng-controller="xpsui:SecurityLogoutCtrl"><a
 				href="#" ng-click="logout();"><span>{{'header.log.out' | translate}}</span><i class="icon-power-off"></i></a
 			></li>
 		</ul>
 	</nav>
 </div>
-<div xpsui-menu class="x-main-menu x-modalview" ng-show="security.currentUser.systemCredentials.login.loginName">
-	<div class="x-main-menu-toggle"></div>
-	<div class="x-modalview-window">
-		<span class="x-modalview-header">Menu</span>
-		<div class="x-main-menu-toggle x-modalview-close"></div>
-		<div class="x-modalview-body" ng-include="'dataset/get/partials/x-main-menu.html'">
-		<!-- <div class="x-modalview-body" >
-			<ul>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-group fa-2x"></i><span>{{'menu.member.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/registry/new/{{'uri://registries/people#views/fullperson'|xpsuiuriescape}}"><span>Nový</span></a></li> 
-						<li><a href="#/search/{{'uri://registries/people#views/fullperson'|xpsuiuriescape}}"><span>{{'menu.search.person.lower.level' | translate}}</span></a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-gear fa-2x"></i><span>{{'menu.my.profile.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/personal-page"><span >{{'menu.profile.lower.level' | translate}}</span></a></li>
-						<li><a href="#/personal-change-password"><span >{{'menu.change.password.lower.level' | translate}}</span></a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-cogs fa-2x"></i><span>{{'menu.permissions.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/registry/new/{{'uri://registries/security#groupmaster'|xpsuiuriescape}}"><span >{{'menu.new.group.lower.level' | translate}}</span></a></li>
-						<li><a href="#/security/group/edit/"><span >{{'menu.permission.groups.lower.level' | translate}}</span></a></li>
-						<li><a href="#/security/user/edit"><span >{{'menu.user.permissions.lower.level' | translate}}</span></a></li>
-						<li><a href="#/registry/new/{{'uri://registries/security#profilesmaster'|xpsuiuriescape}}"><span >{{'menu.new.profile.lower.level' | translate}}</span></a></li>
-						<li><a href="#/security/profile/edit"><span >{{'menu.profiles.lower.level' | translate}}</span></a></li>
 
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-pie-chart fa-2x"></i><span>{{'menu.statistics.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/statistics"><span >{{'menu.statistics.show.title' | translate}}</span></a></li>
-					</ul>
-				</li>
-				<li><a href="#" class="x-submenu-toggle"><i class="fa fa-reorder fa-2x"></i><span>{{'menu.schemas.title' | translate}}</span></a>
-					<ul>
-						<li><a href="#/schema/edit"><span >{{'menu.schema.list.lower.level' | translate}}</span></a></li>
-					</ul>
-				</li>
-			</ul> -->
-		</div>
-	</div>
-</div>
+<div id="main-menu" class="x-main-menu x-modalview" ng-show="security.currentUser.systemCredentials.login.loginName" ng-include="'dataset/get/partials/x-main-menu.html'"></div>
+
+
+
 
 <div class="x-main-content">
 	<ng-view></ng-view>

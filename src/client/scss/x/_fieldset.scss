@@ -66,7 +66,7 @@ div.x-fieldset-row {
 		margin-bottom: 8px;
 	}
 
-	input, select {
+	input, select  {
 		width: 100%;
 		padding: 4px 12px;
 		background-color: #fafafa;
@@ -75,6 +75,17 @@ div.x-fieldset-row {
 		color: #555555;
 		height: 34px;
 	}
+	textarea{
+			width: 100%;
+			padding: 4px 12px;
+			background-color: #fafafa;
+			box-shadow: none !important;
+			border: 1px solid #b0b0b0;
+			color: #555555;
+			min-width:400px ;
+			min-height:34px;
+			resize:both;
+	}
 
 	@media (max-width: $screen-sm) {
 		div.x-fieldset-col-2 {
@@ -82,7 +93,7 @@ div.x-fieldset-row {
 			float: none;
 			margin-bottom: 8px;
 		}
-	
+
 		div.x-fieldset-col-4 {
 			width: auto;
 			float: none;

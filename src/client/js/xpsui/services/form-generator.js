@@ -68,16 +68,38 @@
 					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>'); 
 					field.attr('xpsui-schema', schemaPath);
 				} else if( schemaFragment.type === "string"
+					//FIXME: this should be removed date is not valid value JSON SCHEMA
 					|| schemaFragment.type === "Decimal"
 				){
 					if(schemaFragment.enum){
 						field = angular.element('<div xpsui-select-edit></div>');
 						field.attr('xpsui-schema', schemaPath);
 					} else {
-						field = angular.element('<div xpsui-string-edit></div>');
+						if (schemaFragment.render && schemaFragment.render.component  ){
+
+							if ( schemaFragment.render.component=="psui-textarea" ) {
+								field = angular.element('<div xpsui-textarea-edit></div>');
+							} else
+							if ( schemaFragment.render.component=="psui-datepicker" ) {
+								field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
+							} else {
+								field = angular.element('<div>Unsupported render component '+schemaFragment.render.component+'</div>');
+							}
+						}
+						else {
+							field = angular.element('<div xpsui-string-edit></div>');
+						}
 					}
 				}
-				
+
+				//FIXME: this should be removed date is not valid value JSON SCHEMA
+				else if(schemaFragment.type === "date"){
+
+					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
+				}
+
+
+				field.attr('xpsui-schema', schemaPath);
 				field.attr('ng-model', modelPath);
 				field.attr('xpsui-validity-mark', '');
 
@@ -92,7 +114,7 @@
 					// @todo it is replaced with recursive function (from down to up)
 					// field.attr('psui-unique-id', options.modelPath+'.id');
 				}
-				
+
 
 			} else {
 
@@ -128,7 +150,7 @@
 				}
 
 				field.attr('ng-model', modelPath);
-				
+
 			}
 
 			return field;
@@ -146,7 +168,7 @@
 			}
 			value.append(this.generateField(schemaFragment, schemaPath, modelPath, mode));
 			row.append(value);
-			
+
 			return row;
 		};
 
@@ -156,7 +178,7 @@
 		 * @param scope used angular scope
 		 * @param elm element to geneerate form elements in
 		 * @param schemaFragment {Object} fragment of schema used as form definition
-		 * @param schemaPath 
+		 * @param schemaPath
 		 * @param modelPath
 		 * @param mode
 		 */
@@ -190,8 +212,8 @@
 								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
 								component.attr('xpsui-fieldset', mode);
-							} else if (localFragment.type === 'string' 
-								|| localFragment.type === 'date' 
+							} else if (localFragment.type === 'string'
+								|| localFragment.type === 'date'
 								|| localFragment.type === 'array'
 								|| localFragment.type === 'Decimal'
 							) {
@@ -202,7 +224,7 @@
 						} else {
 							// localFragment has not explicitly defined type
 						}
-						
+
 						//component = componentGenerator.generate(schemaFragment.properties[p], localSchemaPath, localModelPath, mode || this.MODE.VIEW);
 						if(component){
 							elm.append(component);

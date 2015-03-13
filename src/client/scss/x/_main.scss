@@ -223,6 +223,14 @@ button.btn-clear {
 	background: none;
 }
 
+button.btn-floating {
+	position: absolute;
+}
+
+.cancel-button-space-left {
+	margin-left: 80px;
+}
+
 a:HOVER {
 	text-decoration: underline;
 }

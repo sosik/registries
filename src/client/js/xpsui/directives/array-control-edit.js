@@ -10,12 +10,16 @@
 				'xpsuiSchema' : '='
 			},
 			template: '<div ng-repeat="ae in ngModel track by $id(ae)">'
-				+ '<button ng-click="removeByIndex($index);">' 
-					+ '<i></i>{{\'generic.search.remove\' | translate}}'
+				+ '<button class="btn-clear btn-floating" ng-click="removeByIndex($index);" >' 
+					+ '<i class="icon-minus"></i> {{\'generic.search.remove\' | translate}}'
 				+ '</button>' 
-				+ '<div xpsui-objectlink2-edit xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
+				+ '<div class="cancel-button-space-left">'
+					+ '<div xpsui-objectlink2-edit xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
+				+ '</div>'
 			+ '</div>'
-			+ '<button ng-click="appendNew();"><i></i>{{\'generic.search.add\' | translate}}</button>',
+			+ '<div class="pull-right">'
+				+ '<button ng-click="appendNew();" class="btn-clear"><i class="icon-add"></i> {{\'generic.search.add\' | translate}}</button>'
+			+ '</div>',
 			link: function(scope, element, attrs, controller) {
 				console.log(scope.psuiModel);
 				console.log(scope.xpsuiSchema);

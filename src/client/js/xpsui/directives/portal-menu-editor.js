@@ -2,11 +2,11 @@
 	'use strict';
 	
 	angular.module('xpsui:directives')
-	.directive('portalMenuEditor', ['$compile', function($compile) {
+	.directive('xpsuiPortalMenuEditor', ['$compile', function($compile) {
 		return {
 			restrict: 'A',
 			scope: {
-				index: '=portalMenuEditor',
+				index: '=xpsuiPortalMenuEditor',
 				elementIdx: '=portalMenuIndex'
 			},
 			controller: ['$scope', function($scope) {
@@ -33,7 +33,7 @@
 					}
 				};
 			}],
-			require: ["^?portalMenuEditor"],
+			require: ["^?xpsuiPortalMenuEditor"],
 			link: function(scope, elm, attrs, ctrls) {
 				scope.mode = 'view';
 				scope.opened = false;
@@ -42,7 +42,7 @@
 
 				var header = angular.element('<div class="portal-menu-header"></div>');
 				var openIcon = angular.element('<i class="icon-minus" style="padding-right:10px;"></i>');
-				var children = angular.element('<div style="padding-left: 20px;"><div ng-repeat="c in index.subElements"><div portal-menu-editor="c" portal-menu-index="$index"></div></div></div>');
+				var children = angular.element('<div style="padding-left: 20px;"><div ng-repeat="c in index.subElements"><div xpsui-portal-menu-editor="c" portal-menu-index="$index"></div></div></div>');
 				var actionButtons = angular.element('<span style="padding-left: 10px;" class="x-hidden"></span>');
 				var editButton = angular.element('<i class="action-button icon-pencil"></i>');
 				var addButton = angular.element('<i class="action-button icon-add"></i>');
@@ -52,7 +52,7 @@
 
 				var editPanel = angular.element('<table class="x-hidden portal-menu-editor-edit-panel">' +
 					'<tr><td>Meno:</td><td><input ng-model="index.name"</td></tr>' +
-					'<tr><td>Tagy:</td><td><span xportal-multistring-edit ng-model="index.tags"></span></td></tr>' +
+					'<tr><td>Tagy:</td><td><span xpsui-portal-multistring-edit ng-model="index.tags"></span></td></tr>' +
 					'</table>');
 
 

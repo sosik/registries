@@ -2,7 +2,7 @@
 	'use strict';
 	
 	angular.module('xpsui:directives')
-	.directive('portalMenuRender', ['$http', '$route', '$compile', '$location', 
+	.directive('xpsuiPortalMenuRender', ['$http', '$route', '$compile', '$location', 
 	function($http, $route, $compile, $location) {
 		return {
 			restrict: 'A',

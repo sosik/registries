@@ -23,7 +23,7 @@
 					+'<div style="background-color: white; padding-top: 10px; padding-bottom: 10px;">'
 					+'<div class="form-group row">'
 					+' <label class="col-sm-2 control-label">Tagy:</label>'
-					+' <div class="col-sm-4"><div class="input-group"><div portal-multistring-edit ng-model="data.data.tags"></div></div></div>'
+					+' <div class="col-sm-4"><div class="input-group"><div xpsui-portal-multistring-edit ng-model="data.data.tags"></div></div></div>'
 					+'</div>'
 					+'<div class="form-group row">'
 					+' <label class="col-sm-2 control-label">Veľkosť stránky:</label>'

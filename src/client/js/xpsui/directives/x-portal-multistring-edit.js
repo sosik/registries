@@ -2,7 +2,7 @@
 	'use strict';
 	
 	angular.module('xpsui:directives')
-	.directive('xportalMultistringEdit',['xpsui:logging','$parse', 
+	.directive('xpsuiPortalMultistringEdit',['xpsui:logging','$parse', 
 		'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory',
 		function(log, $parse, dropdownFactory, selectboxFactory, datafactory) {
 		return {

@@ -380,7 +380,7 @@
     });
 
   }])
-  .directive('portalMenuEditor', ['$compile', function($compile) {
+  .directive('xpsuiPortalMenuEditor', ['$compile', function($compile) {
     return {
       restrict: 'A',
       scope: {
@@ -430,7 +430,7 @@
 
         var editPanel = angular.element('<table class="psui-hidden portal-menu-editor-edit-panel">' +
             '<tr><td>Meno:</td><td><input ng-model="index.name"</td></tr>' +
-            '<tr><td>Tagy:</td><td><span portal-multistring-edit ng-model="index.tags"></span></td></tr>' +
+            '<tr><td>Tagy:</td><td><span xpsui-portal-multistring-edit ng-model="index.tags"></span></td></tr>' +
             '</table>');
  
 
@@ -543,7 +543,7 @@
       }
     };
   }])
-  .directive('portalMultistringEdit', 
+  .directive('xpsuiPortalMultistringEdit', 
       ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory',
           function(log, $parse, dropdownFactory, selectboxFactory, datafactory) {
     return {
@@ -598,7 +598,7 @@
       }
     };
   }])
-  .directive('portalMenuRender', ['$http', '$route', '$compile', '$location', function($http, $route, $compile, $location) {
+  .directive('xpsuiPortalMenuRender', ['$http', '$route', '$compile', '$location', function($http, $route, $compile, $location) {
     return {
       restrict: 'A',
       link: function(scope, elm, attrs, ctrls) {

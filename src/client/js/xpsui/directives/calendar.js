@@ -617,7 +617,7 @@
 				var xpsuiTextInputCtrl = ctrls[2];
 				var schemaFragment = scope.$eval(attrs.xpsuiSchema);
 				var dropdown = dropdownFactory.create(elm,{
-					titleTransCode: schemaFragment.transCode
+					titleTransCode: (schemaFragment ? schemaFragment.transCode : 'label.date')
 				});
 
 				dropdown.setInput(xpsuiTextInputCtrl.getInput())

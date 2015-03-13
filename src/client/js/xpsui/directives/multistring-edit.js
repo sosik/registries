@@ -45,7 +45,7 @@
 					container.empty();
 					for (i in ngModel.$modelValue) {
 						stringElm = angular.element('<div class="portal-multistring-element"><span>'+ngModel.$modelValue[i]+'</span></div>');
-						xButton = angular.element('<i class="glyphicon-remove"></i>');
+						xButton = angular.element('<i class="icon-remove"></i>');
 						xButton.data('idx', i);
 
 						xButton.on('click', function(evt) {

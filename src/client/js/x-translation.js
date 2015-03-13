@@ -12,6 +12,7 @@
 			"login.authentication.failed": "Prihlásenie zlyhalo",
 			"login.selected.profile.continue":"Pokračovať s profilom",
 			"login.profile":"Profil",
+			"label.date": "Dátum",
 
 			"enum.active.A":"Aktívny",
 			"enum.active.I":"Neaktívny",
@@ -490,6 +491,7 @@
 			"login.authentication.failed": "Přihlášení selhalo",
 			"login.selected.profile.continue":"Pokračovat s profilem",
 			"login.profile":"Profil",
+			"label.date": "Datum",
 
 			"enum.active.A":"Aktívny",
 			"enum.active.I":"Neaktívny",

@@ -297,14 +297,17 @@
 
     $scope.showBlockSelector = function showBlockSelector() {
       $scope.blockSelectorShown = true;
+		document.querySelector('body').classList.add('x-dropdown-open');
     };
 
     $scope.hideBlockSelector = function hideBlockSelector() {
       $scope.blockSelectorShown = false;
+      document.querySelector('body').classList.remove('x-dropdown-open');
     };
 
     $scope.selectBlock = function(block) {
       $scope.blockSelectorShown = false;
+      document.querySelector('body').classList.remove('x-dropdown-open');
       $scope.model.data.push($scope.blocks[block]);
       $scope.$broadcast('modechange');
     };

@@ -16,7 +16,7 @@
 				elm.empty();
 				elm.addClass('x-portal-widget-edit');
 
-				var titleBar = angular.element('<div class="xpsui-portal-widget-title-bar">{{data.meta.type}}:{{data.meta.name}}<div class="pull-right"><i class="action-button glyphicon-arrow-up" ng-click="moveUp();"></i><i class="action-button glyphicon-arrow-down" ng-click="moveDown();"></i><i class="action-button glyphicon-trash" ng-click="remove();"></i></div></div>');
+				var titleBar = angular.element('<div class="xpsui-portal-widget-title-bar">{{data.meta.type}}:{{data.meta.name}}<div class="pull-right"><i class="action-button icon-chevron-up" ng-click="moveUp();"></i><i class="action-button icon-chevron-down" ng-click="moveDown();"></i><i class="action-button icon-trash" ng-click="remove();"></i></div></div>');
 				var content = angular.element(scope.data.meta.element);
 				content.attr('ng-model', 'data.data');
 				content.attr('xpsui-contenteditable', 'false');

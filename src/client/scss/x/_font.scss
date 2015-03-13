@@ -15,6 +15,7 @@ $icon-pencil: $fa-var-pencil !default;
 $icon-calendar: $fa-var-calendar !default;
 $icon-calendar-empty: $fa-var-calendar-o !default;
 $icon-rotate: $fa-var-repeat !default;
+$icon-trash: $fa-var-trash !default;
 
 $icon-sheet-list: $fa-var-list-alt !default;
 $icon-star: $fa-var-star !default;
@@ -40,6 +41,7 @@ $icon-remove: $fa-var-remove !default;
 $icon-sign-in: $fa-var-sign-in !default;
 $icon-remove: $fa-var-times !default;
 $icon-add: $fa-var-plus !default;
+$icon-add-circle: $fa-var-plus-circle !default; 
 $icon-minus: $fa-var-minus !default;
 $icon-search: $fa-var-search !default;
 $icon-open: $fa-var-eye !default;
@@ -57,14 +59,19 @@ $icon-tag: $fa-var-tag !default;
 .icon-login:before { content: $icon-sign-in }
 .icon-remove:before { content: $icon-remove }
 .icon-add:before { content: $icon-add }
+.icon-add-circle:before { content: $icon-add-circle }
 .icon-minus:before { content: $icon-minus }
 .icon-search:before { content: $icon-search }
 .icon-open:before { content: $icon-open }
 .icon-chevron-up:after { content: $icon-chevron-up }
 .icon-chevron-down:after { content: $icon-chevron-down }
+.icon-chevron-left:after { content: $icon-chevron-left }
+.icon-chevron-right:after { content: $icon-chevron-right }
+
 .icon-check:before { content: $icon-check }
 .icon-warning-sign:after{ content: $icon-error }
 .icon-rotate:before { content: $icon-rotate }
+.icon-trash:before { content: $icon-trash }
 
 .icon-sheet-list:before { content: $icon-sheet-list }
 .icon-star:before { content: $icon-star }

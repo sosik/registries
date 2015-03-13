@@ -28,11 +28,11 @@
 							'<div ng-repeat="photo in data.data.images" ng-show="visibleIndex == $index" style="display: inline-block; padding-left: 1px; position: absolute; top: 10px; bottom: 10px; left: 10px; right: 10px;">' +
 									'<img ng-src="{{photo.img}}" style="width: 656px !important; height: 492px !important; margin:0;"></img>' +
 									'<div style="position: absolute; bottom: 0; left: 0;">' +
-										'<i class="glyphicon-chevron-left" ng-click="photoLeft();"></i>'+
-										'<i class="glyphicon-chevron-right" ng-click="photoRight();"></i>'+
+										'<i class="icon-chevron-left" ng-click="photoLeft();"></i>'+
+										' <i class="icon-chevron-right" ng-click="photoRight();"></i>'+
 									'</div>'+
 									'<div style="position: absolute; bottom: 0; right: 0; font-size: 18px;">' +
-										'<i class="glyphicon-remove" ng-click="close();"></i>'+
+										'<i class="icon-remove" ng-click="close();"></i>'+
 									'</div>'+
 							'</div>' +
 						'</div>' +

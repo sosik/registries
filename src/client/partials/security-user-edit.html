@@ -49,7 +49,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th ng-repeat="header in headers">{{header.title}}</th>
+									<th ng-repeat="header in headers">{{header.transCode |translate}}</th>
 									<th>{{'security.user.edit.actions' |translate}}</th>
 								</tr>
 							</thead>
@@ -137,7 +137,7 @@
 				<div class="form-group">
 					<div class="col-md-12">
 						<div class="btn-group pull-right">
-							<button ng-click="resetPassword() " class="btn btn-secondary">Resetnúť heslo</button>
+							<button ng-click="resetPassword() " class="btn btn-secondary">{{'security.user.edit.reset.password' |translate}}</button>
 							<button ng-click="updateUserSecurity()" class="btn btn-primary">
 								<i class="glyphicon-ok"></i>{{'security.user.edit.save' |translate}}
 							</button>

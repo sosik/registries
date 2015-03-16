@@ -13,9 +13,19 @@ var DEFAULT_CFG = {
 
 
 var contentTypes = {
-		'.bin' : 'application/octet-stream',
-		'.jpg' : 'image/jpeg',
-		'.jpeg' : 'image/jpeg'
+		'.pdf': 'application/pdf',
+		'.xls': 'application/vnd.ms-excel',
+		'.doc': 'application/msword',
+		'.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'.ppt': 'application/vnd.ms-powerpoint',
+		'.odt': 'application/vnd.oasis.opendocument.text',
+		'.bin': 'application/octet-stream',
+		'.bmp': 'image/bmp',
+		'.jpg': 'image/jpeg',
+		'.jpeg': 'image/jpeg',
+		'.png': 'image/png',
+		'.csv':'text/csv',
+		'.zip':'application/zip'
 	};
 
 	var getContentTypeByExt = function(ext) {
@@ -37,7 +47,7 @@ var contentTypes = {
 			}
 		}
 
-		return '.bin'
+		return '.bin';
 	}
 
 var escapeRegExp = function(str) {
@@ -45,21 +55,21 @@ var escapeRegExp = function(str) {
 }
 
 var FsCtrl = function(options) {
-	
+
 	this.cfg={};
 	this.cfg = extend(true, {}, DEFAULT_CFG, options);
-	
+
 	log.silly(this.cfg);
-	
+
 	var realPathCache = {};
 
 	this.cfg.rootPath = pathM.resolve(this.cfg.rootPath);
 	var safePathPrefixRegexp = new RegExp("^" + escapeRegExp(this.cfg.rootPath));
-	
+
 	var realPathCache = {};
 
-	
-	
+
+
 	/**
 	 * Get content of file
 	 */
@@ -78,7 +88,7 @@ var FsCtrl = function(options) {
 					} else {
 						err.code=500;
 					}
-					
+
 					callback(err);
 				} else {
 					if (!stat.isFile) {
@@ -103,14 +113,14 @@ var FsCtrl = function(options) {
 			});
 		}
 	};
-	
+
 	this.ls = function(path, res,  callback) {
 
-		
+
 		var filter=this.cfg.fileFilter;
 		var p = this.calculateFsPath(path);
 
-		
+
 		if (!this.isPathSafe(p)) {
 			callback('Path not save ' + p);
 		} else {
@@ -120,16 +130,16 @@ var FsCtrl = function(options) {
 					if (err.code === 'ENOENT') {
 						err.message='Directory not found: '+path;
 						err.code=400;
-					} 
+					}
 					callback(err);
-					
+
 				} else {
 					if (!stat.isDirectory()) {
 						callback('Path is not directory: '+path);
 						next();
 					} else {
 						fs.readdir(p, function(err, entries) {
-							
+
 							if (err) {
 								err.code=500;
 								callback(err);
@@ -138,7 +148,7 @@ var FsCtrl = function(options) {
 								var result = [];
 								async.each(entries, function(item, acallback) {
 									fs.lstat(pathM.join(p, item), function(err, stat) {
-										
+
 										if (err) {
 											acallback(err);
 											return;
@@ -185,7 +195,7 @@ var FsCtrl = function(options) {
 		}
 	};
 
-	
+
 	/**
 	 * Put content to file
 	 */
@@ -199,7 +209,7 @@ var FsCtrl = function(options) {
 			fs.exists(p, function(exists) {
 				if (exists) {
 					callback( 'Entity already exists: '+path);
-					
+
 				} else {
 					var ws = fs.createWriteStream(p);
 					ws.on('error', function(evt) {
@@ -233,7 +243,7 @@ var FsCtrl = function(options) {
 				if (exists) {
 					// statistics sometimes fail
 					that.putGetPath(path, content, contentType, callback);
-					
+
 				} else {
 					var ws = fs.createWriteStream(p);
 					ws.on('error', function(evt) {
@@ -298,7 +308,7 @@ var FsCtrl = function(options) {
 	 */
 	this.replace = function(path,req, res, callback) {
 		var p = this.calculateFsPath(path);
-	
+
 		// works as lock
 		var tmpPath = p + ".tmp";
 
@@ -334,13 +344,13 @@ var FsCtrl = function(options) {
 		}
 
 	};
-	
+
 
 	/**
 	 * Create directory
 	 */
 	this.mkdir = function(path, res, callback) {
-		
+
 		var p = this.calculateFsPath(path);
 
 		if (!this.isPathSafe(p)) {
@@ -350,7 +360,7 @@ var FsCtrl = function(options) {
 			fs.exists(p, function(exists) {
 				if (exists) {
 					callback('Entity already exists'+path);
-					
+
 				} else {
 					fs.mkdir(p, function(err) {
 						if (err) {
@@ -364,13 +374,13 @@ var FsCtrl = function(options) {
 			});
 		}
 	};
-	
+
 	/**
 	 * Remove file or directory
 	 */
 	this.rm = function(path, res, callback) {
 		var p = this.calculateFsPath(path);
-		
+
 
 		if (!this.isPathSafe(p)) {
 			calback('Path not safe'+path);
@@ -384,7 +394,7 @@ var FsCtrl = function(options) {
 					} else {
 						err.message='Failed to stat entity: '+path;
 					}
-					
+
 					callback(err);
 				} else {
 					if (stat.isDirectory()) {
@@ -416,13 +426,13 @@ var FsCtrl = function(options) {
 		}
 	};
 
-	
 
-	
-	
+
+
+
 	/**
 	 * Calculates real intended file path
-	 * 
+	 *
 	 * @param {string}
 	 *            p - path provided in request
 	 */
@@ -433,7 +443,7 @@ var FsCtrl = function(options) {
 	/**
 	 * Checks if provided path is save, it means it is: - path has prefix of
 	 * rootPath
-	 * 
+	 *
 	 * @return {boolean} - true if path is safe, otherwise false
 	 */
 	this.isPathSafe = function(p) {

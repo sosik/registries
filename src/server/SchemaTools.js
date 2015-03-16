@@ -353,7 +353,6 @@ var SchemaTools = function() {
 	* @method resolveExtends
 	*/
 	function resolveExtends(schemasCache) {
-			debugger;
 			var schemasToResolve={};
 			var resolved={};
 

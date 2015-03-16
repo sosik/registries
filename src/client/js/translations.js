@@ -1,4 +1,4 @@
-angular.module('registries')
+angular.module('x-registries')
 .config(['$translateProvider', function($translateProvider) {
 	$translateProvider.useMissingTranslationHandlerLog();
 	$translateProvider.translations('sk', {
@@ -95,6 +95,8 @@ angular.module('registries')
 		"massmail.search.recipient":"Vyhľadáť príjemcov",
 		"massmail.send.view":"Hromadná pošta",
 		"massmail.selection.all":"Podľa filtra",
+
+		"attachment.download.button":"Stiahnuť",
 
 		"header.settings": "Nastavenia",
 		"header.log.out": "Odhlásiť sa",
@@ -583,6 +585,11 @@ angular.module('registries')
 		"massmailing.send":"Odeslat",
 		"massmailing.sent":"Správa byla odeslaná.",
 		"massmail.selection.all":"Podle filtra",
+
+
+
+		"attachment.download.button":"Stiahnuť",
+
 		"header.settings": "Nastavení",
 		"header.log.out": "Odhlásit se",
 		"personal.change.password.change.password": "Změna hesla",

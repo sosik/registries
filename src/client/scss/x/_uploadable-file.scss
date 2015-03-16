@@ -1,0 +1,152 @@
+.xpsui-uploadable-file {
+	cursor: pointer;
+	text-align: center;
+	display: inline-block;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	background-position: center;
+	width: 40px;
+	height: 40px;
+/*
+	border: 1px solid $input-border-color;
+	margin: ($field-padding-vertical) 0px ($field-padding-vertical) ($padding-base-horizontal);
+*/
+
+	.xpsui-modal-dialog {
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		z-index: 50;
+		background-color: rgba(0, 0, 0, 0.5);
+		top: 0px;
+		left: 0px;
+	}
+
+	.x-modalview-header {
+		text-align: left;
+		text-align: left;
+	}
+
+	.xpsui-buttons-holder {
+		position: absolute;
+		top: 0px;
+		right: 33px;
+		z-index: 100;
+
+		.xpsui-icon-rotate:before {
+			content: '';
+		}
+
+		.xpsui-icon-ok:before {
+			content: '';
+		}
+	}
+
+	@media (min-width: $screen-md) {
+		.x-modalview.x-open {
+			background-color: rgba(0, 0, 0, 0.5);
+			position: fixed;
+			z-index: 100;
+			top: 0px;
+			bottom: 0px;
+			left: 0px;
+			right: 0px;
+			height: auto;
+			width: auto;
+		}
+
+		.x-modalview.x-open .x-modalview-window,
+				.x-modalview.x-open .x-modalview-window a {
+			color: #ffffff;
+		}
+
+		.x-modalview.x-open .x-modalview-window {
+			background-color: #333333;
+		}
+
+		.x-modalview .x-modalview-window {
+			visibility: hidden;
+			position: absolute;
+			width: 90%;
+			height: 90%;
+			top: 5%;
+			left: 0px;
+			right: 0px;
+			margin: 0px auto;
+			background-color: #333333;
+			box-sizing: border-box;
+		}
+
+		.x-modalview.x-open .x-modalview-window {
+			visibility: visible;
+		}
+
+		.x-modalview.x-open .x-modalview-header, .x-modalview.x-open .x-modalview-close {
+			color: #333333;
+		}
+
+		.x-modalview.x-open .x-modalview-header {
+			background-color: #FFCE0D;
+		}
+
+		.x-modalview .x-modalview-header {
+			display: block;
+			font-size: 1em;
+			line-height: 2.5em;
+			height: 40px;
+			font-weight: bold;
+			padding-right: 40px;
+			box-sizing: border-box;
+			margin-top: 0px;
+			padding-left: 10px;
+			background-color: transparent;
+			color: #ffffff;
+		}
+
+		.x-modalview-body {
+			position: absolute;
+			top: 40px;
+			bottom: 0px;
+			width: 100%;
+			padding: 10px;
+			overflow-y: auto;
+			box-sizing: border-box;
+		}
+	}
+}
+
+@media (min-width: $screen-md) {
+	.x-dropdown-open .x-main-menu {
+		z-index: 0;
+	}
+}
+
+.xpsui-uploadable-image.x-hidden {
+	display: none;
+}
+
+.xpsui-uploadable-image-fbutton {
+	visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: -5000px;
+}
+
+.psui-imageresizor-resizor {
+
+	.psui-modal-content{
+		background-color: #000000;
+		canvas{
+			cursor: move;
+		}
+	}
+}
+
+.psui-imageresizor-result {
+	position:absolute;
+	/*
+	left: $padding-base-horizontal;
+	top: $field-padding-vertical;
+	*/
+	z-index:10;
+}

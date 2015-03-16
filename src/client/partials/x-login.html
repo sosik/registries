@@ -28,9 +28,11 @@
 						</div>
 					</div>
 
-					<div ng-show="profiles">
-						<label for="password">{{'login.profile' | translate}}</label>
-						<div>
+					<div ng-show="profiles" class="x-fieldset-row">
+						<div class="x-fieldset-label">
+							<label for="selectedProfile">{{'login.profile' | translate}}</label>
+						</div>
+						<div class="x-fieldset-value">
 							<select class="form-control"
 								ng-model="selectedProfile"
 								ng-Init="selectedProfile=profiles[0]"

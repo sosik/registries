@@ -275,8 +275,9 @@ var SchemaTools = function() {
 				props = Object.getOwnPropertyNames(obj);
 				for (p in props) {
 					propName = props[p];
-					if (propName === schemaConstants.OBJECT_LINK_KEYWORD) {
-						// do not dive into objectLink
+					if (propName === schemaConstants.OBJECT_LINK_KEYWORD ||
+							propName === schemaConstants.OBJECT_LINK2_KEYWORD) {
+						// do not dive into objectLink and objectLink2
 					} else {
 						res = compileInternal(obj[propName]);
 						// log.silly(res);

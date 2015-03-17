@@ -19,6 +19,9 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			require('./manglers/TimestampUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver),
+			require('./manglers/ObjectLink2Unmangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver)
 	]);
 
@@ -27,6 +30,9 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			require('./manglers/TimestampUnmangler.js')(),
 			require('./manglers/ObjectCleanerUnmangler.js')(),
 			require('./manglers/ObjectLinkUnmangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver),
+			require('./manglers/ObjectLink2Unmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver)
 	]);
@@ -39,12 +45,18 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
 						return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver),
+			require('./manglers/ObjectLink2Mangler.js')(function(mongoDriver, options) {
+						return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver),
 			require('./manglers/TimestampMangler.js')(),
 			require('./manglers/GenerateVSMangler.js')(mongoDriver)
 	]);
 
 	var saveObjectMangler = require('./ObjectMangler.js').create([
 			require('./manglers/ObjectLinkMangler.js')(function(mongoDriver, options) {
+				return new universalDaoModule.UniversalDao(mongoDriver, options);
+			}, mongoDriver),
+			require('./manglers/ObjectLink2Mangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver),
 			require('./manglers/NumberMangler.js')(),

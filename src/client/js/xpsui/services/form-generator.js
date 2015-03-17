@@ -46,7 +46,7 @@
 					field = angular.element('<div xpsui-array-control-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else 
-				if(schemaFragment.$objectLink2){
+				if(schemaFragment.objectLink2){
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.$uploadableImage
@@ -100,7 +100,7 @@
 					field = angular.element('<div xpsui-array-control-view></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else 
-				if(schemaFragment.$objectLink2){
+				if(schemaFragment.objectLink2){
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else if(schemaFragment.$uploadableImage

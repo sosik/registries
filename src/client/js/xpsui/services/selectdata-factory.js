@@ -212,13 +212,13 @@
 			return this.http ;
 		};
 
-		// ref to schema $objectLink2ForcedCriteria
+		// ref to schema objectLink2ForcedCriteria
 		ObjectLinkStore.prototype.setForcedCriteria = function(criteria){
 			this.criteria = criteria;
 			return this;
 		};
 
-		// ref to schema $objectLink2
+		// ref to schema objectLink2
 		ObjectLinkStore.prototype.setSchema = function(schema){
 			this.schema = schema;
 			return this;
@@ -468,17 +468,17 @@
 			createObjectDataset: function(schemaFragment){
 				var store = new ObjectLinkStore();
 
-				store.setSchema(schemaFragment.$objectLink2)
-					.setForcedCriteria(schemaFragment.$objectLink2ForcedCriteria)
+				store.setSchema(schemaFragment.objectLink2)
+					.setForcedCriteria(schemaFragment.objectLink2ForcedCriteria)
 				;
 
 				return new ObjectDataSet(store);
 			},
 			createTestDataset: function(scope, schemaFragment, itemLenght){
 				var store = new HttpStoreTest();
-				store.setFields(schemaFragment.$objectLink2.fields)
+				store.setFields(schemaFragment.objectLink2.fields)
 					.setScope(scope)
-					.setSchema(schemaFragment.$objectLink2.schema)
+					.setSchema(schemaFragment.objectLink2.schema)
 					.setTestData(itemLenght ? itemLenght: 4000)
 				;
 

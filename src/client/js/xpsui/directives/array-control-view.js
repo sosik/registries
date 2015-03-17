@@ -10,9 +10,10 @@
 				+ '</div>';
 				// + '<button ng-click="appendNew();"><i></i>{{"generic.search.add" | translate}}</button>';
 
-		var  uploadablefileTemplate='<div ng-repeat="ae in ngModel track by $id(ae)">'
-
-						+ '<div  xpsui-uploadable-file xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
+		var  uploadablefileTemplate='<div ng-repeat="ae in ngModel track by $id(ae)" class="xpsui-uploadable-file-view">'
+					+ '<div  xpsui-uploadable-file xpsui-validity-mark '
+					+ '   xpsui-schema="xpsuiSchema.items" '
+					+ '   ng-model="ngModel[$index]"></div>'
 				+ '</div>';
 
 		function getTemplate(renderComponent){

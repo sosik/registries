@@ -5,23 +5,27 @@
 	.directive('xpsuiArrayControlEdit', ['$compile', function($compile) {
 
 		var  objectLinkTemplate='<div ng-repeat="ae in ngModel track by $id(ae)">'
-				+ '<button ng-click="removeByIndex($index);">'
-				+ '<i class="icon-minus"></i>{{\'generic.search.remove\' | translate}}'
+				+ '<button ng-click="removeByIndex($index);" class="btn-clear">'
+				+ '<i class="icon-minus"></i> {{\'generic.search.remove\' | translate}}'
 				+ '</button>'
 				+ '<div  xpsui-objectlink2-edit xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
 				+ '</div>'
 				+ '<div class="pull-right">'
-				+ '<button ng-click="appendNew();"><i class="icon-add"></i>{{"generic.search.add" | translate}}</button>'
+				+ '<button ng-click="appendNew();" class="btn-clear"><i class="icon-add"></i> {{"generic.search.add" | translate}}</button>'
 				+ '</div>';
 
-		var  uploadablefileTemplate='<div ng-repeat="ae in ngModel track by $id(ae)">'
-						+ '<button ng-click="removeByIndex($index);">'
-						+ '<i></i>{{\'generic.search.remove\' | translate}}'
-						+ '</button>'
-						+ '<div  xpsui-uploadable-file xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
+		var  uploadablefileTemplate='<div ng-repeat="ae in ngModel track by $id(ae)" class="xpsui-uploadable-file-edit">'
+						+ ' <div class="psui-attachment-remove">'
+						+ '  <button ng-click="removeByIndex($index);" class="btn-clear">'
+						+ '   <i class="icon-remove"></i> {{\'generic.search.remove\' | translate}}'
+						+ '  </button>'
+						+ ' </div>'
+						+ '<div xpsui-uploadable-file xpsui-validity-mark '
+						+ '     xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"> '
 						+ '</div>'
-						+ '<div class="pull-right">'
-						+ '<button ng-click="appendNew();"><i class="icon-add"></i>{{"generic.search.add"| translate}}</button>'
+						+ '</div>'
+						+ '<div class="pull-right clear">'
+						+ '<button ng-click="appendNew();" class="btn-clear"><i class="icon-add"></i> {{"generic.search.add"| translate}}</button>'
 						+ '</div>';
 
 		function getTemplate(renderComponent){

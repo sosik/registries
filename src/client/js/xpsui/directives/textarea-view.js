@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiStringView', ['xpsui:logging', function(log) {
+	.directive('xpsuiTextareaEdit', ['xpsui:logging', function(log) {
 		return {
 			restrict: 'A',
 			require: ['ngModel'],
@@ -16,7 +16,12 @@
 				elm.addClass('x-string-view');
 
 				ngModel.$render = function() {
-					view.text(ngModel.$viewValue || ' ');	
+					if (ngModel.$viewValue) {
+						view.html(ngModel.$viewValue.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+					} else {
+						view.text(' ');
+					}
+					
 				};
 
 				elm.append(view);

@@ -16,7 +16,11 @@
 				elm.addClass('x-string-view');
 
 				ngModel.$render = function() {
-					view.text(ngModel.$viewValue || ' ');	
+					if (ngModel.$viewValue) {
+						view.html(ngModel.$viewValue.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+					} else {
+						view.text(' ');
+					}
 				};
 
 				elm.append(view);

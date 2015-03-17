@@ -140,6 +140,10 @@
 			row.append(this.generateLabel(schemaFragment));
 
 			var value = angular.element('<div class="x-fieldset-value"></div>');
+
+			if (schemaFragment.readOnly) {
+				mode = this.MODE.VIEW;
+			}
 			value.append(this.generateField(schemaFragment, schemaPath, modelPath, mode));
 			row.append(value);
 			

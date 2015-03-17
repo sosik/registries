@@ -39,6 +39,7 @@ module.exports = {
 	SEQUENCE: 'sequence', // marks fileds that will be assigned by specified seqence
 	TIMESTAMP: 'timestamp', // marks fields that will be updated with server era-time
 	COLLATE: 'collate', //marks fields that needs to be collated/ordered .
+	READ_ONLY: 'readonly', // marks field as readonly field will not be editable in GUI
 
 	//Events
 	FIRE_EVENTS:"fireEvents",

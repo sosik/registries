@@ -11,7 +11,7 @@ module.exports = {
 	//Schema structure
 	OBJECT_LINK_KEYWORD: 'objectLink', // data link (to other collection)
 
-	OBJECT_LINK2_KEYWORD: 'objectLink', // data link (to other collection) v2
+	OBJECT_LINK2_KEYWORD: 'objectLink2', // data link (to other collection) v2
 	OBJECT_LINK2_SCHEMA_KEYWORD: 'schema', // reference to schema used as link definition of objectLink2
 	OBJECT_LINK2_OID_KEYWORD: 'oid', // referenced object identifier by objectLink2
 	OBJECT_LINK2_FIELDS_KEYWORD: 'fields', // enumeration of referenced fields

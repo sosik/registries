@@ -66,7 +66,7 @@
 					if (data) {
 						removeButton.show();
 						schemaUtil.getFieldsSchemaFragment(
-							schemaUtil.concatUri(schemaFragment.objectLink2.schema, 'new'), 
+							schemaFragment.objectLink2.schema, 
 							schemaFragment.objectLink2.fields, 
 							function(fields){
 								objectlink2Factory.renderElement(

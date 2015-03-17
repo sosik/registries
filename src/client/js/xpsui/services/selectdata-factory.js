@@ -169,7 +169,7 @@
 		
 		ObjectDataSet.prototype.getFieldsSchema = function(index){
 			return this.store.fields;
-		}
+		};
 
 
 		/**
@@ -181,7 +181,7 @@
 			this.criteria = null;
 			this.fields = null;
 			this.http = null;
-		};
+		}
 
 		ObjectLinkStore.DEFAULTS = {
 			searchCondition: 'starts',
@@ -192,7 +192,7 @@
 			var self = this;
 			if(!this.fields){
 				schemaUtil.getFieldsSchemaFragment(
-					schemaUtil.concatUri(this.schema.schema, 'new'), 
+					this.schema.schema, 
 					this.schema.fields, 
 					function(fields){
 						self.fields = fields;
@@ -227,7 +227,7 @@
 		ObjectLinkStore.prototype.getHttpConfing = function(dataset){
 			var config = {
 					method : 'POST',
-					url: '/search/' + schemaUtil.encodeUri(schemaUtil.concatUri(this.schema.schema, 'search')),
+					url: '/search/' + schemaUtil.encodeUri(this.schema.schema),
 					data: {
 						criteria: [], 
 						limit: dataset.getLimit() , 

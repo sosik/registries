@@ -9,7 +9,7 @@ var QueryFilter = require('./QueryFilter.js');
 var consts = require(process.cwd() + '/build/server/SchemaConstants.js');
 
 var safeUrlEncoder = require('./safeUrlEncoder.js');
-var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry) {
+var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 
 	var listObjectMangler = require('./ObjectMangler.js').create([
@@ -22,7 +22,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			}, mongoDriver),
 			require('./manglers/ObjectLink2Unmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
-			}, mongoDriver)
+			}, mongoDriver, schemaRegistry)
 	]);
 
 	var getObjectMangler = require('./ObjectMangler.js').create([
@@ -34,7 +34,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry,eventRegistry)
 			}, mongoDriver),
 			require('./manglers/ObjectLink2Unmangler.js')(function(mongoDriver, options) {
 				return new universalDaoModule.UniversalDao(mongoDriver, options);
-			}, mongoDriver)
+			}, mongoDriver, schemaRegistry)
 	]);
 
 	var updateObjectMangler = require('./ObjectMangler.js').create([

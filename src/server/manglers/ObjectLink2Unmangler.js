@@ -52,8 +52,7 @@
 		}
 
 
-		var remoteSchemaUri = objFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD] || schemaFragment[consts.OBJECT_LINK2_KEYWORD][consts.OBJECT_LINK2_SCHEMA_KEYWORD];
-		//FIXME throw error when there is no schema defined
+		var remoteSchemaUri = objFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD] || schemaFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD];
 		var remoteSchema = this.schemaRegistry.getSchema(remoteSchemaUri);
 
 		if (!remoteSchema || !remoteSchema.compiled.table) {
@@ -62,13 +61,14 @@
 			return;
 		}
 
-		//FIXME fetch data by dao service
 		var localDao = this.daoFactory(this.mongoDriver, {collectionName: remoteSchema.compiled.table});
 
 		localDao.get(objFragment[consts.OBJECT_LINK2_OID_KEYWORD], function(err, data) {
 			log.silly('Data callback for %s', objPath);
 
 			var prop;
+
+			// log.error(data);
 
 			if (err) {
 				log.error('Failed to get data from collection, objectLink resolution failed');

@@ -55,7 +55,6 @@
 		var remoteSchemaUri = objFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD] || schemaFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD];
 		var remoteSchema = this.schemaRegistry.getSchema(remoteSchemaUri);
 
-		log.error(remoteSchema);
 		if (!remoteSchema || !remoteSchema.compiled.table) {
 			log.warn('Failed to load remote schema %s', remoteSchemaUri);
 			callback(null, null);

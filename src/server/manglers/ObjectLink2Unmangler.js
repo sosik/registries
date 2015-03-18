@@ -52,7 +52,7 @@
 		}
 
 
-		var remoteSchemaUri = objFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD] || schemaFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD];
+		var remoteSchemaUri = objFragment[consts.OBJECT_LINK2_SCHEMA_KEYWORD] || schemaFragment[consts.OBJECT_LINK2_KEYWORD][consts.OBJECT_LINK2_SCHEMA_KEYWORD];
 		var remoteSchema = this.schemaRegistry.getSchema(remoteSchemaUri);
 
 		if (!remoteSchema || !remoteSchema.compiled.table) {

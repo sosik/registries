@@ -2,11 +2,11 @@
 	'use strict';
 
 	angular.module('x-registries', [
-		'ngRoute', 
+		'ngRoute',
 		'ngCookies',
 		'xpsui:filters',
-		'xpsui:services', 
-		'xpsui:directives', 
+		'xpsui:services',
+		'xpsui:directives',
 		'xpsui:controllers',
 		'pascalprecht.translate',
 		'ui.ace'
@@ -15,6 +15,33 @@
 		// 'personal-page',
 		// 'psui-notification'
 	])
+	// .config(['$httpProvider', function ($httpProvider) {
+	// 	$httpProvider.interceptors.push(function ($q,$injector,$rootScope) {
+	// 		return {
+	// 			'response': function (response) {
+	// 				//Will only be called for HTTP up to 300
+	// 				return response;
+	// 			},
+	// 			'responseError': function (rejection) {
+	// 				if (rejection.status === 500) {
+	// 					$injector.get ('psui.notificationFactory').warn({translationCode:'server.side.exception',translationData:rejection.data,time:5000} );
+	// 				}else
+	// 				if (rejection.status === 401) {
+	// 					$rootScope.security.currentUser = undefined;
+	// 					$rootScope.app.mainMenu=false;
+	// 					$injector.get ('$location').url('/login');
+	// 					$injector.get ('psui.notificationFactory').warn({translationCode:'security.user.session.expired',time:5000} );
+	// 				}else
+	//
+	// 				if (rejection.status === 403) {
+	// 				$injector.get ('$location').url('/login');
+	// 				$injector.get('psui.notificationFactory').warn({translationCode:'security.user.missing.permissions',translationData:rejection.data.missingPerm,time:5000});
+	// 				}else
+	// 				return $q.reject(rejection);
+	// 			}
+	// 		};
+	// 	});
+	// }])
 	.config(['$routeProvider', 'xpsui:loggingProvider',function($routeProvider, loggingProvider) {
 		// $routeProvider.when('/view/:schema/:objId', {controller: 'xViewController', templateUrl: '/partials/x-view.html'});
 
@@ -23,10 +50,15 @@
 		$routeProvider.when('/massmailing', {templateUrl: '/partials/x-massmailing.html', controller: 'xpsui:MassmailingEditCtrl', permissions:['Registry - write']});
 		$routeProvider.when('/login', {templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		$routeProvider.when('/personal-change-password', {templateUrl: '/partials/x-personal-change-password.html', controller: 'xpsui:SecurityPersonalChangePasswordCtrl', permissions:['System User']});
+
 		$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/x-security-group-edit.html', controller: 'xpsui:SecurityGroupEditCtrl', permissions:['Security - read']});
 		$routeProvider.when('/security/user/edit', {templateUrl: 'partials/x-security-user-edit.html', controller: 'xpsui:SecurityUserEditCtrl',permissions:['Security - read']});
 		$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/x-security-profile-edit.html', controller: 'xpsui:SecurityProfileEditCtrl',permissions:['Security - read']});
-	
+
+		$routeProvider.when('/forgotten', {templateUrl: '/partials/forgotten.html', controller: 'security.forgottenCtrl'});
+		$routeProvider.when('/forgotten/reset/:token', {templateUrl: '/partials/forgottenReset.html', controller: 'security.forgottenResetCtrl'});
+
+
 		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl',permissions:['Registry - write']});
 		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl',permissions:['Registry - read']});
 		$routeProvider.when('/search/:entity', {templateUrl : 'partials/x-generic-search.html', controller : 'xpsui:SearchCtrl'});
@@ -44,9 +76,9 @@
 
 
 		$routeProvider.when('/schema/edit', {templateUrl: 'partials/x-schema-editor.html', controller: 'xpsui:SchemaEditCtrl' ,permissions:['System Admin']});
-		
+
 		$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
-		
+
 		loggingProvider.setLevel(5);
 	}])
 	/**
@@ -97,4 +129,6 @@
 			mainMenu: false
 		};
 	}]);
+
+
 }(angular));

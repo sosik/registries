@@ -9,9 +9,10 @@
 		'xpsui:directives',
 		'xpsui:controllers',
 		'pascalprecht.translate',
-		'reCAPTCHA',
-		'ui.ace'
-			// 'x-security',
+		'ui.ace',
+		'reCAPTCHA'
+
+		// 'x-security',
 		// 'personal-page',
 		// 'psui-notification'
 	])
@@ -66,7 +67,6 @@
 
 		$routeProvider.when('/forgotten', {templateUrl: '/partials/forgotten.html', controller: 'xpsui:SecurityForgottenCtrl'});
 		$routeProvider.when('/forgotten/reset/:token', {templateUrl: '/partials/forgottenReset.html', controller: 'xpsui:SecurityForgottenResetCtrl'});
-
 
 		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl',permissions:['Registry - write']});
 		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl',permissions:['Registry - read']});

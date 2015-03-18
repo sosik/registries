@@ -47,7 +47,7 @@
 		$scope.$on('xpsui:model_changed', function() {
 			$scope.save();
 		});
-		
+
 		var schemaUri = schemaUtilFactory.decodeUri($scope.currentSchema);
 
 		schemaUtilFactory.getCompiledSchema(schemaUri, 'view')

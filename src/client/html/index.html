@@ -14,95 +14,64 @@
 	<meta name="copyright" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link rel="shortcut icon" href="favicon.ico" />
-	<link rel="stylesheet" href="css/reset.css" />
-	<link rel="stylesheet" href="css/bootstrap.css" />
-	<!--<link rel="stylesheet" href="css/bootstrap-theme.css" />-->
-	<link rel="stylesheet" href="css/main.css" />
-	<link rel="stylesheet" href="dataset/get/css/custom.css" />
-	<link rel="stylesheet" href="css/psui-uploadable-image.css" />
-	<link rel="stylesheet" href="css/psui-imageresizor.css" />
-	<link rel="stylesheet" href="css/psui-notification.css" />
-	<link rel="stylesheet" href="css/psui-selectbox.css" />
-	<link rel="stylesheet" href="css/portal-editor.css" />
-	<link rel="stylesheet" href="portal/css/portal.css" />
 	<link rel="stylesheet" href="css/x.css" />
+	<link rel="stylesheet" href="css/x-default.css" />
 	<link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.min.css">
 	<link rel="shortcut icon" href="img/icon.ico" />
 
-	<script src="js/modernizr.js"></script>
+	<link rel="stylesheet" href="css/portal-editor.css" />
+	<link rel="stylesheet" href="portal/css/portal.css" />
 
-	<script src="lib/rangy/rangy-core.js"></script>
+	<!-- javascript global -->
 	<script src="lib/angular/angular.js"></script>
+	<script src="lib/angular-re-captcha/angular-re-captcha.js"></script>
 	<script src="lib/angular-route/angular-route.js"></script>
 	<script src="lib/angular-cookies/angular-cookies.js"></script>
 	<script src="lib/angular-translate/angular-translate.js"></script>
 	<script src="lib/angular-translate-handler-log/angular-translate-handler-log.min.js"></script>
 	<script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
 	<script src="lib/angular-ui-ace/ui-ace.js"></script>
-	<script src="js/security.js"></script>
-	<script src="js/personalPage.js"></script>
-	<script src="js/statistics.js"></script>
-	<script src="js/massmailing.js"></script>
-	<script src="js/registry.js"></script>
-	<script src="js/registries.js"></script>
-	<script src="js/schema-utils.js"></script>
-	<script src="js/generic-search.js"></script>
-	<script src="js/generators.js"></script>
-	<script src="js/schema-editor.js"></script>
-	<script src="js/psui.js"></script>
-	<script src="js/xpsui.js"></script>
-	<script src="js/psui-uploadable-image.js"></script>
-	<script src="js/psui-uploadable-file.js"></script>
-	<script src="js/psui-imageresizor.js"></script>
-	<script src="js/psui-notification.js"></script>
-	<script src="js/psui-contenteditable.js"></script>
-	<script src="js/psui-datepicker.js"></script>
-	<script src="js/psui-form-controller.js"></script>
-	<script src="js/psui-default-src.js"></script>
-	<script type="application/javascript" src="js/psui.js"></script>
-	<script src="js/psui-selectbox.js"></script>
-	<script src="js/translations.js"></script>
-	<script src="dataset/get/js/translations.js"></script>
-	<script src="js/psui-validity-mark.js"></script>
-	<script src="js/psui-objectlink.js"></script>
-	<script src="js/safeUrlEncoder.js"></script>
-	<script src="js/portal/portal-editor.js"></script>
+
+	<!-- javascript new libs-->
 	<script src="js/xpsui.min.js"></script>
 	<script src="js/x-main.min.js"></script>
-	<!-- // <script src="https://www.google.com/recaptcha/api.js"></script> -->
-	<script src="lib/angular-re-captcha/angular-re-captcha.js"></script>
-	<script type="text/javascript">
-		function menuMouseWheelHandler(){
-	}
-	</script>
+
+	<!-- javascript data libs -->
+	<script src="dataset/get/js/translations.js"></script>
+	<script src="js/translations.js"></script>
 
 	<!-- javascript shared libs -->
 	<script src="js/x-safeUrlEncoder.js"></script>
+
 </head>
-<body ng-app="registries">
-	<div psui-notification></div>
-	<div id="main-wrapper" ng-class="{'login-page': !security.currentUser}" ng-class="{'main-menu-active': app.mainMenu}">
-		<header ng-include="'partials/header.html'"></header>
-		<div id="main-menu" class="" ng-show="app.mainMenu" ng-include="'dataset/get/partials/main-menu.html'"></div>
-		<div psui-notification></div>
-		<div id="content-wrapper">
-			<div id="content">
-				<ng-view></ng-view>
-				<footer>
-					<div class="footer-content container-fluid">
-						<div class="row">
-							<div class="col-lg-3">
-								&copy; Copyright 2014 Unionsoft s r. o.
-							</div>
-							<div class="col-lg-9 version">
-								CODEBASE : Version ##CODEBASE_VERSION_PLACEHOLDER##, Commit ##CODEBASE_COMMIT_PLACEHOLDER##, Build date ##CODEBASE_BUILDDATE_PLACEHOLDER##<br/>DATASET: Version ##DATASET_VERSION_PLACEHOLDER##, Commit ##DATASET_COMMIT_PLACEHOLDER##
-							</div>
-						</div>
-					</div>
-				</footer>
-			</div>
-		</div>
+<body ng-app="x-registries" ng-class="{'login-page': !security.currentUser.systemCredentials.login.loginName}">
+
+<div xpsui-notification></div>
+
+<div class="x-fixed-header">
+	<div class="x-logo">
+		<img src="img/logo.svg">
 	</div>
+
+	<nav>
+		<ul>
+			<li ng-show="security.currentUser.systemCredentials.login.loginName"><span class="text-block"
+				><span>{{security.currentUser.systemCredentials.login.loginName}}</span><i class="icon-user"></i></span
+			></li>
+			<li ng-show="security.currentUser.systemCredentials.login.loginName" class="" ng-controller="xpsui:SecurityLogoutCtrl"><a
+				href="#" ng-click="logout();"><span>{{'header.log.out' | translate}}</span><i class="icon-power-off"></i></a
+			></li>
+		</ul>
+	</nav>
+</div>
+
+<div id="main-menu" xpsui-menu class="x-main-menu x-modalview" ng-show="security.currentUser.systemCredentials.login.loginName" ng-include="'dataset/get/partials/x-main-menu.html'"></div>
+
+
+
+
+<div class="x-main-content">
+	<ng-view></ng-view>
+</div>
 </body>
 </html>

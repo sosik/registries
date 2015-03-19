@@ -1,7 +1,7 @@
 (function(angular) {
 	'use strict';
 
-	angular.module('xpsui:services') 
+	angular.module('xpsui:services')
 	.factory('xpsui:SecurityService', ['$http', '$rootScope','xpsui:SchemaUtil', function($http, $rootScope,schemaUtilFactory) {
 		var service = {};
 
@@ -60,6 +60,29 @@
 				url : '/udao/listBySchema/'+schemaUtilFactory.encodeUri(entityUri),
 			});
 
+		};
+		service.getForgotenToken = function(email,captcha) {
+			return $http({
+				method : 'POST',
+				url : '/forgotten/token/',
+				data : {
+					email : email,
+					captcha: captcha
+				}
+			});
+		};
+
+		service.getForgotenPasswordReset = function(token) {
+			return $http({
+				method : 'GET',
+				url : '/forgotten/reset/'+token
+			});
+		};
+		service.getCaptchaKey = function(token) {
+			return $http({
+				method : 'GET',
+				url : '/captcha/sitekey/'
+			});
 		};
 
 		service.getLogout = function() {
@@ -179,4 +202,3 @@
 	} ]);
 
 }(window.angular));
-

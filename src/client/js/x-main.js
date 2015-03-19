@@ -9,9 +9,9 @@
 		'xpsui:directives',
 		'xpsui:controllers',
 		'pascalprecht.translate',
+		'reCAPTCHA',
 		'ui.ace'
-
-		// 'x-security',
+			// 'x-security',
 		// 'personal-page',
 		// 'psui-notification'
 	])
@@ -24,24 +24,33 @@
 	// 			},
 	// 			'responseError': function (rejection) {
 	// 				if (rejection.status === 500) {
-	// 					$injector.get ('psui.notificationFactory').warn({translationCode:'server.side.exception',translationData:rejection.data,time:5000} );
+	// 					$injector.get ('xpsui:NotificationFactory').warn({translationCode:'server.side.exception',translationData:rejection.data,time:5000} );
 	// 				}else
 	// 				if (rejection.status === 401) {
 	// 					$rootScope.security.currentUser = undefined;
 	// 					$rootScope.app.mainMenu=false;
 	// 					$injector.get ('$location').url('/login');
-	// 					$injector.get ('psui.notificationFactory').warn({translationCode:'security.user.session.expired',time:5000} );
+	// 					$injector.get ('xpsui:NotificationFactory').warn({translationCode:'security.user.session.expired',time:5000} );
 	// 				}else
 	//
 	// 				if (rejection.status === 403) {
 	// 				$injector.get ('$location').url('/login');
-	// 				$injector.get('psui.notificationFactory').warn({translationCode:'security.user.missing.permissions',translationData:rejection.data.missingPerm,time:5000});
+	// 				$injector.get('xpsui:NotificationFactory').warn({translationCode:'security.user.missing.permissions',translationData:rejection.data.missingPerm,time:5000});
 	// 				}else
 	// 				return $q.reject(rejection);
 	// 			}
 	// 		};
 	// 	});
 	// }])
+	.config(['reCAPTCHAProvider',function (reCAPTCHAProvider) {
+				// required: please use your own key :)
+				reCAPTCHAProvider.setPublicKey('6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS-not-used-but-required');
+
+				// optional: gets passed into the Recaptcha.create call
+				reCAPTCHAProvider.setOptions({
+					theme: 'clean'
+				});
+			}])
 	.config(['$routeProvider', 'xpsui:loggingProvider',function($routeProvider, loggingProvider) {
 		// $routeProvider.when('/view/:schema/:objId', {controller: 'xViewController', templateUrl: '/partials/x-view.html'});
 
@@ -55,8 +64,8 @@
 		$routeProvider.when('/security/user/edit', {templateUrl: 'partials/x-security-user-edit.html', controller: 'xpsui:SecurityUserEditCtrl',permissions:['Security - read']});
 		$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/x-security-profile-edit.html', controller: 'xpsui:SecurityProfileEditCtrl',permissions:['Security - read']});
 
-		$routeProvider.when('/forgotten', {templateUrl: '/partials/forgotten.html', controller: 'security.forgottenCtrl'});
-		$routeProvider.when('/forgotten/reset/:token', {templateUrl: '/partials/forgottenReset.html', controller: 'security.forgottenResetCtrl'});
+		$routeProvider.when('/forgotten', {templateUrl: '/partials/forgotten.html', controller: 'xpsui:SecurityForgottenCtrl'});
+		$routeProvider.when('/forgotten/reset/:token', {templateUrl: '/partials/forgottenReset.html', controller: 'xpsui:SecurityForgottenResetCtrl'});
 
 
 		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl',permissions:['Registry - write']});

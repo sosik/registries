@@ -20,6 +20,7 @@ module.exports = function (config) {
 			'../build/client/js/x-main.min.js',
 			'../build/client/js/xpsui.min.js',
 			'../build/client/lib/angular-cookies/angular-cookies.js',
+			'../build/client/lib/angular-re-captcha/angular-re-captcha.js',
 			'../build/client/lib/angular-translate/angular-translate.js',
 			'../build/client/lib/angular-translate-handler-log/angular-translate-handler-log.min.js',
 			'../build/client/lib/ace-builds/src-min-noconflict/ace.js',

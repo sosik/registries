@@ -112,36 +112,16 @@
 				var ngModel = ctrls[0];
 				if (ngModel) {
 					ngModel.$render = function() {
-							if (ngModel.$viewValue.fileName) {
-//								elm.html(
-//									'<div class="psui-attachment-name">' + ngModel.$viewValue.fileName + '</div>'
-//									+ '<div class="psui-attachment-size">' + getReadableFileSizeString(ngModel.$viewValue.size) + '</div>'
-//									+ '<div class="psui-attachment-actions">'
-//									+ ' <span class="psui-attachment-inactivelink fa fa-save"> {{"attachment.download.button"|translate}}</span>'
-//									+ ' <a href="/uploads/get/'+ngModel.$viewValue.fileId+'" target="_blank" '
-//									+ '  class="psui-attachment-link fa fa-save" '
-//									+ '	 download="'+ngModel.$viewValue.fileName+'" > {{"attachment.download.button"|translate}}</a>'
-//									+ '</div>');
+							if (ngModel.$viewValue && ngModel.$viewValue.fileName) {
 								elm.html(
-										'<div class="psui-attachment-name">' + ngModel.$viewValue.fileName + ' <em>('
-										+ getReadableFileSizeString(ngModel.$viewValue.size) + ')</em></div>'
-										+ '<div class="psui-attachment-actions">'
-										+ ' <span class="psui-attachment-inactivelink fa fa-save"> {{"attachment.download.button"|translate}}</span>'
-										+ ' <a href="/uploads/get/'+ngModel.$viewValue.fileId+'" target="_blank" '
-										+ '  class="psui-attachment-link fa fa-save" '
-										+ '	 download="'+ngModel.$viewValue.fileName+'" > {{"attachment.download.button"|translate}}</a>'
-										+ '</div>');
-//								elm.html(
-//										ngModel.$viewValue.fileName + ' '
-//										+ getReadableFileSizeString(ngModel.$viewValue.size)
-//										+ ' <a href="/uploads/get/'+ngModel.$viewValue.fileId+'" target="_blank" '
-//										+ '  class="psui-attachment-link fa fa-save" '
-//										+ '	 download="'+ngModel.$viewValue.fileName+'" > {{"attachment.download.button"|translate}}</a>'
-//										);
-								//elm.html('abc');
-//								var fileButton = angular.element('<input type="file"></input>');
-//								elm.append(fileButton);
-								//elm.append(view);
+										'<div class="psui-attachment-name">'
+										+ ' <a href="/uploads/get/' + ngModel.$viewValue.fileId + '" target="_blank" '
+										+ '        class="psui-attachment-link fa fa-save" download="' + ngModel.$viewValue.fileName + '">'
+										+ ' ' + ngModel.$viewValue.fileName + '</a>'
+										+ ' <span>' + ngModel.$viewValue.fileName + '</span>'
+										+ ' <em>(' + getReadableFileSizeString(ngModel.$viewValue.size) + ')</em>'
+										+ '</div>'
+										);
 								$compile(elm.contents())(scope);
 								elm.find('a').on('click', function(evt) {
 									evt.stopPropagation();

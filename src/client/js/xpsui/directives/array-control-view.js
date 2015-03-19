@@ -14,10 +14,17 @@
 					+ '<div  xpsui-uploadable-file xpsui-validity-mark '
 					+ '   xpsui-schema="xpsuiSchema.items" '
 					+ '   ng-model="ngModel[$index]"></div>'
-				+ '</div>';
+				+ '</div><div class="xpsui-uploadable-file-nofiles" ng-show="!ngModel || ngModel.length==0">{{"generic.nofiles.label" | translate}}</div>';
 
 		function getTemplate(renderComponent){
 			return (renderComponent==="xpsui-uploadable-file")?uploadablefileTemplate:objectLinkTemplate;
+		}
+
+		function isEmptyObj(obj) {
+			if (obj && obj.hasOwnProperty('fileId')) {
+                return false;
+			}
+            return true;
 		}
 
 		return {
@@ -35,6 +42,11 @@
 
 
 				var modelChanged = function() {
+					if (scope.ngModel
+							&& scope.ngModel.length > 0 
+							&& isEmptyObj(scope.ngModel[scope.ngModel.length-1])) {
+						scope.ngModel.splice(scope.ngModel.length-1, 1);
+					}
 					console.log('model changed', scope.ngModel);
 				};
 

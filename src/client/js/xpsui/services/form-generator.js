@@ -23,8 +23,9 @@
 		FormGenerator.prototype.generateLabel = function(schemaFragment) {
 			// TODO translation
 			var isRequired = (schemaFragment.required ? ' x-required': '');
-			
-			return angular.element('<div class="x-fieldset-label ' + isRequired + '" >' 
+			var fieldsetClass = 'x-fieldset-label';
+
+			return angular.element('<div class="' + fieldsetClass + ' ' + isRequired + '" >' 
 				+ '<span>' + (schemaFragment.transCode ?
 					$translate.instant(schemaFragment.transCode) : schemaFragment.title
 				) + '</span>' 
@@ -170,6 +171,22 @@
 		};
 
 		FormGenerator.prototype.generatePropertyRow = function(schemaFragment, schemaPath, modelPath, mode) {
+
+			if (schemaFragment.type === 'array') {
+				var container = angular.element('<div ></div>');
+				var row1 = angular.element('<div class="x-fieldset-row"></div>');
+				row1.append(this.generateLabel(schemaFragment));
+
+				if (schemaFragment.readOnly) {
+					mode = this.MODE.VIEW;
+				}
+				var row2 = angular.element('<div class="x-fieldset-row"></div>');
+				row2.append(this.generateField(schemaFragment, schemaPath, modelPath, mode));
+				container.append(row1);
+				container.append(row2);
+				return container;
+			}
+
 			var row = angular.element('<div class="x-fieldset-row"></div>');
 
 			row.append(this.generateLabel(schemaFragment));

@@ -14,7 +14,7 @@
 				+ '<button ng-click="appendNew();" class="btn-clear"><i class="icon-add"></i> {{"generic.search.add" | translate}}</button>'
 				+ '</div>';
 
-		var  uploadablefileTemplate='<div ng-repeat="ae in ngModel track by $id(ae)" class="xpsui-uploadable-file-edit">'
+		var uploadablefileTemplate = '<div ng-repeat="ae in ngModel track by $id(ae)" class="xpsui-uploadable-file-edit">'
 						+ ' <div class="psui-attachment-remove">'
 						+ '  <button ng-click="removeByIndex($index);" class="btn-clear">'
 						+ '   <i class="icon-remove"></i> {{\'generic.search.remove\' | translate}}'
@@ -28,7 +28,7 @@
 						+ '<button ng-click="appendNew();" class="btn-clear"><i class="icon-add"></i> {{"generic.search.add"| translate}}</button>'
 						+ '</div>';
 
-		function getTemplate(renderComponent){
+		function getTemplate(renderComponent) {
 			return (renderComponent==="xpsui-uploadable-file")?uploadablefileTemplate:objectLinkTemplate;
 		}
 
@@ -46,7 +46,6 @@
 				element.html(getTemplate(attrs.xpsuiArrayControlEdit));
 				$compile(element.contents())(scope);
 
-
 				var modelChanged = function() {
 					console.log('model changed', scope.ngModel);
 				};
@@ -59,11 +58,24 @@
 					scope.ngModel.splice(idx,1);
 				};
 
+				function isEmptyObj(obj) {
+					if (obj && obj.hasOwnProperty('fileId')) {
+	                    return false;
+					}
+		            return true;
+				}
+
 				scope.appendNew = function() {
 					if(!(scope.ngModel instanceof Array)){
 						scope.ngModel = [];
 					}
-					scope.ngModel.push({});
+					if (scope.ngModel
+							&& scope.ngModel.length > 0 
+							&& !isEmptyObj(scope.ngModel[scope.ngModel.length-1])) {
+//						console.log(scope.ngModel.length);
+//						console.log(JSON.stringify(scope.ngModel));
+						scope.ngModel.push({});
+					}
 				};
 
 			}

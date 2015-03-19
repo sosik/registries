@@ -248,16 +248,13 @@ a:HOVER {
 }
 
 .psui-attachment-remove {
-	clear: both;
-	border-top: 1px solid gray;
-	margin-top: 3px;
+	position: absolute;
+	top: -8px;
+	left: -80px;
 }
 
 .psui-attachment-name {
-	float: left;
-	width: 60%;
 	min-width: 70px;
-	clear: left;
 	margin-bottom: 6px;
 }
 
@@ -265,24 +262,21 @@ a:HOVER {
 	font-size: 0.8em;
 }
 
-.psui-attachment-actions {
-	float: left;
-	width: 90px;
-	min-width: 90px;
-	clear: right;
-}
-
-.xpsui-uploadable-file-view .psui-attachment-inactivelink {
-	display: none;
-}
-
-.xpsui-uploadable-file-edit .psui-attachment-link {
-	display: none;
-}
-
 .xpsui-uploadable-file-edit {
-	margin-top: 25px;
-	clear: both;
+	position: relative;
+	margin-left: 80px;
+}
+
+.xpsui-uploadable-file-view .psui-attachment-name span {
+	display: none;
+}
+
+.xpsui-uploadable-file-edit .psui-attachment-name a {
+	display: none;
+}
+
+.xpsui-uploadable-file-nofiles {
+	margin-top: 10px;
 }
 
 a.forgotten {

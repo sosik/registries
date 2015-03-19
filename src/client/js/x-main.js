@@ -41,9 +41,33 @@
 
 		$routeProvider.when('/portal/edit/:id?', {templateUrl: '/partials/x-portal-edit.html', controller: 'xpsui:PortalEditorCtrl',permissions:['Registry - write']});
 		$routeProvider.when('/portal/menu', {templateUrl: '/partials/x-portal-menu.html', controller: 'xpsui:PortalEditorMenuCtrl',permissions:['Registry - write']});
+		
+		$routeProvider.when('/schema/edit', {
+			templateUrl: 'partials/x-schema-editor-index.html',
+			controller: 'xpsui:SchemaEditorIndexCtrl',
+			permissions: ['System Admin'],
+			resolve: {
+				schemas: ['xpsui:SchemaEditorService', function (schemaService) {
+					return schemaService.getSchemaList().then(function (response) {
+						return response.data;
+					});
+				}]
+			}
+		});
 
-
-		$routeProvider.when('/schema/edit', {templateUrl: 'partials/x-schema-editor.html', controller: 'xpsui:SchemaEditCtrl' ,permissions:['System Admin']});
+		$routeProvider.when('/schema/edit/:schema', {
+			templateUrl: 'partials/x-schema-editor-show.html',
+			controller: 'xpsui:SchemaEditorShowCtrl',
+			permissions: ['System Admin'],
+			resolve: {
+				// Load schema from the server
+				schema: ['$route', 'xpsui:SchemaEditorService', function ($route, schemaService) {
+					return schemaService.getFileContent($route.current.params.schema).then(function (response) {
+						return response.data;
+					});
+				}]
+			}
+		});
 		
 		$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		

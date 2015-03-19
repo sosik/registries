@@ -128,7 +128,8 @@ module.exports = function(grunt) {
 			xpsui: {
 				options: {
 					sourceMap: true,
-					sourceMapIncludeSources: true
+					sourceMapIncludeSources: true,
+					mangle:false
 				},
 				files: {
 					'build/client/js/xpsui.min.js': [
@@ -142,7 +143,8 @@ module.exports = function(grunt) {
 			main: {
 				options: {
 					sourceMap: true,
-					sourceMapIncludeSources: true
+					sourceMapIncludeSources: true,
+					mangle:false
 				},
 				files: {
 					'build/client/js/x-main.min.js': ['src/client/js/x-main.min.js', 'src/client/js/x-*.js']

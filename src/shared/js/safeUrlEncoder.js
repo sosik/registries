@@ -31,7 +31,7 @@
 
 	// are we in angular
 	if (typeof angular !== 'undefined') {
-		angular.module('registries').factory('registries.safeUrlEncoder', [function() {
+		angular.module('x-registries').factory('xpsui:safeUrlEncoder', [function() {
 			return {
 				encode: encode,
 				decode: decode

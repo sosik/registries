@@ -66,14 +66,12 @@
 				}
 
 				scope.appendNew = function() {
-					if(!(scope.ngModel instanceof Array)){
+					if (!(scope.ngModel instanceof Array)) {
 						scope.ngModel = [];
 					}
-					if (scope.ngModel
-							&& scope.ngModel.length > 0 
-							&& !isEmptyObj(scope.ngModel[scope.ngModel.length-1])) {
-//						console.log(scope.ngModel.length);
-//						console.log(JSON.stringify(scope.ngModel));
+					if ((scope.ngModel instanceof Array)
+							&& (scope.ngModel.length == 0 
+									|| !isEmptyObj(scope.ngModel[scope.ngModel.length-1]))) {
 						scope.ngModel.push({});
 					}
 				};

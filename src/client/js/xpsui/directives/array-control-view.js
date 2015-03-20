@@ -42,11 +42,6 @@
 
 
 				var modelChanged = function() {
-					if (scope.ngModel
-							&& scope.ngModel.length > 0 
-							&& isEmptyObj(scope.ngModel[scope.ngModel.length-1])) {
-						scope.ngModel.splice(scope.ngModel.length-1, 1);
-					}
 					console.log('model changed', scope.ngModel);
 				};
 

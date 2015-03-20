@@ -70,8 +70,6 @@
 
 			var prop;
 
-			log.error(data);
-
 			if (err) {
 				log.error('Failed to get data from collection, objectLink resolution failed');
 				callback(err);

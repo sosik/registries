@@ -10,7 +10,7 @@
 	 * @submodule directives
 	 * @class xpsui-fieldset
 	 */
-	.directive('xpsuiFieldset', ['xpsui:logging', 'xpsui:FormGenerator', function(log, formGenerator) {
+	.directive('xpsuiFieldset', ['xpsui:logging', 'xpsui:FormGenerator', '$compile', function(log, formGenerator, $compile) {
 		return {
 			restrict: 'A',
 			link: function(scope, elm, attrs, ctrls) {
@@ -44,9 +44,14 @@
 				var schema = scope.$eval(options);
 				var mode = attrs.xpsuiFieldset;
 
-				if (schema && schema.title) {
-					// TODO translation
+				if (schema && schema.transCode) {
+					var titleElm = angular.element('<div class="x-fieldset-title">{{\'' + schema.transCode + '\'|translate}}</div>');
+					//elm.append(titleElm);
+					elm.append($compile(titleElm)(scope));
+				} else if (schema && schema.title) {
 					elm.append('<div class="x-fieldset-title">' + schema.title + '</div>');
+				} else {
+					elm.append('<div class="x-fieldset-title"></div>');
 				}
 
 				var content = angular.element('<div class="x-fieldset-content"></div>');

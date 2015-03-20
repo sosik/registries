@@ -231,6 +231,8 @@
 			"schema.statistics.fees.paid.sum":"Suma zplatených",
 			"schema.statistics.fees.overdue.count":"Počet po splatnosti",
 			"schema.statistics.fees.overdue.sum":"Suma po splatnosti",
+			"schema.requisitions.basedata": "Základné údaje",
+			"schema.requisitions.basedata": "Prílohy",
 
 			"schemas.countries.enum.AFG": "Afganistan",
 			"schemas.countries.enum.ALA": "Alandy",
@@ -709,6 +711,9 @@
 			"schema.statistics.fees.paid.sum":"Suma zplatených",
 			"schema.statistics.fees.overdue.count":"Počet po splatnosti",
 			"schema.statistics.fees.overdue.sum":"Suma po splatnosti",	"schemas.countries.enum.AFG": "Afganistan",
+			"schema.requisitions.basedata": "Základné údaje",
+			"schema.requisitions.basedata": "Prílohy",
+
 			"schemas.countries.enum.ALA": "Alandy",
 			"schemas.countries.enum.ALB":"Albánie",
 			"schemas.countries.enum.DZA":"Alžírsko",

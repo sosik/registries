@@ -48,8 +48,10 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 			require('./manglers/ObjectLink2Mangler.js')(function(mongoDriver, options) {
 						return new universalDaoModule.UniversalDao(mongoDriver, options);
 			}, mongoDriver),
+			require('./manglers/ReadOnlyMangler.js')(),
 			require('./manglers/TimestampMangler.js')(),
 			require('./manglers/GenerateVSMangler.js')(mongoDriver)
+
 	]);
 
 	var saveObjectMangler = require('./ObjectMangler.js').create([
@@ -64,6 +66,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 			require('./manglers/ObjectCleanerMangler.js')(),
 			require('./manglers/SequenceMangler.js')(mongoDriver),
 			require('./manglers/UniqueMangler.js')(mongoDriver),
+			require('./manglers/ReadOnlyMangler.js')(mongoDriver),
 			require('./manglers/NextMangler.js')(mongoDriver),
 			require('./manglers/GenerateVSMangler.js')(mongoDriver),
 			require('./manglers/CollationMangler.js')(mongoDriver)

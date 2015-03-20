@@ -15,7 +15,7 @@ module.exports = {
 	OBJECT_LINK2_SCHEMA_KEYWORD: 'schema', // reference to schema used as link definition of objectLink2
 	OBJECT_LINK2_OID_KEYWORD: 'oid', // referenced object identifier by objectLink2
 	OBJECT_LINK2_FIELDS_KEYWORD: 'fields', // enumeration of referenced fields
-	
+
 	ITEMS_KEYWORD: 'items', // keyword to support arrays
 	OBJECT_LINK_OID_KEYWORD: 'oid', // object id
 	OBJECT_LINK_REGISTRY_KEYWORD: 'registry', // referenced collection
@@ -39,7 +39,7 @@ module.exports = {
 	SEQUENCE: 'sequence', // marks fileds that will be assigned by specified seqence
 	TIMESTAMP: 'timestamp', // marks fields that will be updated with server era-time
 	COLLATE: 'collate', //marks fields that needs to be collated/ordered .
-	READ_ONLY: 'readonly', // marks field as readonly field will not be editable in GUI
+	READ_ONLY: 'readOnly', // marks field as readonly field will not be editable in GUI
 
 	//Events
 	FIRE_EVENTS:"fireEvents",

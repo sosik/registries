@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiForm', ['$compile', '$parse', 'xpsui:logging', 'xpsui:FormGenerator', 'xpsui:Calculator', function($compile, $parse, log, formGenerator, calculator) {
+	.directive('xpsuiForm', ['$compile', '$parse', 'xpsui:logging', 'xpsui:FormGenerator', 'xpsui:Calculator','$translate', function($compile, $parse, log, formGenerator, calculator,$translate) {
 		return {
 			restrict: 'A',
 			require: 'xpsuiForm',
@@ -86,16 +86,18 @@
 				scope.$watchCollection( attrs.xpsuiSchema, function() {
 					log.info('xpsuiForm generate');
 					var schema = scope.$eval(attrs.xpsuiSchema);
-					var mode = attrs.xpsuiForm;	
+					var mode = attrs.xpsuiForm;
 
 					if(schema.properties){
-						elm.append('<div class="x-form-title">' + schema.title + '</div>');
+
+						var title = schema.transCode?   $translate.instant(schema.transCode) : schema.title;
+						elm.append('<div class="x-form-title">' + title + '</div>');
 						formGenerator.generateForm(scope, elm, schema, attrs.xpsuiSchema, attrs.xpsuiModel, mode || formGenerator.MODE.VIEW);
 					} else {
 						log.info('xpsuiForm schema does not exist');
 					}
-					
-					
+
+
 				});
 
 				log.timeEnd('xpsuiForm Link');

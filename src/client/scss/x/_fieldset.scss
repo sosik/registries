@@ -3,6 +3,20 @@
 	width: 50%;
 	float: left;
 	padding: $fieldset-content-offset;
+	& &{
+		display: block;
+		width: 100%;
+		float: none;
+		padding: $fieldset-content-offset 0px;
+	}
+}
+
+.x-fieldset-full{
+	.x-fieldset, &.x-fieldset {
+		width: 100%;
+		float: none;
+		display: block;
+	}
 }
 
 .x-fieldset-title {
@@ -66,13 +80,15 @@ div.x-fieldset-row {
 		margin-bottom: 8px;
 	}
 
-	input, select {
+	input, select, textarea {
 		width: 100%;
 		padding: 4px 12px;
 		background-color: #fafafa;
 		box-shadow: none !important;
 		border: 1px solid #b0b0b0;
-		color: #555555;
+	}
+
+	input, select{
 		height: 34px;
 	}
 

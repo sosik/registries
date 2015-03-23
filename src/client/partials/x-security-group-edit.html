@@ -1,7 +1,7 @@
-<div id="SearchPage">
+<div >
 	<div>
-		<div>
-			<fieldset class="narrow">
+		<!-- <div> -->
+			<div class="x-fieldset">
 				<span class="x-fieldset-title">
 					{{'security.group.edit.list.of.security.groups' | translate}}
 				</span>
@@ -19,18 +19,18 @@
 							<td>{{$index + 1}}</td>
 							<td>{{group.baseData.name}}</td>
 							<td>
-								<span class="psui-btn psui-edit-btn item-clickable" ng-click="selectGroup(group)">
+								<a class="psui-btn psui-edit-btn item-clickable" ng-click="selectGroup(group)">
 									<i class="icon-pencil"></i> <span>{{'security.group.edit.edit' | translate}}</span>
-								</span>
+								</a>
 							</td>
 						</tr>
 					</tbody>
 				</table>
-			</fieldset>
-		</div>
+			</div>
+		<!-- </div>
 
-		<div>
-			<div ng-show="selectedGroup" id="SelectedGroup">
+		<div> -->
+			<div ng-show="selectedGroup" class="x-fieldset">
 				<div>
 					<fieldset>
 						<span class="x-fieldset-title">{{'security.group.edit.modification.of.security.group' | translate}} - {{selectedGroup.baseData.name}}</span>
@@ -73,8 +73,8 @@
 						</span>
 						<div>
 							<div>
-								<div>
-									<div class="permissions">
+								<div class="x-multiselect-box">
+									<div>
 										<header>{{'security.group.edit.added.permissions' | translate}}</header>
 										<section>
 											<div ng-repeat="perm in group.permissions" class="psui-list-item" ng-click="removePermission(perm)">
@@ -82,7 +82,7 @@
 											</div>
 										</section>
 									</div>
-									<div class="permissions">
+									<div>
 										<header>{{'security.group.edit.available.permissions' | translate}}</header>
 										<section>
 											<div ng-repeat="perm in permissions" class="psui-list-item" ng-click="addPermission(perm)">
@@ -105,7 +105,7 @@
 				</div>
 				
 			</div>
-		</div>
+		<!-- </div> -->
 	</div>
 </div>
 

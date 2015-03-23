@@ -64,7 +64,7 @@
 
 			&:before{
 				@include icon-font($icon-remove !important);
-				font-size: em(18px);
+				font-size: em($font-size-bigger);
 				line-height: $fixed-header-height;
 			}
 		}

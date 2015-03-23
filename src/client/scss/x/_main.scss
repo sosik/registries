@@ -121,8 +121,8 @@ body{
 
 #SelectedGroup {
 	width: 15 * $fixed-header-height;
-	position: fixed;
-	top: $fixed-header-height;
+	// position: fixed;
+	// top: $fixed-header-height;
 	right: 10px;
 
 	fieldset {
@@ -150,38 +150,38 @@ body{
 	}
 }
 
-#SelectedUser, #SelectedProfile, #SelectedGroup {
+// #SelectedUser, #SelectedProfile, #SelectedGroup {
 
 
-	.permissions {
-		border: 1px solid #b0b0b0;
-		padding: 0px;
-		margin: 0px;
-		width: 50%;
-		float: left;
+// 	.permissions {
+// 		border: 1px solid #b0b0b0;
+// 		padding: 0px;
+// 		margin: 0px;
+// 		width: 50%;
+// 		float: left;
 
-		header {
-			position: relative;
-			background-color: #b0b0b0;
-			padding: 4px 12px;
-			color: #ffffff;
-		}
+// 		header {
+// 			position: relative;
+// 			background-color: #b0b0b0;
+// 			padding: 4px 12px;
+// 			color: #ffffff;
+// 		}
 		
-		section {
-			height: 150px;
-			overflow: auto;
+// 		section {
+// 			height: 150px;
+// 			overflow: auto;
 			
-			div {
-				display: block;
-				padding: 4px 12px 4px 12px;
-				border-bottom: 1px dotted #ffffff;
-				cursor: pointer;
-				color: #666666;
-				line-height: 1.42857;
-			}
-		}
-	}
-}
+// 			div {
+// 				display: block;
+// 				padding: 4px 12px 4px 12px;
+// 				border-bottom: 1px dotted #ffffff;
+// 				cursor: pointer;
+// 				color: #666666;
+// 				line-height: 1.42857;
+// 			}
+// 		}
+// 	}
+// }
 
 button.btn-primary {
 	padding: 6px 12px;
@@ -241,4 +241,8 @@ a:HOVER {
 
 .pull-left {
 	text-align: left;
+}
+
+.clearfix{
+	@include clearfix();
 }

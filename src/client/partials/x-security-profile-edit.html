@@ -89,7 +89,7 @@
 		</div>
 	</div>
 	<div>
-		<div ng-show="selectedProfile" id="SelectedProfile">
+		<div ng-show="selectedProfile" >
 				<div>
 					<fieldset>
 						<span class="x-fieldset-title">{{'security.profile.edit.name.data' |translate}} - {{selectedProfile.baseData.name}}</span>
@@ -119,8 +119,8 @@
 
 					<div>
 						<div>
-							<div>
-								<div class="permissions">
+							<div  class="x-multiselect-box">
+								<div >
 									<header>{{'security.profile.edit.added.groups' |translate}}</header>
 									<section >
 										<div ng-repeat="group in profile.groups" ng-click="removeGroup(group)">
@@ -128,7 +128,7 @@
 										</div>
 									</section>
 								</div>
-								<div class="permissions">
+								<div >
 									<header>{{'security.profile.edit.available.groups' |translate}}</header>
 									<section>
 										<div ng-repeat="group in groups" ng-click="addGroup(group)">
@@ -151,8 +151,8 @@
 
 					<div>
 						<div>
-							<div>
-								<div class="permissions">
+							<div class="x-multiselect-box">
+								<div >
 									<header>{{'security.profile.edit.added.permissions' |translate}}</header>
 									<section >
 										<div ng-repeat="perm in profile.permissions" ng-click="removePermission(perm)">
@@ -160,7 +160,7 @@
 										</div>
 									</section>
 								</div>
-								<div class="permissions">
+								<div >
 									<header>{{'security.profile.edit.available.permissions' |translate}}</header>
 									<section>
 										<div ng-repeat="perm in permissions" ng-click="addPermission(perm)">

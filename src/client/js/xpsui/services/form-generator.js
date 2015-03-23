@@ -55,14 +55,14 @@
 				if(schemaFragment.objectLink2){
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.$uploadableImage
+				} else if(schemaFragment.uploadableImage
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
 					field = angular.element('<div xpsui-uploadable-image xpsui-imageresizor /></div>');
 					field.attr('xpsui-schema', schemaPath);
-					var width = schemaFragment.$uploadableImage ?
-						schemaFragment.$uploadableImage.width : schemaFragment.render.width;
-					var height = schemaFragment.$uploadableImage ?
-						schemaFragment.$uploadableImage.height : schemaFragment.render.height;
+					var width = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.width : schemaFragment.render.width;
+					var height = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.height : schemaFragment.render.height;
 
 					field.attr('psui-imageresizor-width', width);
 					field.attr('psui-imageresizor-height', height);
@@ -73,14 +73,13 @@
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
 					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if( schemaFragment.type === "string"
-					//FIXME: this should be removed date is not valid value JSON SCHEMA
-					|| schemaFragment.type === "Decimal"
-				){
-					if(schemaFragment.enum){
-						field = angular.element('<div xpsui-select-edit></div>');
-						field.attr('xpsui-schema', schemaPath);
-					} else {
+				// } else if( schemaFragment.type === "string"
+				// 	|| schemaFragment.type === "Decimal"
+				// ){
+				} else if(schemaFragment.enum){
+					field = angular.element('<div xpsui-select-edit></div>');
+					field.attr('xpsui-schema', schemaPath);
+				} else {
 						if (schemaFragment.render && schemaFragment.render.component  ){
 
 							if ( schemaFragment.render.component=="psui-textarea" ) {
@@ -95,7 +94,7 @@
 						else {
 							field = angular.element('<div xpsui-string-edit></div>');
 						}
-					}
+				//}
 				}
 
 				//FIXME: this should be removed date is not valid value JSON SCHEMA
@@ -139,29 +138,29 @@
 				if(schemaFragment.objectLink2){
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.$uploadableImage
+				} else if(schemaFragment.uploadableImage
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
 					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
-					var width = schemaFragment.$uploadableImage ?
-						schemaFragment.$uploadableImage.width : schemaFragment.render.width;
-					var height = schemaFragment.$uploadableImage ?
-						schemaFragment.$uploadableImage.height : schemaFragment.render.height;
+					var width = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.width : schemaFragment.render.width;
+					var height = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.height : schemaFragment.render.height;
 
 					field.attr('width', width);
 					field.attr('height', height);
 				} else if(schemaFragment.type === "date"
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
 					field = angular.element('<div xpsui-date-view></div>');
-				} else if( schemaFragment.type === "string"
-					|| schemaFragment.type === "Decimal"
-				){
-					if(schemaFragment.enum){
-						field = angular.element('<div xpsui-select-view></div>');
-						field.attr('xpsui-schema', schemaPath);
-					} else {
-						field = angular.element('<div xpsui-string-view></div>');
-					}
+				// } else if( schemaFragment.type === "string"
+				// 	|| schemaFragment.type === "Decimal"
+				// ){
+				} else if(schemaFragment.enum){
+					field = angular.element('<div xpsui-select-view></div>');
+					field.attr('xpsui-schema', schemaPath);
+				} else {
+					field = angular.element('<div xpsui-string-view></div>');
 				}
+				//}
 
 				field.attr('ng-model', modelPath);
 
@@ -237,7 +236,10 @@
 
 						if (localFragment && localFragment.type) {
 							// localFragment has explicitly defined type
-							if (localFragment.type === 'object') {
+
+							// @info conflict with objeclink2 because type is object too
+							//if (localFragment.type === 'object') { 
+							if (localFragment.properties) {
 								component = angular.element('<div></div>');
 								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
@@ -245,7 +247,9 @@
 							} else if (localFragment.type === 'string'
 								|| localFragment.type === 'date'
 								|| localFragment.type === 'array'
-								|| localFragment.type === 'Decimal'
+								|| localFragment.type === 'number'
+								|| localFragment.type === 'object'
+								|| localFragment.type.toLowerCase() === 'decimal'
 							) {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {

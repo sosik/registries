@@ -7,7 +7,7 @@
 			return {
 				restrict: 'AE',
 				link: function(scope, elm, attrs, ctrls) {
-					elm.addClass('psui-notification');
+					elm.addClass('x-notification');
 					$rootScope.psuiNotification = ( $rootScope.psuiNotification || {} );
 					$rootScope.psuiNotification.message = ( $rootScope.psuiNotification.message || [] );
 					scope.$watchCollection('psuiNotification.message', function(newNames,oldNames){
@@ -15,20 +15,21 @@
 							if (!($rootScope.psuiNotification.message[i].element)){
 								if($rootScope.psuiNotification.message[i].translationCode){
 								//	$translate($rootScope.psuiNotification.message[i].translationCode).then(function(notif){
-									$rootScope.psuiNotification.message[i].element = $compile(angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">{{\''+ $rootScope.psuiNotification.message[i].translationCode +'\' | translate:\'{data:"'+ $rootScope.psuiNotification.message[i].translationData +'"}\'}}</div>'))(scope);
+									$rootScope.psuiNotification.message[i].element = $compile(angular.element('<div class="x-notification-'+ $rootScope.psuiNotification.message[i].type +'">{{\''+ $rootScope.psuiNotification.message[i].translationCode +'\' | translate:\'{data:"'+ $rootScope.psuiNotification.message[i].translationData +'"}\'}}</div>'))(scope);
 								//	});
 									
 								} else {
-									$rootScope.psuiNotification.message[i].element = angular.element('<div class="psui-notification-'+ $rootScope.psuiNotification.message[i].type +'">'+ $rootScope.psuiNotification.message[i].text +'</div>');
+									$rootScope.psuiNotification.message[i].element = angular.element('<div class="x-notification-'+ $rootScope.psuiNotification.message[i].type +'">'+ $rootScope.psuiNotification.message[i].text +'</div>');
 								}
 								elm.append($rootScope.psuiNotification.message[i].element);
 								if ($rootScope.psuiNotification.message[i].deletable){
 									var buttonDelete = angular.element('<button type="button"></button>');
 									$rootScope.psuiNotification.message[i].element.append(buttonDelete);
+									$rootScope.psuiNotification.message[i].button = buttonDelete;
 									var searchedMessage = $rootScope.psuiNotification.message[i];
 									buttonDelete.on('click',function(evt){
 										for (var j = 0; j < $rootScope.psuiNotification.message.length; j++ ){
-											if ($rootScope.psuiNotification.message[j] == searchedMessage) {
+											if ($rootScope.psuiNotification.message[j].button[0] == this) {
 												$rootScope.psuiNotification.message[j].element.remove();
 												$rootScope.psuiNotification.message.splice(j,1);
 											}

@@ -48,11 +48,11 @@
 						if (nv) {
 							validationMark.addClass('ng-invalid');
 							validationMark.removeClass('x-hidden');
-							inlineEditCtrl.hideCommitButton();
+							inlineEditCtrl && inlineEditCtrl.hideCommitButton();
 						} else {
 							validationMark.removeClass('ng-invalid');
 							validationMark.addClass('x-hidden');
-							inlineEditCtrl.showCommitButton();
+							inlineEditCtrl && inlineEditCtrl.showCommitButton();
 						}
 					});
 

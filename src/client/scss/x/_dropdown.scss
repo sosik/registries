@@ -134,6 +134,7 @@
 
 .x-dropdown-open{
 	.x-main-content{
+
 		@media (max-width: $screen-sm-max) {
 			overflow-x: visible;
 		}
@@ -144,5 +145,13 @@
 
 	.x-main-menu-toggle{
 		visibility: hidden;
+	}
+}
+
+.x-dropdown-open-md{
+	@extend .x-dropdown-open;
+	
+	.x-main-content{
+		overflow-x: visible;
 	}
 }

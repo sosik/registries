@@ -1,0 +1,118 @@
+#portal-editor-menu {
+}
+
+.portal-menu-editor {
+	margin-left: 15px;
+}
+.portal-menu-editor .portal-menu-header {
+	-webkit-user-select: none;
+	height: 28px;
+	line-height: 28px;
+}
+
+.portal-menu-editor .action-button {
+	border: 1px gray solid;
+	padding: 4px;
+	margin-right: 5px;
+	border-radius: 4px;
+}
+.portal-menu-editor .action-button:HOVER {
+	background-color: #FDB730;
+}
+
+.portal-menu-editor-edit-panel {
+	margin-left: 55px;
+	width: 600px;
+}
+
+.portal-menu-editor-edit-panel INPUT {
+	padding: 2px;
+	width: 50%;
+}
+
+.portal-multistring-element {
+	display: inline-block;
+	padding-left: 10px;
+	padding-right: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	background-color: #FDB730;
+	border-radius: 4px;
+	margin-right: 5px;
+	margin-top: 3px;
+}
+.portal-multistring-element SPAN {
+	font-size: 80%;
+	padding-right: 5px;
+}
+
+.portal-multistring-element I {
+	font-size: 80%;
+}
+.portal-contenteditable {
+  border: silver solid 1px; }
+
+.portal-contenteditable-buttons-holder {
+  background-color: #333333; }
+  .portal-contenteditable-buttons-holder button {
+    color: white;
+    height: 22px;
+    font-size: 18px;
+    border: none;
+    border-right: 1px solid #636363;
+    background-color: #333333;
+    margin: 5px 0 5px 0; }
+    .portal-contenteditable-buttons-holder button:hover {
+      color: #fdb730; }
+    .portal-contenteditable-buttons-holder button:before {
+      position: relative;
+      top: 1px;
+      display: inline-block;
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-bold:before {
+      content: "\e608"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-indent:before {
+      content: "\e60f"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-outdent:before {
+      content: "\e610"; }
+    .portal-contenteditable-buttons-holder button.psui-contenteditable-ol:before {
+      content: "\e604"; }
+    .portal-contenteditable-buttons-holder button.psui-contenteditable-ul:before {
+      content: "\e603"; }
+    .portal-contenteditable-buttons-holder button.psui-contenteditable-italic:before {
+      content: "\e609"; }
+    .portal-contenteditable-buttons-holder button[class*="portal-contenteditable-"]:before {
+      top: 0px;
+      font-size: 14px; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-h:before {
+      content: "\e180"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-undo:before {
+      content: "\e601"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-redo:before {
+      content: "\e602"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-table:before {
+      content: "\e60a"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-image:before {
+      content: "\e600"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-link:before {
+      content: "\e605"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-center:before {
+      content: "\e60c"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-left:before {
+      content: "\e60b"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-right:before {
+      content: "\e60d"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-justify:before {
+      content: "\e60e"; }
+    .portal-contenteditable-buttons-holder button.portal-contenteditable-remove-format:before {
+      content: "\e606"; }
+    .portal-contenteditable-buttons-holder button.chosen {
+      color: #fdb730; }
+
+.portal-edit-block-selector-block TR:HOVER {
+	background-color: #fdb730;
+}

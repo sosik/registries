@@ -7,7 +7,8 @@
 		'xpsui:SecurityService',
 		'xpsui:SchemaUtil',
 		'xpsui:NotificationFactory',
-		function($scope, SecurityService, schemaUtilFactory, notificationFactory) {
+		'schema',
+		function($scope, SecurityService, schemaUtilFactory, notificationFactory, schema) {
 
 			$scope.groups = [];
 			$scope.selectedGroup = null;
@@ -19,11 +20,13 @@
 				schema : {}
 			};
 
-			schemaUtilFactory.getCompiledSchema('uri://registries/security#groupmaster', 'new').success(function(data) {
-				$scope.schemaFormOptions.schema = data;
-			}).error(function(err) {
-				notificationFactory.error(err);
-			});
+			$scope.schemaFormOptions.schema = schema;
+
+			// schemaUtilFactory.getCompiledSchema('uri://registries/security#groupmaster', 'new').success(function(data) {
+			// 	$scope.schemaFormOptions.schema = data;
+			// }).error(function(err) {
+			// 	notificationFactory.error(err);
+			// });
 
 			var remove = function(arr, item) {
 				for (var i = arr.length; i--;) {

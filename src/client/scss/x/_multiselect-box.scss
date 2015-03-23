@@ -1,0 +1,30 @@
+.x-multiselect-box{
+	> div {
+		border: 1px solid #b0b0b0;
+		padding: 0px;
+		margin: 0px;
+		width: 50%;
+		float: left;
+
+		header {
+			position: relative;
+			background-color: #b0b0b0;
+			padding: 4px 12px;
+			color: #ffffff;
+		}
+		
+		section {
+			height: 150px;
+			overflow: auto;
+			
+			div {
+				display: block;
+				padding: 4px 12px 4px 12px;
+				border-bottom: 1px dotted #ffffff;
+				cursor: pointer;
+				color: #666666;
+				line-height: 1.42857;
+			}
+		}
+	}
+}

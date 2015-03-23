@@ -55,9 +55,11 @@
 				elm.addClass('x-select-edit x-objectlink2-edit');
 
 				ngModel.$render = function() {
-					render(dataFactory.getObjectLinkData(
-						schemaFragment.objectLink2, ngModel.$viewValue
-					));
+					if(!angular.equals({},ngModel.$viewValue)) {
+						render(dataFactory.getObjectLinkData(
+							schemaFragment.objectLink2, ngModel.$viewValue
+						));
+					}
 				};
 
 				function render(data){

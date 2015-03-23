@@ -56,6 +56,10 @@ $main-item-active-bg-color: lighten($color-black, 10%);
 $string-border-color: $color-secondary; 
 $string-background-color: transparent; 
 
+// component
+$component-border-color: $color-secondary;
+$component-background-color: $color-background-soft;
+
 // inline edit
 $inlineedit-background: $string-border-color;
 $inlineedit-pencil-background: rgba(red($string-border-color),green($string-border-color),blue($string-border-color),.3);
@@ -82,3 +86,17 @@ $validation-mark-color: $color-error;
 $validation-mark-bg: $color-white;
 $validation-mark-popup-01: rgba(250, 250, 250, 0);
 $validation-mark-popup-02: rgba(208, 208, 208, 0);
+
+// notifications
+$notifi-error-border: #ebccd1;
+$notifi-error-background: #f2dede;
+$notifi-error-color: #a94442;
+
+
+$notifi-warn-border: #eae834;
+$notifi-warn-background: #fffeae;
+$notifi-warn-color: #a08c04;
+
+$notifi-info-border: #00c405;
+$notifi-info-background: #ddffcf;
+$notifi-info-color: #005302;

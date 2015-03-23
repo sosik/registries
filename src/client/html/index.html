@@ -65,7 +65,15 @@
 	</nav>
 </div>
 
-<div id="main-menu" xpsui-menu class="x-main-menu x-modalview" ng-show="security.currentUser.systemCredentials.login.loginName" ng-include="'dataset/get/partials/x-main-menu.html'"></div>
+<div id="main-menu" xpsui-menu class="x-main-menu x-modalview" ng-show="security.currentUser.systemCredentials.login.loginName">
+	<div class="x-main-menu-toggle"></div>
+	<div class="x-modalview-window">
+		<span class="x-modalview-header">Menu</span>
+		<div class="x-main-menu-toggle x-modalview-close"></div>
+		<div class="x-modalview-body" ng-include="'dataset/get/partials/x-main-menu.html'">
+		</div>
+	</div>
+</div>
 
 
 

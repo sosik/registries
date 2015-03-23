@@ -177,7 +177,7 @@
 					originImgWidth = img.width;
 					originImgHeight = img.height;
 					canvasResult.removeClass('x-hidden');
-					document.querySelector('body').classList.add('x-dropdown-open-md');
+					document.querySelector('body').classList.add('x-dropdown-open');
 					modalEl.addClass('x-open');
 					draw(context,context2);
 				};
@@ -213,7 +213,7 @@
 					}
 
 					canvasResult.addClass('x-hidden');
-					document.querySelector('body').classList.remove('x-dropdown-open-md');
+					document.querySelector('body').classList.remove('x-dropdown-open');
 					modalEl.removeClass('x-open');
 					evt.stopPropagation();
 					return false;

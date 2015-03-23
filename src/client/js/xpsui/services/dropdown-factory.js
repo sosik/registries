@@ -15,7 +15,7 @@
 		Dropdown.DEFAULTS = {
 			closingTime: 150,
 			clsOpen: 'x-open',
-			bodyClsOpen: 'x-dropdown-open',
+			bodyClsOpen: 'x-dropdown-open-sm',
 			allowClose: true,
 			showDropdownAction: true,
 			titleTransCode: null

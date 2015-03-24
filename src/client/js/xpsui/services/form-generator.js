@@ -252,7 +252,6 @@
 								localFragment.type === 'date' ||
 								localFragment.type === 'array' ||
 								localFragment.type === 'Decimal'
-								|| localFragment.type.toLowerCase() === 'decimal'
 							) {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {
@@ -277,7 +276,7 @@
 						log.groupEnd();
 					}
 				} else {
-						log.warn('Schema fragment type %s not implemented yet', schemaFragment.type);
+						log.warn('Schema fragment type "%s" not implemented yet', schemaFragment.type);
 				}
 			} else {
 				log.warn('Schema fragment has not explicit type defined');

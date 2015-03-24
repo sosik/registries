@@ -238,14 +238,20 @@
 						if (localFragment && localFragment.type) {
 							// localFragment has explicitly defined type
 							if (localFragment.type === 'object') {
-								component = angular.element('<div></div>');
-								component.attr('xpsui-options', localSchemaPath);
-								component.attr('xpsui-model', localModelPath);
-								component.attr('xpsui-fieldset', mode);
-							} else if (localFragment.type === 'string'
-								|| localFragment.type === 'date'
-								|| localFragment.type === 'array'
-								|| localFragment.type === 'Decimal'
+								if (localFragment.objectLink2) {
+									// objectLink2
+									component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
+								} else {
+									// general object, render as fieldset
+									component = angular.element('<div></div>');
+									component.attr('xpsui-options', localSchemaPath);
+									component.attr('xpsui-model', localModelPath);
+									component.attr('xpsui-fieldset', mode);
+								}
+							} else if (localFragment.type === 'string' ||
+								localFragment.type === 'date' ||
+								localFragment.type === 'array' ||
+								localFragment.type === 'Decimal'
 							) {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {
@@ -253,6 +259,12 @@
 							}
 						} else {
 							// localFragment has not explicitly defined type
+							// we will try to identify types by other means
+							if (localFragment.objectLink2) {
+								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
+							} else {
+								log.warn('Cannot identify type of fragment %s', localSchemaPath);
+							}
 						}
 
 						//component = componentGenerator.generate(schemaFragment.properties[p], localSchemaPath, localModelPath, mode || this.MODE.VIEW);

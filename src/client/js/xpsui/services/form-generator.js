@@ -43,7 +43,7 @@
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
 
-				if (schemaFragment.type === 'array') {
+				if (schemaFragment.type.toLowerCase() === 'array') {
 					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component ){
 						field = angular.element('<div xpsui-array-control-edit="'+schemaFragment.items.render.component+'"></div>');
 
@@ -69,7 +69,7 @@
 					field.attr('style', (width ? 'width:'+ width+'px !important;':'')
 						+ (height ? 'height:'+height+'px !important;':'')
 					);
-				} else if(schemaFragment.type === "date"
+				} else if(schemaFragment.type.toLowerCase() === "date" 
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
 					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
 					field.attr('xpsui-schema', schemaPath);
@@ -123,7 +123,7 @@
 
 			} else {
 
-				if (schemaFragment.type === 'array') {
+				if (schemaFragment.type.toLowerCase() === 'array') {
 
 
 					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component ){
@@ -148,7 +148,7 @@
 
 					field.attr('width', width);
 					field.attr('height', height);
-				} else if(schemaFragment.type === "date"
+				} else if(schemaFragment.type.toLowerCase() === "date" 
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
 					field = angular.element('<div xpsui-date-view></div>');
 				// } else if( schemaFragment.type === "string"
@@ -244,11 +244,11 @@
 								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
 								component.attr('xpsui-fieldset', mode);
-							} else if (localFragment.type === 'string'
-								|| localFragment.type === 'date'
-								|| localFragment.type === 'array'
-								|| localFragment.type === 'number'
-								|| localFragment.type === 'object'
+							} else if (localFragment.type.toLowerCase() === 'string' 
+								|| localFragment.type.toLowerCase() === 'date' 
+								|| localFragment.type.toLowerCase() === 'array'
+								|| localFragment.type.toLowerCase() === 'number'
+								|| localFragment.type.toLowerCase() === 'object'
 								|| localFragment.type.toLowerCase() === 'decimal'
 							) {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
@@ -268,7 +268,7 @@
 						log.groupEnd();
 					}
 				} else {
-						log.warn('Schema fragment type %s not implemented yet', schemaFragment.type);
+						log.warn('Schema fragment type "%s" not implemented yet', schemaFragment.type);
 				}
 			} else {
 				log.warn('Schema fragment has not explicit type defined');

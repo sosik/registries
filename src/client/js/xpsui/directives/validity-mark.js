@@ -5,7 +5,7 @@
 	.directive('xpsuiValidityMark', ['$compile', function($compile) {
 		return {
 			restrict: 'A',
-			require: ['^ngModel', '^form'],
+			require: ['^ngModel', '^form','^?xpsuiInlineedit'],
 			link: function(scope, elm, attrs, controller) {
 				var wrapper = elm;
 
@@ -13,6 +13,7 @@
 				if (controller[0]) {
 					ngModel = controller[0];
 				}
+				var inlineEditCtrl = controller[2];
 
 				var validationMark = angular.element('<span class="xpsui-btn xpsui-validation-mark"><i></i><span>error</span></span>');
 				validationMark.addClass('x-hidden');
@@ -47,9 +48,11 @@
 						if (nv) {
 							validationMark.addClass('ng-invalid');
 							validationMark.removeClass('x-hidden');
+							inlineEditCtrl && inlineEditCtrl.hideCommitButton();
 						} else {
 							validationMark.removeClass('ng-invalid');
 							validationMark.addClass('x-hidden');
+							inlineEditCtrl && inlineEditCtrl.showCommitButton();
 						}
 					});
 
@@ -74,15 +77,6 @@
 					});
 				}
 
-				// if (controller[1]) {
-				// 	var form = controller[1];
-
-				// 	scope.$watch(function() {return form.psui.submitPrepare}, function(newVal) {
-				// 		if (newVal === true) {
-				// 			ngModel.$setViewValue(ngModel.$modelValue);
-				// 		}
-				// 	});
-				// }
 			}
 		}
 	}]);

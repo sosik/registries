@@ -5,11 +5,27 @@
 	.directive('xpsuiInlineedit', ['xpsui:logging', 'xpsui:FormGenerator', '$compile', '$timeout', '$parse', function(log, formGenerator, $compile, $timeout, $parse) {
 		return {
 			restrict: 'A',
-			require: ['^xpsuiFormControl'],
+			require: ['^xpsuiFormControl','xpsuiInlineedit'],
+
+			controller: function() {
+				this.setCommitButton = function(button){
+					this.comitButton = button;
+				}
+				
+				this.showCommitButton = function(){
+					this.comitButton.removeClass('x-hidden');
+				}
+
+				this.hideCommitButton = function(){
+					this.comitButton.addClass('x-hidden');
+				}
+				
+			},
 			link: function(scope, elm, attrs, ctrls) {
 				log.group('Inlineedit Link');
 
 				var formControl = ctrls[0];
+				var selfCtrl = ctrls[1];
 
 				var modelPath = attrs.xpsuiModel;
 				var schemaPath = attrs.xpsuiSchema;
@@ -30,8 +46,8 @@
 				var viewElm = formGenerator.generateField(schema, schemaPath, modelPath, formGenerator.MODE.VIEW);
 				var editElm = formGenerator.generateField(schema, schemaPath, modelPath, formGenerator.MODE.EDIT);
 
-
 				var contentElm = angular.element('<div class="x-inlineedit-content"></div>');
+
 				contentElm.append(viewElm);
 				contentElm.append(editElm);
 
@@ -40,10 +56,11 @@
 				$compile(viewElm)(scope);
 				$compile(editElm)(scope);
 
-				var buttonsElm = angular.element('<div class="x-inlineedit-buttons x-hidden"></button></div>');
+				var buttonsElm = angular.element('<div class="x-inlineedit-buttons x-hidden"></div>');
 				var commitButton = angular.element('<button class="x-component-button x-inlineedit-commit-button"><i class="fa fa-check"></i><span>Uložiť</span></button>');
 				var rollbackButton = angular.element('<button class="x-component-button x-inlineedit-rollback-button"><i class="fa fa-remove"></i><span>Zrušiť</span></button>');
-
+				selfCtrl.setCommitButton(commitButton);
+				
 				buttonsElm.append(commitButton).append(rollbackButton);
 
 				elm.append(buttonsElm);

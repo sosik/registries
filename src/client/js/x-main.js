@@ -23,7 +23,18 @@
 		$routeProvider.when('/massmailing', {templateUrl: '/partials/x-massmailing.html', controller: 'xpsui:MassmailingEditCtrl', permissions:['Registry - write']});
 		$routeProvider.when('/login', {templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		$routeProvider.when('/personal-change-password', {templateUrl: '/partials/x-personal-change-password.html', controller: 'xpsui:SecurityPersonalChangePasswordCtrl', permissions:['System User']});
-		$routeProvider.when('/security/group/edit/', {templateUrl: '/partials/x-security-group-edit.html', controller: 'xpsui:SecurityGroupEditCtrl', permissions:['Security - read']});
+		$routeProvider.when('/security/group/edit/', {
+			templateUrl: '/partials/x-security-group-edit.html', 
+			controller: 'xpsui:SecurityGroupEditCtrl', 
+			permissions:['Security - read'],
+			resolve: {
+				schema: ['xpsui:SchemaUtil', function (schemaUtilFactory) {
+					return schemaUtilFactory.getCompiledSchema('uri://registries/security#groupmaster', 'new').then(function(response) {
+						return response.data;
+					});
+				}]
+			}
+		});
 		$routeProvider.when('/security/user/edit', {templateUrl: 'partials/x-security-user-edit.html', controller: 'xpsui:SecurityUserEditCtrl',permissions:['Security - read']});
 		$routeProvider.when('/security/profile/edit', {templateUrl: 'partials/x-security-profile-edit.html', controller: 'xpsui:SecurityProfileEditCtrl',permissions:['Security - read']});
 	
@@ -41,9 +52,33 @@
 
 		$routeProvider.when('/portal/edit/:id?', {templateUrl: '/partials/x-portal-edit.html', controller: 'xpsui:PortalEditorCtrl',permissions:['Registry - write']});
 		$routeProvider.when('/portal/menu', {templateUrl: '/partials/x-portal-menu.html', controller: 'xpsui:PortalEditorMenuCtrl',permissions:['Registry - write']});
+		
+		$routeProvider.when('/schema/edit', {
+			templateUrl: 'partials/x-schema-editor-index.html',
+			controller: 'xpsui:SchemaEditorIndexCtrl',
+			permissions: ['System Admin'],
+			resolve: {
+				schemas: ['xpsui:SchemaEditorService', function (schemaService) {
+					return schemaService.getSchemaList().then(function (response) {
+						return response.data;
+					});
+				}]
+			}
+		});
 
-
-		$routeProvider.when('/schema/edit', {templateUrl: 'partials/x-schema-editor.html', controller: 'xpsui:SchemaEditCtrl' ,permissions:['System Admin']});
+		$routeProvider.when('/schema/edit/:schema', {
+			templateUrl: 'partials/x-schema-editor-show.html',
+			controller: 'xpsui:SchemaEditorShowCtrl',
+			permissions: ['System Admin'],
+			resolve: {
+				// Load schema from the server
+				schema: ['$route', 'xpsui:SchemaEditorService', function ($route, schemaService) {
+					return schemaService.getFileContent($route.current.params.schema).then(function (response) {
+						return response.data;
+					});
+				}]
+			}
+		});
 		
 		$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		

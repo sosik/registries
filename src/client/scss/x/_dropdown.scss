@@ -132,8 +132,9 @@
 	
 }
 
-.x-dropdown-open{
+.x-dropdown-open-sm{
 	.x-main-content{
+
 		@media (max-width: $screen-sm-max) {
 			overflow-x: visible;
 		}
@@ -144,5 +145,13 @@
 
 	.x-main-menu-toggle{
 		visibility: hidden;
+	}
+}
+
+.x-dropdown-open{
+	@extend .x-dropdown-open-sm;
+
+	.x-main-content{
+		overflow-x: visible;
 	}
 }

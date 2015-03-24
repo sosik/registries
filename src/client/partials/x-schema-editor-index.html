@@ -1,0 +1,29 @@
+<div>
+	<span  class="x-fieldset-title">{{'schema.editor.list.of.schemas.for.editation' | translate}}</span>
+
+	<div class="table-container">
+		<table class="table">
+			<thead>
+				<tr>
+			<th>{{'schema.editor.id' | translate}}</th>
+			<th>{{'schema.editor.name' | translate}}</th>
+			<th>{{'schema.editor.size' | translate}}</th>
+			<th> </th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-class="{'psui-active': (selectedSchema===schema)}"  ng-repeat="schema in schemaList">
+					<td>{{$index + 1}}</td>
+					<td>{{schema.name}}</td>
+					<td>{{schema.size}}</td>
+					<td class="psui-actions-holder">
+						<a ng-href="#/schema/edit/{{ schema.name }}" class="psui-btn psui-edit-btn">
+							<i></i><span>{{'schema.editor.edit' | translate}}</span>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+

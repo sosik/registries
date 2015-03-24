@@ -1,0 +1,26 @@
+.x-notification{
+	
+	button{
+		&:hover{
+			color: $font-color-base;
+		}
+	}
+	
+	.x-notification-error{
+		border-color: $notifi-error-border;
+		background-color: $notifi-error-background;
+		color: $notifi-error-color;
+	}
+	
+	.x-notification-warn{
+		border-color: $notifi-warn-border;
+		background-color: $notifi-warn-background;
+		color: $notifi-warn-color;
+	}
+	
+	.x-notification-info{
+		border-color: $notifi-info-border;
+		background-color: $notifi-info-background;
+		color: $notifi-info-color;
+	}
+}

@@ -1,0 +1,17 @@
+<div class="x-fieldset-full x-fieldset">
+	<span  class="x-fieldset-title">{{'schema.editor.schema.editing' | translate}}</span>
+	<div>
+		<section class="" id="editor">
+			<div>
+				<div style="height: 80vh;" ui-ace="aceConfig" ng-model="schema"></div>
+			</div>
+		</section>
+	</div>
+	<div class="x-fieldset">
+		<div >
+			<button ng-click="postData(schema)" class="btn btn-primary pull-right" ng-disabled="loading">
+				<i ng-class="{ 'glyphicon-ok': !loading, 'fa fa-spin fa-spinner': loading }"></i>{{'schema.editor.save' | translate}}
+			</button>
+		</div>
+	</div>
+</div>

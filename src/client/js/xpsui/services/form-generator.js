@@ -42,41 +42,41 @@
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
 
-				if (schemaFragment.type === 'array') {
+				if (schemaFragment.type.toLowerCase() === 'array') {
 					field = angular.element('<div xpsui-array-control-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else 
 				if(schemaFragment.objectLink2){
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.$uploadableImage
+				} else if(schemaFragment.uploadableImage
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
 					field = angular.element('<div xpsui-uploadable-image xpsui-imageresizor /></div>');
 					field.attr('xpsui-schema', schemaPath);
-					var width = schemaFragment.$uploadableImage ? 
-						schemaFragment.$uploadableImage.width : schemaFragment.render.width;
-					var height = schemaFragment.$uploadableImage ? 
-						schemaFragment.$uploadableImage.height : schemaFragment.render.height;
+					var width = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.width : schemaFragment.render.width;
+					var height = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.height : schemaFragment.render.height;
 
 					field.attr('psui-imageresizor-width', width);
 					field.attr('psui-imageresizor-height', height);
 					field.attr('style', (width ? 'width:'+ width+'px !important;':'')
 						+ (height ? 'height:'+height+'px !important;':'')
 					);
-				} else if(schemaFragment.type === "date" 
+				} else if(schemaFragment.type.toLowerCase() === "date" 
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
 					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>'); 
 					field.attr('xpsui-schema', schemaPath);
-				} else if( schemaFragment.type === "string"
-					|| schemaFragment.type === "Decimal"
-				){
-					if(schemaFragment.enum){
-						field = angular.element('<div xpsui-select-edit></div>');
-						field.attr('xpsui-schema', schemaPath);
-					} else {
-						field = angular.element('<div xpsui-string-edit></div>');
-					}
+				// } else if( schemaFragment.type === "string"
+				// 	|| schemaFragment.type === "Decimal"
+				// ){
+				} else if(schemaFragment.enum){
+					field = angular.element('<div xpsui-select-edit></div>');
+					field.attr('xpsui-schema', schemaPath);
+				} else {
+					field = angular.element('<div xpsui-string-edit></div>');
 				}
+				//}
 				
 				field.attr('ng-model', modelPath);
 				field.attr('xpsui-validity-mark', '');
@@ -96,36 +96,36 @@
 
 			} else {
 
-				if (schemaFragment.type === 'array') {
+				if (schemaFragment.type.toLowerCase() === 'array') {
 					field = angular.element('<div xpsui-array-control-view></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else 
 				if(schemaFragment.objectLink2){
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.$uploadableImage
+				} else if(schemaFragment.uploadableImage
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
 					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
-					var width = schemaFragment.$uploadableImage ? 
-						schemaFragment.$uploadableImage.width : schemaFragment.render.width;
-					var height = schemaFragment.$uploadableImage ? 
-						schemaFragment.$uploadableImage.height : schemaFragment.render.height;
+					var width = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.width : schemaFragment.render.width;
+					var height = schemaFragment.uploadableImage ? 
+						schemaFragment.uploadableImage.height : schemaFragment.render.height;
 
 					field.attr('width', width);
 					field.attr('height', height);
-				} else if(schemaFragment.type === "date" 
+				} else if(schemaFragment.type.toLowerCase() === "date" 
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
 					field = angular.element('<div xpsui-date-view></div>');
-				} else if( schemaFragment.type === "string"
-					|| schemaFragment.type === "Decimal"
-				){
-					if(schemaFragment.enum){
-						field = angular.element('<div xpsui-select-view></div>');
-						field.attr('xpsui-schema', schemaPath);
-					} else {
-						field = angular.element('<div xpsui-string-view></div>');
-					}
+				// } else if( schemaFragment.type === "string"
+				// 	|| schemaFragment.type === "Decimal"
+				// ){
+				} else if(schemaFragment.enum){
+					field = angular.element('<div xpsui-select-view></div>');
+					field.attr('xpsui-schema', schemaPath);
+				} else {
+					field = angular.element('<div xpsui-string-view></div>');
 				}
+				//}
 
 				field.attr('ng-model', modelPath);
 				
@@ -185,15 +185,20 @@
 
 						if (localFragment && localFragment.type) {
 							// localFragment has explicitly defined type
-							if (localFragment.type === 'object') {
+
+							// @info conflict with objeclink2 because type is object too
+							//if (localFragment.type === 'object') { 
+							if (localFragment.properties) {
 								component = angular.element('<div></div>');
 								component.attr('xpsui-options', localSchemaPath);
 								component.attr('xpsui-model', localModelPath);
 								component.attr('xpsui-fieldset', mode);
-							} else if (localFragment.type === 'string' 
-								|| localFragment.type === 'date' 
-								|| localFragment.type === 'array'
-								|| localFragment.type === 'Decimal'
+							} else if (localFragment.type.toLowerCase() === 'string' 
+								|| localFragment.type.toLowerCase() === 'date' 
+								|| localFragment.type.toLowerCase() === 'array'
+								|| localFragment.type.toLowerCase() === 'number'
+								|| localFragment.type.toLowerCase() === 'object'
+								|| localFragment.type.toLowerCase() === 'decimal'
 							) {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {
@@ -212,7 +217,7 @@
 						log.groupEnd();
 					}
 				} else {
-						log.warn('Schema fragment type %s not implemented yet', schemaFragment.type);
+						log.warn('Schema fragment type "%s" not implemented yet', schemaFragment.type);
 				}
 			} else {
 				log.warn('Schema fragment has not explicit type defined');

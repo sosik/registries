@@ -69,39 +69,26 @@
 					field.attr('style', (width ? 'width:'+ width+'px !important;':'')
 						+ (height ? 'height:'+height+'px !important;':'')
 					);
-				} else if(schemaFragment.type.toLowerCase() === "date" 
-					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
+				} else if(schemaFragment.type.toLowerCase() === "date"){
 					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
 					field.attr('xpsui-schema', schemaPath);
-				// } else if( schemaFragment.type === "string"
-				// 	|| schemaFragment.type === "Decimal"
-				// ){
 				} else if(schemaFragment.enum){
 					field = angular.element('<div xpsui-select-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
+				} else if (schemaFragment.render && schemaFragment.render.component  ){
+
+					if ( schemaFragment.render.component=="psui-textarea" ) {
+						field = angular.element('<div xpsui-textarea-edit></div>');
+					} else
+					if ( schemaFragment.render.component=="psui-datepicker" ) {
+						field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
+					} else {
+						field = angular.element('<div>Unsupported render component '+schemaFragment.render.component+'</div>');
+					}
 				} else {
-						if (schemaFragment.render && schemaFragment.render.component  ){
-
-							if ( schemaFragment.render.component=="psui-textarea" ) {
-								field = angular.element('<div xpsui-textarea-edit></div>');
-							} else
-							if ( schemaFragment.render.component=="psui-datepicker" ) {
-								field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
-							} else {
-								field = angular.element('<div>Unsupported render component '+schemaFragment.render.component+'</div>');
-							}
-						}
-						else {
-							field = angular.element('<div xpsui-string-edit></div>');
-						}
-				//}
+					field = angular.element('<div xpsui-string-edit></div>');
 				}
 
-				//FIXME: this should be removed date is not valid value JSON SCHEMA
-				else if(schemaFragment.type === "date"){
-
-					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
-				}
 
 
 				field.attr('xpsui-schema', schemaPath);

@@ -2,6 +2,12 @@
 	'use strict';
 
 	angular.module('xpsui:services')
+	/**
+	 *
+	 * @class xpsui:Objectlink2Factory
+	 * @module client
+	 * @submodule services
+	 */
 	.factory('xpsui:Objectlink2Factory', ['xpsui:logging', '$timeout', '$translate', 'xpsui:SelectboxFactory', 'xpsui:DateUtil', '$parse',
 	function(log, $timeout, $translate, selectbox, dateUtil, $parse) {	
 		function Objectlink2(element, options){
@@ -27,23 +33,35 @@
 		};
 
 
-		Objectlink2.renderElement = function($wrapperElement, fieldsSchema, data){
+		/**
+		 * Render visual content of element by fileds definition.
+		 *
+		 * @param {angular wrapped DOM element} wrapperElement
+		 * @param {object} fieldsSchema - map of fields schema fragments
+		 * @param {object} data - data to render
+		 *
+		 * @return {undefined}
+		 * @method renderElement
+		 * @static
+		 */
+		Objectlink2.renderElement = function(wrapperElement, fieldsSchema, data) {
 			if(!fieldsSchema){
-				return null;
+				return;
 			}
 
 			var field;
 
-			for (var field in fieldsSchema) {
+			for (field in fieldsSchema) {
+				// FIXME translations 
 				var type = fieldsSchema[field].type,
 					label = fieldsSchema[field].title,
 					value = data.refData[field]
 				;
 
-				$wrapperElement.append(
-					angular.element('<span title="' + label + '">' 
-						+ Objectlink2.getFormatedValue(type,value) 
-						+ '</span>'
+				wrapperElement.append(
+					angular.element('<span title="' + label + '">' +
+						Objectlink2.getFormatedValue(type,value) +
+						'</span>'
 					)
 				);
 			}
@@ -68,6 +86,6 @@
 				return new Objectlink2(element, options);
 			},
 			renderElement: Objectlink2.renderElement
-		}
+		};
 	}]);
 }(window.angular));

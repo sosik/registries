@@ -18,11 +18,11 @@
 				this.setup = function(){
 					this.$input = angular.element('<div tabindex="0"></div>');
 					this.$input.addClass('x-input');
-				}
+				};
 				
 				this.getInput = function(){
 					return this.$input;
-				}
+				};
 
 				this.$input = null;
 				this.setup();
@@ -44,8 +44,8 @@
 					onClear: function(){
 						input.empty();
 						scope.$apply(function() {
-							ngModel.$setViewValue(
-								null
+							ngModel.$setModelValue(
+								{}
 							);
 						});
 					}
@@ -56,21 +56,25 @@
 
 				ngModel.$render = function() {
 					if(!angular.equals({},ngModel.$viewValue)) {
+						// get data from schema or model and render it
 						render(dataFactory.getObjectLinkData(
-							schemaFragment.objectLink2, ngModel.$viewValue
+							schemaFragment.objectLink2, ngModel.$modelValue
 						));
+					} else {
+						input.empty();
 					}
 				};
 
-				function render(data){
+				function render(data) {
 					input.empty();
 
 					if (data) {
 						removeButton.show();
+						// get fields schema fragments
 						schemaUtil.getFieldsSchemaFragment(
 							schemaFragment.objectLink2.schema, 
 							schemaFragment.objectLink2.fields, 
-							function(fields){
+							function(fields) {
 								objectlink2Factory.renderElement(
 									input,
 									fields,
@@ -89,7 +93,7 @@
 				});
 
 				// dropdown
-				var dropdown = dropdownFactory.create(elm,{
+				var dropdown = dropdownFactory.create(elm, {
 					titleTransCode: schemaFragment.transCode
 				});
 				

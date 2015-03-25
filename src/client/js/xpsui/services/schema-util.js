@@ -2,6 +2,11 @@
 	'use strict';
 
 	angular.module('xpsui:services')
+	/**
+	 * @class xpsui:SchemaUtil
+	 * @module client
+	 * @submodule services
+	 */
 	.factory('xpsui:SchemaUtil', [  '$http', '$parse', 'xpsui:safeUrlEncoder', function($http, $parse, urlEncoder) {
 
 		var service = {};
@@ -33,18 +38,25 @@
 		};
 
 		/**
-		 * get schema1's fields
+		 * Gets schema defined by URI and extracts only required fields.
 		 *
 		 * @param {string} schema 	e.g. uri//registries/componaies
 		 * @param {object} fields  	e.g. {"name": "baseData.name"}
-		 * @param {function} callback
+		 * @param {function(fields)} callback, where fields is map of fields schema fragments
+		 * 
+		 * @return {undefined}
+		 * @method getFieldsSchemaFragment
+		 * @static
+		 * @async
 		 */
-		service.getFieldsSchemaFragment = function(schema, fields, callback){
+		service.getFieldsSchemaFragment = function(schema, fields, callback) {
+			// FIXME logging
 			this.getCompiledSchema(schema).success(function(data) {
 				var field, outFields = {};
 
 				for(field in fields){
 					var fieldProp = fields[field].split("."),
+						// FIXME very nasty way to handle object path to schema path transformation
 						path = [
 							"properties",
 							fieldProp[0],

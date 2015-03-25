@@ -259,10 +259,27 @@
 			// 		op: this.options.searchCondition
 			// 	});
 			// }
+			
+			//FIXME make sure this.criteria is always array never null
+			if (this.criteria && angular.isArray(this.criteria)) {
+				config.data.criteria.concat(this.criteria);
+			}
 
-			config.data.criteria = config.data.criteria.concat(
-				(this.criteria && this.criteria instanceof Array) ? this.criteria : []
-			);
+			var _searchVal = dataset.getSearchValue();
+
+			//FIXME make sure that getSearchValue is always string and always non null
+			if (_searchVal && angular.isString(_searchVal) && _searchVal.length > 0) {
+				for (field in this.schema.fields) {
+					config.data.criteria.push({
+						f: this.schema.fields[field],
+						v: _searchVal,
+						op: this.options.searchCondition
+					});
+
+					break;
+				}
+
+			}
 
 			return config;
 		};
@@ -302,21 +319,34 @@
 
 		};
 
-		ObjectLinkStore.getData = function(objectLink, data){
+		/**
+		 * Get data from schema or model
+		 *
+		 * @param objectLink schema definition of object link (under objectLink2 keyword)
+		 * @param data data value of object link (data in model)
+		 *
+		 * @return data from model (if refData exists) or try to parse it form model
+		 */
+		ObjectLinkStore.getData = function(objectLink, data) {
 			if( typeof data === 'object'){
-				if(data['refData']){
+				// if there are refData in object (objectLink)
+				if(data.refData){
 					return data;
 				}
 
+
+				// if there is no refData, try to parse fields form model
+				// FIXME does this make sense???
 				var field,
 					outData = {
 						schema: objectLink.schema,
 						oid: data.id,
 						refData: {}
-					}
-				;
-				for (var field in objectLink.fields) {
+					};
+				
+				for (field in objectLink.fields) {
 					var getter = $parse(objectLink.fields[field]);
+					// FIXME what is this?
 					outData.refData[field] = getter(data);
 				}
 

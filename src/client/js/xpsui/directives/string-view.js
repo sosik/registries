@@ -16,8 +16,13 @@
 				elm.addClass('x-string-view');
 
 				ngModel.$render = function() {
-					if (ngModel.$viewValue) {
-						view.html(ngModel.$viewValue.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+					if (ngModel && ngModel.$viewValue || ngModel.$viewValue===0 ) {
+						if (isNaN(ngModel.$viewValue)){
+							view.html(ngModel.$viewValue.replace(/(?:\r\n|\r|\n)/g, '<br />'));
+						}
+						else {
+							view.html(ngModel.$viewValue);
+						}
 					} else {
 						view.text(' ');
 					}

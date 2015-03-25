@@ -39,6 +39,32 @@
 		}
 	}
 
+	.x-modalview-close {
+		display: block;
+		position: absolute;
+		right: 10px;
+		top: 0px;
+
+		&:before{
+			@include icon-font($icon-remove !important);
+			font-size: em($font-size-bigger);
+			line-height: $fixed-header-height;
+		}
+	}
+
+	.x-modalview-body:before {
+		content: '';
+		display: inline-block;
+		height: 100%; 
+		vertical-align: middle;
+		margin-right: -0.25em; /* Adjusts for spacing */
+	}
+
+	.xpsui-uploadable-canvas-container {
+		display: inline-block;
+		vertical-align: middle;
+	}
+
 	@media (min-width: $screen-md) {
 		.x-modalview.x-open {
 			background-color: rgba(0, 0, 0, 0.5);
@@ -109,6 +135,7 @@
 			overflow-y: auto;
 			box-sizing: border-box;
 		}
+
 	}
 }
 

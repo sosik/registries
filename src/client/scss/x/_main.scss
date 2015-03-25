@@ -223,6 +223,20 @@ button.btn-clear {
 	background: none;
 }
 
+button.btn-edit {
+	padding: 6px 12px;
+	border: 1px solid transparent;
+	white-space: nowrap;
+	padding: 6px 12px;
+	font-weight: normal;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	font-size: $font-size-middle;
+	line-height: 1.42857;
+	background-color: #b0b0b0;
+}
+
 button.btn-floating {
 	position: absolute;
 }

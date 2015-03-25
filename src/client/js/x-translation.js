@@ -126,6 +126,7 @@
 			"security.user.edit.modification.done": "Použivateľ bol modifikovaný",
 			"security.user.missing.permissions":"Chybajúce oprávnenie: {{data}}",
 			"security.user.session.expired":"Pre nečinnosť ste boli odhlásený.",
+			"security.current.password.does.not.match": "Heslo sa nepodarilo zmeniť. Staré heslo nie je správne.",
 
 			"security.profile.edit.searching":"Bezpečnostný profil vyhľadávanie",
 			"security.profile.edit.add":"Pridať",
@@ -608,6 +609,7 @@
 			"security.group.edit.modification.of.security.group": "Modifikace bezpečnostní skupiny",
 			"security.user.edit.modification.done": "Modifikace uživatela",
 			"security.user.session.expired":"Relace vypršela",
+			"security.current.password.does.not.match": "Heslo sa nepodařilo změnit. Staré heslo není spravné.",
 
 			"security.profile.edit.searching":"Bezpečnostný profil vyhledávání",
 			"security.profile.edit.add":"Pridat",

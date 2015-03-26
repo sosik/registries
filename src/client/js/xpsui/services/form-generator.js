@@ -44,19 +44,17 @@
 			} else if (mode === this.MODE.EDIT) {
 
 				if (schemaFragment.type === 'array') {
-					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component ){
+					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component ) {
 						field = angular.element('<div xpsui-array-control-edit="'+schemaFragment.items.render.component+'"></div>');
-
-					}else {
+					} else {
 						field = angular.element('<div xpsui-array-control-edit></div>');
 					}
 					field.attr('xpsui-schema', schemaPath);
-				} else 
-				if(schemaFragment.objectLink2){
+				} else if(schemaFragment.objectLink2) {
 					field = angular.element('<div xpsui-objectlink2-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.uploadableImage
-					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
+				} else if (schemaFragment.uploadableImage
+					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')) {
 					field = angular.element('<div xpsui-uploadable-image xpsui-imageresizor /></div>');
 					field.attr('xpsui-schema', schemaPath);
 					var width = schemaFragment.uploadableImage ? 
@@ -69,15 +67,10 @@
 					field.attr('style', (width ? 'width:'+ width+'px !important;':'')
 						+ (height ? 'height:'+height+'px !important;':'')
 					);
-				} else if(schemaFragment.type === "date"
-					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
-					field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
-					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.enum){
+				} else if (schemaFragment.enum) {
 					field = angular.element('<div xpsui-select-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else if (schemaFragment.render && schemaFragment.render.component  ){
-
 					if ( schemaFragment.render.component=="psui-textarea" ) {
 						field = angular.element('<div xpsui-textarea-edit></div>');
 					} else if ( schemaFragment.render.component=="psui-datepicker" ) {
@@ -90,8 +83,6 @@
 				} else {
 					field = angular.element('<div xpsui-string-edit></div>');
 				}
-
-
 
 				field.attr('xpsui-schema', schemaPath);
 				field.attr('ng-model', modelPath);
@@ -109,26 +100,22 @@
 					// field.attr('psui-unique-id', options.modelPath+'.id');
 				}
 
-
 			} else {
 
 				if (schemaFragment.type === 'array') {
-
-
-					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component ){
+					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component) {
 						field = angular.element('<div xpsui-array-control-view="'+schemaFragment.items.render.component+'"></div>');
 
-					}else {
+					} else {
 						field = angular.element('<div xpsui-array-control-view></div>');
 					}
 
 					field.attr('xpsui-schema', schemaPath);
-				} else 
-				if(schemaFragment.objectLink2){
+				} else if (schemaFragment.objectLink2) {
 					field = angular.element('<div xpsui-objectlink2-view></div>');
 					field.attr('xpsui-schema', schemaPath);
-				} else if(schemaFragment.uploadableImage
-					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')){
+				} else if (schemaFragment.uploadableImage
+					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')) {
 					field = angular.element('<img ng-src="{{' + modelPath + '}}" src="" xpsui-default-src="/img/no_photo.jpg"></img>');
 					var width = schemaFragment.uploadableImage ? 
 						schemaFragment.uploadableImage.width : schemaFragment.render.width;
@@ -137,19 +124,14 @@
 
 					field.attr('width', width);
 					field.attr('height', height);
-				} else if(schemaFragment.type === "date"
-					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')){
+				} else if (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker') {
 					field = angular.element('<div xpsui-date-view></div>');
-				// } else if( schemaFragment.type === "string"
-				// 	|| schemaFragment.type === "Decimal"
-				// ){
-				} else if(schemaFragment.enum){
+				} else if (schemaFragment.enum) {
 					field = angular.element('<div xpsui-select-view></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else {
 					field = angular.element('<div xpsui-string-view></div>');
 				}
-				//}
 
 				field.attr('ng-model', modelPath);
 
@@ -238,9 +220,8 @@
 									component.attr('xpsui-fieldset', mode);
 								}
 							} else if (localFragment.type === 'string' ||
-								localFragment.type === 'date' ||
 								localFragment.type === 'array' ||
-								localFragment.type === 'Decimal'
+								localFragment.type === 'number'
 							) {
 								component = this.generatePropertyRow(localFragment, localSchemaPath, localModelPath, mode);
 							} else {

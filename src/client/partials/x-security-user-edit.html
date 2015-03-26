@@ -1,8 +1,9 @@
-<div>
+<div id="SearchPage">
 	<div>
-		<div class="x-fieldset">
-			<!-- <form> -->
-				<div class="clearfix">
+		<div>
+			<form>
+				<fieldset>
+				<!-- <div class="clearfix"> -->
 					<span class="x-fieldset-title">{{'security.user.edit.searching' |translate}} ({{entity}})</span>
 
 					<div ng-repeat="crit in searchCrit" class="x-fieldset-row">
@@ -17,7 +18,7 @@
 								ng-Init="crit.operator=searchDef.operators[0]"
 								ng-options="op.title for op in searchDef.operators"></select>
 						</div>
-						<div class="x-fieldset-col-4">
+						<div ng-show="!crit.objectLink" class="x-fieldset-col-4">
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid"
@@ -39,43 +40,45 @@
 							<button ng-click="search()" class="btn-primary"><i class="icon-search"></i> {{'security.user.edit.search' |translate}}</button>
 						</div>
 					</div>
-					<!-- </div> -->
-				</div>
-			<!-- </form> -->
+				<!-- </div> -->
+				</fieldset>
+			</form>
 			
-			<div ng-show="userList" class="x-fieldset">
+			<div ng-show="userList">
 				<!-- <div class="x-fieldset"> -->
-				<spam class="x-fieldset-title">{{'security.user.edit.result' |translate}} ({{entity}})</spam>
-				<div class="table-container ">
-					<table>
-						<thead>
-							<tr>
-								<th ng-repeat="header in headers">{{header.title}}</th>
-								<th>{{'security.user.edit.actions' |translate}}</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-class="{'psui-active': (selectedUser===obj)}" ng-repeat="obj in userList" ng-click="goView($index)">
-								<td ng-repeat="header in headers">{{getVal("obj." +
-									header.field)}} {{$eval("obj."+header.field)}}</td>
-
-								<td>
-									<a ng-click='selectUser(obj)' class="item-clickable">
-										<i class="icon-pencil"></i> <span>{{'security.user.edit.edit' |translate}}</span>
-									</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="x-fieldset">
+				<fieldset>
+					<spam class="x-fieldset-title ng-binding">{{'security.user.edit.result' |translate}} ({{entity}})</spam>
 					<div>
-						<div class="pull-right">
-							<button ng-click='searchNext()' class="btn-secondary"> >>> </button>
+						<table>
+							<thead>
+								<tr>
+									<th ng-repeat="header in headers">{{header.title}}</th>
+									<th>{{'security.user.edit.actions' |translate}}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-class="{'psui-active': (selectedUser===obj)}" ng-repeat="obj in userList" ng-click="goView($index)">
+									<td ng-repeat="header in headers">{{getVal("obj." +
+										header.field)}} {{$eval("obj."+header.field)}}</td>
+
+									<td>
+										<a ng-click='selectUser(obj)' class="item-clickable">
+											<i class="icon-pencil"></i> <span>{{'security.user.edit.edit' |translate}}</span>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+					<div class="x-fieldset">
+						<div>
+							<div class="pull-right">
+								<button ng-click='searchNext()' class="btn-secondary"> >>> </button>
+							</div>
 						</div>
 					</div>
-				</div>
-					
+				</fieldset>
 				<!-- </div> -->
 			
 			</div>

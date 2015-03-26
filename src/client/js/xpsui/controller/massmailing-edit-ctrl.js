@@ -2,9 +2,9 @@
 	'use strict';
 
 	angular.module('xpsui:controllers')
-	.controller('xpsui:MassmailingEditCtrl', [ 
-		'$scope', 
-		'$routeParams', 
+	.controller('xpsui:MassmailingEditCtrl', [
+		'$scope',
+		'$routeParams',
 		'xpsui:SchemaUtil',
 		'xpsui:GenericSearchFactory',
 		'xpsui:NotificationFactory',
@@ -12,7 +12,7 @@
 		'xpsui:MassmailingFactory',
 		function($scope, $routeParams,SchemaUtilFactory,genericSearchFactory,notificationFactory,schemaUtilFactory,massmailingFactory) {
 
-			var schemaUri='uri://registries/mailtemplates#master/view';
+			var schemaUri='uri://registries/mailtemplates#views/mailTemplate/view';
 			var peopleSchemaUri='uri://registries/people#views/fullperson/';
 
 			$scope.selectedTemplate={baseData:  { name: '', textTemplate: '', htmlTemplate: ''} };
@@ -173,6 +173,6 @@
 				});
 			};
 
-		} 
+		}
 	]);
 }(window.angular));

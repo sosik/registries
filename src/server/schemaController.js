@@ -35,7 +35,7 @@ var SchemaController = function(mongoDriver,schemaRegistry,eventRegistry, option
 
 		var schema = schemaRegistry.getSchema(schemaUri);
 		if (!schema) {
-			resp.send(500, 'schema not found : ' + schema);
+			resp.status(500).send('schema not found : ' + schema);
 			log.info('Schema not found ', schemaUri);
 			return;
 		}
@@ -48,7 +48,7 @@ var SchemaController = function(mongoDriver,schemaRegistry,eventRegistry, option
 
 		fsCtrl.get(path, resp, function(err) {
 			if (err) {
-				resp.send(err.code || 500, err);
+				resp.status().send( err);
 			}
 
 		});
@@ -59,7 +59,7 @@ var SchemaController = function(mongoDriver,schemaRegistry,eventRegistry, option
 
 		fsCtrl.replace(path, req, resp, function(err) {
 			if (err) {
-				resp.send(err.code || 500, err);
+				resp.status(err.code || 500).send(err);
 			}
 			schemaRegistry.load();
 			eventRegistry.load();
@@ -72,7 +72,7 @@ var SchemaController = function(mongoDriver,schemaRegistry,eventRegistry, option
 
 		fsCtrl.ls(path, resp, function(err) {
 			if (err) {
-				resp.send(err.code || 500, err);
+				resp.status(err.code || 500).send(err);
 			}
 
 		});

@@ -2,16 +2,16 @@
 	'use strict';
 
 	angular.module('xpsui:controllers')
-	.controller( 'xpsui:SecurityUserEditCtrl', [ 
-		'$scope', 
-		'$routeParams', 
-		'xpsui:SecurityService', 
-		'xpsui:GenericSearchFactory', 
+	.controller( 'xpsui:SecurityUserEditCtrl', [
+		'$scope',
+		'$routeParams',
+		'xpsui:SecurityService',
+		'xpsui:GenericSearchFactory',
 		'xpsui:SchemaUtil',
-		'xpsui:NotificationFactory', 
+		'xpsui:NotificationFactory',
 		function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
 
-			var entityUri = 'uri://registries/user#security';
+			var entityUri = 'uri://registries/userSecurity';
 			var pageSize=20;
 
 			$scope.userList = [];
@@ -202,7 +202,7 @@
 				});
 			};
 
-		} 
+		}
 	]);
-	
+
 }(window.angular));

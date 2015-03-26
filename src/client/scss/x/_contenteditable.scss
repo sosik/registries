@@ -1,6 +1,9 @@
 .x-contenteditable {
-	//height: 600px;
-	border: silver solid 1px;
+	@include inline-edit(">.x-contenteditable-content");
+	// border: silver solid 1px;
+	>.x-contenteditable-content{
+		min-height: 3em;
+	}
 }
 
 .x-contenteditable-buttons-holder {

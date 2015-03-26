@@ -80,9 +80,10 @@
 
 					if ( schemaFragment.render.component=="psui-textarea" ) {
 						field = angular.element('<div xpsui-textarea-edit></div>');
-					} else
-					if ( schemaFragment.render.component=="psui-datepicker" ) {
+					} else if ( schemaFragment.render.component=="psui-datepicker" ) {
 						field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
+					} else if (schemaFragment.render.component=="psui-contenteditable") {
+						field = angular.element('<div xpsui-contenteditable></div>');
 					} else {
 						field = angular.element('<div>Unsupported render component '+schemaFragment.render.component+'</div>');
 					}

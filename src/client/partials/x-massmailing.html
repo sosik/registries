@@ -1,10 +1,10 @@
 <section ng-app="doc.ui-ace" class="ng-scope x-fieldset-full">
 	<form novalidate class="ng-pristine ng-valid form">
-	
-			
+
+
 			<fieldset>
 				<span class="x-fieldset-title">{{'massmail.send.view' | translate}}</span>
-				
+
 				<div class="x-fieldset-row">
 					<div class="x-fieldset-label">
 						<label for="name" >{{'massmail.predefined.template' | translate}}</label>
@@ -53,7 +53,7 @@
 							ng-Init="crit.operator=searchDef.operators[0]"
 							ng-options="op.title for op in searchDef.operators"></select>
 					</div>
-					
+
 					<div class="x-fieldset-col-4">
 						<input  type="text" id="name" name="name" ng-model="crit.value"
 							placeholder="" class="ng-pristine ng-valid form-control"
@@ -102,9 +102,9 @@
 			</div>
 			<div class="x-fieldset">
 				<div class="pull-right">
-					<button ng-disabled="recipientCount()<1" confirmed-click="sendMail()" ng-confirm-click="Realy want to send ?" class="btn-primary"><i class="glyphicon-search"></i>{{'massmailing.send' | translate}} ({{recipientCount()}}x)</button>
+					<button ng-disabled="recipientCount()<1" xpsui-confirmed-click="sendMail()" xpsui-confirm-click="Realy want to send ?" class="btn-primary"><i class="glyphicon-search"></i>{{'massmailing.send' | translate}} ({{recipientCount()}}x)</button>
 				</div>
 			</div>
-	
+
 	</form>
 </section>

@@ -67,6 +67,15 @@
 	// transition: border .5s;
 	cursor: pointer;
 }
+.x-inlineedit:AFTER {
+	@include icon-font($icon-pencil);
+	position: absolute;
+	right: 0;
+	top: 0px;
+	bottom: 0px;
+	color: transparent;
+}
+
 .x-inlineedit-active:AFTER {
 	@include icon-font($icon-pencil);
 

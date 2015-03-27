@@ -54,17 +54,17 @@
 
 	<nav>
 		<ul>
-			<li ng-show="security.currentUser.systemCredentials.login.loginName"><span class="text-block"
+			<li ng-show="hasPermissions(['System User'])"><span class="text-block"
 				><span>{{security.currentUser.systemCredentials.login.loginName}}</span><i class="icon-user"></i></span
 			></li>
-			<li ng-show="security.currentUser.systemCredentials.login.loginName" class="" ng-controller="xpsui:SecurityLogoutCtrl"><a
+			<li ng-show="hasPermissions(['System User'])" class="" ng-controller="xpsui:SecurityLogoutCtrl"><a
 				href="#" ng-click="logout();"><span>{{'header.log.out' | translate}}</span><i class="icon-power-off"></i></a
 			></li>
 		</ul>
 	</nav>
 </div>
 
-<div id="main-menu" xpsui-menu class="x-main-menu x-modalview" ng-show="security.currentUser.systemCredentials.login.loginName">
+<div id="main-menu" xpsui-menu class="x-main-menu x-modalview" ng-show="hasPermissions(['System User'])">
 	<div class="x-main-menu-toggle"></div>
 	<div class="x-modalview-window">
 		<span class="x-modalview-header">Menu</span>

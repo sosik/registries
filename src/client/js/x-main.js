@@ -61,8 +61,8 @@
 		$routeProvider.when('/login', {templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		$routeProvider.when('/personal-change-password', {templateUrl: '/partials/x-personal-change-password.html', controller: 'xpsui:SecurityPersonalChangePasswordCtrl', permissions:['System User']});
 		$routeProvider.when('/security/group/edit/', {
-			templateUrl: '/partials/x-security-group-edit.html', 
-			controller: 'xpsui:SecurityGroupEditCtrl', 
+			templateUrl: '/partials/x-security-group-edit.html',
+			controller: 'xpsui:SecurityGroupEditCtrl',
 			permissions:['Security - read'],
 			resolve: {
 				schema: ['xpsui:SchemaUtil', function (schemaUtilFactory) {
@@ -78,8 +78,8 @@
 		$routeProvider.when('/forgotten', {templateUrl: '/partials/forgotten.html', controller: 'xpsui:SecurityForgottenCtrl'});
 		$routeProvider.when('/forgotten/reset/:token', {templateUrl: '/partials/forgottenReset.html', controller: 'xpsui:SecurityForgottenResetCtrl'});
 
-		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl',permissions:['Registry - write']});
-		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl',permissions:['Registry - read']});
+		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl'});
+		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl'});
 		$routeProvider.when('/search/:entity', {templateUrl : 'partials/x-generic-search.html', controller : 'xpsui:SearchCtrl'});
 
 		$routeProvider.when('/registry/custom/:template/:schema/:id', {templateUrl: function(params) {
@@ -90,9 +90,9 @@
 			return '/dataset/get/partials/' + params.template;
 		}, controller: 'xpsui:RegistryCustomGenerateCtrl',permissions:['Registry - read']});
 
-		$routeProvider.when('/portal/edit/:id?', {templateUrl: '/partials/x-portal-edit.html', controller: 'xpsui:PortalEditorCtrl',permissions:['Registry - write']});
-		$routeProvider.when('/portal/menu', {templateUrl: '/partials/x-portal-menu.html', controller: 'xpsui:PortalEditorMenuCtrl',permissions:['Registry - write']});
-		
+		$routeProvider.when('/portal/edit/:id?', {templateUrl: '/partials/x-portal-edit.html', controller: 'xpsui:PortalEditorCtrl',permissions:['Portal - write']});
+		$routeProvider.when('/portal/menu', {templateUrl: '/partials/x-portal-menu.html', controller: 'xpsui:PortalEditorMenuCtrl',permissions:['Portal - write']});
+
 		$routeProvider.when('/schema/edit', {
 			templateUrl: 'partials/x-schema-editor-index.html',
 			controller: 'xpsui:SchemaEditorIndexCtrl',
@@ -131,6 +131,7 @@
 	.run(["$rootScope", '$location', 'xpsui:SecurityService', '$cookies','xpsui:NotificationFactory', function($rootScope, $location, SecurityService,$cookies,notificationFactory) {
 		$rootScope.security = $rootScope.security || {};
 		// by default, current user is undefined, as there is noone logged in
+		$rootScope.hasPermissions=SecurityService.hasPermissions;
 
 		var changeRouteRuleActive=false;
 

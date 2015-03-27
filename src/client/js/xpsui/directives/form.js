@@ -93,7 +93,7 @@
 
 						// ACTIONS
 						if ( "viewedit"===mode && schema.clientActions ) {
-							var contentActionsHolder = angular.element('<div class="content-actions"></div>');
+							var contentActionsHolder = angular.element('<div class="content-actions pull-right"></div>');
 							elm.append(contentActionsHolder);
 
 							for (var actionIndex in schema.clientActions) {
@@ -103,12 +103,12 @@
 								console.log('xxxxxxx'+action.__DIRECTIVE__);
 								switch (action.__DIRECTIVE__){
 									case 'action-link':
-										actionElm = angular.element('<a xpsui-form-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+attrs.xpsuiModel+'"></a>');
+										actionElm = angular.element('<a xpsui-form-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+attrs.xpsuiModel+'" class="btn-primary"></a>');
 										$compile(actionElm)(scope);
 										contentActionsHolder.append(actionElm);
 									break;
 									case 'generate-action-link':
-										actionElm = angular.element('<a xpsui-form-generate-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+attrs.xpsuiModel+'"></a>');
+										actionElm = angular.element('<a xpsui-form-generate-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+attrs.xpsuiModel+'" class="btn-primary"></a>');
 										$compile(actionElm)(scope);
 										contentActionsHolder.append(actionElm);
 									break;

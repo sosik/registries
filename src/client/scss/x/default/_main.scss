@@ -18,13 +18,14 @@ body{
 	border: 1px solid white;
 }
 
-button.btn-primary {
+button.btn-primary, a.btn-primary {
 	color: $color-main-reverse;
 	background-color: $color-main;
 	border-color: $color-main-darker;
 }
 
-button.btn-primary:hover, button.btn-primary:active {
+button.btn-primary:hover, button.btn-primary:active,
+		a.btn-primary:hover, a.btn-primary:active {
 	background-color: $color-main-highlight;
 	border-color: $color-main-highlight-darker;
 }

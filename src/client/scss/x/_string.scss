@@ -10,4 +10,5 @@
 
 .x-string-edit {
 	@include inline-edit();
+	padding: 0px;
 }

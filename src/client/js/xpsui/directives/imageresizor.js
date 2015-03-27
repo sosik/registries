@@ -37,15 +37,15 @@
 				var originImgWidth;
 				var originImgHeight;
 
-				if (window.innerWidth < imgWidth) {
-					imgWidth = window.innerWidth;
-					imgHeight = Math.round(imgHeight * (window.innerWidth/imgWidth));
+				if (window.innerWidth < width) {
+					var resizeRatio = (window.innerWidth/width);
+					height = Math.round(height * resizeRatio);
+					width = window.innerWidth;
+					imgWidth = (attrs.psuiImageresizorWidth || 0) * resizeRatio;
+					imgHeight = (attrs.psuiImageresizorHeight || 0) * resizeRatio;
 				}
-				if (window.innerHeight < imgHeight) {
-					imgHeight = window.innerHeight;
-					imgWidth = Math.round(imgWidth * (window.innerHeight/imgHeight));
-				}
-				
+				console.log('Imageresizor width: ' + width + ' height: ' + height);
+
 				var modalEl = angular.element('<div class="xpsui-imageresizor-resizor" ></div>');
 				modalEl.addClass('x-modalview');
 				wrapper.append(modalEl);
@@ -54,6 +54,11 @@
 				modalContentWrapperEl.addClass('x-modalview-window');
 				modalEl.append(modalContentWrapperEl);
 				var modalWidth = width + 40;
+				if (window.innerWidth < modalWidth) {
+					modalWidth = width;
+					height = height * ((width - 40) / width);
+					width = width - 40;
+				}
 				modalContentWrapperEl.css('width', '' + modalWidth + 'px');
 
 				var labelTranslated = $translate.instant(scope.$eval(attrs.xpsuiSchema.concat('.transCode')));
@@ -66,8 +71,8 @@
 
 				var canvasContainer = angular.element('<div class="xpsui-uploadable-canvas-container"></div>')
 				var resizorCanvas = angular.element('<canvas ></canvas>');
-				resizorCanvas.attr('width',width);
-				resizorCanvas.attr('height',height);
+				resizorCanvas.attr('width', width);
+				resizorCanvas.attr('height', height);
 				canvasContainer.append(resizorCanvas);
 				modalContentEl.append(canvasContainer);
 				

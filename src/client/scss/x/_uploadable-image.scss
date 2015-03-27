@@ -52,14 +52,6 @@
 		}
 	}
 
-	.x-modalview-body:before {
-		content: '';
-		display: inline-block;
-		height: 100%; 
-		vertical-align: middle;
-		margin-right: -0.25em; /* Adjusts for spacing */
-	}
-
 	.xpsui-uploadable-canvas-container {
 		display: inline-block;
 		vertical-align: middle;
@@ -98,6 +90,14 @@
 			margin: 0px auto;
 			background-color: #333333;
 			box-sizing: border-box;
+		}
+
+		.x-modalview-body:before {
+			content: '';
+			display: inline-block;
+			height: 100%; 
+			vertical-align: middle;
+			margin-right: -0.25em; /* Adjusts for spacing */
 		}
 
 		.x-modalview.x-open .x-modalview-window {

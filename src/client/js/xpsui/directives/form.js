@@ -88,11 +88,41 @@
 					scope.$watchCollection( attrs.xpsuiSchema, function() {
 						log.info('xpsuiForm generate');
 						var schema = scope.$eval(attrs.xpsuiSchema);
-						var mode = attrs.xpsuiForm;	
+						var mode = attrs.xpsuiForm;
+
+
+						// ACTIONS
+						if ( "viewedit"===mode && schema.clientActions ) {
+							var contentActionsHolder = angular.element('<div class="content-actions"></div>');
+							elm.append(contentActionsHolder);
+
+							for (var actionIndex in schema.clientActions) {
+								var action = schema.clientActions[actionIndex];
+
+								var actionElm;
+								console.log('xxxxxxx'+action.__DIRECTIVE__);
+								switch (action.__DIRECTIVE__){
+									case 'action-link':
+										actionElm = angular.element('<a xpsui-form-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+attrs.xpsuiModel+'"></a>');
+										$compile(actionElm)(scope);
+										contentActionsHolder.append(actionElm);
+									break;
+									case 'generate-action-link':
+										actionElm = angular.element('<a xpsui-form-generate-action-link psui-options="schemaFormOptions.schema.clientActions.'+actionIndex+'" psui-model="'+attrs.xpsuiModel+'"></a>');
+										$compile(actionElm)(scope);
+										contentActionsHolder.append(actionElm);
+									break;
+									default:
+									console.error('Unknown directive value',action.__DIRECTIVE__);
+									break;
+								}
+
+							}
+						}
 
 						if(schema.properties){
-							elm.append('<div class="x-form-title">' 
-								+ (schema.transCode ? $translate.instant(schema.transCode) : schema.title) 
+							elm.append('<div class="x-form-title">'
+								+ (schema.transCode ? $translate.instant(schema.transCode) : schema.title)
 								+ '</div>'
 							);
 							formGenerator.generateForm(scope, elm, schema, attrs.xpsuiSchema, attrs.xpsuiModel, mode || formGenerator.MODE.VIEW);

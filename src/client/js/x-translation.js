@@ -26,6 +26,17 @@
 			"validation.field.not.unique":"Hodnota nie je unikátna.",
 			"validation.field.not.number":"Hodnota nie je číslo.",
 
+			"forgotten.password.title":"Zabudnuté heslo",
+			"forgotten.password.email":"Email",
+			"forgotten.password.verify":"Kontrola",
+			"forgotten.password.email.placeholder":"Registracny email",
+			"forgotten.password.submit":"Odoslať",
+			"security.forgotten.token.generated":"Linka pre resetnutie hesla bola zaslaná na Vašu mailovú adresu.",
+			"security.forgotten.reset.done":"Nové heslo bolo zaslané na Vašu mailovú adresu.",
+			"security.forgotten.captcha.validation.failed.incorrect-captcha-sol":"Captcha nesprávne zadaná.",
+			"security.forgotten.token.not.found":"Neplatná požiadavka. Pre zmenu hesla aktualizujte požiadavku.",
+			"security.forgotten.mail.not.found": "Uživateľ s daný mailom nebol najdený.",
+
 			"menu.member.title": "Člen",
 			"menu.player.title": "Hráč",
 			"menu.fees.title": "Poplatok",
@@ -512,6 +523,17 @@
 			"validation.field.not.unique":"Hodnota není unikátní.",
 			"validation.field.not.number":"Hodnota není číslo.",
 
+			"forgotten.password.title":"Zabudnuté heslo",
+			"forgotten.password.email":"Email",
+			"forgotten.password.verify":"Kontrola",
+			"forgotten.password.email.placeholder":"Registrační email",
+			"forgotten.password.submit":"Odeslat",
+			"security.forgotten.token.generated":"Linka pre resetnutie hesla bola zaslaná na Vašu mailovú adresu.",
+			"security.forgotten.reset.done":"Nové heslo bolo zaslané na Vašu mailovú adresu.",
+			"security.forgotten.captcha.validation.failed.incorrect-captcha-sol":"Captcha nesprávne zadaná.",
+			"security.forgotten.token.not.found":"Neplatná požiadavka. Pre zmenu hesla aktualizujte požiadavku.",
+			"security.forgotten.mail.not.found": "Uživatel s daný mailom nebol nalezen.",
+
 
 			"menu.member.title": "Člen",
 			"menu.player.title": "Hráč",
@@ -972,5 +994,5 @@
 			$translate.use(lang);
 		};
 	}]);
-	
+
 }(angular));

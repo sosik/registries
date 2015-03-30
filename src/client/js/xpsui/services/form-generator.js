@@ -79,6 +79,9 @@
 						field = angular.element('<div xpsui-date-edit xpsui-calendar ></div>');
 					} else if (schemaFragment.render.component=="psui-contenteditable") {
 						field = angular.element('<div xpsui-contenteditable></div>');
+
+					} else if (schemaFragment.render.component=="psui-uploadable-file") {
+						field = angular.element('<div xpsui-uploadable-file></div>');
 					} else {
 						field = angular.element('<div>Unsupported render component '+schemaFragment.render.component+'</div>');
 					}

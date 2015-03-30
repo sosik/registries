@@ -42,7 +42,7 @@
 					<div class="x-fieldset-row">
 						<div class="pull-left">
 							<button ng-click="addCrit()" class="btn-secondary">
-								<i class="icon-add"></i> 
+								<i class="icon-add"></i>
 								{{'security.profile.edit.add' |translate}}
 							</button>
 						</div>
@@ -198,6 +198,14 @@
 								placeholder="value" class="ng-pristine ng-valid"
 								autocomplete="off">
 						</div>
+
+						<div ng-show="!crit.attribute.render" class="x-fieldset-col-2">
+							<input
+								type="text" id="name" name="name" ng-model="crit.expr"
+								placeholder="value" class="ng-pristine ng-valid"
+								autocomplete="off">
+						</div>
+
 
 						<div ng-show="crit.attribute.render.objectLink" class="x-fieldset-col-2">
 							<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />

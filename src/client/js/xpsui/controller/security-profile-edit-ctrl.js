@@ -2,13 +2,13 @@
 	'use strict';
 
 	angular.module('xpsui:controllers')
-	.controller('xpsui:SecurityProfileEditCtrl', [ 
-		'$scope', 
-		'$routeParams', 
-		'xpsui:SecurityService', 
-		'xpsui:GenericSearchFactory', 
+	.controller('xpsui:SecurityProfileEditCtrl', [
+		'$scope',
+		'$routeParams',
+		'xpsui:SecurityService',
+		'xpsui:GenericSearchFactory',
 		'xpsui:SchemaUtil',
-		'xpsui:NotificationFactory', 
+		'xpsui:NotificationFactory',
 		function($scope, $routeParams, securityService, genericSearchFactory, schemaUtilFactory, notificationFactory) {
 
 			var entityUri = 'uri://registries/security#profilesmaster';
@@ -130,6 +130,7 @@
 								schema: c.schema,
 								f : c.attribute.path,
 								v : c.obj.oid,
+								expr : c.obj.expr,
 								op : c.operator.value,
 								obj: c.obj
 							});
@@ -139,6 +140,7 @@
 								schema: c.schema,
 								f : c.attribute.path,
 								v : c.value,
+								expr : c.expr,
 								op : c.operator.value
 							});
 						}
@@ -246,6 +248,7 @@
 								$scope.schemaChange(modelCrit,function(c){
 										c.attribute=mapAttribute( c.attDef.attributes,c.attribute);
 										c.obj=crit.obj;
+										c.expr=crit.expr;
 										$scope.profileCrit.push(c);
 								});
 
@@ -277,7 +280,7 @@
 					notificationFactory.error(err)});
 			};
 
-		} 
+		}
 	]);
-	
+
 }(window.angular));

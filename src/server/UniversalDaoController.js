@@ -446,11 +446,11 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 		});
 	};
 
-	function enhanceQuery(qf,schema,schemaName,profile){
+	function enhanceQuery(qf,schema,schemaName,profile,currentUser){
 		securityService.applySchemaForcedCrits(schema,qf);
 
 		if (profile){
-				qf=securityService.applyProfileCrits(profile,schemaName,qf);
+				qf=securityService.applyProfileCrits(profile,schemaName,qf,currentUser);
 		}
 
 
@@ -537,7 +537,7 @@ this.searchBySchema = function(req, resp,next) {
 			qf.addCriterium(crits.criteria[c].f,crits.criteria[c].op,crits.criteria[c].v);
 		}
 
-		enhanceQuery(qf,compiledSchema,schemaName,req.profile);
+		enhanceQuery(qf,compiledSchema,schemaName,req.profile,req.currentUser);
 
 		log.silly('used crits', qf);
 		dao.list(qf, function(err, data) {

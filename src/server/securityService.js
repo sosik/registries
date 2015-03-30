@@ -5,6 +5,7 @@ var extend = require('extend');
 var log = require('./logging.js').getLogger('SecurityService.js');
 
 var QueryFilter = require('./QueryFilter.js');
+var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
 
 var DEFAULT_CFG = {};
 
@@ -92,14 +93,30 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	/**
 		method merges profile criteria to specified qf
 	*/
-	this.applyProfileCrits=function(profile,schemaName,qf){
+	this.applyProfileCrits=function(profile,schemaName,qf,currentUser){
 
 		// query=QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.loginName)
 		if ( profile.security && profile.security.forcedCriteria ){
 			var schemaCrit=getSchemaCrit(profile.security.forcedCriteria,schemaName);
 			if (schemaCrit){
 				schemaCrit.criteria.map(function(c){
-				qf.addCriterium(c.f,c.op,c.v);
+					if (c.expr){
+						var resolved=objectTools.evalPath(currentUser,c.expr);
+						if (!resolved){
+							throw new Error('not able to resolve profile expression: '+c.expr);
+						}
+						if (c.hasOwnProperty('obj')){
+							qf.addCriterium(c.f+".oid",c.op,resolved);
+						}
+						else {
+							qf.addCriterium(c.f,c.op,resolved);
+
+						}
+					}
+					else {
+						qf.addCriterium(c.f,c.op,c.v);
+					}
+
 				});
 			}
 		}

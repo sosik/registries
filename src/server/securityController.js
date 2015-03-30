@@ -282,7 +282,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				if ('criteria' in req.body){
 					req.body.criteria.map(function(cc){
 						var schemaCrit= getSchemaCrit(profile.security.forcedCriteria,cc.schema);
-						schemaCrit.criteria.push({f:cc.f,op:cc.op,v:cc.v,obj:cc.obj});
+						schemaCrit.criteria.push({f:cc.f,op:cc.op,v:cc.v,obj:cc.obj,expr:cc.expr});
 					});
 				}
 

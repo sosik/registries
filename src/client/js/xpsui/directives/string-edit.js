@@ -38,7 +38,7 @@
 
 				elm.append(input);
 
-				input.on('change', function(evt) {
+				input.on('keyup', function(evt) {
 					scope.$apply(function() {
 						ngModel.$setViewValue(input.val());
 					});

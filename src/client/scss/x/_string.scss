@@ -1,9 +1,10 @@
 
 .x-string-view {
 	@include inline-view();
-	div{
+	> div{
 		// fix min height
-		display: inline-block;
+		// display: inline-block;
+		display: block;
 	}
 }
 

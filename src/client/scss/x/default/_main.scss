@@ -18,7 +18,7 @@ body{
 	border: 1px solid white;
 }
 
-button.btn-primary, a.btn-primary {
+button.btn-primary, a.btn-primary, a.btn-primary:HOVER, a.btn-primary:VISITED {
 	color: $color-main-reverse;
 	background-color: $color-main;
 	border-color: $color-main-darker;

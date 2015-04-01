@@ -226,50 +226,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 			}
 			), 0);
-
-
 		}
-
-		// SVF dirty hack
-		if (obj.baseData
-				&& obj.baseData.typeOfTransfer
-				&& (obj.baseData.typeOfTransfer === 'hosťovanie' || obj.baseData.typeOfTransfer === 'prestup' || obj.baseData.typeOfTransfer === 'zahr. transfér')
-				&& obj.baseData.dateFrom
-				&& obj.baseData.clubTo
-				&& obj.baseData.clubTo.oid
-				&& obj.baseData.player
-				&& obj.baseData.player.oid
-				&& obj.baseData.stateOfTransfer === 'schválený') {
-
-			var cdate = new Date();
-			var cyear = cdate.getFullYear().toString();
-			var cmonth = (cdate.getMonth() + 1).toString();
-			var cday = cdate.getDate().toString();
-			var cmpstr = ''.concat(cyear, (cmonth.length > 1?cmonth:'0'.concat(cmonth)), (cday.length > 1 ? cday: '0'.concat(cday)));
-
-			if (cmpstr >= obj.baseData.dateFrom) {
-				var cDao = new universalDaoModule.UniversalDao(
-					mongoDriver,
-					{collectionName: 'people'}
-				);
-
-				cDao.get(obj.baseData.player.oid, function(err, data){
-					if (err) {
-						log.error('Failed to get player for club update');
-						return;
-					}
-
-					if (data) {
-						if (!data.player) {
-							data.player = {};
-						}
-
-						cDao.update(data, function(err, data){});
-					}
-				});
-			}
-		}
-
 	};
 
 	this.getBySchema = function(schemaName,userCtx,id,callback) {

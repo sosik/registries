@@ -98,13 +98,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter);
 
-	app.put('/udao/save/:table',  securityService.authenRequired,bodyParser.json(), udc.save);
 	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser.json(),udc.saveBySchema);
-	app.get('/udao/get/:table/:id',securityService.authenRequired, bodyParser.json(), udc.get);
 	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, udc.getBySchema);
-	app.get('/udao/list/:table',securityService.authenRequired, bodyParser.json(), udc.list);
-	app.get('/udao/listBySchema/:schema',securityService.authenRequired, bodyParser.json(), udc.listBySchema);
-	app.post('/udao/search/:table',securityService.authenRequired, bodyParser.json(), udc.search);
 	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchemaCount);
 	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchema);
 

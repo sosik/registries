@@ -56,8 +56,8 @@
 		service.getSecurityGroups = function() {
 			var entityUri='uri://registries/security#groupmaster/new';
 			return $http({
-				method : 'GET',
-				url : '/udao/listBySchema/'+schemaUtilFactory.encodeUri(entityUri),
+				method : 'POST',
+				url : '/search/'+schemaUtilFactory.encodeUri(entityUri),
 			});
 
 		};

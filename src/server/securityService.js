@@ -69,7 +69,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	};
 
 	this.missingPermissionMessage=function(perm){
-		return {missingPerm:perm};
+		return {missingPerm:perm,security:true};
 	};
 
 	function hasPermission(coll, perm) {

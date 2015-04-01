@@ -1,3 +1,4 @@
+/*jslint node: true */
 var expect = require('chai').expect;
 var async = require('async');
 var config = require(process.cwd() + '/build/server/config.js');
@@ -67,7 +68,7 @@ describe('universalDaoCRUDOperations', function() {
 					// we inserted single record into empty collection
 					expect(mongoData.length).to.be.equal(1);
 					expect(mongoData[0].name.firstName).to.be.equal(user1.name.firstName);
-					expect(mongoData[0]._id).to.not.be.undefined;
+					expect(mongoData[0]._id).to.not.be.undefined();
 					expect(mongoData[0]._id.toHexString()).to.be.equal(data.id);
 
 					savedId = user1.id;
@@ -122,9 +123,9 @@ describe('universalDaoCRUDOperations', function() {
 			if (err) {
 				throw new Error(err);
 			}
-			
+
 			expect(count).to.be.equal(1);
-			
+
 			mongoDriver.getDb().collection(cn).findOne({"_id": new ObjectID.createFromHexString(user1.id)}, function(err, mongoData) {
 				if (err) {
 					throw new Error(err);
@@ -138,7 +139,7 @@ describe('universalDaoCRUDOperations', function() {
 			});
 		});
 	});
-	
+
 	it('Update - dao should update saved object empty unset', function(done) {
 		var cn = 'testCol';
 		var d = new universalDaoModule.UniversalDao(
@@ -160,9 +161,9 @@ describe('universalDaoCRUDOperations', function() {
 			if (err) {
 				throw new Error(err);
 			}
-			
+
 			expect(count).to.be.equal(1);
-			
+
 			mongoDriver.getDb().collection(cn).findOne({"_id": new ObjectID.createFromHexString(user1.id)}, function(err, mongoData) {
 				if (err) {
 					throw new Error(err);
@@ -176,7 +177,7 @@ describe('universalDaoCRUDOperations', function() {
 			});
 		});
 	});
-	
+
 	it('Delete - dao should remove saved object', function(done) {
 		var cn = 'testCol';
 		var d = new universalDaoModule.UniversalDao(
@@ -253,7 +254,7 @@ describe('universalDaoCRUDOperations', function() {
 			mongoDriver,
 			{collectionName: cn}
 		);
-		
+
 		// prepare several objects
 		async.parallel([function (callback) {
 			mongoDriver.getDb().collection(cn).save({
@@ -277,7 +278,7 @@ describe('universalDaoCRUDOperations', function() {
 
 			var opts = {
 				crits: [{f: 'name', op: 'eq', v: 'fero'}]
-			}
+			};
 			d.list(opts, function(err, result) {
 				if (err) {
 					done(err);

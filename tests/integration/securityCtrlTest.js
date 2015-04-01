@@ -1,4 +1,4 @@
-'use strict';
+/*jslint node: true */
 var expect = require('chai').expect;
 var fs = require('fs.extra');
 
@@ -21,7 +21,7 @@ describe('SecurityCtrl', function() {
 
 		mongoDriver.init(config.mongoDbURI_test, function(err) {
 
-			expect(err).to.be.null;
+			expect(err).to.be.null();
 
 			loginCtrl = new loginControllerModule.SecurityController(mongoDriver, {
 				userCollection : 'people',
@@ -190,7 +190,7 @@ describe('SecurityCtrl', function() {
 			};
 		};
 		util.inherits(resMock, require('stream').Writable);
-		(resMock, require('stream').Writable);
+		// (resMock, require('stream').Writable);
 
 		var res=null;
 		loginCtrl.login(reqMock,  res=new resMock());
@@ -298,7 +298,7 @@ describe('SecurityCtrl', function() {
 							expect(data.length).to.be.equal(1);
 							token=data[0];
 							expect(token.touched).to.be.above(now);
-							expect(logOutReqMock.authenticated).to.be.true;
+							expect(logOutReqMock.authenticated).to.be.true();
 							done();
 						});
 					}, 10);
@@ -322,10 +322,10 @@ describe('SecurityCtrl', function() {
 			this.json = function( data) {
 				expect(this.removedCookieCount).to.be.equal(2);
 			};
-		};
+		}();
 
 		util.inherits(resMock, require('stream').Writable);
-		(resMock, require('stream').Writable);
+		// (resMock, require('stream').Writable);
 
 		var res=null;
 
@@ -354,7 +354,7 @@ describe('SecurityCtrl', function() {
 			};
 			// this.send = function(code, data) {
 			// };
-		};
+		}();
 
 		loginCtrl.verifyCaptcha=function (captcha,cb){
 			expect(captcha.challenge).to.be.equal('ch');

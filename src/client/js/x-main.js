@@ -30,14 +30,16 @@
 					if (rejection.status === 401) {
 						$rootScope.security.currentUser = undefined;
 						$rootScope.app.mainMenu=false;
+						$injector.get ('xpsui:NavigationService').navigate();
 						$injector.get ('$location').url('/login');
 						$injector.get ('xpsui:NotificationFactory').warn({translationCode:'security.user.session.expired',time:5000} );
 					}else
 
 					if (rejection.status === 403) {
-					$injector.get ('$location').url('/login');
-					$injector.get('xpsui:NotificationFactory').warn({translationCode:'security.user.missing.permissions',translationData:rejection.data.missingPerm,time:5000});
-					}else
+						$injector.get ('xpsui:NavigationService').navigate();
+						$injector.get ('$location').url('/login');
+						$injector.get('xpsui:NotificationFactory').warn({translationCode:'security.user.missing.permissions',translationData:rejection.data.missingPerm,time:5000});
+					} else
 					return $q.reject(rejection);
 				}
 			};
@@ -132,7 +134,6 @@
 		$rootScope.security = $rootScope.security || {};
 		// by default, current user is undefined, as there is noone logged in
 		$rootScope.hasPermissions=SecurityService.hasPermissions;
-
 		var changeRouteRuleActive=false;
 
 		if ($cookies.loginName){

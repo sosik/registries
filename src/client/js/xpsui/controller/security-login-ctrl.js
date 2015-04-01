@@ -7,7 +7,8 @@
 		'$rootScope', 
 		'$location',
 		'xpsui:NotificationFactory', 
-		function($scope, SecurityService, $rootScope, $location,notificationFactory) {
+		'xpsui:NavigationService' ,
+		function($scope, SecurityService, $rootScope, $location,notificationFactory, navigationService) {
 			// FIXME remove this in production
 			// $scope.user = 'johndoe';
 			// $scope.password = 'johndoe';
@@ -26,7 +27,10 @@
 						SecurityService.selectProfile(user.systemCredentials.profiles[0].id).success(function(){
 							SecurityService.getCurrentUser().success(function(data){
 							$rootScope.security.currentUser=data;
-							$location.path('/personal-page');
+							
+							if (!navigationService.back()) {
+								$location.path('/personal-page');
+							}
 							});
 						});
 					}
@@ -45,7 +49,9 @@
 				SecurityService.selectProfile($scope.selectedProfile.id).success(function(){
 					 SecurityService.getCurrentUser().success(function(data){
 						$rootScope.security.currentUser=data;
-						$location.path('/personal-page');
+						if (!navigationService.back()) {
+							$location.path('/personal-page');
+						}
 					});
 				});
 			};

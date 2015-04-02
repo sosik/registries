@@ -59,8 +59,15 @@
 				};
 
 				function isEmptyObj(obj) {
-					if (obj && obj.hasOwnProperty('fileId')) {
-	                    return false;
+					if (!obj) {
+						return true;
+					}
+
+					for (var key in obj) {
+						if (key && key.indexOf('$') != 0
+								&& obj.hasOwnProperty(key)) {
+							return false;
+						}
 					}
 		            return true;
 				}

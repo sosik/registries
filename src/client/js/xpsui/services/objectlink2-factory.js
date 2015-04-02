@@ -53,17 +53,19 @@
 
 			for (field in fieldsSchema) {
 				// FIXME translations 
-				var type = fieldsSchema[field].type,
-					label = fieldsSchema[field].title,
-					value = data.refData[field]
-				;
+				if (fieldsSchema[field]) {
+					var type = fieldsSchema[field].type,
+						label = fieldsSchema[field].title,
+						value = data.refData[field]
+					;
 
-				wrapperElement.append(
-					angular.element('<span title="' + label + '">' +
-						Objectlink2.getFormatedValue(type,value) +
-						'</span>'
-					)
-				);
+					wrapperElement.append(
+						angular.element('<span title="' + label + '">' +
+							Objectlink2.getFormatedValue(type,value) +
+							'</span>'
+						)
+					);
+				}
 			}
 
 		};

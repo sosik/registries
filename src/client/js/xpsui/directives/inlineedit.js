@@ -79,6 +79,15 @@
 					elm.off('click', viewModeClickHandler);
 
 					oldValue = scope.$eval(modelPath);
+					// Create a hard copy
+					// .. otherwise the rollback on cancel button would keep the edited value.
+					if (oldValue && oldValue.constructor == Array) {
+						var copy = [];
+						for (var i=0; i<oldValue.length; i++) {
+							copy[i] = oldValue[i];
+						}
+						oldValue = copy;
+					}
 				}
 
 				var viewModeClickHandler = function(evt) {

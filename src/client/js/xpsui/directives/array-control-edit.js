@@ -5,10 +5,12 @@
 	.directive('xpsuiArrayControlEdit', ['$compile', function($compile) {
 
 		var  objectLinkTemplate='<div ng-repeat="ae in ngModel track by $id(ae)">'
-				+ '<button ng-click="removeByIndex($index);" class="btn-clear">'
-				+ '<i class="icon-minus"></i> {{\'generic.search.remove\' | translate}}'
-				+ '</button>'
-				+ '<div  xpsui-objectlink2-edit xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
+				+ ' <div class="x-array-control-item">'
+				+ '  <div  xpsui-objectlink2-edit xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
+				+ '  <button ng-click="removeByIndex($index);" class="btn-clear floating">'
+				+ '   <i class="icon-minus"></i> {{\'generic.search.remove\' | translate}}'
+				+ '  </button>'
+				+ ' </div>'
 				+ '</div>'
 				+ '<div class="pull-right">'
 				+ '<button ng-click="appendNew();" class="btn-clear"><i class="icon-add"></i> {{"generic.search.add" | translate}}</button>'

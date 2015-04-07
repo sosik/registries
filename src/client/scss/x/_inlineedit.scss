@@ -12,6 +12,7 @@
 		> :first-child{
 			line-height: em($line-height);
 		}
+
 	}
 
 	.x-inlineedit-buttons {
@@ -91,3 +92,18 @@
 	// background-color: rgba(200,200,200,0.5);
 }
 
+.x-array-control-item {
+	position: relative;
+
+	button.btn-clear.floating {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+	}
+	
+	div.x-select-edit {
+		box-sizing: border-box;
+		padding-left: 80px;
+		width: auto;
+	}
+}

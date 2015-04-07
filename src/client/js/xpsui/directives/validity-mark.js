@@ -77,6 +77,16 @@
 					});
 				}
 
+				if (controller[1]) {
+					var form = controller[1];
+
+					scope.$watch(function() {return form.xpsui.submitPrepare}, function(newVal) {
+						if (newVal === true) {
+							ngModel.$setViewValue(ngModel.$modelValue);
+						}
+					});
+				}
+
 			}
 		}
 	}]);

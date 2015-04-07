@@ -7,7 +7,7 @@
 		function($compile, $parse, log, formGenerator, calculator, $translate) {
 			return {
 				restrict: 'A',
-				require: 'xpsuiForm',
+				require: '^form',
 				controller: [ '$scope', '$element', '$attrs', function($scope, $element, $attrs) {
 					this.focusedElm = null;
 
@@ -74,6 +74,15 @@
 				link: function(scope, elm, attrs, ctrls) {
 					log.group('xpsuiForm Link');
 					log.time('xpsuiForm Link');
+
+					var formCtrl = ctrls;
+
+					formCtrl.xpsui = formCtrl.xpsui || {
+						submitPrepare: false,
+						prepareForSubmit: function() {
+							formCtrl.xpsui.submitPrepare = true;
+						}
+					};
 
 					elm.addClass('x-form');
 

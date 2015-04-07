@@ -22,7 +22,7 @@
 			};
 
 			$scope.save = function() {
-				//$scope.newForm.psui.prepareForSubmit();
+				$scope.newForm.xpsui.prepareForSubmit();
 				if ($scope.newForm.$invalid) {
 					notificationFactory.error({translationCode: 'registry.form.not.filled.correctly', time: 5000});
 					return;

@@ -1,0 +1,17 @@
+.pull-right {
+	text-align: right;
+}
+
+.clear {
+	clear: both;
+}
+
+.pull-left {
+	text-align: left;
+}
+
+.clearfix {
+	@include clearfix();
+}
+
+@include not-print(".no-print");

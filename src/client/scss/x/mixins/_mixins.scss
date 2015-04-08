@@ -1,3 +1,12 @@
+@mixin not-print($element: input){
+	@media print {
+		#{$element} {
+			display: none !important;
+		}
+	}
+}
+
+
 @mixin not-selectable() {
 	user-select: none;
 	-webkit-user-select: none;

@@ -1,0 +1,26 @@
+.x-fieldset {
+	display: block;
+	width: initial;
+	float: none;
+	padding: 0px;
+	@include clearfix();
+
+	div.x-fieldset-row {
+		
+		div.x-fieldset-label{
+			width: 40%;
+			float: left;
+			position: relative;
+			padding-top: 9px;
+		}
+
+		div.x-fieldset-value {
+			width: 59%;
+			float: right;
+			position: relative;
+			margin: 0px;
+			// margin-bottom: 8px;
+		}
+		
+	}
+}

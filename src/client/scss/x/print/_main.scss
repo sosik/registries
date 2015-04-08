@@ -1,0 +1,36 @@
+// body{
+// 	font-size: 12px;
+// }
+
+@page {
+	size: auto;
+	margin: 20mm 15mm 20mm 20mm;
+}
+
+// *{
+// 	border: 1px solid black;
+// }
+
+
+.x-main-content,
+.x-fixed-header{
+	  position: initial;
+}
+
+.x-main-content{
+	overflow-x: visible;
+	padding: 0px;
+}
+ 
+.x-fixed-header{
+	display: none;
+	position: initial;
+}
+
+// .no-print{
+// 	display: none !important;
+// }
+
+.x-form-title {
+	padding: 0px;
+}

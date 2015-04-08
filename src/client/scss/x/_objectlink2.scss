@@ -19,7 +19,7 @@
 
 	div.x-input{
 		line-height: em($line-height);
-		display: inline-block;
+		display: block;
 		min-height: $inlineedit-min-height;
 		
 		span{

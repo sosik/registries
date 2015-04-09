@@ -22,7 +22,7 @@
 						+ '   <i class="icon-remove"></i> {{\'generic.search.remove\' | translate}}'
 						+ '  </button>'
 						+ ' </div>'
-						+ '<div xpsui-uploadable-file xpsui-validity-mark '
+						+ '<div xpsui-uploadable-file xpsui-validity-mark class="xpsui-uploadable-file-edit-item"'
 						+ '     xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"> '
 						+ '</div>'
 						+ '</div>'

@@ -23,7 +23,7 @@
 	}
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiUploadableFile', ['xpsui:FileUploadFactory','xpsui:NotificationFactory','$compile', function(psFileUploadFactory,notificationFactory,$compile) {
+	.directive('xpsuiUploadableFile', ['xpsui:FileUploadFactory','xpsui:NotificationFactory','$compile', '$translate', function(psFileUploadFactory,notificationFactory,$compile,$translate) {
 		return {
 			restrict: 'A',
 			require: ['?ngModel', 'xpsuiUploadableFile'],
@@ -33,17 +33,18 @@
 					this.imageProcessed = function(blob) {}
 			},
 			link: function(scope, elm, attrs, ctrls) {
-				var fileButton = angular.element('<input type="file"></input>');
-				var iconButton = angular.element('<div></div>');
-					iconButton.addClass('xpsui-uploadable-image-fbutton');
-					iconButton.addClass('fa fa-2x fa-folder-open-o');
+				var fileButton = angular.element('<input type="file" style="display: none;"></input>');
+				var chooseFileButton = angular.element(
+						'<button class="btn-primary">'
+						+ '<icon class="icon-open"></icon> ' + $translate.instant('generic.file.choose')
+						+ '</button>');
 				var imgLink = '';
 				// elm.addClass('xpsui-uploadable-file');
 
 				elm.append(fileButton);
-				elm.append(iconButton);
+				elm.append(chooseFileButton);
 
-				iconButton.on('click', function(evt) {
+				chooseFileButton.on('click', function (evt) {
 					fileButton[0].files[0] = '';
 					fileButton[0].value = '';
 					fileButton[0].click();
@@ -71,6 +72,7 @@
 									uploader.upload(function(err, path) {
 										if (err) {
 											notificationFactory.error(err);
+											return;
 										}
 
 										elm.css('background-image', 'url(/photos/get/' + path+')');
@@ -83,6 +85,7 @@
 								uploader.upload(function(err, path) {
 									if (err) {
 										notificationFactory.error(err);
+										return;
 									}
 
 									// elm.css('background-image', 'url(/photos/get/' + path+')');

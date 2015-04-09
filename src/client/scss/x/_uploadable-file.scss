@@ -150,3 +150,14 @@
 	*/
 	z-index:10;
 }
+
+.xpsui-uploadable-file-view {
+	button.btn-primary {
+		display: none;
+	}
+}
+
+.xpsui-uploadable-file-edit-item {
+	height: 33px;
+	padding-top: 6px;
+}

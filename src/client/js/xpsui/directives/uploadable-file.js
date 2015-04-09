@@ -71,8 +71,8 @@
 									var uploader = new psFileUploadFactory.FileUploader(scope, blob, getContentType(file.name), '/uploads/putgetpath/');
 									uploader.upload(function(err, path) {
 										if (err) {
-											notificationFactory.error(err);
-											return;
+											notificationFactory.error($translate.instant('generic.file.uploadFailed'));
+											//return true;
 										}
 
 										elm.css('background-image', 'url(/photos/get/' + path+')');
@@ -84,8 +84,9 @@
 								var uploader = new psFileUploadFactory.FileUploader(scope, file, getContentType(file.name), '/uploads/putgetpath/');
 								uploader.upload(function(err, path) {
 									if (err) {
-										notificationFactory.error(err);
-										return;
+										notificationFactory.error($translate.instant('generic.file.uploadFailed'));
+										scope.$apply( function() { });
+										return true;
 									}
 
 									// elm.css('background-image', 'url(/photos/get/' + path+')');

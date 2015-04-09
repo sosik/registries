@@ -64,9 +64,17 @@
 		Selectbox.prototype.setInput = function(element){
 			var self = this;
 			this.$inputElement = element;
+			
+			this._bindInputEventHandlers();
 
+			return this;
+		};
+
+		Selectbox.prototype._bindInputEventHandlers = function() {
+			var self = this;
 
 			this.$inputElement.on('keypress', function(event) {
+
 				if(!self.options.freeTextMode){
 					event.preventDefault();
 				}
@@ -75,16 +83,36 @@
 					self.dropdown && self.dropdown.open();
 
 					if(self.$searchInput){
-						self.$searchInput.val(String.fromCharCode(event.keyCode));
+						var keychar = self.getKeyChar(event);
+						keychar && self.$searchInput.val(keychar);
+												
 						self.actionFilter(self.$searchInput.val());
 						self.$searchInput[0].blur();
 						self.$searchInput[0].focus();
 					}
 				}
 			});
-			
-			return this;
-		};
+
+			this.$inputElement.on('keydown', function(event) {
+				if (self.options.useSearchInput && 
+					(event.keyCode === keys.backspace
+					|| event.keyCode === keys.del)
+				) {
+					event.preventDefault();
+				};
+			});
+		}
+
+		Selectbox.prototype.getKeyChar = function(event) {
+			if (event.which == null) {
+				return String.fromCharCode(event.keyCode) // IE
+			} else if (event.which!=0 && event.charCode!=0) {
+				return String.fromCharCode(event.which)   // the rest
+			} else {
+				return null // special key
+			}
+		}
+
 
 		Selectbox.prototype.getInput = function(){	
 			return this.$inputElement;

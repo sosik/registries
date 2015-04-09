@@ -15,10 +15,27 @@ var actions = {
 		CREATE : 'create'
 };
 
+/**
+  Class contains helper methods to validate and enforce security.
+@module server
+@submodule security
+@class SecurityService
+
+*/
 var SecurityService = function(mongoDriver, schemaRegistry, options) {
 
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
+
+
+	/**
+		Method validates if available user permissions are suficient to process actions
+		@method hasRightForAction
+
+		@param schema schemaObject defines security constrains
+		@param  action  action to process
+		@param  avaliablePerm available permissions
+	*/
 	this.hasRightForAction = function(schema, action, avaliablePerm) {
 
 		log.verbose('checking permision on schema:action',schema,action);
@@ -50,14 +67,24 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	};
 
 
+	/**
+		Method returns displayable/ (' ' joined) permissions required for specified action
+		<br> limitation: method expect presence of action otherwise may fail.
+		@method requiredPermissions
+		@param schema schemaObject
+		@param action action to perform
+	*/
+
 	this.requiredPermissions = function(schema, action) {
 		return schema['security'][action]['static'].join(' ');
 	};
 
 
-/**
- * Method verifies if current user (req.perm) contains required permission
- */
+	/**
+	Method verifies if current user (req.perm) contains required permission
+	@method userHasPermissions
+	@returns true if user has permission
+	*/
 	this.userHasPermissions = function (req,perm) {
 
 		log.verbose('check user has perm ', perm);
@@ -68,9 +95,15 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		return false;
 	};
 
+	/**
+		Factory method for missing permission missingPermissionMessage
+		@method missingPermissionMessage
+		@param perm missing permission
+	*/
 	this.missingPermissionMessage=function(perm){
 		return {missingPerm:perm,security:true};
 	};
+
 
 	function hasPermission(coll, perm) {
 
@@ -82,6 +115,10 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		return false;
 	}
 
+	/**
+	Filter: checks if user authenticated
+	@method authenRequired
+	*/
 	this.authenRequired= function (req,res,next){
 		if (!req.authenticated ) {
 			res.sendStatus(401);
@@ -91,7 +128,8 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	};
 
 	/**
-		method merges profile criteria to specified qf
+		Method merges profile criteria to specified qf
+		@method applyProfileCrits
 	*/
 	this.applyProfileCrits=function(profile,schemaName,qf,currentUser){
 
@@ -137,8 +175,9 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 	}
 
 
-		/**
-		method merges schema forced criteria to specified qf
+	/**
+		Method merges schema forced criteria to specified qf
+		@method applySchemaForcedCrits
 	*/
 	this.applySchemaForcedCrits=function(schema,qf){
 
@@ -150,7 +189,12 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		}
 		return qf;
 	};
+	/**
+		Filter: verifies if user has rights to perform controller action.
 
+		@method hasPermFilter
+		@param perm required permission
+	*/
 	this.hasPermFilter= function (perm){
 		var t=this;
 		var f= function (perm){

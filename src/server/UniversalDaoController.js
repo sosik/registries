@@ -23,7 +23,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 
 
 	function responeMapper(resp,next){
-
+		var self=this;
 		this.resp=resp;
 		this.next=next;
 

@@ -10,6 +10,16 @@ var consts = require(process.cwd() + '/build/server/SchemaConstants.js');
 
 var safeUrlEncoder = require('./safeUrlEncoder.js');
 
+
+/**
+
+ Class provides data manipulation operations implementation
+ @module server
+ @submodule services
+ @class UniversalDaoService
+
+
+*/
 var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 
@@ -98,6 +108,21 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		return retVal;
 	}
 
+
+	/**
+		Method to store data to specified schema.
+		<br>Does:
+		<li>checks security (permissions) </li>
+		<li>creates auditLog</li>
+		<li>mangles and stores entity</li>
+		@method saveBySchema
+
+		@param schemaName schemaUri
+		@param userCtx security context
+		@param obj object to store
+		@param callback { form any(err,userError,data)}
+
+	*/
 	this.saveBySchema = function(schemaName,userCtx,obj, callback) {
 
 		var schema = schemaRegistry.getSchema(schemaName);
@@ -229,6 +254,20 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		}
 	};
 
+	/**
+		Method to fetch single entity  from specified schema.
+		<br>
+		Does:
+		<li> checks security (permissions) </li>
+		<li> fetches entity/json from dao </li>
+		<li> unmangles and returns entity</li>
+
+		@method getBySchema
+		@param schemaName schemaUri
+		@param userCtx security context
+		@param id entityId
+		@param callback { form any(err,userError,data)}
+	*/
 	this.getBySchema = function(schemaName,userCtx,id,callback) {
 
 		var schema = schemaRegistry.getSchema(schemaName);
@@ -322,8 +361,20 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 	}
 
+	/**
+		Method to fetch entities from specified schema by query
+		<br>
+		Does:
+		<li> checks security (permissions) </li>
+		<li> enhances query by profile criteria (dynamic security) </li>
+		<li> fetches entities/ from dao </li>
+		<li> unmangles and return entity</li>
 
-
+		@method searchBySchema
+		@param schemaName schemaUri
+		@param query criteria to search data
+		@param callback { form any(err,userError,data)}
+	*/
 	this.searchBySchema = function(schemaName,userCtx,query,callback) {
 
 		log.silly('searching in ',schemaName,' for', query);
@@ -397,6 +448,20 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 	};
 
+
+	/**
+		Method to fetch entity count matching  query/criteria
+		<br>
+		Does:
+		<li> checks security (permissions) </li>
+		<li> enhances query by profile criteria (dynamic security) </li>
+		<li> fetchs and returns count of entities </li>
+
+		@method searchBySchemaCount
+		@param schemaName schemaUri
+		@param query criteria to search data
+		@param callback { form any(err,userError,data)}
+	*/
 
 	this.searchBySchemaCount = function(schemaName,query,callback) {
 

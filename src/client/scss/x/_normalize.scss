@@ -1,9 +1,10 @@
-*:not(input textarea){
+*:not(input):not(textarea){
 	@include not-selectable();
 }
 
 input, textarea, keygen, select, button {
 	margin: 0px;
+
 }
 
 a{

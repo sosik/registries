@@ -29,6 +29,10 @@
 	border-bottom: 1px solid #b0b0b0;
 }
 
+// .x-fieldset-value *{
+// 	@include text-selectable();	
+// }
+
 div.x-fieldset-row {
 	clear: both;
 	position: relative;

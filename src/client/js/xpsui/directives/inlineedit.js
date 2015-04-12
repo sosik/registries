@@ -111,17 +111,14 @@
 					enterViewMode();
 					scope.$emit('xpsui:model_changed');
 
+					formControl.releaseFocus(elm);
+
 					return true;
 				}
 				
 				var commitClickHandler = function(evt) {
 					evt.stopPropagation();
-
-					if (commit()) {
-						formControl.releaseFocus(elm);
-					}
-
-					formControl.releaseFocus(elm);
+					commit();
 
 					return false;
 				};
@@ -159,11 +156,41 @@
 						});
 					}
 				});
+
 				if (mode === formGenerator.MODE.EDIT) {
 					enterEditMode();
 				} else {
 					enterViewMode();
 				}
+
+				elm.on('keypress keydown', function(evt) {
+					if (evt.which === 27) {
+						// key escape
+						rollback();
+						evt.preventDefault();
+					} else if (evt.which === 13) {
+						// key enter
+						commit();
+						evt.preventDefault();
+					} else if (evt.which === 9) {
+						// key tab
+						commit();
+					}
+				});
+
+				// hendle tabs	
+				
+				if (mode !== formGenerator.MODE.EDIT) {
+					elm.attr('tabindex', '0');
+				
+					elm.on('focus', function(e) {
+						if (formControl.acquireFocus(elm)) {
+							enterEditMode();
+						}
+					});
+					
+				}	
+				
 
 				log.groupEnd();
 			}

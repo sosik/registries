@@ -1,5 +1,4 @@
 var log = require('./logging.js').getLogger('UniversalDaoController.js');
-var auditLog = require('./logging.js').getLogger('AUDIT');
 var async = require('async');
 
 var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
@@ -7,9 +6,6 @@ var objectTools = require(process.cwd() + '/build/server/ObjectTools.js');
 var securityServiceModule = require(process.cwd() + '/build/server/securityService.js');
 var QueryFilter = require('./QueryFilter.js');
 var consts = require(process.cwd() + '/build/server/SchemaConstants.js');
-
-var safeUrlEncoder = require('./safeUrlEncoder.js');
-
 
 /**
 
@@ -83,7 +79,6 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 			require('./manglers/CollationMangler.js')(mongoDriver)
 	]);
 
-	var that=this;
 	this.mongoDriver=mongoDriver;
 	var securityService= new securityServiceModule.SecurityService();
 
@@ -174,7 +169,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 			setTimeout(updateObjectMangler.mangle(obj, compiledSchema, function(err, local) {
 
 				if (err){
-					next(err);
+					callback(err);
 					return;
 				}
 
@@ -185,7 +180,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 				_dao.update(obj, function(err, data){
 					if (err) {
-						next(err);
+						callback(err);
 						return;
 					}
 					callback(null,null,data);
@@ -201,7 +196,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 					auditEntity.timeStamp = new Date().getTime();
 					auditEntity.schemaName = schemaName;
 
-					_daoAudit.save(auditEntity, function (data){});
+					_daoAudit.save(auditEntity, function (){});
 				});
 
 			}
@@ -213,12 +208,11 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 				if (err){
 					log.error(err);
-					next(err);
+					callback(err);
 					return;
 				}
 				if (local && local.length>0){
-					res.status(400);
-					next(convertLocalErrors(local));
+					callback(null,convertLocalErrors(local));
 					return;
 				}
 
@@ -227,20 +221,19 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 				_dao.save(obj, function(err, data){
 					if (err) {
 						log.error(err);
-						next(err);
+						callback(err);
 						return;
 					}
-					res.json(data);
-
+					callback(null,null,data);
 
 					if (compiledSchema[consts.FIRE_EVENTS] && compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE] ){
 						log.silly('Firing event',compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE]);
-						eventRegistry.emitEvent(compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE],{entity:data,user:req.currentUser});
+						eventRegistry.emitEvent(compiledSchema[consts.FIRE_EVENTS][consts.FIRE_EVENTS_CREATE],{entity:data,user:userCtx.user});
 					}
 
 					var auditEntity={};
 					auditEntity.obj = obj;
-					auditEntity.user = req.currentUser.id;
+					auditEntity.user = userCtx.user.id;
 					auditEntity.action = "create";
 					auditEntity.timeStamp = new Date().getTime();
 					auditEntity.schemaName = schemaName;
@@ -291,7 +284,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		}
 
 
-		_dao = new universalDaoModule.UniversalDao(
+		var _dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
 			{collectionName: compiledSchema.table}
 		);
@@ -303,11 +296,11 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		_dao.get(id, function(err, data){
 			if (err) {
 				log.error(err);
-				next(err);
+				callback(err);
 				return;
 			}
 			setTimeout(getObjectMangler.mangle(data, compiledSchema, function(err, cb) {
-									if (err){next(err); return;}
+									if (err){callback(err); return;}
 									callback(null,null,data);
 								}), 0);
 
@@ -419,7 +412,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		log.silly('used crits', qf);
 		dao.list(qf, function(err, data) {
 			if (err) {
-				next(err);
+				callback(err);
 			} else {
 				if (data) {
 					var mangFuncs = [];
@@ -463,9 +456,9 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		@param callback { form any(err,userError,data)}
 	*/
 
-	this.searchBySchemaCount = function(schemaName,query,callback) {
+	this.searchBySchemaCount = function(schemaName,userCtx,query,callback) {
 
-		log.silly('searching for', req.params);
+		log.silly('searching for', query);
 		var schema = schemaRegistry.getSchema(schemaName);
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName: schema.compiled.table
@@ -478,7 +471,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 			throw new Error('Schema is not compiled');
 		}
 
-		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,req.perm)){
+		if (!securityService.hasRightForAction(compiledSchema,securityServiceModule.actions.READ,userCtx.perm)){
 			log.warn('user has not rights to search in schema',schemaName);
 
 			callback(securityService.missingPermissionMessage(securityService.requiredPermissions(compiledSchema,securityServiceModule.actions.READ)));
@@ -490,20 +483,20 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		var qf=QueryFilter.create();
 
 		for(var c in query.criteria){
-			qf.addCriterium(crits.criteria[c].f,crits.criteria[c].op,crits.criteria[c].v);
+			qf.addCriterium(query.criteria[c].f,query.criteria[c].op,query.criteria[c].v);
 		}
 
 		securityService.applySchemaForcedCrits(compiledSchema,qf);
 
-		if (req.profile){
-				qf=securityService.applyProfileCrits(req.profile,schemaName,qf);
+		if (userCtx.profile){
+				qf=securityService.applyProfileCrits(userCtx.profile,schemaName,qf);
 		}
 
-		log.silly('used crits', crits);
+		log.silly('used crits', query);
 		dao.count(qf, function(err, data) {
 			if (err) {
 				log.error(err);
-				next(err);
+				callback(err);
 			} else {
 				if (data) {
 					var mangFuncs = [];
@@ -520,7 +513,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 					async.parallelLimit(mangFuncs, 3, function(err, cb) {
 						if (err) {
 
-							next(err);
+							callback(err);
 						}
 
 						callback(null,null,data);
@@ -536,7 +529,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 	this.getArticleTagsDistinct = function( callback) {
 
-		log.silly('searching tags distinct', req.params);
+		log.silly('searching tags distinct');
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {
 			collectionName: 'portalArticles'
 		});

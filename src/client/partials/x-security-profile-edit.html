@@ -185,7 +185,7 @@
 						</div>
 						<div class="x-fieldset-col-2">
 							<select ng-model="crit.attribute"
-								ng-options="att.title for att in crit.attDef.attributes"></select>
+								ng-options="att.title group by att.group for att in crit.attDef.attributes"></select>
 						</div>
 						<div class="x-fieldset-col-2">
 							<select
@@ -199,15 +199,15 @@
 								autocomplete="off">
 						</div>
 
-						<div ng-show="!crit.attribute.render" class="x-fieldset-col-2">
+						<div  class="x-fieldset-col-2">
 							<input
 								type="text" id="name" name="name" ng-model="crit.expr"
-								placeholder="value" class="ng-pristine ng-valid"
+								placeholder="expression" class="ng-pristine ng-valid"
 								autocomplete="off">
 						</div>
 
 
-						<div ng-show="crit.attribute.render.objectLink" class="x-fieldset-col-2">
+						<div ng-show="crit.attribute.render.objectLink2" class="x-fieldset-col-2">
 							<psui-objectlink schema-fragment="crit.attribute.schemaFragment" ng-model="crit.obj" />
 						</div>
 

@@ -99,7 +99,7 @@
 
 				crit.map(function(c) {
 					if (c && c.attribute && c.attribute.path) {
-						if (c.attribute.objectLink){
+						if (c.attribute.objectLink2){
 							retval.push({
 								f : c.attribute.path,
 								v : c.object.oid,
@@ -125,12 +125,12 @@
 
 				crit.map(function(c) {
 					if (c && c.attribute && c.attribute.path) {
-						if (c.attribute.render && c.attribute.render.objectLink){
+						if (c.attribute.render && c.attribute.render.objectLink2){
 							retval.push({
 								schema: c.schema,
 								f : c.attribute.path,
-								v : c.obj.oid,
-								expr : c.obj.expr,
+								v : c.obj ? c.obj.oid : null,
+								expr : c.expr,
 								op : c.operator.value,
 								obj: c.obj
 							});

@@ -123,10 +123,12 @@
 							schemaFragment.uploadableImage.width : schemaFragment.render.width;
 					var height = schemaFragment.uploadableImage ? 
 						schemaFragment.uploadableImage.height : schemaFragment.render.height;
-
-					field.attr('psui-width', width);
-					field.attr('psui-height', height);
-
+					var style = 'width: 100% !important;'
+						+ (height ? 'height:'+height+'px !important;':'height:150px;')
+						+ 'background-size: contain;'
+						+ 'background-repeat: no-repeat;'
+						+ 'background-position: top left;';
+					field = angular.element('<div style="' + style + 'background-image: url(\'{{' + modelPath + '?' + modelPath + ':\'/img/no_photo.jpg\'}}\')"></div>');
 				} else if(schemaFragment.type === "date"
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')) {
 					field = angular.element('<div xpsui-date-view></div>');

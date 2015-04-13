@@ -14,6 +14,14 @@
 			link: function(scope, elm, attrs, ctrls) {
 				var fileButton = angular.element('<input type="file"></input>');
 				var imgLink = '';
+				var imgWidth = attrs.psuiWidth || 0;
+				var imgHeight = attrs.psuiHeight || 0;
+
+				elm.attr('style', 
+					(imgHeight ? 'height:'+imgHeight+'px !important;':'')
+				);
+
+
 				elm.addClass('xpsui-uploadable-image');
 				
 				elm.append(fileButton);
@@ -83,6 +91,11 @@
 						});
 					};
 				}
+
+				// if (attrs.xpsuiSchema) {
+				// 	var schema = scope.$eval(attrs.xpsuiSchema);
+				// }
+				
 			}
 		}
 	}]);

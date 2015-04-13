@@ -1,14 +1,12 @@
 .xpsui-uploadable-image {
 	cursor: pointer;
 	text-align: center;
-	display: inline-block;
-	background-size: 100% 100%;
 	background-repeat: no-repeat;
-	background-position: center;
-/*
-	border: 1px solid $input-border-color;
-	margin: ($field-padding-vertical) 0px ($field-padding-vertical) ($padding-base-horizontal);
-*/
+
+	width: 100%;
+	height: $uploadable-image-height;
+	background-size: contain;
+	background-position: top left;
 
 	.xpsui-modal-dialog {
 		position: fixed;
@@ -137,6 +135,14 @@
 		}
 
 	}
+}
+
+.xpsui-uploadable-image-view{
+	width: 100%;
+	height: $uploadable-image-height;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: top left;
 }
 
 @media (min-width: $screen-md) {

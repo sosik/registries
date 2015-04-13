@@ -62,13 +62,9 @@
 					var height = schemaFragment.uploadableImage ? 
 						schemaFragment.uploadableImage.height : schemaFragment.render.height;
 
-					field.attr('psui-imageresizor-width', width);
-					field.attr('psui-imageresizor-height', height);
-					field.attr('style', 'width: 100% !important;'
-						+ (height ? 'height:'+height+'px !important;':'height:150px')
-						+ 'background-size: contain;'
-						+ 'background-position: top left;'
-					);
+					field.attr('psui-width', width);
+					field.attr('psui-height', height);
+
 				} else if (schemaFragment.enum) {
 					field = angular.element('<div xpsui-select-edit></div>');
 					field.attr('xpsui-schema', schemaPath);
@@ -121,16 +117,16 @@
 					field.attr('xpsui-schema', schemaPath);
 				} else if (schemaFragment.uploadableImage
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-uploadable-image')) {
+
+					field = angular.element('<div xpsui-uploadable-image-view></div>');
 					var width = schemaFragment.uploadableImage ? 
 							schemaFragment.uploadableImage.width : schemaFragment.render.width;
 					var height = schemaFragment.uploadableImage ? 
 						schemaFragment.uploadableImage.height : schemaFragment.render.height;
-					var style = 'width: 100% !important;'
-						+ (height ? 'height:'+height+'px !important;':'height:150px;')
-						+ 'background-size: contain;'
-						+ 'background-repeat: no-repeat;'
-						+ 'background-position: top left;';
-					field = angular.element('<div style="' + style + 'background-image: url(\'{{' + modelPath + '}}\')"></div>');
+
+					field.attr('psui-width', width);
+					field.attr('psui-height', height);
+
 				} else if(schemaFragment.type === "date"
 					|| (schemaFragment.render && schemaFragment.render.component === 'psui-datepicker')) {
 					field = angular.element('<div xpsui-date-view></div>');

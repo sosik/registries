@@ -23,8 +23,8 @@
 				
 				var imgCtrl = ctrls[0];
 
-				var imgWidth = attrs.psuiImageresizorWidth || 0;
-				var imgHeight = attrs.psuiImageresizorHeight || 0;
+				var imgWidth = attrs.psuiWidth || 0;
+				var imgHeight = attrs.psuiHeight || 0;
 				var resize = 1;
 				var width = imgWidth*2;
 				var height = imgHeight*2;
@@ -41,8 +41,8 @@
 					var resizeRatio = (window.innerWidth/width);
 					height = Math.round(height * resizeRatio);
 					width = window.innerWidth;
-					imgWidth = (attrs.psuiImageresizorWidth || 0) * resizeRatio;
-					imgHeight = (attrs.psuiImageresizorHeight || 0) * resizeRatio;
+					imgWidth = (attrs.psuiWidth || 0) * resizeRatio;
+					imgHeight = (attrs.psuiHeight || 0) * resizeRatio;
 				}
 				console.log('Imageresizor width: ' + width + ' height: ' + height);
 

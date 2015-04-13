@@ -37,12 +37,11 @@
 
 			function collectProperties(pathPrefix, objectDef,group,resultArr) {
 				for ( var pr in objectDef.properties) {
-
-						if (objectDef.properties[pr].objectLink) {
+						if (objectDef.properties[pr].objectLink2) {
 							resultArr.push({
 								path: pathPrefix + pr+'.oid',
 								type: objectDef.properties[pr].type,
-								render:{objectLink:objectDef.properties[pr].objectLink},
+								render:{objectLink2:objectDef.properties[pr].objectLink2},
 								schemaFragment:objectDef.properties[pr],
 								group:group,
 								title: (objectDef.properties[pr].transCode ? $translate.instant(objectDef.properties[pr].transCode) : objectDef.properties[pr].title)

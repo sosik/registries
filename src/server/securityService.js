@@ -144,7 +144,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 							throw new Error('not able to resolve profile expression: '+c.expr);
 						}
 						if (c.hasOwnProperty('obj')){
-							qf.addCriterium(c.f+".oid",c.op,resolved);
+							qf.addCriterium(c.f,c.op,resolved);
 						}
 						else {
 							qf.addCriterium(c.f,c.op,resolved);

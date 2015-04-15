@@ -52,7 +52,10 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 	function getRequestSchema(req,next){
 
 		if ( !req.params || !req.params.schema){
-			next('Schema not specified.');
+			if (next) {
+				next('Schema not specified.');
+			}
+			return;
 		}
 
 		return safeUrlEncoder.decode(req.params.schema);
@@ -122,32 +125,70 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 		Returns  distinct tags as enum.
 		@method getArticleTagsDistinct
 	*/
-	this.getArticleTagsDistinct = function(req, resp,next) {
-		var schemaUri=getRequestSchema(req,next);
-		selservice.getArticleTagsDistinct(new responeMapper(res,next));
+	this.getArticleTagsDistinct = function(req, resp, next) {
+		var schemaUri=getRequestSchema(req, next);
+		self.service.getArticleTagsDistinct(req, new responeMapper(resp, next));
 	};
 
-	this.listPortalMenu = function(req, resp, next) {
+	this.getPortalArticle = function(req, res,next) {
+		self.get(req, res, next, 'portalArticles');
+	}
+
+	this.get = function(req, res, next, table) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
-			{collectionName: 'portalMenu'}
+			{ collectionName: table }
 		);
 
-		_dao.list({}, function(err, data) {
+		log.verbose(req.params);
+		_dao.get(req.params.id, function(err, data){
 			if (err) {
 				log.error(err);
 				next(err);
 				return;
 			}
 
-			resp.json(data);
+			res.json(data);
 		});
 	};
 
+	this.listPortalArticles = function(req, resp, next) {
+		self.list(req, resp, next, 'portalArticles');
+	};
+
+	this.listPortalMenu = function(req, resp, next) {
+		self.list(req, resp, next, 'portalMenu');
+	};
+	
+	this.list = function(req, resp, next, collectionName) {
+		_dao = new universalDaoModule.UniversalDao(
+				mongoDriver,
+				{collectionName: collectionName}
+			);
+
+			_dao.list({}, function(err, data) {
+				if (err) {
+					log.error(err);
+					next(err);
+					return;
+				}
+
+				resp.json(data);
+			});
+	};
+
+	this.savePortalArticles = function(req, res,next) {
+		self.save(req, res,next, 'portalArticles');
+	};
+
 	this.savePortalMenu = function(req, res,next) {
+		self.save(req, res,next, 'portalMenu');
+	};
+
+	this.save = function(req, res,next, collectionName) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,
-			{ collectionName: 'portalMenu' }
+			{ collectionName: collectionName }
 		);
 
 		log.verbose("data to savvar e", req.body);

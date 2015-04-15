@@ -61,7 +61,11 @@
 				}
 				modalContentWrapperEl.css('width', '' + modalWidth + 'px');
 
-				var labelTranslated = $translate.instant(scope.$eval(attrs.xpsuiSchema.concat('.transCode')));
+				
+				var labelTranslated = '';
+				if (attrs.xpsuiSchema) {
+					$translate.instant(scope.$eval(attrs.xpsuiSchema.concat('.transCode')));
+				}
 				var modalHeader = $compile(angular.element('<div class="x-modalview-header"><span>' + labelTranslated + '</span></div>'))(scope);
 				modalContentWrapperEl.append(modalHeader);
 				

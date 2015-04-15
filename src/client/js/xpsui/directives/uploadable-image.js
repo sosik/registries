@@ -44,6 +44,7 @@
 						if (file.type !== 'image/jpeg') {
 							//TODO do something clever
 							notificationFactory.error({translationCode:'psui.uploadable.image.unsupported.image.type'});
+							scope.$apply(function () {});
 						} else {
 							if (imgCtrl && imgCtrl.srcElm) {
 								var urlObject;

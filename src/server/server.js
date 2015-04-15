@@ -100,6 +100,9 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 
 	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser.json(),udc.saveBySchema);
 	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, udc.getBySchema);
+	app.get('/udao/list/portalMenu',securityService.authenRequired, bodyParser.json(), udc.listPortalMenu);
+	app.put('/udao/save/portalMenu',securityService.authenRequired, bodyParser.json(), udc.savePortalMenu);
+
 	app.post('/search/count/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchemaCount);
 	app.post('/search/:schema',securityService.authenRequired, bodyParser.json(),udc.searchBySchema);
 

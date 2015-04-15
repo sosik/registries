@@ -527,7 +527,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 	};
 
 
-	this.getArticleTagsDistinct = function( callback) {
+	this.getArticleTagsDistinct = function(req, callback) {
 
 		log.silly('searching tags distinct');
 		var dao = new universalDaoModule.UniversalDao(mongoDriver, {

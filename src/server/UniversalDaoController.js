@@ -1,6 +1,7 @@
 var log = require('./logging.js').getLogger('UniversalDaoController.js');
 var auditLog = require('./logging.js').getLogger('AUDIT');
 
+var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
 var udcServiceModule = require('./UniversalDaoService.js');
 
 
@@ -124,6 +125,47 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 	this.getArticleTagsDistinct = function(req, resp,next) {
 		var schemaUri=getRequestSchema(req,next);
 		selservice.getArticleTagsDistinct(new responeMapper(res,next));
+	};
+
+	this.listPortalMenu = function(req, resp, next) {
+		_dao = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{collectionName: 'portalMenu'}
+		);
+
+		_dao.list({}, function(err, data) {
+			if (err) {
+				log.error(err);
+				next(err);
+				return;
+			}
+
+			resp.json(data);
+		});
+	};
+
+	this.savePortalMenu = function(req, res,next) {
+		_dao = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{ collectionName: 'portalMenu' }
+		);
+
+		log.verbose("data to savvar e", req.body);
+
+		var obj = req.body;
+		_dao.save(obj, function(err, data){
+			if (err) {
+				log.error(err);
+				next(error);
+				return;
+			}
+
+			//FIXME: Old fashion audit log is obsolete. pure save method is not audited. It should be used
+			//only as save by schema. Don't forget to remove declaration also.
+			//auditLogs.info('user oid', req.currentUser.id,'has saved/modified object',obj);
+
+			res.json(data);
+		});
 	};
 
 };

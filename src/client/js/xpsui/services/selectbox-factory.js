@@ -227,7 +227,7 @@
 		};
 
 		Selectbox.prototype.onBeforeLoad = function(){
-			this.setInfoText($translate.instant('Loading...'));
+			this.setInfoText($translate.instant('psui.selectbox.loading'));
 			this.setInfoNumFromText('');
 			this.$element.addClass('x-loading');
 		};
@@ -285,7 +285,7 @@
 		
 		Selectbox.prototype.setInfoNum = function(){
 			if (this.$infoElement) {
-				this.setInfoText($translate.instant('Rows'));
+				this.setInfoText($translate.instant('psui.selectbox.rows'));
 				this.$infoElement.text(this.dataset.data.length + 
 					(!this.dataset.loadDone ? "+" : "")
 				);

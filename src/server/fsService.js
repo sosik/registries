@@ -7,9 +7,7 @@ var async = require('async');
 var pathM = require('path');
 var uuid =  require('node-uuid');
 
-var DEFAULT_CFG = {
-		rootPath : '/tmp/'
-	};
+var DEFAULT_CFG = { rootPath : '/tmp/' };
 
 
 var contentTypes = {
@@ -48,14 +46,22 @@ var contentTypes = {
 		}
 
 		return '.bin';
-	}
+	};
 
 var escapeRegExp = function(str) {
   return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
-}
+};
+
+/**
+ Class provides data manipulation operations implementation
+ @module server
+ @submodule services
+ @class FsService
+*/
 
 var FsCtrl = function(options) {
 
+	var that=this;
 	this.cfg={};
 	this.cfg = extend(true, {}, DEFAULT_CFG, options);
 
@@ -66,18 +72,19 @@ var FsCtrl = function(options) {
 	this.cfg.rootPath = pathM.resolve(this.cfg.rootPath);
 	var safePathPrefixRegexp = new RegExp("^" + escapeRegExp(this.cfg.rootPath));
 
-	var realPathCache = {};
-
-
 
 	/**
-	 * Get content of file
-	 */
+		Get content of file
+		@method get
+		@param path
+		@param res
+		@param callback
+	*/
 	this.get = function(path, res, callback) {
 		var p = this.calculateFsPath(path);
 
 		if (!this.isPathSafe(p)) {
-			callback('Path not safe')
+			callback('Path not safe');
 		} else {
 			// path is safe
 			fs.lstat(p, function(err, stat) {
@@ -114,12 +121,18 @@ var FsCtrl = function(options) {
 		}
 	};
 
-	this.ls = function(path, res,  callback) {
+	/**
+	 	Method lists path
 
+		@method ls
+		@param path
+		@param res
+		@param callback
+	*/
+	this.ls = function(path, res,  callback) {
 
 		var filter=this.cfg.fileFilter;
 		var p = this.calculateFsPath(path);
-
 
 		if (!this.isPathSafe(p)) {
 			callback('Path not save ' + p);
@@ -136,14 +149,12 @@ var FsCtrl = function(options) {
 				} else {
 					if (!stat.isDirectory()) {
 						callback('Path is not directory: '+path);
-						next();
 					} else {
 						fs.readdir(p, function(err, entries) {
 
 							if (err) {
 								err.code=500;
 								callback(err);
-								next();
 							} else {
 								var result = [];
 								async.each(entries, function(item, acallback) {
@@ -183,7 +194,7 @@ var FsCtrl = function(options) {
 									if (err) {
 										callback(err);
 									} else {
-										res.send(200, result);
+										res.send(result);
 										callback(null);
 									}
 								});
@@ -196,9 +207,14 @@ var FsCtrl = function(options) {
 	};
 
 
+
 	/**
-	 * Put content to file
-	 */
+		Method saves request body
+		@method put
+		@param path
+		@param res
+		@param callback
+	*/
 	this.put = function(path,req, res, callback) {
 		var p = this.calculateFsPath(req.path);
 
@@ -219,7 +235,7 @@ var FsCtrl = function(options) {
 						callback(evt);
 					});
 					ws.on('finish', function(evt) {
-						res.send(200);
+						res.send();
 						callback(null);
 					});
 					req.pipe(ws);
@@ -229,8 +245,14 @@ var FsCtrl = function(options) {
 	};
 
 	/**
-	 * Puts content to file into target directory and returns path to file
-	 */
+		Method saves/puts content to file into target directory and returns path to file
+
+		@method putGetPath
+		@param path
+		@param content
+		@param contentType
+		@param callback
+	*/
 	this.putGetPath = function(path, content, contentType, callback) {
 		var filename = uuid.v4() + getExtByContentType(contentType);
 		var p = this.calculateFsPath(pathM.join(path, filename));
@@ -259,11 +281,15 @@ var FsCtrl = function(options) {
 				}
 			});
 		}
-	}
+	};
 
 	/**
-	 * moves file to non-existing index
-	 */
+		Method moves file to non-existing index
+		@method moveRotate
+		@param srcFile
+		@param dstProposal
+		@param next
+	*/
 	this.moveRotate = function(srcFile, dstProposal, next) {
 
 		var fileExists = true;
@@ -273,7 +299,7 @@ var FsCtrl = function(options) {
 		var count = 0;
 
 		async.whilst(function() {
-			return fileExists
+			return fileExists;
 		}, function(callback) {
 
 			fs.exists(candidate, function(exists) {
@@ -287,7 +313,7 @@ var FsCtrl = function(options) {
 			});
 		}, function(err) {
 			if (err) {
-				callback(err);
+				next(err);
 			} else {
 				if (srcFile === candidate) {
 					next();
@@ -303,9 +329,16 @@ var FsCtrl = function(options) {
 
 	};
 
+
 	/**
-	 * Replaces content of file, Original file is moved to lowest free index
-	 */
+		Replaces content of file, Original file is moved to lowest free index
+
+		@method moveRotate
+		@param path
+		@param req
+		@param res
+		@param callback
+	*/
 	this.replace = function(path,req, res, callback) {
 		var p = this.calculateFsPath(path);
 
@@ -315,7 +348,7 @@ var FsCtrl = function(options) {
 		var ctrl = this;
 
 		if (!this.isPathSafe(tmpPath)) {
-			callback('Path is not safe'+ path)
+			callback('Path is not safe'+ path);
 		} else {
 			// path is safe
 			fs.exists(tmpPath, function(exists) {
@@ -330,7 +363,7 @@ var FsCtrl = function(options) {
 						callback(evt);
 					});
 					ws.on('finish', function(evt) {
-						res.send(200);
+						res.send();
 						// moves actual to end
 						ctrl.moveRotate(p, p, function() {
 							ctrl.moveRotate(tmpPath, p, callback);
@@ -345,10 +378,14 @@ var FsCtrl = function(options) {
 
 	};
 
-
 	/**
-	 * Create directory
-	 */
+		Method creates directory
+
+		@method mkdir
+		@param path
+		@param res
+		@param callback
+	*/
 	this.mkdir = function(path, res, callback) {
 
 		var p = this.calculateFsPath(path);
@@ -360,13 +397,12 @@ var FsCtrl = function(options) {
 			fs.exists(p, function(exists) {
 				if (exists) {
 					callback('Entity already exists'+path);
-
 				} else {
 					fs.mkdir(p, function(err) {
 						if (err) {
 							callback(err);
 						} else {
-							res.send(200);
+							res.send();
 							callback();
 						}
 					});
@@ -376,14 +412,21 @@ var FsCtrl = function(options) {
 	};
 
 	/**
-	 * Remove file or directory
-	 */
+	 Remove file or directory
+		Method creates directory
+
+		@method rm
+		@param path
+}
+		@param res
+		@param callback
+	*/
 	this.rm = function(path, res, callback) {
 		var p = this.calculateFsPath(path);
 
 
 		if (!this.isPathSafe(p)) {
-			calback('Path not safe'+path);
+			callback('Path not safe'+path);
 		} else {
 			// path is safe
 			fs.lstat(p, function(err, stat) {
@@ -403,7 +446,7 @@ var FsCtrl = function(options) {
 								err.message='Failed to remove directory: '+path;
 								callback(err);
 							} else {
-								res.send(200, 'Directory removed: '+ path);
+								res.send('Directory removed: '+ path);
 								callback(null);
 							}
 						});
@@ -413,7 +456,7 @@ var FsCtrl = function(options) {
 								err.message='Failed to remove file: '+path;
 								callback(err);
 							} else {
-								res.send(200, 'File removed '+ path);
+								res.send('File removed '+ path);
 								callback(null);
 							}
 						});
@@ -429,22 +472,21 @@ var FsCtrl = function(options) {
 
 
 
-
 	/**
-	 * Calculates real intended file path
-	 *
-	 * @param {string}
-	 *            p - path provided in request
-	 */
+		Method calculates/transforms request path to real intended file path
+		@method calculateFsPath
+		@param path
+		@returns physical/fs path
+	*/
 	this.calculateFsPath = function(p) {
 		return pathM.resolve(pathM.join(this.cfg.rootPath, p));
 	};
 
 	/**
-	 * Checks if provided path is save, it means it is: - path has prefix of
-	 * rootPath
-	 *
-	 * @return {boolean} - true if path is safe, otherwise false
+		Checks/verifies if provided path is save, it means it is: - path has prefix of rootPath
+		@method isPathSafe
+		@param path
+		@return {boolean} - true if path is safe, otherwise false
 	 */
 	this.isPathSafe = function(p) {
 		return safePathPrefixRegexp.test(pathM.normalize(p));

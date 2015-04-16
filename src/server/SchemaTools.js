@@ -13,6 +13,7 @@ var extend = require('extend');
 var util = require('util');
 var schemaConstants = require('./SchemaConstants.js');
 var objectTools = require('./ObjectTools.js');
+var schemaExtends = require('./schemaExtend.js');
 
 /**
 * SchemaTools class. Used as main schemas manipulation class.
@@ -368,7 +369,7 @@ var SchemaTools = function() {
 
 			// cycle while able to solve
 			while (solved>0){
-				var solved=0;
+				solved=0;
 
 				//search for extends
 				exts=findExtends(schemasToResolve);
@@ -382,14 +383,15 @@ var SchemaTools = function() {
 						// referenced schema should be resolved too.
 						if (refExts.length===0){
 							var extended=solveExtend(ext.local,extSchema.compiled);
+
 							solved++;
-							var index=ext.path.indexOf('#')
+							var index=ext.path.indexOf('#');
 							var url=ext.path.substring(0,index+1);
 							updateRegistry( url,schemasCache[url].compiled,schemasCache);
 							log.silly('resolved extend',ext.path,ext.val);
 						}
 					}
-				})
+				});
 				log.info('extends solved',solved,'/',exts.length );
 
 			}
@@ -411,11 +413,22 @@ var SchemaTools = function() {
 	}
 	function solveExtend(obj,refSchema){
 		delete obj[schemaConstants.EXTENDS_KEYWORD];
-		var extended=extend(true,{},refSchema,obj);
-		delete extended[schemaConstants.EXTENDS_KEYWORD];
-		extend(true,obj,extended);
-		objectTools.removeNullProperties(obj);
-		return extended;
+		//copy data
+		var deepCopy=schemaExtends.SchemaExtend.extend({},refSchema);
+		// merge schemas
+		deepCopy=schemaExtends.SchemaExtend.extend(deepCopy,obj);
+		objectTools.removeNullProperties(deepCopy);
+
+		// resets current to deepCopy
+		Object.getOwnPropertyNames(obj).forEach(function(prop){
+			delete obj[prop];
+		});
+
+		Object.getOwnPropertyNames(deepCopy).forEach(function(prop){
+			 obj[prop]=deepCopy[prop];
+		});
+
+		return deepCopy;
 	}
 
 	function findExtends(schemaObj){

@@ -35,12 +35,12 @@ describe('FsService', function() {
 		done();
 	});
 
-	
-	
+
+
 	it('should identify safe/unsafe paths', function(done) {
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
-		expect(fsCtrl.isPathSafe(path.join(testDataPath, '../data/'))).to.be.false;
-		expect(fsCtrl.isPathSafe(path.join(testDataPath, '/data/'))).to.be.true;
+		expect(fsCtrl.isPathSafe(path.join(testDataPath, '../data/'))).to.be.false();
+		expect(fsCtrl.isPathSafe(path.join(testDataPath, '/data/'))).to.be.true();
 		done();
 	});
 
@@ -49,7 +49,7 @@ describe('FsService', function() {
 			rootPath: testDataPath,
 			filePathRegexp: /^\/fs\/\w+\//i
 		});
-		
+
 		expect(fsCtrl.calculateFsPath('/dir/file.jpg')).to.be.equal(path.join(testDataPath, '/dir/file.jpg'));
 
 		done();
@@ -67,22 +67,21 @@ describe('FsService', function() {
 		var resMock = {
 			statusCode: null,
 			data: null,
-			send: function(code, data) {
-				this.statusCode = code;
+			send: function(data) {
+				// this.statusCode = code;
 				this.data = data;
 			}
 		};
-		
+
 		fsCtrl.ls(reqMock, resMock,  function(err) {
-			expect(err).to.not.exist;
-			expect(resMock.statusCode).to.be.equal(200);
+			expect(err).to.not.exist();
 			expect(resMock.data.length).to.be.equal(3);
 
 			done();
 		});
 	});
 
-	
+
 	it('should list directory and filter reults', function(done) {
 		fs.mkdirSync(path.join(testDataPath, 'lsDir'));
 		fs.writeFileSync(path.join(testDataPath, 'lsDir/f1'), "xxxx");
@@ -93,19 +92,19 @@ describe('FsService', function() {
 		var filterMeth= function(item){
 			if (! /.*\.[0-9]+/.test(item.name)) {
 				return true;
-			
+
 			}
 			return false;
-		}; 
-		
+		};
+
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath, fileFilter:filterMeth});
 
 		var reqMock = '/lsDir';
 		var resMock = {
 			statusCode: null,
 			data: null,
-			send: function(code, data) {
-				this.statusCode = code;
+			send: function( data) {
+				// this.statusCode = code;
 				this.data = data;
 			}
 		};
@@ -117,16 +116,14 @@ describe('FsService', function() {
 			}
 			return false;
 		};
-		
-		fsCtrl.ls(reqMock, resMock,  function(err) {
-			expect(err).to.not.exist;
-			expect(resMock.statusCode).to.be.equal(200);
-			expect(resMock.data.length).to.be.equal(3);
 
+		fsCtrl.ls(reqMock, resMock,  function(err) {
+			expect(err).to.not.exist();
+			expect(resMock.data.length).to.be.equal(3);
 			done();
 		});
 	});
-	
+
 	it('should remove files and directories', function(done) {
 		fs.mkdirSync(path.join(testDataPath, 'lsDir'));
 		fs.writeFileSync(path.join(testDataPath, 'lsDir/f1'), "xxxx");
@@ -156,10 +153,10 @@ describe('FsService', function() {
 				var res = new resMock();
 
 				fsCtrl.rm(req, res, function(err) {
-					expect(err).to.not.exist;
-					
+					expect(err).to.not.exist();
+
 					fs.exists(path.join(testDataPath, 'lsDir/f1'), function(exists) {
-						expect(exists).to.be.false;
+						expect(exists).to.be.false();
 						callback();
 					});
 				});
@@ -169,10 +166,10 @@ describe('FsService', function() {
 				var res = new resMock();
 
 				fsCtrl.rm(req, res, function(err) {
-					expect(err).to.not.exist;
-					
+					expect(err).to.not.exist();
+
 					fs.exists(path.join(testDataPath, 'lsDir/subdir'), function(exists) {
-						expect(exists).to.be.false;
+						expect(exists).to.be.false();
 						callback();
 					});
 				});
@@ -182,7 +179,7 @@ describe('FsService', function() {
 				var res = new resMock();
 
 				fsCtrl.rm(req, res, function(err) {
-					expect(err).to.exist;
+					expect(err).to.exist();
 					expect(err.statusCode||500).to.be.equal(500);
 					callback();
 				});
@@ -192,7 +189,7 @@ describe('FsService', function() {
 				var res = new resMock();
 
 				fsCtrl.rm(req, res, function(err) {
-					expect(err).to.exist;
+					expect(err).to.exist();
 					expect(err.code).to.be.equal(404);
 					callback();
 				});
@@ -203,11 +200,11 @@ describe('FsService', function() {
 		});
 	});
 
-	
+
 	it('should increment index if existing dstfile', function(done) {
-		
+
 		fs.mkdirSync(path.join(testDataPath, 'replaceDir'));
-		
+
 		fs.writeFileSync(path.join(testDataPath, 'replaceDir/f1'), "xxxx");
 
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
@@ -248,13 +245,13 @@ describe('FsService', function() {
 			function(callback) {
 				var req = new reqMock('replaceDir/f1','yyyy');
 				var res = new resMock();
-				
+
 
 				fsCtrl.replace('/replaceDir/f1',req, res, function(err) {
 
-					expect(err).to.not.exist;
-					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f1.1"))).to.be.true;
-					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f1"))).to.be.true;
+					expect(err).to.not.exist();
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f1.1"))).to.be.true();
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f1"))).to.be.true();
 					callback();
 				});
 			}
@@ -263,13 +260,13 @@ describe('FsService', function() {
 			done();
 		});
 	});
-	
 
-	
+
+
 	it('should create new file index if dst does not exist no index files', function(done) {
-		
+
 		fs.mkdirSync(path.join(testDataPath, 'replaceDir'));
-		
+
 
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
 
@@ -309,13 +306,13 @@ describe('FsService', function() {
 			function(callback) {
 				var req = new reqMock('/replaceDir/f2','yyyy');
 				var res = new resMock();
-				
+
 
 				fsCtrl.replace('/replaceDir/f2',req, res, function(err) {
 
-					expect(err).to.not.exist;
-					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f2.1"))).to.be.false;
-					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f2"))).to.be.true;
+					expect(err).to.not.exist();
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f2.1"))).to.be.false();
+					expect(fs.existsSync(path.join(testDataPath, "replaceDir/f2"))).to.be.true();
 					callback();
 				});
 			}
@@ -324,20 +321,20 @@ describe('FsService', function() {
 			done();
 		});
 	});
-	
 
-	
-	
+
+
+
 	it('should get file', function(done) {
 		fs.writeFileSync(path.join(testDataPath, 'f1'), "xxxx");
 
-		
+
 		var fsCtrl = new fsCtrlModule.FsCtrl({rootPath: testDataPath});
 
 		var reqMock = function(_path) {
 			this.path = _path;
 		};
-		
+
 
 		var resMock = function() {
 			require('stream').Writable.call(this);
@@ -361,7 +358,7 @@ describe('FsService', function() {
 		};
 
 		fsCtrl.get('f1', res = new resMock(), function(err) {
-			expect(err).to.not.exist;
+			expect(err).to.not.exist();
 			expect(res.data).to.be.equal('xxxx');
 			done();
 		});
@@ -377,17 +374,15 @@ describe('FsService', function() {
 		var resMock = function() {
 			this.statusCode = null;
 			this.data = null;
-			this.send = function(code, data) {
-				this.statusCode = code;
+			this.send = function(data) {
 				this.data = data;
 			};
 		};
 
 		fsCtrl.mkdir('/xxx', res = new resMock(), function(err) {
-			expect(err).to.not.exist;
-			expect(res.statusCode).to.be.equal(200);
+			expect(err).to.not.exist();
 			fs.exists(path.join(testDataPath, '/xxx'), function(exists) {
-				expect(exists).to.be.true;
+				expect(exists).to.be.true();
 				done();
 			});
 		});
@@ -436,8 +431,8 @@ describe('FsService', function() {
 			var req = new reqMock('.', 'abcd');
 			var res = new resMock();
 			fsCtrl.putGetPath('.', req, null, function(err, path) {
-				expect(err).to.not.exist;
-				expect(path).to.exist;
+				expect(err).to.not.exist();
+				expect(path).to.exist();
 				callback();
 			});
 		},
@@ -445,8 +440,8 @@ describe('FsService', function() {
 			var req = new reqMock('.', 'abcd');
 			var res = new resMock();
 			fsCtrl.putGetPath('.', req, 'image/jpeg', function(err, path) {
-				expect(err).to.not.exist;
-				expect(path).to.exist;
+				expect(err).to.not.exist();
+				expect(path).to.exist();
 				callback();
 			});
 
@@ -499,7 +494,7 @@ describe('FsService', function() {
 			var req = new reqMock('f1', 'abcd');
 			var res = new resMock();
 			fsCtrl.put('f1',req, res, function(err) {
-				expect(err).to.exist;
+				expect(err).to.exist();
 				callback();
 			});
 		}, function(callback) {
@@ -507,8 +502,7 @@ describe('FsService', function() {
 			var req = new reqMock('f2', 'abcd');
 			var res = new resMock();
 			fsCtrl.put('f2',req, res, function(err) {
-				expect(err).to.not.exist;
-				expect(res.statusCode).to.be.equal(200);
+				expect(err).to.not.exist();
 				expect(fs.readFileSync(path.join(testDataPath, 'f2'), {encoding:'utf8'})).to.be.eql('abcd');
 				callback();
 			});
@@ -517,7 +511,7 @@ describe('FsService', function() {
 			var req = new reqMock('../../../f2', 'abcd');
 			var res = new resMock();
 			fsCtrl.put('../../../f2',req, res, function(err) {
-				expect(err).to.exist;
+				expect(err).to.exist();
 				callback();
 			});
 		}],

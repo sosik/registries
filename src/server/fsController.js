@@ -12,6 +12,15 @@ var DEFAULT_CFG = {
 	allowedOperations: [ 'ls', 'get', 'rm', 'mkdir', 'put', 'putgetpath', 'replace' ]
 };
 
+/**
+ Class controls file manipulation operations.
+ <br>
+ Class binds only allowed operations to fsService operations. 
+
+ @module server
+ @submodule controllers
+ @class FsController
+*/
 var create = function(options) {
 	var app = express();
 
@@ -35,13 +44,13 @@ var create = function(options) {
 			app.fsCtrl.ls(path, resp, function(err) {
 				if (err) {
 					log.error('Failed to ls', err);
-					resp.send(err.code || 500, err);
+					resp.status(err.code || 500).send( err);
 				}
 
 			});
 		});
 	}
-	
+
 // get
 	if (prop.allowedOperations.indexOf('get') > -1) {
 		log.verbose('Registering allowed opperation get');
@@ -51,7 +60,7 @@ var create = function(options) {
 			app.fsCtrl.get(path, resp, function(err) {
 				if (err) {
 					log.error('Failed to get', err);
-					resp.send(err.code || 500, err);
+					resp.status(err.code || 500).send( err);
 				}
 
 			});
@@ -67,7 +76,7 @@ var create = function(options) {
 			app.fsCtrl.rm(path, resp, function(err) {
 				if (err) {
 					log.error('Failed to rm', err);
-					resp.send(err.code || 500, err);
+					resp.status(err.code || 500).send(err);
 				}
 
 			});
@@ -83,7 +92,7 @@ var create = function(options) {
 			app.fsCtrl.mkdir(path, resp, function(err) {
 				if (err) {
 					log.error('Failed to mkdir', err);
-					resp.send(err.code || 500, err);
+					resp.status(err.code || 500).send(err);
 				}
 
 			});
@@ -99,7 +108,7 @@ var create = function(options) {
 			app.fsCtrl.put(path, resp, function(err) {
 				if (err) {
 					log.error('Failed to put', err);
-					resp.send(err.code || 500, err);
+					resp.status(err.code || 500).send(err);
 				}
 
 			});
@@ -115,10 +124,10 @@ var create = function(options) {
 			app.fsCtrl.putGetPath(path, req, req.get('Content-Type'), function(err, path) {
 				if (err) {
 					log.error('Failed to putGetPath', err);
-					resp.send(500, err);
+					resp.status(500).send(err);
 				}
 				log.info('Saved file %s', path);
-				resp.send(200, path);
+				resp.send(path);
 			});
 		});
 	}
@@ -131,7 +140,7 @@ var create = function(options) {
 			app.fsCtrl.replace(path, req, resp, function(err) {
 				if (err) {
 					log.error('Failed to replace', err);
-					resp.send(err.code || 500, err);
+					resp.status(err.code || 500).send(err);
 				}
 
 			});
@@ -140,6 +149,6 @@ var create = function(options) {
 
 
 	return app;
-}
+};
 
 module.exports = {create: create};

@@ -45,14 +45,29 @@
 					var schema = scope.$eval(options);
 					var mode = attrs.xpsuiFieldset;
 
+					if (schema) {
+						/**
+						 * full screen render
+						 */
+						if (schema.render && schema.render.width) {
+							switch (schema.render.width) {
+								case 'full': 
+									elm.addClass('x-fieldset-full');
+								break;
+							}
+						}
+
+					}
+
 					if (schema && (schema.title || schema.transCode)) {
 						// TODO translation
 						elm.append('<div class="x-fieldset-title">' 
 							+ (schema.transCode ? $translate.instant(schema.transCode) : schema.title)
 							+ '</div>'
 						);
-				} else {
-					elm.append('<div class="x-fieldset-title"></div>');
+
+					} else {
+						elm.append('<div class="x-fieldset-title"></div>');
 					}
 
 					var content = angular.element('<div class="x-fieldset-content"></div>');

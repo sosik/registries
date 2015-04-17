@@ -37,6 +37,13 @@
 		}
 	}
 
+	.x-modalview{
+		display: none;
+		&.x-open{
+			display: block;
+		}
+	}	
+
 	.x-modalview-close {
 		display: block;
 		position: absolute;

@@ -37,7 +37,14 @@ app.use(function(req, resp, next) {
 });
 
 //app.get('/article/:id', pageController.renderArticle);
+swig.setFilter('httpPrefixed', function(value) {
+	if (value && 
+			(value.toLowerCase().indexOf('http://') === 0 || value.toLowerCase().indexOf('https://') === 0)) {
+		return value;
+	}
 
+	return 'http://' + value;
+});
 
 
 app.use(function(err, req, res, next) {
@@ -62,6 +69,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(express.static(path.join(process.cwd(), 'data', 'portal')));
 	app.use('/portal', express.static(path.join(process.cwd(), 'data', 'portal', 'client')));
 	app.use('/photos/get', express.static(path.join(process.cwd(), 'data', 'photos')));
+	app.use('/uploads/get', express.static(path.join(process.cwd(), 'data', 'uploads')));
 
 	// If nothing worked so far show 404
 	//app.use(pageController.renderNotFound);

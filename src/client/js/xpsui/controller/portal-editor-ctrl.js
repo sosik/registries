@@ -141,6 +141,19 @@
 //              },
 //              data: '<h1>Poradie</h1>'
 //            },
+          link: {
+              meta: {
+                name: 'link',
+                desc: '<h1>Linka</h1><p>Linka na inú stránku</p>',
+                icon: 'img/block-link.png',
+                type: 'link',
+              },
+              data: {
+                  href: 'www.example.com',
+                  newWindow: false,
+                  title: 'Example link',
+                }
+            },
       image: {
           meta: {
             name: 'image',
@@ -153,6 +166,18 @@
             img: ''
           }
         },
+        fileList: {
+            meta: {
+              name: 'file-list',
+              element: '<div></div>',
+              type: 'file-list',
+              desc: '<h1>Súbory</h1><p>Zoznam súborov</p>',
+              icon: 'img/block-content.png',
+            },
+            data: {
+              files: []
+            }
+          },
       category: {
           meta: {
             name: 'category',

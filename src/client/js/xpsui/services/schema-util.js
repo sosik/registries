@@ -17,11 +17,11 @@
 		 */
 		service.getCompiledSchema = function(schemaUri, suffix) {
 			var _schemaUri = schemaUri;
-			
+
 			if (suffix){
 			 _schemaUri = this.concatUri(schemaUri, suffix);
 			}
-			
+
 			return $http({
 				method : 'GET',
 				cache: true,
@@ -32,8 +32,8 @@
 
 		service.listBySchema = function(schemaUri) {
 			return $http({
-				method : 'GET',
-				url : '/udao/listBySchema/'+service.encodeUri(schemaUri)
+				method : 'POST',
+				url : '/search/'+service.encodeUri(schemaUri)
 			});
 		};
 
@@ -43,7 +43,7 @@
 		 * @param {string} schema 	e.g. uri//registries/componaies
 		 * @param {object} fields  	e.g. {"name": "baseData.name"}
 		 * @param {function(fields)} callback, where fields is map of fields schema fragments
-		 * 
+		 *
 		 * @return {undefined}
 		 * @method getFieldsSchemaFragment
 		 * @static

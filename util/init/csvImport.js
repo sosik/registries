@@ -1070,8 +1070,10 @@ function  mergePlayerToRoster(roster,rosterItem){
 
 		if (roster){
 			rosterItem.listOfPlayers=roster.listOfPlayers;
+			rosterItem.coaches=roster.coaches;
 		}else {
 			rosterItem.listOfPlayers={player:[]};
+			rosterItem.coaches={};
 		}
 
 
@@ -1093,16 +1095,16 @@ function  mergePlayerToRoster(roster,rosterItem){
 					save=true;
 				break;
 			case '10':
-				rosterItem.coaches={};
 				rosterItem.coaches.coach=(tmp.player);
 				save=true;
 				break;
 			case '11':
-					if (!roster.coaches.aCoach1) {roster.coaches.aCoach1=(tmp.player);}
-					else if (!roster.coaches.aCoach2) {roster.coaches.aCoach2=(tmp.player);}
-					else if (!roster.coaches.aCoach3) {roster.coaches.aCoach3=(tmp.player);}
-					else if (!roster.coaches.aCoach4) {roster.coaches.aCoach4=(tmp.player);}
-					else if (!roster.coaches.aCoach5) {roster.coaches.aCoach5=(tmp.player);}
+					if (!roster.coaches.aCoach1) {rosterItem.coaches.aCoach1=(tmp.player);}
+					else if (!roster.coaches.aCoach2) {rosterItem.coaches.aCoach2=(tmp.player);}
+					else if (!roster.coaches.aCoach3) {rosterItem.coaches.aCoach3=(tmp.player);}
+					else if (!roster.coaches.aCoach4) {rosterItem.coaches.aCoach4=(tmp.player);}
+					else if (!roster.coaches.aCoach5) {rosterItem.coaches.aCoach5=(tmp.player);}
+					save=true;
 				break;
 
 

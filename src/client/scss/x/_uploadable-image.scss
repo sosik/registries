@@ -78,7 +78,7 @@
 		}
 
 		.x-modalview .x-modalview-window {
-			visibility: hidden;
+			display: none;
 			position: absolute;
 			width: 90%;
 			height: 90%;
@@ -99,7 +99,7 @@
 		}
 
 		.x-modalview.x-open .x-modalview-window {
-			visibility: visible;
+			display: block;
 		}
 
 		.x-modalview.x-open .x-modalview-header, .x-modalview.x-open .x-modalview-close {

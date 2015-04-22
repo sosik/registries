@@ -7,7 +7,7 @@
 		'$parse', 
 		'xpsui:DropdownFactory', 
 		'xpsui:Objectlink2Factory',
-		'xpsui:SelectDataFactory', 
+		'xpsui:DataDatasetFactory', 
 		'xpsui:SchemaUtil',
 		'xpsui:RemoveButtonFactory',
 	function(log, $parse, dropdownFactory, objectlink2Factory, dataFactory, schemaUtil, removeButtonFactory) {
@@ -57,9 +57,12 @@
 				ngModel.$render = function() {
 					if(!angular.equals({},ngModel.$viewValue)) {
 						// get data from schema or model and render it
-						render(dataFactory.getObjectLinkData(
-							schemaFragment.objectLink2, ngModel.$modelValue
-						));
+						// 
+						// not need anymore the transfrom method getObjectLinkData
+						// render(dataFactory.getObjectLinkData(
+						// 	schemaFragment.objectLink2, ngModel.$modelValue
+						// ));
+						render(ngModel.$modelValue);
 					} else {
 						input.empty();
 					}

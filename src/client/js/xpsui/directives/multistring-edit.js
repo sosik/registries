@@ -3,7 +3,7 @@
 
 	angular.module('xpsui:directives')
 	.directive('xpsuiMultistringEdit', ['xpsui:logging', 'xpsui:DropdownFactory', 
-							'xpsui:SelectboxFactory','xpsui:SelectDataFactory', '$timeout',
+							'xpsui:SelectboxFactory','xpsui:DataDatasetFactory', '$timeout',
 							'$http',
 			function(log, dropdownFactory, selectboxFactory, datafactory, $timeout, $http) {
 		return {

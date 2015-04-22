@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiSelectView', ['xpsui:logging','$translate','xpsui:SelectDataFactory', function(log, $translate, datafactory) {
+	.directive('xpsuiSelectView', ['xpsui:logging','$translate','xpsui:DataDatasetFactory', function(log, $translate, datafactory) {
 		return {
 			restrict: 'A',
 			require: ['^ngModel'],

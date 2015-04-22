@@ -25,7 +25,7 @@
 
 			Objectlink2.renderElement(
 				$item,
-				this.getDataset().getFieldsSchema(),
+				this.getDataset().store.fields,
 				data
 			);
 

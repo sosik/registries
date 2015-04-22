@@ -1,28 +1,71 @@
 (function(angular) {
 	'use strict';
 
+	/**
+	 * Generate and manage list of selectbox options and search input. 
+	 *
+	 * @example
+	 *    // create and set selectbox
+	 *    var selectbox = selectboxFactory.create(elm, {
+	 *        useSearchInput: false,
+	 *        onSelected: function(value){
+	 *            //do something with selected value
+	 *        }
+	 *    });
+	 *    // assign with select input
+	 *    selectbox.setInput(selfControl.getInput());
+	 *    // assign dropdown where the option list is generated after open the dropdown.
+	 *    selectbox.setDropdown(dropdown);
+	 * 
+	 * @class xpsui:SelectboxFactory
+	 * @module client
+	 * @submodule services
+	 */
 	angular.module('xpsui:services')
-	.factory('xpsui:SelectboxFactory', ['xpsui:logging', '$timeout', '$translate','xpsui:SelectDataFactory',  function(log, $timeout, $translate, datafactory) {	
+	.factory('xpsui:SelectboxFactory', ['xpsui:logging', '$timeout', '$translate',  
+	function (log, $timeout, $translate) {	
 		var keys = {
-	            tab:      9,
-	            backspace:8,
-	            enter:    13,
-	            escape:   27,
-	            space:    32,
-	            pageup:   33,
-	            pagedown: 34,
-	            end:      35,
-	            home:     36,
-	            left:     37,
-	            up:       38,
-	            right:    39,
-	            down:     40,
-	            del: 	  46, 
-	            asterisk: 106
-	   };
+			tab:      9,
+			backspace:8,
+			enter:    13,
+			escape:   27,
+			space:    32,
+			pageup:   33,
+			pagedown: 34,
+			end:      35,
+			home:     36,
+			left:     37,
+			up:       38,
+			right:    39,
+			down:     40,
+			del: 	  46, 
+			asterisk: 106
+		};
 
+		/**
+		 * Constructor
+		 * 
+		 * @method Selectbox
+		 * @param {angular.element} $element directive element
+		 * @param {Object} options  look on attributes
+		 * @constructor
+		 */
 		function Selectbox($element, options){
+
+			/**
+			 * Directive element
+			 *
+			 * @property $element
+			 * @type {angular.element}
+			 */
 			this.$element = $element;
+
+			/**
+			 * Directive input element. Use for handle key events.
+			 *
+			 * @property $element
+			 * @type {angular.element}
+			 */
 			this.$inputElement  = null;
 			this.dataset = null;
 			this.isRendered = false;
@@ -34,22 +77,79 @@
 			this.options = angular.extend({}, Selectbox.DEFAULTS, options || {} );
 		};
 		
+		/**
+		 * Selectbox defaul settings. Setting can be rewrite.
+		 *
+		 * @property DEFAULTS
+		 * @static
+		 * @type {Object}
+		 * 
+		 */
 		Selectbox.DEFAULTS = {
 			// show search input
+			/**
+			 * Display or hide the search input
+			 * 
+			 * @attribute useSearchInput
+			 * @default true
+			 * @type {Boolean}
+			 */
 			useSearchInput: true,
-			// shearch input keydown - waiting time
+			/**
+			 * Timeout for re-render the option list when user type someting in search input.
+			 * 
+			 * @default 300
+			 * @type {Number}
+			 */
 			filterTimeout: 300,
-			// info line:
+			/**
+			 * Display or hide the footer.
+			 *
+			 * @default true
+			 * @type {Boolean}
+			 */
 			showInfo: true,
-			// callback
+			/**
+			 * Callback funciton is calling after select a option.
+			 *
+			 * @example
+			 *     onSelected: function(value){
+			 *         input.val(value.v);
+			 *     }
+			 *     
+			 * @default function(value){} 
+			 * @type {fuction}
+			 */
 			onSelected: function(value){},
-			// onBlur close
+			/**
+			 * Colse on blur
+			 * 
+			 * @default true
+			 * @type {Boolean}
+			 */
 			closeOnBlur: true,
-			// paging scroll bufer
+			/**
+			 * paging scroll bufer. When using scrollbar
+			 *
+			 * @todo  documenation
+			 * @default 40
+			 * @type {Number}
+			 */
 			pagingScrollBuffer: 40,
-			//paging items buffer
+			/**
+			 * paging items buffer
+			 *
+			 * @todo  documenation
+			 * @default 10
+			 * @type {Number}
+			 */
 			pagingItemsBuffer: 10,
-			// allow custom text which can not be in collection
+			/**
+			 * allow type custom free text into the search input
+			 *
+			 * @default false
+			 * @type {Boolean}
+			 */
 			freeTextMode: false
 		};
 		
@@ -189,8 +289,6 @@
 			this.selected = $el.data('index');
 			$el.addClass('x-selected');
 
-			console.log('selected: ' + this.selected );
-			console.log('item min =<' + (this.dataset.data.length - this.options.pagingItemsBuffer));
 			if( this.selected >= this.dataset.data.length - this.options.pagingItemsBuffer ){
 				this.doPaging();
 			} 

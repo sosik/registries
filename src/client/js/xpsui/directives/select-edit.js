@@ -2,8 +2,8 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory', '$timeout', 
-		function(log, $parse, dropdownFactory, selectboxFactory, datafactory, $timeout) {
+	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:DataDatasetFactory', 
+		function (log, $parse, dropdownFactory, selectboxFactory, datafactory) {
 		return {
 			restrict: 'A',
 			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiSelectEdit'],

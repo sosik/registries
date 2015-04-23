@@ -1,6 +1,7 @@
 var log = require('./logging.js').getLogger('UniversalDaoController.js');
 var auditLog = require('./logging.js').getLogger('AUDIT');
 
+var universalDaoModule = require(process.cwd() + '/build/server/UniversalDao.js');
 var udcServiceModule = require('./UniversalDaoService.js');
 
 
@@ -51,7 +52,10 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 	function getRequestSchema(req,next){
 
 		if ( !req.params || !req.params.schema){
-			next('Schema not specified.');
+			if (next) {
+				next('Schema not specified.');
+			}
+			return;
 		}
 
 		return safeUrlEncoder.decode(req.params.schema);
@@ -121,9 +125,88 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 		Returns  distinct tags as enum.
 		@method getArticleTagsDistinct
 	*/
-	this.getArticleTagsDistinct = function(req, resp,next) {
-		var schemaUri=getRequestSchema(req,next);
-		selservice.getArticleTagsDistinct(new responeMapper(res,next));
+	this.getArticleTagsDistinct = function(req, resp, next) {
+		var schemaUri=getRequestSchema(req, next);
+		self.service.getArticleTagsDistinct(req, new responeMapper(resp, next));
+	};
+
+	this.getPortalArticle = function(req, res,next) {
+		self.get(req, res, next, 'portalArticles');
+	}
+
+	this.get = function(req, res, next, table) {
+		_dao = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{ collectionName: table }
+		);
+
+		log.verbose(req.params);
+		_dao.get(req.params.id, function(err, data){
+			if (err) {
+				log.error(err);
+				next(err);
+				return;
+			}
+
+			res.json(data);
+		});
+	};
+
+	this.listPortalArticles = function(req, resp, next) {
+		self.list(req, resp, next, 'portalArticles');
+	};
+
+	this.listPortalMenu = function(req, resp, next) {
+		self.list(req, resp, next, 'portalMenu');
+	};
+	
+	this.list = function(req, resp, next, collectionName) {
+		_dao = new universalDaoModule.UniversalDao(
+				mongoDriver,
+				{collectionName: collectionName}
+			);
+
+			_dao.list({}, function(err, data) {
+				if (err) {
+					log.error(err);
+					next(err);
+					return;
+				}
+
+				resp.json(data);
+			});
+	};
+
+	this.savePortalArticles = function(req, res,next) {
+		self.save(req, res,next, 'portalArticles');
+	};
+
+	this.savePortalMenu = function(req, res,next) {
+		self.save(req, res,next, 'portalMenu');
+	};
+
+	this.save = function(req, res,next, collectionName) {
+		_dao = new universalDaoModule.UniversalDao(
+			mongoDriver,
+			{ collectionName: collectionName }
+		);
+
+		log.verbose("data to savvar e", req.body);
+
+		var obj = req.body;
+		_dao.save(obj, function(err, data){
+			if (err) {
+				log.error(err);
+				next(error);
+				return;
+			}
+
+			//FIXME: Old fashion audit log is obsolete. pure save method is not audited. It should be used
+			//only as save by schema. Don't forget to remove declaration also.
+			//auditLogs.info('user oid', req.currentUser.id,'has saved/modified object',obj);
+
+			res.json(data);
+		});
 	};
 
 };

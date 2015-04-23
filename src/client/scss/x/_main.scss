@@ -267,6 +267,10 @@ a:HOVER {
 	left: -80px;
 }
 
+.xpsui-uploadable-file-edit .psui-attachment-remove {
+	top: 0px;
+}
+
 .psui-attachment-name {
 	min-width: 70px;
 	margin-bottom: 6px;
@@ -287,6 +291,10 @@ a:HOVER {
 
 .xpsui-uploadable-file-edit .psui-attachment-name a {
 	display: none;
+}
+
+.xpsui-uploadable-file-edit-item button.btn-primary {
+	margin-top: -7px;
 }
 
 .xpsui-uploadable-file-nofiles {

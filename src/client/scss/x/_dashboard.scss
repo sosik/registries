@@ -1,0 +1,32 @@
+
+DashboardWidget {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: flex-start;
+}
+
+.dashboard-widget-container {
+	min-width: 40%;
+	margin: 20px 20px;
+
+	.dashboard-widget-title {
+		padding: 10px;
+		border-bottom: 1px solid gray;
+		font-weight: bold;
+		text-transform: uppercase;
+	}
+
+	.dashboard-widget-content {
+		padding: 10px;
+		min-height: 150px;
+	}
+
+}
+
+@media (max-width: $screen-sm) {
+	.dashboard-widget-container {
+		float: none;
+		width: 90%;
+		margin: 10px 4%;
+	}
+}

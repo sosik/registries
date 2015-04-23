@@ -6,7 +6,7 @@
 
 		var  objectLinkTemplate='<div ng-repeat="ae in ngModel track by $id(ae)">'
 
-				+ '<div  xpsui-objectlink2-edit xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
+				+ '<div  xpsui-objectlink2-view xpsui-validity-mark xpsui-schema="xpsuiSchema.items" ng-model="ngModel[$index]"></div>'
 				+ '</div>';
 				// + '<button ng-click="appendNew();"><i></i>{{"generic.search.add" | translate}}</button>';
 

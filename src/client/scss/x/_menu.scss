@@ -52,10 +52,11 @@
 		}
 		ul{
 			a{
+				margin-bottom: em($menu-item-height, $menu-item-font-size)/2;
+				margin-top: em($menu-item-height, $menu-item-font-size)/2;
+
 				span{
-					white-space: nowrap;
 					display: block;
-					text-overflow: ellipsis;
 					overflow: hidden;
 				}
 			}
@@ -67,7 +68,6 @@
 			padding-left: $menu-item-icon-width + $menu-item-icon-offset * 2;
 			span{
 				font-size: em($menu-item-font-size);
-				line-height: em($menu-item-height, $menu-item-font-size);
 			}
 		}
 		.x-submenu-toggle{

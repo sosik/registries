@@ -82,7 +82,12 @@
 
 					scope.$watch(function() {return form.xpsui.submitPrepare}, function(newVal) {
 						if (newVal === true) {
-							ngModel.$setViewValue(ngModel.$modelValue);
+							var ngVal = ngModel.$modelValue;
+							if (angular.isObject(ngVal) && Object.getOwnPropertyNames(ngVal).length == 0) {
+								ngModel.$setViewValue("");
+							} else {
+								ngModel.$setViewValue(ngModel.$modelValue);
+							}
 						}
 					});
 				}

@@ -32,6 +32,7 @@
 				elm.addClass('x-string-edit');
 
 				ngModel.$render = function() {
+					console.log('rendering..');
 					input.val(ngModel.$viewValue || '');
 					formControl.oldValue = ngModel.$modelValue;
 				};

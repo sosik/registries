@@ -340,9 +340,7 @@
 					}
 				}
 
-				return q.all(args).then(function(results) {
-					return computationFunc(results, scope, self.schema.def);
-				});
+				return computationFunc(args, scope, self.schema.def);
 			};
 
 			ComputedProperty.prototype.watcher = function(scope) {

@@ -191,8 +191,9 @@ describe("xpsui:Calculator", function () {
 		scope.person = SCOPES.concatStatic;
 
 		var property = calculator.createProperty(SCHEMAS.concatStatic);
-		expect(property.getter(scope.person)).to.eventually.be.equal('Johan Straus').notify(done);
+		expect(property.getter(scope.person)).to.equal('Johan Straus');
 		scope.$apply();
+		done();
 	});
 
 	it('should concat string arguments from scope', function (done) {
@@ -200,9 +201,10 @@ describe("xpsui:Calculator", function () {
 		scope.person = SCOPES.concat;
 
 		var property = calculator.createProperty(SCHEMAS.concat);
-		expect(property.getter(scope.person)).to.eventually.be.equal('Abraham Lincoln').notify(done);
+		expect(property.getter(scope.person)).to.equal('Abraham Lincoln');
 
 		scope.$apply();
+		done();
 	});
 
 	it('should concat string arguments from scope and apply defaults', function (done) {
@@ -210,9 +212,10 @@ describe("xpsui:Calculator", function () {
 		scope.person = SCOPES.concatWithDefaults;
 
 		var property = calculator.createProperty(SCHEMAS.concatWithDefaults);
-		expect(property.getter(scope.person)).to.eventually.be.equal('Janko Hraško').notify(done);
+		expect(property.getter(scope.person)).to.equal('Janko Hraško');
 
 		scope.$apply();
+		done();
 	});
 
 	it('should have watcher to watch scope changes', function () {
@@ -261,20 +264,20 @@ describe("xpsui:Calculator", function () {
 		var property = calculator.createProperty(SCHEMAS.idToBirthDay);
 		$q.all([
 			// Men
-			expect(property.getter(scope.manBefore1554)).to.eventually.be.equal('23.03.1950'),
-			expect(property.getter(scope.manBefore1554WithSlash)).to.eventually.be.equal('14.11.1947'),
-			expect(property.getter(scope.man)).to.eventually.be.equal('08.05.1980'),
-			expect(property.getter(scope.manWithSlash)).to.eventually.be.equal('11.11.1996'),
-			expect(property.getter(scope.manAfter2000)).to.eventually.be.equal('07.06.2005'),
-			expect(property.getter(scope.manAfter2000WithSlash)).to.eventually.be.equal('24.01.2007'),
+			expect(property.getter(scope.manBefore1554)).to.equal('23.03.1950'),
+			expect(property.getter(scope.manBefore1554WithSlash)).to.equal('14.11.1947'),
+			expect(property.getter(scope.man)).to.equal('08.05.1980'),
+			expect(property.getter(scope.manWithSlash)).to.equal('11.11.1996'),
+			expect(property.getter(scope.manAfter2000)).to.equal('07.06.2005'),
+			expect(property.getter(scope.manAfter2000WithSlash)).to.equal('24.01.2007'),
 
 			// Women
-			expect(property.getter(scope.womanBefore1554)).to.eventually.be.equal('28.07.1947'),
-			expect(property.getter(scope.womanBefore1554WithSlash)).to.eventually.be.equal('15.04.1933'),
-			expect(property.getter(scope.woman)).to.eventually.be.equal('08.11.1989'),
-			expect(property.getter(scope.womanWithSlash)).to.eventually.be.equal('11.09.1989'),
-			expect(property.getter(scope.womanAfter2000)).to.eventually.be.equal('17.12.2005'),
-			expect(property.getter(scope.womanAfter2000WithSlash)).to.eventually.be.equal('23.10.2004')
+			expect(property.getter(scope.womanBefore1554)).to.equal('28.07.1947'),
+			expect(property.getter(scope.womanBefore1554WithSlash)).to.equal('15.04.1933'),
+			expect(property.getter(scope.woman)).to.equal('08.11.1989'),
+			expect(property.getter(scope.womanWithSlash)).to.equal('11.09.1989'),
+			expect(property.getter(scope.womanAfter2000)).to.equal('17.12.2005'),
+			expect(property.getter(scope.womanAfter2000WithSlash)).to.equal('23.10.2004')
 		]).finally(done);
 
 		scope.$apply();

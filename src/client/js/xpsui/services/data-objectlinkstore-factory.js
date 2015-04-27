@@ -2,13 +2,32 @@
 	'use strict';
 
 	angular.module('xpsui:services')
+	/**
+	 * Http store
+	 * 
+	 * @class xpsui:DataObjectlinkstoreFactory
+	 * @module client
+	 * @submodule services
+	 */
 	.factory('xpsui:DataObjectlinkstoreFactory', ['xpsui:logging', '$http', '$parse', 'xpsui:SchemaUtil',  'xpsui:HttpHandlerFactory',
 	function (log, $http, $parse, schemaUtil, httpHandlerFactory) {
 
 		/**
-		 * ObjectLinkStore
+		 * Constructor
+		 * 
+		 * @method ObjectLinkStore
+		 * @param {Object} options  look on ObjectLinkStore.DEFAULTS attributes
+		 * @constructor
+		 * @protected
 		 */
 		function ObjectLinkStore(options){
+			/**
+			 * Object settings
+			 *
+			 * @property options
+			 * @extends {Dropdown.DEFAULTS}
+			 * @type {Object}
+			 */
 			this.options = angular.extend({}, ObjectLinkStore.DEFAULTS, options || {} );
 			this.schema = {};
 			this.criteria = null;
@@ -16,8 +35,30 @@
 			this.http = null;
 		}
 
+		/**
+		 * ObjectLinkStore defaul settings. Setting can be rewrite.
+		 *
+		 * @property DEFAULTS
+		 * @static
+		 * @type {Object}
+		 * 
+		 */
 		ObjectLinkStore.DEFAULTS = {
+			/**
+			 * Search condition.
+			 * 
+			 * @attribute searchCondition
+			 * @default 'starts'
+			 * @type {String}
+			 */
 			searchCondition: 'starts',
+			/**
+			 * Sorting data by
+			 * 
+			 * @attribute orderBySort
+			 * @default 'asc'
+			 * @type {String}
+			 */
 			orderBySort: 'asc'
 		};
 
@@ -38,6 +79,11 @@
 			callback();
 		};
 
+		/**
+		 * Get httop
+		 * @method getHttp
+		 * @return {$http} [description]
+		 */
 		ObjectLinkStore.prototype.getHttp = function(){
 			if(!this.http){
 				this.http = httpHandlerFactory.newHandler();
@@ -45,18 +91,45 @@
 			return this.http ;
 		};
 
-		// ref to schema objectLink2ForcedCriteria
+		/**
+		 * Set search criteria
+		 *
+		 * Criteria:
+		 * 
+		 *     [
+		 *         {
+		 *             "f": "origFieldPath",
+		 *             "op": "operation",
+		 *             "v": "searchValue"
+		 *         }
+		 *         ...
+		 *     ]
+		 *     
+		 * @method  setForcedCriteria
+		 * @param {Array} criteria Ref to schemaFragment.objectLink2ForcedCriteria
+		 */
 		ObjectLinkStore.prototype.setForcedCriteria = function(criteria){
 			this.criteria = criteria;
 			return this;
 		};
 
-		// ref to schema objectLink2
+		/**
+		 * Set schema
+		 * @method  setSchema
+		 * @param {Object} schema Ref to schema objectLink2
+		 */
 		ObjectLinkStore.prototype.setSchema = function(schema){
 			this.schema = schema;
 			return this;
 		};
 
+		/**
+		 * Get http config 
+		 * 
+		 * @method  getHttpConfing
+		 * @param  {xpsui:DataDatasetFactory} dataset 
+		 * @return {Object}  http config
+		 */
 		ObjectLinkStore.prototype.getHttpConfing = function(dataset){
 			var config = {
 					method : 'POST',
@@ -117,6 +190,13 @@
 			return config;
 		};
 
+		/**
+		 * Load data 
+		 * 
+		 * @method load
+		 * @param  {xpsui:DataDatasetFactory}   dataset 
+		 * @param  {Function} callback It is call after data is loaded
+		 */
 		ObjectLinkStore.prototype.load = function(dataset, callback){
 			var self = this;
 
@@ -153,8 +233,16 @@
 		};
 
 		/**
-		 * Get data from schema or model
+		 * Set corret fromat of data like
+		 *     
+		 *     {
+		 *         schema: objectLink.schema,
+		 *         oid: data.id,
+		 *         refData: {}
+		 *      }
+		 * 
 		 *
+		 * @method getData
 		 * @param objectLink schema definition of object link (under objectLink2 keyword)
 		 * @param data data value of object link (data in model)
 		 *

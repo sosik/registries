@@ -2,6 +2,17 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
+	/**
+	 * Render and manages calendar picker
+	 *
+	 * Example:
+	 *
+	 *     <div xpsui-date-edit xpsui-calendar xpsui-schema="schema.path" ng-model="model.path"></div>
+	 *
+	 * @module  client
+	 * @submodule directives
+	 * @class  xpsuiCalendar
+	 */
 	.directive('xpsuiCalendar',['xpsui:logging', 'xpsui:DateUtil', '$translate', 'xpsui:DropdownFactory', function(log, dateUtil, $translate, dropdownFactory) {
 		var keys = {
 	            tab:      9,
@@ -17,18 +28,64 @@
 	            right:    39,
 	            down:     40,
 	            asterisk: 106
-	   };
-	   
+	    };
+	    
+	    /**
+		 * Generate and manage calendar. The calnedar contains header and calendar (year, month, day) buttons. 
+		 *
+		 * Example:
+		 *
+		 *      xpsuiDatapickerCtrl.setRootElement(elm);
+		 *      xpsuiDatapickerCtrl.setInput(xpsuiTextInputCtrl.getInput());
+		 *      xpsuiDatapickerCtrl.setDropdown(dropdown);
+		 *      xpsuiDatapickerCtrl.render();
+		 * 
+		 * @method component
+		 * @constructor
+		 * @todo  create factory like xpsui:SelectboxFactory
+		 */
 		var component = function(){
+			/**
+			 * Object settings
+			 *
+			 * @property options
+			 * @extends {Dropdown.DEFAULTS}
+			 * @type {Object}
+			 */
 			this.options = angular.extend({}, component.DEFAULTS);
-			// selected date - date from input
+			
+			/**
+			 * Selected value
+			 *
+			 * @property value
+			 * @type {Date} 
+			 */
 			this.value;
 			
 			// date for render layout - date is using layout functions
+			/**
+			 * Date for render layout. Date is using layout functions
+			 *
+			 * @property date
+			 * @type {Date} 
+			 * @private
+			 */
 			this.date;
 			
+			/**
+			 * Is rendered flag
+			 * 
+			 * @property isRendered
+			 * @type {Boolean} 
+			 */
 			this.isRendered = false;
 			
+			/**
+			 * Dropdown
+			 * 
+			 * @property dropdown
+			 * @type {xpsui:DropdownFactory} 
+			 */
 			this.dropdown = false;
 		};
 		
@@ -45,6 +102,13 @@
 			angular.extend(this.options, options || {});
 		};
 		
+		/**
+		 * Set directive input and listen on change event
+		 *
+		 * @method setInput
+		 * @param {angular.element} input directive's input element
+		 * @return {object} this
+		 */
 		component.prototype.setInput = function(element){
 			var self = this;
 			this.$inputElement = element;
@@ -90,7 +154,19 @@
 			return this;
 		};
 		
+		/**
+		 * Set element where the calendar will be rendered
+		 * 
+		 * @method setRootElement
+		 * @param {angular.element} element
+		 */
 		component.prototype.setRootElement = function(element){
+			/**
+			 * Element container where the calendar is rendered
+			 *
+			 * @property $rootElement
+			 * @type {angular.element}
+			 */
 			this.$rootElement = element
 			return this;
 		};
@@ -126,6 +202,13 @@
 			return this.value;
 		};
 		
+		/**
+		 * Handle events as mouseover, click, keydown, focus, blur of each calendar item
+		 * 
+		 * @method _bindEventHandlers
+		 * @param  {Array} $items array of calendar elements
+		 * @private
+		 */
 		component.prototype._bindHandlers = function($items) {
 			var self = this;
 
@@ -157,16 +240,40 @@
 			this.resetTabElemens();
 		};
 
+		/**
+		 * Handle mouseover event
+		 * 
+		 * @method _handleMouseover
+		 * @param  {angular.element} $el  Element
+		 * @param  {Event} event
+		 * @private
+		 */
 		component.prototype._handleMouseover = function($el, event){
 			this.setFocus($el);
 			event.stopPropagation();
 		};
 		
+		/**
+		 * Handle click event
+		 * 
+		 * @method _handleClick
+		 * @param  {angular.element} $el  Element
+		 * @param  {Event} event
+		 * @private
+		 */
 		component.prototype._handleClick = function($el, event){
 			this._handleActions($el);
 			event.stopPropagation();
 		};
 		
+		/**
+		 * Handle keydown event
+		 * 
+		 * @method _handleKeyDown
+		 * @param  {angular.element} $el  Element
+		 * @param  {Event} event
+		 * @private
+		 */
 		component.prototype._handleKeyDown = function($el, event){
 			switch (event.keyCode) {
 				case keys.up:
@@ -231,14 +338,38 @@
 			}
 		};
 		
+		/**
+		 * Handle focus event
+		 * 
+		 * @method _handleFocus
+		 * @param  {angular.element} $el  Element
+		 * @param  {Event} event
+		 * @private
+		 */
 		component.prototype._handleFocus = function($el, event){
 			this.dropdown && this.dropdown.cancelClosing();
 		};
 		
+		/**
+		 * Handle blur event
+		 * 
+		 * @method _handleBlur
+		 * @param  {angular.element} $el  Element
+		 * @param  {Event} event
+		 * @private
+		 */
 		component.prototype._handleBlur = function($el, event){
 			this.dropdown && this.dropdown.close();
 		};
 		
+		/**
+		 * Handle click on a callendar button
+		 * 
+		 * @method _handleBlur
+		 * @param  {angular.element} $el  Element
+		 * @param  {Event} event
+		 * @private
+		 */
 		component.prototype._handleActions = function($el){
 			switch($el[0]){
 				case this.$previousActionElement[0]:
@@ -281,6 +412,12 @@
 			}
 		};
 		
+		/**
+		 * Init render
+		 * 
+		 * @method _renderInit
+		 * @private
+		 */
 		component.prototype._renderInit =  function(){
 			var self = this;
 			if(!this.isRendered){
@@ -304,6 +441,12 @@
 		};
 		
 		component.prototype.resetTabElemens =  function(){
+			/**
+			 * Contain all callendar layout button
+			 * 
+			 * @property $tabElements
+			 * @type {Array}
+			 */
 			this.$tabElements = angular.element(
 				this.$element[0].querySelectorAll('[tabindex]')
 			);
@@ -320,14 +463,31 @@
 			return index;
 		};
 		
+		/**
+		 * Get all callendar action elements
+		 * @method  getTabElements
+		 * @return {angular.element} Elements
+		 */
 		component.prototype.getTabElements = function(){
 			return this.$tabElements;
 		};
 		
+		/**
+		 * Get first tab element
+		 * 
+		 * @method  getFirstTabElement
+		 * @return {angular.element} Element
+		 */
 		component.prototype.getFirstTabElement = function(){
 			return angular.element(this.$contentElement[0].querySelector('[tabindex]'));
 		};
 		
+		/**
+		 * Init controlls buttons
+		 * 
+		 * @method  _controllsInit
+		 * @private
+		 */
 		component.prototype._controllsInit = function(){
 			var self = this;
 			this.$controllElement =  angular.element('<div class="x-controlls"></div>');
@@ -364,6 +524,11 @@
 			this.$headerActionElement.html(text);
 		};
 		
+		/**
+		 * Do next action. Render next month
+		 * 
+		 * @method  nextAction
+		 */
 		component.prototype.nextAction = function(){
 			if(this.doLayout === this.dailyLayout ){
 				var month = this.getDate().getMonth() + 1;
@@ -377,6 +542,11 @@
 			this.doLayout();
 		};
 		
+		/**
+		 * Do previous action. Render previous month
+		 * 
+		 * @method  previousAction
+		 */
 		component.prototype.previousAction = function(){
 			if(this.doLayout === this.dailyLayout ){
 				this.date.setMonth(this.getDate().getMonth() - 1);
@@ -389,6 +559,11 @@
 			this.doLayout();
 		};
 		
+		/**
+		 * Do current day action. Render calendar with actul month
+		 * 
+		 * @method  currentDayAction
+		 */
 		component.prototype.currentDayAction = function(){
 			this.setDate(new Date());
 			this.doLayout = this.dailyLayout;
@@ -403,8 +578,18 @@
 			}
 		};
 		
+		/**
+		 * Render actual layout. Layout can be yearly, monthly, daily
+		 * 
+		 * @method  doLayout
+		 */
 		component.prototype.doLayout = function(){};
 		
+		/**
+		 * Render yearly layout
+		 * 
+		 * @method yearlyLayout
+		 */
 		component.prototype.yearlyLayout = function(){
 			var currentDate = new Date(),
 				selectedDate = this.getValue(),
@@ -448,6 +633,11 @@
 			this.doLayout = this.yearlyLayout;
 		};
 		
+		/**
+		 * Render monthly layout
+		 * 
+		 * @method monthlyLayout
+		 */
 		component.prototype.monthlyLayout = function(){
 			var currentDate = new Date(),
 				selectedDate = this.getValue(),
@@ -495,6 +685,11 @@
 			this.doLayout = this.monthlyLayout;
 		};
 		
+		/**
+		 * Render daily layout
+		 * 
+		 * @method dailyLayout
+		 */
 		component.prototype.dailyLayout = function(){
 			var currentDate = new Date(),
 				selectedDate = this.getValue(),
@@ -583,17 +778,37 @@
 			this.doLayout = this.dailyLayout;
 		};
 		
+		/**
+		 * Render the calendar into the element 
+		 * 
+		 * @method renderTo
+		 * @param  {angular.element} element container element
+		 */
 		component.prototype.renderTo = function(element){
 			this.setRootElement(element);
 			this.render();
 		};
 		
+		/**
+		 * Render option item list. this.$rootElement have to be set before
+		 *
+		 * @example
+		 *     calendar.setRootElement(element);
+		 *     calendar.render()
+		 *
+		 * @method render 
+		 */
 		component.prototype.render = function(){
 			this.reset();
 			this._renderInit();
 			this.doLayout();
 		};
 		
+		/**
+		 * Reset date property and set daily layout
+		 * 
+		 * @method  reset
+		 */
 		component.prototype.reset = function(){
 			// reset date
 			if (this.value) {

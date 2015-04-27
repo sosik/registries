@@ -2,6 +2,18 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
+	/**
+	 * View component of Selectbox/dropdown. Requires xpsui:DataDatasetFactory to get correct value label.
+	 *
+	 * Example:
+	 *
+	 *     <div xpsui-select-view ng-model="path.to.model" /></div>
+	 * 
+	 * @class xpsuiSelectView
+	 * @module client
+	 * @submodule directives
+	 * @requires  xpsui:DataDatasetFactory
+	 */
 	.directive('xpsuiSelectView', ['xpsui:logging','$translate','xpsui:DataDatasetFactory', function(log, $translate, datafactory) {
 		return {
 			restrict: 'A',

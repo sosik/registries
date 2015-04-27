@@ -2,6 +2,18 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
+	/**
+	 * ObjectLink2 component
+	 *
+	 * Example:
+	 *
+	 *     <div xpsui-objectlink2-view xpsui-schema="schema.path" ng-model="model.path"></div>
+	 * 
+	 * @class xpsuiObjectlink2Edit
+	 * @module client
+	 * @submodule directives
+	 * @requires  xpsui:Objectlink2Factory, xpsui:DataDatasetFactory
+	 */
 	.directive('xpsuiObjectlink2View', ['xpsui:logging', 'xpsui:Objectlink2Factory','xpsui:DataDatasetFactory', 'xpsui:SchemaUtil','$parse',
 	function(log, objectlink2Factory, dataFactory, schemaUtil, $parse) {
 		return {

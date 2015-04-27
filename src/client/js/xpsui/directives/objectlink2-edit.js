@@ -2,6 +2,18 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
+	/**
+	 * ObjectLink2 component
+	 *
+	 * Example:
+	 *
+	 *     <div xpsui-objectlink2-edit xpsui-schema="schema.path" ng-model="model.path"></div>
+	 * 
+	 * @class xpsuiObjectlink2Edit
+	 * @module client
+	 * @submodule directives
+	 * @requires  xpsui:DropdownFactory, xpsui:Objectlink2Factory, xpsui:DataDatasetFactory
+	 */
 	.directive('xpsuiObjectlink2Edit', [
 		'xpsui:logging',
 		'$parse', 
@@ -38,6 +50,9 @@
 					schemaFragment = parseSchemaFragment(scope)
 				;
 
+				/**
+				 * set remove button
+				 */
 				var removeButton = removeButtonFactory.create(elm,{
 					enabled: !!!schemaFragment.required,
 					input: input,

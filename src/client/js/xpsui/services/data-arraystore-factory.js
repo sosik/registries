@@ -2,17 +2,41 @@
 	'use strict';
 
 	angular.module('xpsui:services')
+	/**
+	 * Array store
+	 * 
+	 * @class xpsui:DataArraystoreFactory
+	 * @module client
+	 * @submodule services
+	 */
 	.factory('xpsui:DataArraystoreFactory', ['xpsui:logging', '$timeout', '$translate',
 	function(log, $timeout, $translate) {
 
 		/**
-		 * ArrayStore
+		 * Constructor
+		 * 
+		 * @method ArrayStore
+		 * @constructor
+		 * @protected
 		 */
-
 		function ArrayStore(){
+			/**
+			 * Loaded data
+			 * 
+			 * @property data
+			 * @default []
+			 * @type {Array}
+			 */
 			this.data = [];
 		};
 
+		/**
+		 * Set data
+		 * 
+		 * @method setData
+		 * @param {array} data          Data for value
+		 * @param {aray} translateCode  Data for title
+		 */
 		ArrayStore.prototype.setData = function(data, translateCode){
 			if (translateCode) {
 				// there are transCodes
@@ -41,6 +65,13 @@
 			return false;
 		};
 
+		/**
+		 * Load data 
+		 * 
+		 * @method load
+		 * @param  {xpsui:DataDatasetFactory}   dataset 
+		 * @param  {Function} callback It is call after data is loaded
+		 */
 		ArrayStore.prototype.load = function(dataset, callback){
 			var self = this;
 

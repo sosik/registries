@@ -12,13 +12,28 @@
 		var service = {};
 
 		/**
-		 * combines schemaUri and suffix to valid schema definition uri.
-		 * It does proper URI escaping
+		 * Combines schemaUri and suffix to valid schema definition uri, does proper uri excaping
+		 * and returns $http promise to get data from server.
+		 *
+		 * Http object has cache enabled.
+		 *
+		 * @method getCompiledSchema
+		 * @static
+		 * @param schemaUri uri of schema
+		 * @param suffix
+		 *
+		 * @return {Object} fragment of schema
+		 *
+		 * @example
+		 * .getCompiledSchema('uri://registries/people/', 'view')
+		 * .success(...)
+		 * .error(...)
 		 */
 		service.getCompiledSchema = function(schemaUri, suffix) {
 			var _schemaUri = schemaUri;
 
-			if (suffix){
+			//FIXME this construction requires that schemaUri or suffix contains / at the end or beginning
+			if (suffix) {
 			 _schemaUri = this.concatUri(schemaUri, suffix);
 			}
 

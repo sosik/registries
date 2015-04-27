@@ -141,7 +141,7 @@
 			});
 		};
 
-		service.updateProfileSecurity = function(profileId,profileName, permissions, groups,criteria) {
+		service.updateProfileSecurity = function(profileId,profileName, permissions, groups,crits) {
 
 			return $http({
 				method : 'POST',
@@ -151,7 +151,7 @@
 					profileName: profileName,
 					permissions : permissions,
 					groups : groups,
-					criteria: criteria
+					crits: crits
 				}
 			});
 		};

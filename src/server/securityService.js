@@ -137,7 +137,7 @@ var SecurityService = function(mongoDriver, schemaRegistry, options) {
 		if ( profile.security && profile.security.forcedCriteria ){
 			var schemaCrit=getSchemaCrit(profile.security.forcedCriteria,schemaName);
 			if (schemaCrit){
-				schemaCrit.criteria.map(function(c){
+				schemaCrit.crits.map(function(c){
 					if (c.expr){
 						var resolved=objectTools.evalPath(currentUser,c.expr);
 						if (!resolved){

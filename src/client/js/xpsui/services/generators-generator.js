@@ -142,12 +142,12 @@
 				method : 'POST',
 				url : '/search/' + schemaUtilFactory.encodeUri(searchSchema),
 				data : {
-					criteria :[{
+					crits :[{
 						f : "baseData.competitionPart.oid",
 						v : entity.id,
 						op : "eq"
 					}],
-					sortBy: [ { f:"baseData.date", o: "asc"}]
+					sorts: [ { f:"baseData.date", o: "asc"}]
 				}
 			}).success(function(terms){
 				var teams=entity.listOfTeam.team;

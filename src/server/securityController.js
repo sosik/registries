@@ -279,10 +279,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 				profile.security.forcedCriteria=[];
 
-				if ('criteria' in req.body){
-					req.body.criteria.map(function(cc){
+				if ('crits' in req.body){
+					req.body.crits.map(function(cc){
 						var schemaCrit= getSchemaCrit(profile.security.forcedCriteria,cc.schema);
-						schemaCrit.criteria.push({f:cc.f,op:cc.op,v:cc.v,obj:cc.obj,expr:cc.expr});
+						schemaCrit.crits.push({f:cc.f,op:cc.op,v:cc.v,obj:cc.obj,expr:cc.expr});
 					});
 				}
 
@@ -312,7 +312,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 
 		if (!found){
-			found={applySchema:schema, criteria:[]};
+			found={applySchema:schema, crits:[]};
 			forced.push(found);
 		}
 		return found;

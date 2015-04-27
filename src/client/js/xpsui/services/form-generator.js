@@ -32,6 +32,29 @@
 			+ '</div>');
 		};
 
+		FormGenerator.prototype.generateValidations = function(field, schemaFragment, schemaPath, modelPath, mode) {
+			//validation make sense only in edit mode
+			if (mode === this.MODE.EDIT) {
+
+				// validations
+				if (schemaFragment.required) {
+					field.attr('required', true);
+					field.attr('xpsui-validity-mark', '');
+				}
+
+				if (schemaFragment.unique) {
+					console.log('');
+					// FIXME why do i need this definition? whay i cannot simply use whole object options in xpsui-schema
+					field.attr('xpsui-unique', schemaPath + '.unique');
+					field.attr('xpsui-validity-mark', '');
+					// @todo it is replaced with recursive function (from down to up)
+					// field.attr('psui-unique-id', options.modelPath+'.id');
+				}
+			}
+
+			return field;
+		};
+
 		FormGenerator.prototype.generateField = function(schemaFragment, schemaPath, modelPath, mode) {
 			var field;
 
@@ -42,7 +65,6 @@
 				field.attr('xpsui-model', modelPath);
 				field.attr('xpsui-schema', schemaPath);
 			} else if (mode === this.MODE.EDIT) {
-
 				if (schemaFragment.type === 'array') {
 					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component ) {
 						field = angular.element('<div xpsui-array-control-edit="'+schemaFragment.items.render.component+'"></div>');
@@ -87,22 +109,8 @@
 
 				field.attr('xpsui-schema', schemaPath);
 				field.attr('ng-model', modelPath);
-				field.attr('xpsui-validity-mark', '');
-
-				// validations
-				if (schemaFragment.required) {
-					field.attr('required', true);
-				}
-
-				if (schemaFragment.unique) {
-					console.log('');
-					field.attr('xpsui-unique', schemaPath + '.unique');
-					// @todo it is replaced with recursive function (from down to up)
-					// field.attr('psui-unique-id', options.modelPath+'.id');
-				}
 
 			} else {
-
 				if (schemaFragment.type === 'array') {
 					if (schemaFragment.items && schemaFragment.items.render && schemaFragment.items.render.component) {
 						field = angular.element('<div xpsui-array-control-view="'+schemaFragment.items.render.component+'"></div>');
@@ -157,7 +165,7 @@
 					mode = this.MODE.VIEW;
 				}
 				var row2 = angular.element('<div class="x-fieldset-row"></div>');
-				row2.append(this.generateField(schemaFragment, schemaPath, modelPath, mode));
+				row2.append(this.generateValidations(this.generateField(schemaFragment, schemaPath, modelPath, mode), schemaFragment, schemaPath, modelPath, mode));
 				container.append(row1);
 				container.append(row2);
 				return container;
@@ -172,7 +180,7 @@
 			if (schemaFragment.readOnly) {
 				mode = this.MODE.VIEW;
 			}
-			value.append(this.generateField(schemaFragment, schemaPath, modelPath, mode));
+			value.append(this.generateValidations(this.generateField(schemaFragment, schemaPath, modelPath, mode),schemaFragment, schemaPath, modelPath, mode));
 			row.append(value);
 
 			return row;

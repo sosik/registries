@@ -117,13 +117,13 @@ var MassmailingController = function(mongoDriver, options) {
 					});
 				}
 		} else {
-			log.verbose('Sending mail to users matching criteria',req.body.criteria);
+			log.verbose('Sending mail to users matching criteria',req.body.crits);
 
 
 		var qf=QueryFilter.create();
 
-		for(var c in req.body.criteria){
-			qf.addCriterium(req.body.criteria[c].f,req.body.criteria[c].op,req.body.criteria[c].v);
+		for(var c in req.body.crits){
+			qf.addCriterium(req.body.crits[c].f,req.body.crits[c].op,req.body.crits[c].v);
 		}
 
 

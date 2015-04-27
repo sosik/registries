@@ -393,19 +393,7 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 		}
 
 		//remap to QueryFiter
-		var qf=QueryFilter.create();
-		if('sortBy' in query && query.sortBy){
-			qf.addSort(query.sortBy[0].f,query.sortBy[0].o);
-		}
-		if ('limit' in query){
-			qf.setLimit(query.limit);
-		}
-		if ('skip' in query){
-			qf.setSkip(query.skip);
-		}
-		for(var c in query.criteria){
-			qf.addCriterium(query.criteria[c].f,query.criteria[c].op,query.criteria[c].v);
-		}
+		var qf=QueryFilter.create(query);
 
 		enhanceQuery(qf,compiledSchema,schemaName,userCtx.profile,userCtx.user);
 

@@ -10,15 +10,15 @@
 			controller: function() {
 				this.setCommitButton = function(button){
 					this.comitButton = button;
-				}
+				};
 				
 				this.showCommitButton = function(){
 					this.comitButton.removeClass('x-hidden');
-				}
+				};
 
 				this.hideCommitButton = function(){
 					this.comitButton.addClass('x-hidden');
-				}
+				};
 				
 			},
 			link: function(scope, elm, attrs, ctrls) {
@@ -45,7 +45,7 @@
 
 				var viewElm = formGenerator.generateField(schema, schemaPath, modelPath, formGenerator.MODE.VIEW);
 				var editElm = formGenerator.generateField(schema, schemaPath, modelPath, formGenerator.MODE.EDIT);
-
+				formGenerator.generateValidations(editElm, schema, schemaPath, modelPath, formGenerator.MODE.EDIT);
 				var contentElm = angular.element('<div class="x-inlineedit-content"></div>');
 
 				contentElm.append(viewElm);

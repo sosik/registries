@@ -5,13 +5,13 @@
 	.factory('xpsui:GenericSearchFactory', [ '$http', 'xpsui:SchemaUtil', '$translate', function($http, schemaUtilFactory, $translate) {
 		var service = {};
 
-		service.getSearch = function(searchSchema, criteria,sortBy,skip,limit) {
+		service.getSearch = function(searchSchema, crits,sortBy,skip,limit) {
 
 			return $http({
 				method : 'POST',
 				url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
 				data : {
-					criteria : criteria,
+					crits: crits,
 					sortBy: sortBy,
 					limit: limit,
 					skip: skip
@@ -20,13 +20,13 @@
 		};
 
 
-		service.getSearchCount = function(searchSchema, criteria) {
+		service.getSearchCount = function(searchSchema, crits) {
 
 			return $http({
 				method : 'POST',
 				url : '/search/count/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(searchSchema,'search')),
 				data : {
-					criteria : criteria
+					crits : crits
 				}
 			});
 		};

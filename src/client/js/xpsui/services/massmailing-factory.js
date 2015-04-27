@@ -4,13 +4,13 @@
 	angular.module('xpsui:services')
 	.factory('xpsui:MassmailingFactory', [ '$http', function($http) {
 		var service = {};
-		service.sendMail = function(template,criteria,users) {
+		service.sendMail = function(template,crits,users) {
 
 			return $http({
 				method : 'POST',
 				url : '/massmailing/send',
 				data : {
-					criteria : criteria,
+					crits : crits,
 					template: template,
 					users: users
 				}

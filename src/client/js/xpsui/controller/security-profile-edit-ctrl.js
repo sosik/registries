@@ -243,7 +243,7 @@
 				}
 				if ('forcedCriteria' in profile.security){
 					profile.security.forcedCriteria.map(function(schemaCrit){
-						schemaCrit.criteria.map(function(crit){
+						schemaCrit.crits.map(function(crit){
 							var modelCrit={schema:schemaCrit.applySchema,operator:mapOperator(crit.op),attribute:crit.f,value:crit.v};
 								$scope.schemaChange(modelCrit,function(c){
 										c.attribute=mapAttribute( c.attDef.attributes,c.attribute);

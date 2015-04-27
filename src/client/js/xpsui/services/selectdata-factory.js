@@ -7,6 +7,8 @@
 		/**
 		 * DataSet
 		 */
+
+		// FIXME change to use queryfilter 
 		function DataSet(store, options){
 			this.store = store;
 			this.options = angular.extend({}, DataSet.DEFAULTS, options || {} );
@@ -154,7 +156,7 @@
 
 		ObjectDataSet.prototype = Object.create(DataSet.prototype);
 
-		ObjectDataSet.prototype.loaded = function(data){
+		ObjectDataSet.prototype.loaded = function(data) {
 			if(data.length <= this.options.limit){
 				this.loadDone = true;
 			} else {
@@ -165,7 +167,7 @@
 			this.data = this.data.concat(data);
 			this.options.loaded(this,data);
 			this.offset++;
-		}
+		};
 		
 		ObjectDataSet.prototype.getFieldsSchema = function(index){
 			return this.store.fields;
@@ -178,7 +180,7 @@
 		function ObjectLinkStore(options){
 			this.options = angular.extend({}, ObjectLinkStore.DEFAULTS, options || {} );
 			this.schema = {};
-			this.criteria = null;
+			this.crits = null;
 			this.fields = null;
 			this.http = null;
 		}
@@ -213,8 +215,8 @@
 		};
 
 		// ref to schema objectLink2ForcedCriteria
-		ObjectLinkStore.prototype.setForcedCriteria = function(criteria){
-			this.criteria = criteria;
+		ObjectLinkStore.prototype.setForcedCriteria = function(crits){
+			this.crits = crits;
 			return this;
 		};
 
@@ -229,10 +231,10 @@
 					method : 'POST',
 					url: '/search/' + schemaUtil.encodeUri(this.schema.schema),
 					data: {
-						criteria: [], 
+						crits: [], 
 						limit: dataset.getLimit() , 
 						skip: dataset.getOffset(), 
-						sortBy:[]
+						sorts:[]
 					}
 				},
 				orderByName = null
@@ -246,7 +248,7 @@
 				}
 			}
 
-			config.data.sortBy.push({
+			config.data.sorts.push({
 				"f": this._orderByName,
 				"o": this.options.orderBySort
 			});
@@ -261,8 +263,8 @@
 			// }
 			
 			//FIXME make sure this.criteria is always array never null
-			if (this.criteria && angular.isArray(this.criteria)) {
-				config.data.criteria.concat(this.criteria);
+			if (this.crits && angular.isArray(this.crits)) {
+				config.data.crits.concat(this.crits);
 			}
 
 			var _searchVal = dataset.getSearchValue();
@@ -270,7 +272,7 @@
 			//FIXME make sure that getSearchValue is always string and always non null
 			if (_searchVal && angular.isString(_searchVal) && _searchVal.length > 0) {
 				for (field in this.schema.fields) {
-					config.data.criteria.push({
+					config.data.crits.push({
 						f: this.schema.fields[field],
 						v: _searchVal,
 						op: this.options.searchCondition
@@ -328,7 +330,7 @@
 		 * @return data from model (if refData exists) or try to parse it form model
 		 */
 		ObjectLinkStore.getData = function(objectLink, data) {
-			if( typeof data === 'object'){
+			if( data && typeof data === 'object'){
 				// if there are refData in object (objectLink)
 				if(data.refData){
 					return data;

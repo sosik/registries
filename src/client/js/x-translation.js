@@ -107,6 +107,7 @@
 			"personal.change.password.current.password": "Staré heslo",
 			"personal.change.password.new.password": "Nové heslo",
 			"personal.change.password.new.password.check": "Kontrola nového hesla",
+//FIXME remove generic search
 			"generic.search.searching": "Vyhľadávanie",
 			"generic.search.add": "Pridať",
 			"generic.search.remove": "Zrušiť",
@@ -121,6 +122,12 @@
 			"generic.nofiles.label": "Žiadne súbory.",
 			"generic.file.choose": "Zvoliť súbor",
 			"generic.file.uploadFailed": "Uloženie súboru zlyhalo.",
+//FIXME translate into other languages
+			"queryfilter.ops.EXISTS": "existuje (má hodnotu)",
+			"queryfilter.ops.NOT_EXISTS": "neexistuje (nemá hodnotu)",
+			"queryfilter.ops.EQUAL": "je rovné (=)",
+			"queryfilter.ops.GREATER": "je väčšie (>)",
+			"queryfilter.ops.GREATER_EQUAL": "je väčšie alebo rovné (>=)",
 			"registry.new.new": "Nový",
 			"registry.new.cancel": "Zrušiť",
 			"registry.new.send": "Odoslať",

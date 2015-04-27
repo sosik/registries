@@ -155,9 +155,9 @@
 
 			$scope.sendMail=function(){
 				var userIds=null;
-				var criteria=null;
+				var crits=null;
 				if ($scope.selectAll){
-					criteria=$scope.lastCriteria;
+					crits=$scope.lastCriteria;
 				}
 				else {
 					userIds=[];
@@ -168,7 +168,7 @@
 						}
 					}
 				}
-				massmailingFactory.sendMail($scope.selectedTemplate,criteria,userIds).success(function(){
+				massmailingFactory.sendMail($scope.selectedTemplate,crits,userIds).success(function(){
 					notificationFactory.info({translationCode:'massmailing.sent', time:3000});
 				});
 			};

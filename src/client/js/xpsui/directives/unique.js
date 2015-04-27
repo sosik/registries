@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiUnique', ['$http', 'xpsui:SchemaUtil', function($http, schemaUtilFactory) {
+	.directive('xpsuiUnique', ['$http', 'xpsui:SchemaUtil', 'xpsui:QueryFilter', function($http, schemaUtilFactory, QueryFilter) {
 		var latestId = 0;
 
 		return {
@@ -16,15 +16,15 @@
 					ngModel.$parsers.push(
 						function(value) {
 							//var selfId = scope.$eval(attrs.psuiUniqueId);
-							var crits = [];
-							crits.push({f:options.field, op: 'eq', v: value});
+							var qf = QueryFilter.create().addCriterium(
+									options.field,
+									QueryFilter.operation.EQUAL,
+									value
+							).setLimit(1);
 							var conf = {
 								method : 'POST',
 								url : '/search/' + schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri(options.schema,'search')),
-								data : {
-									criteria : crits,
-									limit: 1
-								}
+								data : qf
 							};
 
 							function containEqualId(ngModelStr, id){

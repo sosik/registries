@@ -17,7 +17,7 @@
 
 				ngModel.$render = function() {
 					if (ngModel && ngModel.$viewValue || ngModel.$viewValue===0 ) {
-						if (isNaN(ngModel.$viewValue)){
+						if (isNaN(ngModel.$viewValue) && ngModel.$viewValue.replace){
 							view.html(ngModel.$viewValue.replace(/(?:\r\n|\r|\n)/g, '<br />'));
 						}
 						else {

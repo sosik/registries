@@ -2,12 +2,24 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
+	/**
+	 * ObjectLink2 component
+	 *
+	 * Example:
+	 *
+	 *     <div xpsui-objectlink2-edit xpsui-schema="schema.path" ng-model="model.path"></div>
+	 * 
+	 * @class xpsuiObjectlink2Edit
+	 * @module client
+	 * @submodule directives
+	 * @requires  xpsui:DropdownFactory, xpsui:Objectlink2Factory, xpsui:DataDatasetFactory
+	 */
 	.directive('xpsuiObjectlink2Edit', [
 		'xpsui:logging',
 		'$parse', 
 		'xpsui:DropdownFactory', 
 		'xpsui:Objectlink2Factory',
-		'xpsui:SelectDataFactory', 
+		'xpsui:DataDatasetFactory', 
 		'xpsui:SchemaUtil',
 		'xpsui:RemoveButtonFactory',
 	function(log, $parse, dropdownFactory, objectlink2Factory, dataFactory, schemaUtil, removeButtonFactory) {
@@ -38,6 +50,9 @@
 					schemaFragment = parseSchemaFragment(scope)
 				;
 
+				/**
+				 * set remove button
+				 */
 				var removeButton = removeButtonFactory.create(elm,{
 					enabled: !!!schemaFragment.required,
 					input: input,
@@ -57,9 +72,12 @@
 				ngModel.$render = function() {
 					if(!angular.equals({},ngModel.$viewValue)) {
 						// get data from schema or model and render it
-						render(dataFactory.getObjectLinkData(
-							schemaFragment.objectLink2, ngModel.$modelValue
-						));
+						// 
+						// not need anymore the transfrom method getObjectLinkData
+						// render(dataFactory.getObjectLinkData(
+						// 	schemaFragment.objectLink2, ngModel.$modelValue
+						// ));
+						render(ngModel.$modelValue);
 					} else {
 						input.empty();
 					}

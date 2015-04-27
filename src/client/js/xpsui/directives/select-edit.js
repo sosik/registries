@@ -2,8 +2,20 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory', '$timeout', 
-		function(log, $parse, dropdownFactory, selectboxFactory, datafactory, $timeout) {
+	/**
+	 * Selectbox/dropdown component
+	 *
+	 * Example:
+	 *
+	 *     <div xpsui-select-edit xpsui-schema="schema.path" ng-model="model.path"></div>
+	 * 
+	 * @class xpsuiSelectEdit
+	 * @module client
+	 * @submodule directives
+	 * @requires  xpsui:DropdownFactory, xpsui:SelectboxFactory, xpsui:DataDatasetFactory
+	 */
+	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:DataDatasetFactory', 
+		function (log, $parse, dropdownFactory, selectboxFactory, datafactory) {
 		return {
 			restrict: 'A',
 			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiSelectEdit'],

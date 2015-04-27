@@ -2,7 +2,19 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiObjectlink2View', ['xpsui:logging', 'xpsui:Objectlink2Factory','xpsui:SelectDataFactory', 'xpsui:SchemaUtil','$parse',
+	/**
+	 * ObjectLink2 component
+	 *
+	 * Example:
+	 *
+	 *     <div xpsui-objectlink2-view xpsui-schema="schema.path" ng-model="model.path"></div>
+	 * 
+	 * @class xpsuiObjectlink2Edit
+	 * @module client
+	 * @submodule directives
+	 * @requires  xpsui:Objectlink2Factory, xpsui:DataDatasetFactory
+	 */
+	.directive('xpsuiObjectlink2View', ['xpsui:logging', 'xpsui:Objectlink2Factory','xpsui:DataDatasetFactory', 'xpsui:SchemaUtil','$parse',
 	function(log, objectlink2Factory, dataFactory, schemaUtil, $parse) {
 		return {
 			restrict: 'A',
@@ -34,9 +46,10 @@
 								objectlink2Factory.renderElement(
 									view, 
 									fields, 
-									dataFactory.getObjectLinkData(
-										schemaFragment.objectLink2, ngModel.$viewValue
-									)
+									// dataFactory.getObjectLinkData(
+									// 	schemaFragment.objectLink2, ngModel.$viewValue
+									// )
+									ngModel.$modelValue
 								);
 							}
 						);

@@ -3,7 +3,7 @@
 	
 	angular.module('xpsui:directives')
 	.directive('portalMultistringEdit',['xpsui:logging','$parse', 
-		'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory',
+		'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:DataDatasetFactory',
 		function(log, $parse, dropdownFactory, selectboxFactory, datafactory) {
 		return {
 			restrict: 'A',

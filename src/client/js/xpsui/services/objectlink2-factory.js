@@ -51,6 +51,7 @@
 
 			var field;
 
+			wrapperElement.empty();
 			for (field in fieldsSchema) {
 				// FIXME translations 
 				if (fieldsSchema[field]) {

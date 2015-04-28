@@ -47,6 +47,9 @@
 					var keys = Object.keys(args).sort(),
 						result = '';
 					for (var i = 0; i < keys.length; i++) {
+						if (typeof args[keys[i]] === "undefined") {
+							return ;
+						}
 						result = result.concat(args[keys[i]])
 					}
 					return result;
@@ -146,6 +149,10 @@
 					var keys = Object.keys(args).sort();
 
 					var first = args[keys[0]];
+
+					if (!first) {
+						return 0;
+					}
 
 					return first.length;
 				},

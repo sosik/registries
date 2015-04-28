@@ -109,6 +109,7 @@
 
 				field.attr('xpsui-schema', schemaPath);
 				field.attr('ng-model', modelPath);
+				field.attr('xpsui-calculable', schemaPath);
 
 			} else {
 				if (schemaFragment.type === 'array') {

@@ -122,6 +122,8 @@
 			"generic.nofiles.label": "Žiadne súbory.",
 			"generic.file.choose": "Zvoliť súbor",
 			"generic.file.uploadFailed": "Uloženie súboru zlyhalo.",
+			"generic.loading": "Načítava...",
+			"generic.more": "Viac",
 //FIXME translate into other languages
 			"queryfilter.ops.EXISTS": "existuje (má hodnotu)",
 			"queryfilter.ops.NOT_EXISTS": "neexistuje (nemá hodnotu)",
@@ -507,7 +509,11 @@
 			"schemas.countries.enum.WLF": "Wallis a Futuna",
 			"schemas.countries.enum.ZMB": "Zambia",
 			"schemas.countries.enum.ESH": "Západná Sahara",
-			"schemas.countries.enum.ZWE": "Zimbabwe"
+			"schemas.countries.enum.ZWE": "Zimbabwe",
+
+			"dashboard.widget.notifications.title": "Notifikácie",
+			"dashboard.widget.members.openRequests": "Nové registrácie",
+			"dashboard.widget.members.noOpenRequests": "Žiadne žiadosti."
 		});
 
 		$translateProvider.translations('cz', {
@@ -628,6 +634,8 @@
 			"generic.nofiles.label": "Žádny soubory.",
 			"generic.file.choose": "Vybrat soubor",
 			"generic.file.uploadFailed": "Nepodařilo se uložit soubor.",
+			"generic.loading": "Načítava...",
+			"generic.more": "Více",
 			"registry.new.new": "Nový",
 			"registry.new.cancel": "Zrušit",
 			"registry.new.send": "Odeslat",
@@ -1002,7 +1010,11 @@
 			"schemas.countries.enum.WLF":"Wallis a Futuna",
 			"schemas.countries.enum.ZMB":"Zambie",
 			"schemas.countries.enum.ESH":"Západní Sahara",
-			"schemas.countries.enum.ZWE":"Zimbabwe"
+			"schemas.countries.enum.ZWE":"Zimbabwe",
+
+			"dashboard.widget.notifications.title": "Notifikace",
+			"dashboard.widget.members.openRequests": "Nové registrace",
+			"dashboard.widget.members.noOpenRequests": "Žádny žádosti."
 		});
 		
 		$translateProvider.translations('en', {
@@ -1096,6 +1108,8 @@
 			"generic.search.result.of.searching": "Search result",
 			"generic.search.export.csv": "Export",
 			"generic.search.nodata.found": "No data found",
+			"generic.loading": "Loading...",
+			"generic.more": "More",
 			"registry.new.new": "New",
 			"registry.new.cancel": "Cancel",
 			"registry.new.send": "Send",
@@ -1470,7 +1484,11 @@
 			"schemas.countries.enum.WLF": "Wallis & Futuna",
 			"schemas.countries.enum.ZMB": "Zambia",
 			"schemas.countries.enum.ESH": "Western Sahara",
-			"schemas.countries.enum.ZWE": "Zimbabwe"
+			"schemas.countries.enum.ZWE": "Zimbabwe",
+
+			"dashboard.widget.notifications.title": "Notifications",
+			"dashboard.widget.members.openRequests": "New registrations",
+			"dashboard.widget.members.noOpenRequests": "Žádny žádosti."
 		});
 	}])
 	.controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {

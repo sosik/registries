@@ -166,6 +166,20 @@
             img: ''
           }
         },
+        video: {
+            meta: {
+              name: 'video',
+              desc: '<h1>Embedované video</h1><p>Embedované video s titulkom a textom</p>',
+              icon: 'img/block-image.png',
+              type: 'video',
+            },
+            data: {
+                src: '',
+                title: 'Embedované video',
+                subTitle: 'video',
+                text: 'text k videu',
+              }
+          },
         fileList: {
             meta: {
               name: 'file-list',

@@ -6,12 +6,15 @@
 		'$scope', 
 		'$routeParams',
 		'$location', 
+		'$timeout',
 		'xpsui:GenericSearchFactory',
 		'xpsui:SchemaUtil',
 		'xpsui:NotificationFactory',
 		'$translate', 
 		'xpsui:ObjectTools', 
-		function($scope, $routeParams,  $location, genericSearchFactory, schemaUtilFactory ,notificationFactory,$translate, objectTools ) {
+		'xpsui:NavigationService',
+		function($scope, $routeParams,  $location, $timeout, genericSearchFactory, 
+				schemaUtilFactory ,notificationFactory,$translate, objectTools, navigationService ) {
 			var entityUri = schemaUtilFactory.decodeUri($routeParams.entity);
 
 			$scope.entityUri = entityUri;
@@ -272,6 +275,11 @@
 			$scope.getLink = function(i) {
 				return '#/registry/view/' + schemaUtilFactory.encodeUri(entityUri) + '/' + $scope.data[i].id;
 			};
+			
+			var navigation = navigationService.restore();
+			if (navigation) {
+				$timeout(function () { $scope.search(); }, 1000);
+			}
 		} 
 	]);
 

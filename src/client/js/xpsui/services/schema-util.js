@@ -114,6 +114,19 @@
 			});
 		};
 
+		/**
+		 * Fills object in scopeToFill with path/value pairs form values parameter.
+		 *
+		 * @param {string} scopeToFill	scope value to be filled.
+		 * @param {object} values		values to fill, e.g. [ { 'path': 'model.obj.baseData.name', 'value': 'Peter' }, { 'path': 'model.obj.baseData.surName', 'value': 'Vaskovic' } ]
+		 *
+		 * @method fillObj
+		 */
+		service.fillObj = function fillObj(scopeToFill, values) {
+			angular.forEach(values, function(value, key) {
+				$parse(value.path).assign(scopeToFill, value.value);
+			});
+		};
 
 		/**
 		 * concatenates schema uri and fragment in propper way

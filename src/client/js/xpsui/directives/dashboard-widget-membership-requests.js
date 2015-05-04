@@ -13,10 +13,20 @@
 	
 	angular.module('xpsui:directives')
 	.directive('xpsuiDashboardWidgetMembershipRequests', 
-			['xpsui:logging', '$compile', '$translate', '$http', 'xpsui:SchemaUtil', 'xpsui:NotificationFactory',
-	        function(log, $compile, $translate, $http, schemaUtilFactory, notificationFactory) {
+			['xpsui:logging', '$compile', '$translate', '$http', '$location', 'xpsui:SchemaUtil', 'xpsui:NotificationFactory',
+			 'xpsui:NavigationService',
+	        function(log, $compile, $translate, $http, $location, schemaUtilFactory, notificationFactory, navigationService) {
 		return {
+			controller: function($scope, $element, $attrs) {
+			},
 			link: function(scope, elm, attrs, ctrls) {
+				scope.showRegistrations = function() {
+					navigationService.navigateToPath(
+							'/search/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FrequisitionApplicant', 
+							'search');
+					$location.path('/search/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FrequisitionApplicant');
+				};
+
 				log.group('xpsui-dashboard-widget-membership-requests Widget');
 
 				elm.empty();
@@ -64,7 +74,8 @@
 					if (data) {
 						contentBlock1Elm.html(
 								'<span>' + data.length + '</span><br/>'
-								+ ' <a href="#/search/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FrequisitionApplicant">' + $translate.instant('generic.more') + '</a>');
+								+ ' <a ng-click="showRegistrations()">' + $translate.instant('generic.more') + '</a>');
+						$compile(contentBlock1Elm)(scope);
 						return;
 					}
 					var label_noOpenRequests = $translate.instant('dashboard.widget.members.noOpenRequests');

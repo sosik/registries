@@ -41,6 +41,22 @@
 		};
 
 		/**
+		 * Stores path and context, both passed as method parameter.
+		 *
+		 * @param {String} the location to be stored with context information.
+		 * @param {Object} context information about the state to be restored with location param.
+		 * 
+		 * @return {undefined}
+		 * @method navigateToPath
+		 */
+		service.navigateToPath = function(path, context) {
+			service.navigationStack.push({ path: path, context: context });
+			if (service.navigationStack.length > 10) {
+				service.navigationStack.splice(0, 1);
+			}
+		};
+
+		/**
 		 * Returns the last item inserted to navigation and removes this item from navigation,
 		 * or undefined.
 		 * The value is returned and then removed only, if the current location matches the stored location

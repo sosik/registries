@@ -1,16 +1,19 @@
 (function(angular) {
 	'use strict';
 
+
 	angular.module('xpsui:controllers')
 	.controller('xpsui:RegistryNewCtrl', [
 		'$route',
 		'$scope',
+		'$parse',
 		'$routeParams',
 		'$http',
 		'$location',
 		'xpsui:SchemaUtil',
 		'xpsui:NotificationFactory',
-		function($route, $scope, $routeParams, $http, $location,schemaUtilFactory,notificationFactory) {
+		'xpsui:NavigationService',
+		function($route, $scope, $parse, $routeParams, $http, $location, schemaUtilFactory, notificationFactory, navigationService) {
 			// $scope.currentSchemaUri = 'uri://registries/' + schemaUtilFactory.decodeUri($routeParams.schema);
 			$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
 			$scope.model = {};
@@ -45,6 +48,10 @@
 			schemaUtilFactory.getCompiledSchema($scope.currentSchemaUri, 'new').success(function(data) {
 				$scope.schemaFormOptions.schema = data;
 				schemaUtilFactory.generateObjectFromSchema($scope.schemaFormOptions.schema, $scope.model.obj);
+				var filler = navigationService.restore();
+				if (filler) {
+					schemaUtilFactory.fillObj($scope, filler);
+				}
 			}).error(function(err) {
 				notificationFactory.error(err);
 			});

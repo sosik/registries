@@ -251,7 +251,19 @@
           data: {
             tags: []
           }
-        }
+        },
+      showcase: {
+          meta: {
+            name: 'showcasevideo',
+            element: '<div></div>',
+            type: 'showcasevideo',
+            desc: '<h1>Výklad s videami</h1><p>Videá v prelínajúcom zobrazení výkladného okna</p>',
+            icon: 'img/block-topics.png',
+          },
+          data: {
+            tags: []
+          }
+        },
       };
 
     //$scope.templateUrl = 'portal/templates/article.html';

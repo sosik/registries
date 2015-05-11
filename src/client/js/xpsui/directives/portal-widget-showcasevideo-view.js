@@ -72,7 +72,7 @@
 							var article = angular.element('<article ng-show="visibleIndex == ' + i + '"></article>');
 					   		var item = angular.element(
 					   			'<iframe width="560" height="315" src="' + scope.model[i].video.src + '" frameborder="0" allowfullscreen></iframe>'
-								+ '<div class="x-portal-widget-showcasevideo-textblock"><a ng-click="navigate(' + scope.model[i].id + ')" >' + scope.model[i].video.title + '</a><div >' + scope.model[i].video.subTitle + '</div></div>');
+								+ '<div class="x-portal-widget-showcasevideo-textblock"><a ng-click="aler(10);navigate(\'' + scope.model[i].id + '\')" >' + scope.model[i].video.title + '</a><div >' + scope.model[i].video.subTitle + '</div></div>');
 					   		article.append(item);
 					   		elm.append(article);
 					   		$compile(article)(scope);

@@ -252,7 +252,7 @@
             tags: []
           }
         },
-      showcase: {
+      showcasevideo: {
           meta: {
             name: 'showcasevideo',
             element: '<div></div>',

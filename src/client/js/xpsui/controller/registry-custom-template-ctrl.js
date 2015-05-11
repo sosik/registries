@@ -26,6 +26,27 @@
 				});
 				return;
 			}
+
+			if ($routeParams.template == 'createTransfer.html') {
+				$http({ method : 'GET',
+					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FtransferApplicant~2Fview'
+						+ '/' + $routeParams.id})
+				.success(function(data, status, headers, config) {
+					if (data.id) {
+						delete data.id;
+					}
+					var copyFields = [
+					                  { 'path': 'model.obj', 'value': data }
+					];
+					navigationService.navigateToPath(
+							'/registry/new/uri~3A~2F~2Fregistries~2Ftransfers~23views~2Ftransfers', 
+							copyFields);
+					$location.path("/registry/new/uri~3A~2F~2Fregistries~2Ftransfers~23views~2Ftransfers");
+				}).error(function(err) {
+					notificationFactory.error(err);
+				});
+				return;
+			}
 		}
 	]);
 }(window.angular));

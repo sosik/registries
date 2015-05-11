@@ -7,9 +7,9 @@ Navigation service helps implement navigation in registry controllers.
 It is essentially a stack of past states. State is represented as a 2-ple (path, context).
 Path is stored automatically from Angular's $location object. Context is optionally passed into service method.
 
-There are four public methods in NavigationService - navigate(context), back(), restore() and clear().
+There are five public methods in NavigationService - navigate(context), navigateToPath(path, context), back(), restore() and clear().
 
-Flow starts with navigate(context) method. This stores the current path and passed context into the navigation.
+Flow starts with navigate(context) method. This stores the current path and passed context into the navigation. Optionally, navigateToPath(path, context) can be used when current path is different from target path, to store context with any arbitrary path.
 Then back() or restore() return to previous states. clear() can be used before 
 the navigate(context) call to clear the navigation.
 
@@ -40,6 +40,11 @@ by the caller of restore() method.
 			$scope.gotoNext = function() {
 				navigationService.navigate($scope.model);
 				$scope.model = {};
+			};
+
+			// State to be filled is stored, when moving to new form
+			$scope.moveToNewForm = function() {
+				navigationService.navigateToPath('/another/form', { 'obj1.objInner.field1': 'value1', 'obj2.objInner.field2': 'value2' });
 			};
 
 			// State is restored when moving back in history

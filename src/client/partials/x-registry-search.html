@@ -1,6 +1,7 @@
 <section>
 <form novalidate>
 	<fieldset>
+	<span class="x-fieldset-title">{{'generic.search.searching' | translate}} ({{schema.transCode | translate}})</span>
 	<div style="display: flex; flex-direction: row; padding-bottom: 3px;" ng-repeat="crit in searchCrits">
 		<div style="flex-direction: column; flex: 0 0 auto; padding-right: 3px;"><select style="font-size: 1em; line-height: 1.25em; height: 32px; background-color: #fafafa;" ng-options="d.name group by [d.group] for d in schemaFields" ng-model="crit.field" ng-change=""></select></div>
 		<div style="flex-direction: column; flex: 0 0 auto; padding-right: 3px;"><select style="font-size: 1em; line-height: 1.25em; height: 32px; background-color: #fafafa;" ng-options="o.text for o in allOps" ng-model="crit.op"></select></div>
@@ -12,18 +13,27 @@
 			<button ng-click="addNewCrit()" type="button" class="btn-secondary"><i class="icon-add"></i> Pridať</button>	
 		</div>
 		<div style="flex-direction: column; flex: 0 0 auto; align-content: flex-end;">
-			<button ng-click="search()" type="button" class="btn-primary"><i class="icon-search"></i> Hľadať</button>	
+			<button ng-click="search()" type="button" class="btn-primary"><i ng-show="!isSearching" class="icon-search"></i><i ng-show="isSearching" class="fa fa-spinner fa-spin"></i> Hľadať</button>	
 		</div>
 	</div>
 	</fieldset>
 </form>
 <fieldset>
 	<span class="x-fieldset-title">Výsledok vyhľadávania</span>
-	<div class="search-header" style="display:flex; flex-direction: row; flex-wrap: wrap; background-color: #b0b0b0; color: white;">
-		<div ng-repeat="f in schema.listFields" style="padding: 8px 8px 8px 8px; white-space: nowrap; flex-direction: column; flex: 1 0 150px; overflow: hidden; position: relative;">{{f.transCode|translate}}<i ng-show="f.field == currSort.field" class="icon-chevron-up" style="position: absolute; right: 0; padding-right: 10px; padding-left: 3px; background-color: #b0b0b0;"></i></div><div style="flex: 1 0 150px;"></div>
+	<div class="search-header" style="display:flex; flex-direction: row; flex-wrap: wrap; justify-content: space-around; background-color: #b0b0b0; color: white; margin-bottom: 3px;">
+		<div ng-repeat="f in schema.listFields" style="padding: 8px 8px 8px 8px; white-space: nowrap; flex-direction: column; flex: 1 0 150px; overflow: hidden; position: relative; cursor: pointer;" ng-click="changeSort(f.field);">{{(f.transCode ? f.transCode : f.title) | translate}}
+			<i ng-show="f.field == currSort.field && currSort.order == sort.ASC" class="icon-chevron-up" style="position: absolute; right: 0; padding-right: 10px; padding-left: 3px; background-color: #b0b0b0;"></i>
+			<i ng-show="f.field == currSort.field && currSort.order == sort.DESC" class="icon-chevron-down" style="position: absolute; right: 0; padding-right: 10px; padding-left: 3px; background-color: #b0b0b0;"></i>
+		</div>
+		<div style="flex: 1 0 150px;">&nbsp;</div>
 	</div>
-	<div ng-repeat="d in data" style="display:flex; flex-direction: row; flex-wrap: wrap; background-color: white; color: black; border-bottom: 1px solid #ddd;">
-		<div ng-repeat="f in schema.listFields" style="white-space: nowrap; flex-direction: column; flex: 1 0 150px; overflow: hidden; position: relative;" xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" xpsui-model="$parent.d[f.field]">x</div><div class="psui-actions-holder" style="padding: 6px; flex: 1 0 auto;"><a style="color: black;"><i class="icon-open"></i> <span>Zobraziť</span></a></div>
+	<div ng-repeat="d in data" style="display:flex; flex-direction: row; flex-wrap: wrap; background-color: white; color: black; border-bottom: 1px solid #ddd; justify-content: space-around;">
+		<div ng-repeat="f in schema.listFields" style="white-space: nowrap; flex-direction: column; flex: 1 0 150px; overflow: hidden; position: relative;" xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" xpsui-model="$parent.d[f.field]">x</div><div class="psui-actions-holder" style="padding: 6px; flex: 1 0 150px; text-align: right;"><a ng-repeat="a in $parent.schema.clientActions" xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" xpsui-schema="a" class="btn-primary">Zobraziť</button></a>
+	</div>
+</fieldset>
+<fieldset style="display: flex;">
+	<div style="flex-direction: column; flex: 0 0 auto; align-content: flex-end;">
+		<button ng-show="moreData" ng-click="next()" type="button" class="btn-primary pull-right"><i ng-show="!isSearching" class="fa fa-forward"></i><i ng-show="isSearching" class="fa fa-spinner fa-spin"></i> Viac</button>	
 	</div>
 </fieldset>
 </section>

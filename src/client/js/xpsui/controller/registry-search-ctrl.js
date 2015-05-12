@@ -15,11 +15,13 @@
 		'$routeParams',
 		'xpsui:SchemaUtil',
 		'$translate',
-		'$http',
+		'xpsui:HttpHandlerFactory',
 		'$parse',
 		'xpsui:logging',
 		'xpsui:QueryFilter',
-		function($scope, $routeParams, schemaUtil, $translate, $http, $parse, log, QueryFilter) {
+		function($scope, $routeParams, schemaUtil, $translate, httpFactory, $parse, log, QueryFilter) {
+
+			var httpHandler = httpFactory.newHandler();
 
 			//FIXME this function must be replaced by generic objecttools function shared among client and server if poosible
 			$scope.objectPathToSchemaPath = function(objPath) {
@@ -30,11 +32,17 @@
 				}
 			};
 
+			$scope.limit = 50;
+			$scope.moreData = false;
+			$scope.isSearching = false;
+
 			// current sort definition
 			$scope.currSort = {
 				field: null,
-				order: QueryFilter.sort.DESC
+				order: QueryFilter.sort.ASC
 			};
+
+			$scope.sort = QueryFilter.sort;
 
 			$scope.addNewCrit = function() {
 				$scope.searchCrits.push({
@@ -46,10 +54,37 @@
 				$scope.searchCrits.splice(idx, 1);
 			};
 
+			/**
+			 * Changes search sort order by field.
+			 * Order of sort can be changed by consequent use of function with
+			 * same field name.
+			 *
+			 * @param {string} field name of parameter
+			 *
+			 */
+			$scope.changeSort = function(field) {
+				if ($scope.currSort.field == field) {
+					// same field clicked twice, change sort order
+
+					if ($scope.currSort.order == QueryFilter.sort.ASC) {
+						$scope.currSort.order = QueryFilter.sort.DESC;
+					} else {
+						$scope.currSort.order = QueryFilter.sort.ASC;
+					}
+				}
+
+				$scope.currSort.field = field;
+
+				$scope.search();
+			};
+
 			$scope.setSearch = function(field) {
 			};
 
 			$scope.search = function() {
+				$scope.model = [];
+				$scope.data = [];
+				$scope.moreData = false;
 				$scope.currPage = 0;
 				fetchData();
 			};
@@ -60,8 +95,11 @@
 			};
 
 			function fetchData() {
+				$scope.isSearching = true;
+
 				var qf = QueryFilter.create();
 				
+				// add criteria
 				for (var i = 0; i <$scope.searchCrits.length; ++i) {
 					// skip criteria with empty field
 					if ($scope.searchCrits[i].field) {
@@ -69,25 +107,48 @@
 							$scope.searchCrits[i].field.path,
 							QueryFilter.operation[$scope.searchCrits[i].op.op],
 							$scope.searchCrits[i].val
-						).setSkip($scope.currPage * 50)
-						.setLimit(50);
+						);
 					}
 				}
 
+				// add fields
+				for (i = 0; i < $scope.schema.listFields.length; ++i) {
+					qf.addField($scope.schema.listFields[i].field);
+				}
+				qf.addField('id'); //ID should be always returned
+
+				// add sorts and limits
+				qf.addSort($scope.currSort.field, $scope.currSort.order)
+					.setSkip($scope.currPage * $scope.limit)
+					.setLimit($scope.limit + 1);
+
 				console.log(qf);
-				$http({
+				httpHandler.http({
 					url: '/search/' + schemaUtil.encodeUri(schemaUri),
 					method: 'POST',
 					data: qf
-				}).success(function(data, status, headers, config) {
-					$scope.data = flattenData(data, $scope.schema.listFields);
-				}).error(function(err) {
+				}).then(function(data) {
+					//success
+					var d = data.data;
+					$scope.isSearching = false;
+					if (d.length > $scope.limit) {
+						$scope.moreData = true;
+						d = d.slice(0,$scope.limit);
+					} else {
+						$scope.moreData = false;
+					}
+					$scope.model = $scope.model.concat(d);
+					$scope.data = $scope.data.concat(flattenData(d, $scope.schema.listFields));
+				}, function(err) {
+					// error
 					// FIXME notification
 				});
 			}
 
 			var schemaUri = schemaUtil.decodeUri($routeParams.schema);
 			$scope.schema = null;
+			$scope.model = [];
+			$scope.data = [];
 
 			// prepare known operations
 			$scope.allOps = [];

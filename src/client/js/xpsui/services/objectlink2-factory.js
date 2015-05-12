@@ -59,6 +59,11 @@
 						value = data.refData[field]
 					;
 
+					if (fieldsSchema[field].render && fieldsSchema[field].render.component == 'psui-datepicker') {
+						//special hack to show date value correctly
+						type = 'date';
+					}
+
 					wrapperElement.append(
 						angular.element('<span title="' + label + '">' +
 							Objectlink2.getFormatedValue(type,value) +
@@ -76,7 +81,7 @@
 			}
 
 			value = (typeof value === 'object' && value.v) ? value.v : value;
-			if(type === 'date'){
+			if (type === 'date'){
 				value = dateUtil.formatter(value);
 			}
 			return value;

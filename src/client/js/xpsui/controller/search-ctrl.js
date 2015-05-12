@@ -278,7 +278,7 @@
 			
 			var navigation = navigationService.restore();
 			if (navigation) {
-				$timeout(function () { $scope.search(); }, 1000);
+				$timeout(function () { $scope.search(); }, 200);
 			}
 		} 
 	]);

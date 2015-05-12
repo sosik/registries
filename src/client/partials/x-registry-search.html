@@ -28,7 +28,7 @@
 		<div style="padding: 8px 8px 8px 8px; white-space: nowrap; flex-direction: column; flex: 1 0 150px; overflow: hidden; position: relative; cursor: pointer;">Akcia</div>
 	</div>
 	<div ng-repeat="d in data" style="display:flex; flex-direction: row; flex-wrap: wrap; background-color: white; color: black; border-bottom: 1px solid #ddd; justify-content: space-around;">
-		<div ng-repeat="f in schema.listFields" ng-style="{'flex': '1 0 150px' }" style="white-space: wrap; flex-direction: column; overflow: hidden; position: relative;" xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" xpsui-model="$parent.d[f.field]">x</div><div class="psui-actions-holder" style="padding: 6px; flex: 1 0 auto; text-align: right;"><a ng-repeat="a in $parent.schema.clientActions" xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" xpsui-schema="a" class="btn-primary">Zobraziť</button></a>
+		<div ng-repeat="f in schema.listFields" ng-style="{'flex': '1 0 150px' }" style="white-space: wrap; flex-direction: column; overflow: hidden; position: relative;" xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" xpsui-model="$parent.d[f.field]">x</div><div class="psui-actions-holder" style="padding: 6px; flex: 1 0 150px; text-align: right;"><a ng-repeat="a in $parent.schema.clientActions" xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" xpsui-schema="a" class="btn-primary">Zobraziť</button></a>
 	</div>
 </fieldset>
 <fieldset style="display: flex;">

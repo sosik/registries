@@ -49,20 +49,20 @@
 				var block1 = createWidgetBlock(contentBlock1Title, contentBlock1Elm)
 				blocks.append(block1);
 
-				var block2 = createWidgetBlock('Trasfery', 'Some content')
-				blocks.append(block2);
+				// var block2 = createWidgetBlock('Trasfery', 'Some content')
+				// blocks.append(block2);
 
-				var block3 = createWidgetBlock('Example', 'Some content')
-				blocks.append(block3);
+				// var block3 = createWidgetBlock('Example', 'Some content')
+				// blocks.append(block3);
 
-				var block4 = createWidgetBlock('Example', 'Some content')
-				blocks.append(block4);
+				// var block4 = createWidgetBlock('Example', 'Some content')
+				// blocks.append(block4);
 
-				var block5 = createWidgetBlock('Example', 'Some content')
-				blocks.append(block5);
+				// var block5 = createWidgetBlock('Example', 'Some content')
+				// blocks.append(block5);
 
-				var block6 = createWidgetBlock('Example', 'Some content')
-				blocks.append(block6);
+				// var block6 = createWidgetBlock('Example', 'Some content')
+				// blocks.append(block6);
 
 				elm.append(titleBar);
 				elm.append(content);

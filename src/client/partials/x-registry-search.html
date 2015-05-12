@@ -25,14 +25,14 @@
 			<i ng-show="f.field == currSort.field && currSort.order == sort.ASC" class="icon-chevron-up" style="position: absolute; right: 0; padding-right: 10px; padding-left: 3px; background-color: #b0b0b0;"></i>
 			<i ng-show="f.field == currSort.field && currSort.order == sort.DESC" class="icon-chevron-down" style="position: absolute; right: 0; padding-right: 10px; padding-left: 3px; background-color: #b0b0b0;"></i>
 		</div>
-		<div style="flex: 1 0 150px;">&nbsp;</div>
+		<div style="padding: 8px 8px 8px 8px; white-space: nowrap; flex-direction: column; flex: 1 0 150px; overflow: hidden; position: relative; cursor: pointer;">Akcia</div>
 	</div>
 	<div ng-repeat="d in data" style="display:flex; flex-direction: row; flex-wrap: wrap; background-color: white; color: black; border-bottom: 1px solid #ddd; justify-content: space-around;">
-		<div ng-repeat="f in schema.listFields" style="white-space: nowrap; flex-direction: column; flex: 1 0 150px; overflow: hidden; position: relative;" xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" xpsui-model="$parent.d[f.field]">x</div><div class="psui-actions-holder" style="padding: 6px; flex: 1 0 150px; text-align: right;"><a ng-repeat="a in $parent.schema.clientActions" xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" xpsui-schema="a" class="btn-primary">Zobraziť</button></a>
+		<div ng-repeat="f in schema.listFields" ng-style="{'flex': '1 0 150px' }" style="white-space: wrap; flex-direction: column; overflow: hidden; position: relative;" xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" xpsui-model="$parent.d[f.field]">x</div><div class="psui-actions-holder" style="padding: 6px; flex: 1 0 auto; text-align: right;"><a ng-repeat="a in $parent.schema.clientActions" xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" xpsui-schema="a" class="btn-primary">Zobraziť</button></a>
 	</div>
 </fieldset>
 <fieldset style="display: flex;">
-	<div style="flex-direction: column; flex: 0 0 auto; align-content: flex-end;">
+	<div style="flex-direction: column; flex: 0 0 150px; align-content: flex-end;">
 		<button ng-show="moreData" ng-click="next()" type="button" class="btn-primary pull-right"><i ng-show="!isSearching" class="fa fa-forward"></i><i ng-show="isSearching" class="fa fa-spinner fa-spin"></i> Viac</button>	
 	</div>
 </fieldset>

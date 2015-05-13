@@ -116,7 +116,7 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 	*/
 	this.searchBySchemaCount = function(req, resp,next) {
 		var schemaUri=getRequestSchema(req,next);
-		self.service.searchBySchemaCount(schemaUri,getUserContext(req),req.body, new responeMapper(res,next));
+		self.service.searchBySchemaCount(schemaUri,getUserContext(req),req.body, new responeMapper(resp,next));
 	};
 
 

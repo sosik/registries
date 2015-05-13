@@ -139,7 +139,6 @@
 				for (var idx = 0; idx < $scope.forcedCriterias.length; idx++) {
 					c.push($scope.forcedCriterias[idx]);
 				}
-				c.
 				genericSearchFactory.getSearch(peopleSchemaUri, $scope.lastCriteria,convertSortBy( $scope.sortBy),$scope.data.length,pageSize).success(function(data) {
 
 					data.map(function (newItems){

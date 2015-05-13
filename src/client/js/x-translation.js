@@ -90,6 +90,7 @@
 			"menu.massmailing.new.lower.level":"Nový vzor",
 			"menu.massmailing.search.lower.level":"Vyhľadáť",
 			"menu.massmailing.send.title":"Odoslať",
+			"massmailing.send.confirm":"Skutočne odoslať?",
 			"massmailing.send":"Odoslať",
 			"massmailing.sent":"Správa bola odoslaná.",
 
@@ -619,6 +620,7 @@
 			"massmail.html.template":"Html verze zprávy",
 			"massmail.search.recipient":"Vyhledat příjemce",
 			"massmail.send.view":"Hromadní pošta",
+			"massmailing.send.confirm":"Skutečne odeslat?",
 			"massmailing.send":"Odeslat",
 			"massmailing.sent":"Správa byla odeslaná.",
 			"massmail.selection.all":"Podle filtra",

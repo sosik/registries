@@ -4,3 +4,14 @@
 		background-color: $component-background-color;
 	}
 }
+
+.x-objectlink2-view {
+	a, a:HOVER, a:VISITED, i {
+		color: $color-text;
+		font-size: 14px;
+	}
+	a:HOVER, a:HOVER i {
+		text-decoration: underline;
+		color: $color-text-darker;
+	}
+}

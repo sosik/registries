@@ -42,6 +42,7 @@ $icon-sign-in: $fa-var-sign-in !default;
 $icon-remove: $fa-var-times !default;
 $icon-add: $fa-var-plus !default;
 $icon-add-circle: $fa-var-plus-circle !default; 
+$icon-external-link: $fa-var-external-link !default; 
 $icon-minus: $fa-var-minus !default;
 $icon-search: $fa-var-search !default;
 $icon-open: $fa-var-eye !default;
@@ -60,6 +61,7 @@ $icon-tag: $fa-var-tag !default;
 .icon-remove:before { content: $icon-remove }
 .icon-add:before { content: $icon-add }
 .icon-add-circle:before { content: $icon-add-circle }
+.icon-external-link:before { content: $icon-external-link }
 .icon-minus:before { content: $icon-minus }
 .icon-search:before { content: $icon-search }
 .icon-open:before { content: $icon-open }

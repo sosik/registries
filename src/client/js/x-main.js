@@ -84,7 +84,7 @@
 		$routeProvider.when('/registry/new/:schema', {templateUrl: '/partials/x-registry-new.html', controller: 'xpsui:RegistryNewCtrl'});
 		$routeProvider.when('/registry/view/:schema/:id', {templateUrl: '/partials/x-registry-view.html', controller: 'xpsui:RegistryViewCtrl'});
 		$routeProvider.when('/search/:entity', {templateUrl : 'partials/x-generic-search.html', controller : 'xpsui:SearchCtrl'});
-		$routeProvider.when('/registry/search/:schema', {templateUrl : 'partials/x-registry-search.html', controller : 'xpsui:RegistrySearchCtrl', permissions: ['Registry - read']});
+		$routeProvider.when('/registry/search/:schema', {templateUrl : 'partials/x-registry-search.html', controller : 'xpsui:RegistrySearchCtrl'});
 
 		$routeProvider.when('/registry/custom/:template/:schema/:id', {templateUrl: function(params) {
 			return '/dataset/get/partials/' + params.template;

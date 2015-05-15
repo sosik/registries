@@ -44,15 +44,38 @@
 
 
 				if (ngModel) {
+					// can not use tab and enter keys in pending time
+					var eventPreventKeys = function(evt) {
+						// key enter, tab
+						if (evt.which === 9 || evt.which === 13) {
+							evt.preventDefault();
+							evt.stopPropagation();
+						}
+					}
+
+					scope.$watch(function(scope) {return ngModel.$pending;}, function(nv, ov) {
+						if (nv) {
+							element.addClass('x-panding');
+							inlineEditCtrl && inlineEditCtrl.hideCommitButton();
+							// can not use tab and enter keys in pending time
+							elm.on('keypress keydown', eventPreventKeys);
+						} else {
+							element.removeClass('x-panding');
+						}
+					});
+					
 					scope.$watch(function(scope) {return ngModel.$invalid;}, function(nv, ov) {
 						if (nv) {
 							validationMark.addClass('ng-invalid');
 							validationMark.removeClass('x-hidden');
 							inlineEditCtrl && inlineEditCtrl.hideCommitButton();
+							// can not use tab and enter keys in pending time
+							elm.on('keypress keydown', eventPreventKeys);
 						} else {
 							validationMark.removeClass('ng-invalid');
 							validationMark.addClass('x-hidden');
 							inlineEditCtrl && inlineEditCtrl.showCommitButton();
+							elm.off('keypress keydown', eventPreventKeys);
 						}
 					});
 

@@ -31,6 +31,11 @@
 					return;
 				}
 
+				if ($scope.newForm.$pending) {
+					notificationFactory.error({translationCode: 'registry.form.pending', time: 5000});
+					return;
+				}
+
 				$http({url: '/udao/saveBySchema/'+schemaUtilFactory.encodeUri(schemaUtilFactory.concatUri($scope.currentSchemaUri , 'new')), method: 'PUT',data: $scope.model.obj})
 				.success(function(data, status, headers, config){
 					notificationFactory.clear();

@@ -53,6 +53,7 @@
 				var editPanel = angular.element('<table class="x-hidden portal-menu-editor-edit-panel">' +
 					'<tr><td>Meno:</td><td><input ng-model="index.name"</td></tr>' +
 					'<tr><td>Tagy:</td><td><span xpsui-portal-multistring-edit ng-model="index.tags"></span></td></tr>' +
+					'<tr><td>Hash tag (#):</td><td><input ng-model="index.hash"</td></tr>' +
 					'</table>');
 
 

@@ -25,6 +25,7 @@
 					name: 'ROOT',
 					transCode: null,
 					tags: [],
+					hash: '',
 					subElements: []
 				}
 			};

@@ -17,10 +17,9 @@
 					var copyFields = [
 					                  { 'path': 'model.obj', 'value': data }
 					];
-					navigationService.navigateToPath(
-							'/registry/new/uri~3A~2F~2Fregistries~2Fpeople~23views~2Ffullperson', 
-							copyFields);
-					$location.path("/registry/new/uri~3A~2F~2Fregistries~2Fpeople~23views~2Ffullperson");
+					var uri = '/registry/new/uri~3A~2F~2Fregistries~2Fpeople~23views~2Ffullperson';
+					navigationService.navigateToPath(uri, copyFields);
+					$location.path(uri);
 				}).error(function(err) {
 					notificationFactory.error(err);
 				});
@@ -38,15 +37,53 @@
 					var copyFields = [
 					                  { 'path': 'model.obj', 'value': data }
 					];
-					navigationService.navigateToPath(
-							'/registry/new/uri~3A~2F~2Fregistries~2Ftransfers~23views~2Ftransfers', 
-							copyFields);
-					$location.path("/registry/new/uri~3A~2F~2Fregistries~2Ftransfers~23views~2Ftransfers");
+					var uri = '/registry/new/uri~3A~2F~2Fregistries~2Ftransfers~23views~2Ftransfers';
+					navigationService.navigateToPath(uri, copyFields);
+					$location.path(uri);
 				}).error(function(err) {
 					notificationFactory.error(err);
 				});
 				return;
 			}
+
+			if ($routeParams.template == 'personalAccountActivation.html') {
+				$http({ method : 'GET',
+					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Fpeople~23views~2Ffullperson~2Fview'
+						+ '/' + $routeParams.id})
+				.success(function(data, status, headers, config) {
+					$http({ method : 'GET', url: '/security/profiles' })
+					.success(function(dataProfiles, statusProfiles, headersProfiles, configProfiles) {
+						var defaultProfile = {};
+						for (var pos = 0; pos < dataProfiles.length; pos++) {
+							if (dataProfiles[pos].baseData.name == 'default') {
+								defaultProfile = dataProfiles[pos];
+							}
+						}
+						var email = '';
+						if (data && data.contactInfo) {
+							email = data.contactInfo.email;
+						}
+						var accountName = '';
+						if (data && data.baseData) {
+							accountName = data.baseData.name;
+						}
+						var copyFields = [
+							{ 'path': 'model.obj.account.email', 'value': email },
+							{ 'path': 'model.obj.account.name', 'value': accountName },
+							{ 'path': 'model.obj.account.profiles', 'value': [defaultProfile] }
+						];
+						var uri = '/registry/new/uri~3A~2F~2Fregistries~2FpersonalAccount~23views~2FpersonalAccount';
+						navigationService.navigateToPath(uri, copyFields);
+						$location.path(uri);
+					}).error(function(err) {
+						notificationFactory.error(err);
+					});
+				}).error(function(err) {
+					notificationFactory.error(err);
+				});
+				return;				
+			}
+
 		}
 	]);
 }(window.angular));

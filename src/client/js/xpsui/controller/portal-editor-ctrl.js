@@ -216,6 +216,18 @@
               tags: []
             }
           },
+        ranking: {
+            meta: {
+              name: 'ranking',
+              element: '<div></div>',
+              type: 'ranking',
+              desc: '<h1>Poradie</h1><p>Výsledky / poradie súťažiacich.</p>',
+              icon: 'img/block-content.png',
+            },
+            data: {
+              results: []
+            }
+          },
       gallery: {
           meta: {
             name: 'gallery',

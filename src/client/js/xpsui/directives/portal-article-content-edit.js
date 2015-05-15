@@ -72,6 +72,9 @@
 							block.attr('xpsui-portal-widget-' + ngModel.$modelValue[i].meta.type + '-view', attrs.ngModel+'[' + i + ']');
 						}
 
+						if (ngModel.$modelValue[i].css) {
+							block.attr('class', ngModel.$modelValue[i].css.cssClass);
+						}
 						block.attr('index', i);
 
 						content.append(block);

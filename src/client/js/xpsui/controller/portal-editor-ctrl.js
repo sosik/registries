@@ -99,7 +99,8 @@
             desc: '<h1>Titulok</h1><p>Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov</p>',
             icon: 'img/block-title.png',
           },
-          data: '<h1>...Titulok článku...</h1>'
+          data: '<h1>...Titulok článku...</h1>',
+          css: { cssClass: '' }
         },
       abstract: {
           meta: {
@@ -262,9 +263,10 @@
           },
           data: {
             tags: []
-          }
+          },
+          css: { cssClass: '' }
         },
-      showcase: {
+      showcasevideo: {
           meta: {
             name: 'showcasevideo',
             element: '<div></div>',
@@ -274,7 +276,8 @@
           },
           data: {
             tags: []
-          }
+          },
+          css: { cssClass: '' }
         },
       };
 

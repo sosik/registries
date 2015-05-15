@@ -25,6 +25,10 @@
 					+' <label class="col-sm-2 control-label">Tagy:</label>'
 					+' <div class="col-sm-4"><div class="input-group"><div xpsui-portal-multistring-edit ng-model="data.data.tags"></div></div></div>'
 					+'</div>'
+					+'<div class="form-group row">'
+					+' <label class="col-sm-2 control-label">CSS Classes:</label>'
+					+' <div class="col-sm-4"><input ng-model="data.css.cssClass"/></div>'
+					+'</div>'
 					+'</div>'
 					+'</fieldset>'
 					+'</form>');

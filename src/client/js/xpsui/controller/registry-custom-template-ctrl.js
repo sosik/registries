@@ -56,7 +56,9 @@
 						var defaultProfile = {};
 						for (var pos = 0; pos < dataProfiles.length; pos++) {
 							if (dataProfiles[pos].baseData.name == 'default') {
-								defaultProfile = dataProfiles[pos];
+								defaultProfile = {};
+								defaultProfile.oid = dataProfiles[pos].id;
+								defaultProfile.refData = { name: dataProfiles[pos].baseData.name };
 							}
 						}
 						var email = '';

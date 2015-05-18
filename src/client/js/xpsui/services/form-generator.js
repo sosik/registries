@@ -104,11 +104,12 @@
 						field = angular.element('<div>Unsupported render component '+schemaFragment.render.component+'</div>');
 					}
 				} else {
-					field = angular.element('<div xpsui-string-edit></div>');
+					field = angular.element('<div xpsui-string-edit ></div>');
 				}
 
 				field.attr('xpsui-schema', schemaPath);
 				field.attr('ng-model', modelPath);
+				field.attr('xpsui-calculable', schemaPath);
 
 			} else {
 				if (schemaFragment.type === 'array') {
@@ -144,10 +145,11 @@
 					field = angular.element('<div xpsui-select-view></div>');
 					field.attr('xpsui-schema', schemaPath);
 				} else {
-					field = angular.element('<div xpsui-string-view></div>');
+					field = angular.element('<div xpsui-string-view ></div>');
 				}
 
 				field.attr('ng-model', modelPath);
+				field.attr('xpsui-calculable', schemaPath);
 
 			}
 

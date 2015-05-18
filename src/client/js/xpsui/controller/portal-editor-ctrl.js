@@ -166,6 +166,18 @@
             img: ''
           }
         },
+        image1170: {
+            meta: {
+              name: 'image1170',
+              element: '<div></div>',
+              type: 'image1170',
+              desc: '<h1>Obrázok 1170px x 570px</h1><p>Obrázok 1170px x 570px.</p>',
+              icon: 'img/block-image.png',
+            },
+            data: {
+              img: ''
+            }
+          },
         video: {
             meta: {
               name: 'video',
@@ -239,7 +251,19 @@
           data: {
             tags: []
           }
-        }
+        },
+      showcasevideo: {
+          meta: {
+            name: 'showcasevideo',
+            element: '<div></div>',
+            type: 'showcasevideo',
+            desc: '<h1>Výklad s videami</h1><p>Videá v prelínajúcom zobrazení výkladného okna</p>',
+            icon: 'img/block-topics.png',
+          },
+          data: {
+            tags: []
+          }
+        },
       };
 
     //$scope.templateUrl = 'portal/templates/article.html';

@@ -286,7 +286,8 @@ PageController.prototype.renderPage = function(req, res, next) {
 									id: data[i].id,
 									title: findFirstOfType(data[i].data, 'title'),
 									abstract: findFirstOfType(data[i].data, 'abstract'),
-									img: findFirstOfType(data[i].data, 'image')
+									img: findFirstOfType(data[i].data, 'image'),
+									video: findFirstOfType(data[i].data, 'video')
 								});
 							}
 						}
@@ -316,7 +317,8 @@ PageController.prototype.renderPage = function(req, res, next) {
 					for (var i in locals.article.data) {
 						if (locals.article.data[i] && locals.article.data[i].meta.type === 'category' 
 								|| locals.article.data[i].meta.type === 'showcase'
-								|| locals.article.data[i].meta.type === 'overview') {
+								|| locals.article.data[i].meta.type === 'overview'
+								|| locals.article.data[i].meta.type === 'showcasevideo') {
 							blocksResolvers.push(createCategoryResolver(locals.article.data[i], aid));
 						}
 					}

@@ -94,6 +94,14 @@
 				fetchData();
 			};
 
+			$scope.findFieldDefinition = function(fieldPath) {
+				for (var i = 0; i < $scope.schemaFields.length; i++) {
+					if (fieldPath == $scope.schemaFields[i].path) {
+						return $scope.schemaFields[i];
+					}
+				}
+			};
+
 			function fetchData() {
 				$scope.isSearching = true;
 
@@ -103,10 +111,18 @@
 				for (var i = 0; i <$scope.searchCrits.length; ++i) {
 					// skip criteria with empty field
 					if ($scope.searchCrits[i].field) {
+						var val = $scope.searchCrits[i].val;
+
+						var fieldDef = $scope.findFieldDefinition($scope.searchCrits[i].field.path);
+						if (fieldDef
+							&& fieldDef.fragment.type == 'number'
+							&& val == parseInt(val)) {
+							val = parseInt(val);
+						}
 						qf.addCriterium(
 							$scope.searchCrits[i].field.path,
 							QueryFilter.operation[$scope.searchCrits[i].op.op],
-							$scope.searchCrits[i].val
+							val
 						);
 					}
 				}

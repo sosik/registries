@@ -22,7 +22,7 @@
 							<input
 								type="text" id="name" name="name" ng-model="crit.value"
 								placeholder="value" class="ng-pristine ng-valid"
-								autocomplete="off">
+								autocomplete="off" ng-keydown="fieldKeyDown($event);">
 
 						</div>
 						<div class="x-fieldset-col-2">

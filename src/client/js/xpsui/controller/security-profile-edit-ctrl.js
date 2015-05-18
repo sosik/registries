@@ -280,6 +280,14 @@
 					notificationFactory.error(err)});
 			};
 
+			$scope.fieldKeyDown = function($event) {
+				if ($event.keyCode == 13) {
+					$scope.search();
+					//$event.stopPropagation();
+					$event.preventDefault();
+					return false;
+				}
+			};
 		}
 	]);
 

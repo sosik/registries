@@ -171,7 +171,7 @@
             meta: {
               name: 'image1170',
               element: '<div></div>',
-              type: 'image1170',
+              type: 'image',
               desc: '<h1>Obrázok 1170px x 570px</h1><p>Obrázok 1170px x 570px.</p>',
               icon: 'img/block-image.png',
             },

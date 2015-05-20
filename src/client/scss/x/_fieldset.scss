@@ -62,6 +62,7 @@ div.x-fieldset-row {
 		float: left;
 		position: relative;
 		padding-top: 9px;
+		word-wrap: break-word;
 
 		&.x-required:after {
 			content: '*';

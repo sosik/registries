@@ -8,7 +8,20 @@
 			$scope.model = {};
 			$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
 
-			
+			if ($routeParams.template == 'playerLicenseCard.html' || $routeParams.template == 'playerHostingCard.html' || $routeParams.template == 'officerCard.html') {
+				$scope.model = {};
+				$scope.currentSchemaUri = schemaUtilFactory.decodeUri($routeParams.schema);
+
+				$http({ method : 'GET',url: '/udao/getBySchema/'+$routeParams.schema+'/'+ $routeParams.id})
+				.success(function(data, status, headers, config){
+					$scope.model = data;
+				}).error(function(err) {
+					notificationFactory.error(err);
+				});
+				return;
+			};
+
+
 			if ($routeParams.template == 'createMember.html') {
 				$http({ method : 'GET',
 					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FpeopleRegistrationApplicant~2Fview'

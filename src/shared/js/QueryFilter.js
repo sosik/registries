@@ -12,18 +12,6 @@
 	 */
 	var operation = {
 		/**
-		 * Field exists in structure
-		 *
-		 * @property EXISTS
-		 */
-		EXISTS: 'ex',
-		/**
-		 * Field does not exist in structire
-		 * 
-		 * @property NOT_EXISTS
-		 */
-		NOT_EXISTS: 'nex',
-		/**
 		 * Field value is equal
 		 *
 		 * @property EQUAL
@@ -83,6 +71,18 @@
 		 * @property STARTS_WITH
 		 */ 
 		STARTS_WITH: 'starts',
+		/**
+		 * Field exists in structure
+		 *
+		 * @property EXISTS
+		 */
+		EXISTS: 'ex',
+		/**
+		 * Field does not exist in structure
+		 * 
+		 * @property NOT_EXISTS
+		 */
+		NOT_EXISTS: 'nex',
 		/**
 		 * Field values are all present
 		 *
@@ -168,7 +168,7 @@
 					break;
 				case operation.NOT_EXISTS:
 						c = {f: field, op: operation.NOT_EXISTS};
-						break;
+					break;
 				case operation.EQUAL:
 					c = {f: field, op: operation.EQUAL, v: val};
 					break;

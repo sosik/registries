@@ -1,0 +1,133 @@
+
+.flex-form {
+
+	.flex-form-row {
+		display: flex;
+		display: -webkit-box;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		padding-bottom: 3px;
+	}
+
+	.flex-form-col-left {
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		flex: 0 0 auto;
+		-webkit-flex: 0 0 auto;
+		padding-right: 3px;
+	}
+
+	.flex-form-col-middle {
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		flex: 1 0 auto;
+		-webkit-flex: 1 0 auto;
+	}
+
+	.flex-form-col-right {
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		flex: 0 0 auto;
+		-webkit-flex: 0 0 auto; 
+	}
+
+	.flex-form-col-content-end {
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		flex: 0 0 auto;
+		-webkit-flex: 0 0 auto;
+		align-content: flex-end;
+	}
+
+	select {
+		font-size: 1em;
+		line-height: 1.25em;
+		height: 32px;
+		background-color: #fafafa;
+	}
+
+}
+
+.flex-form-fieldset {
+	.flex-form-headers {
+		display: flex;
+		display: -webkit-box;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		justify-content: space-around;
+		background-color: #b0b0b0;
+		color: white;
+		border-width: 2px;
+		border-bottom-width: 2px;
+		border-bottom-style: solid;
+		border-bottom-color: rgb(136, 135, 135);
+	}
+
+	.flex-form-header {
+		padding: 8px 10px 8px 10px;
+		white-space: nowrap;
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		flex: 1 0 150px;
+		-webkit-flex: 1 0 150px;
+		overflow: hidden;
+		position: relative;
+		cursor: pointer;
+	}
+
+	.flex-form-header-icon {
+		position: absolute;
+		right: 0;
+		padding-right: 10px;
+		padding-left: 3px;
+		background-color: #b0b0b0;
+	}
+
+	.flex-form-data-row {
+		display: flex;
+		display: -webkit-box;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		background-color: white;
+		color: black;
+		border-bottom: 1px solid #ddd;
+		justify-content: space-around;
+		padding: 6px 2px 2px 0px;
+	}
+
+	.flex-form-data-col {
+		white-space: wrap;
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		overflow: hidden;
+		position: relative;
+	}
+
+	.flex-form-data-action {
+		padding: 6px;
+		flex: 1 0 150px;
+		-webkit-flex: 1 0 150px;
+		text-align: right;
+	}
+
+	.flex {
+		display: flex;
+		display: -webkit-flex;
+	}
+
+	.flex-form-col-end {
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		flex: 0 0 150px;
+		-webkit-flex: 0 0 150px;
+		align-content: flex-end;
+	}
+
+}

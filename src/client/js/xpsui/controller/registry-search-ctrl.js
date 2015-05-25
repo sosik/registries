@@ -78,6 +78,47 @@
 				$scope.search();
 			};
 
+			$scope.exportCsv = function() {
+				fetchData(function(data) {
+
+					var htmlData='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table id="tblExport" style="border:1px solid black; "><thead><tr>';
+					for (var li in $scope.schema.listFields){
+						var lisDef=$scope.schema.listFields[li];
+						htmlData+='<th>'+lisDef.title+'</th>';
+					}
+					htmlData+='<tr></thead><tbody>';
+
+					for (var item=0; item<data.data.length; item++) {
+						htmlData+='<tr>';
+						for (var li=0; li<$scope.schema.listFields.length; li++) {
+							var components = $scope.schema.listFields[li].field.split('.');
+							var value = data.data[item];
+							for (var i=0; i<components.length; i++) {
+								value = value[components[i]];
+							}
+							if (value || value === 0) {
+								htmlData += '<td>' + value +'</td>';
+							} else {
+								htmlData += '<td></td>';
+							}
+						}
+						htmlData+='</tr>';
+					}
+					htmlData+='</tbody></table></body></html>';
+
+					var blob = new Blob([htmlData], {type: 'application/vnd.ms-excel;charset=utf-8'});
+					var url  =  window.webkitURL||window.URL;
+					var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+					link.href = url.createObjectURL(blob);
+					link.download = 'search-export.xls'; // whatever file name you want :)
+
+					var event = document.createEvent('MouseEvents');
+					event.initEvent('click', true, false);
+					link.dispatchEvent(event);
+
+				});
+			};
+
 			$scope.setSearch = function(field) {
 			};
 
@@ -102,7 +143,7 @@
 				}
 			};
 
-			function fetchData() {
+			function fetchData(fetchDataCallback) {
 				$scope.isSearching = true;
 
 				var qf = QueryFilter.create();
@@ -145,6 +186,11 @@
 					data: qf
 				}).then(function(data) {
 					//success
+					if (fetchDataCallback) {
+						fetchDataCallback(data);
+						return;
+					}
+
 					var d = data.data;
 					$scope.isSearching = false;
 					if (d.length > $scope.limit) {

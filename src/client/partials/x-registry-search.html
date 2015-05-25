@@ -47,6 +47,9 @@
 </fieldset>
 <fieldset class="flex-form-fieldset">
 	<div class="flex">
+		<div class="">
+			<button ng-show="data" ng-click='exportCsv()' class="btn-secondary"> {{'generic.search.export.csv' | translate}} </button>
+		</div>
 		<div class="flex-form-col-end">
 			<button ng-show="moreData" ng-click="next()" type="button" class="btn-primary pull-right"><i ng-show="!isSearching" class="fa fa-forward"></i><i ng-show="isSearching" class="fa fa-spinner fa-spin"></i> Viac</button>
 		</div>

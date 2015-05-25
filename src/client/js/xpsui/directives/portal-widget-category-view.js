@@ -89,6 +89,9 @@
 								title: findFirstOfType(data[i].data, 'title'),
 								abstract: findFirstOfType(data[i].data, 'abstract'),
 								img: findFirstOfType(data[i].data, 'image'),
+								img1170: findFirstOfType(data[i].data, 'image1170'),
+								video: findFirstOfType(data[i].data, 'video'),
+								content: findFirstOfType(data[i].data, 'content')
 							});
 						}
 						scope.refreshPage();

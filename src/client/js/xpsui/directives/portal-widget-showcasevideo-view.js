@@ -64,6 +64,8 @@
 								abstract: findFirstOfType(data[i].data, 'abstract'),
 								img: findFirstOfType(data[i].data, 'image'),
 								video: findFirstOfType(data[i].data, 'video'),
+								img1170: findFirstOfType(data[i].data, 'image1170'),
+								content: findFirstOfType(data[i].data, 'content')
 							});
 					   }
 

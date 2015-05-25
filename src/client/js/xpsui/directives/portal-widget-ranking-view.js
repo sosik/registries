@@ -14,9 +14,10 @@
 
 				elm.empty();
 				elm.addClass('x-portal-widget-edit');
+				elm.addClass('portal-article-ranking');
 
 
-				var content = angular.element('<div style="padding-left: 2px;">' +
+				var content = angular.element('<div style="padding-left: 2px;" class="ranking">' +
 						'<div ng-repeat="result in data.data.results" class="actual-ranking-riders-items">' +
 								'<div class="rider-name">{{$index}}. {{result.name}}</div>' +
 								'<div class="rider-country">({{result.country}})</div>' +

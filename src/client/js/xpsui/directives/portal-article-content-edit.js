@@ -65,7 +65,7 @@
 					
 					var content = angular.element('<div></div>');
 					for (i = 0; i < ngModel.$modelValue.length; ++i) {
-						block = angular.element('<div>x</div>');
+						block = angular.element('<div >x</div>');
 						if (scope.mode === 'edit') {
 							block.attr('xpsui-portal-widget-' + ngModel.$modelValue[i].meta.type + '-edit', attrs.ngModel+'[' + i + ']');
 						} else {

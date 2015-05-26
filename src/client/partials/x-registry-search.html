@@ -27,14 +27,20 @@
 <fieldset class="flex-form-fieldset">
 	<span class="x-fieldset-title">Výsledok vyhľadávania</span>
 	<div class="search-header flex-form-headers" >
-		<div ng-repeat="f in schema.listFields" class="flex-form-header" ng-click="changeSort(f.field);">{{(f.transCode ? f.transCode : f.title) | translate}}
+		<div ng-repeat="f in schema.listFields" class="flex-form-header" ng-click="changeSort(f.field);"
+				ng-style="{'flex': fieldWeigth(f), '-webkit-flex': fieldWeigth(f) }">
+			{{(f.transCode ? f.transCode : f.title) | translate}}
 			<i ng-show="f.field == currSort.field && currSort.order == sort.ASC" class="icon-chevron-up" class="flex-form-header-icon"></i>
 			<i ng-show="f.field == currSort.field && currSort.order == sort.DESC" class="icon-chevron-down" class="flex-form-header-icon"></i>
 		</div>
 		<div class="flex-form-header">Akcia</div>
 	</div>
-	<div ng-repeat="d in data" class="flex-form-data-row">
-		<div ng-repeat="f in schema.listFields" ng-style="{'flex': '1 0 150px', '-webkit-flex': '1 0 150px' }" class="flex-form-data-col" xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" xpsui-model="$parent.d[f.field]">x</div>
+	<div ng-repeat="d in data" class="flex-form-data-row row-{{($index%2)?'odd':'even'}}">
+		<div ng-repeat="f in schema.listFields" 
+				ng-style="{'flex': fieldWeigth(f), '-webkit-flex': fieldWeigth(f) }"
+				class="flex-form-data-col" 
+				xpsui-by-schema-field-view xpsui-schema="{{'$parent.$parent.schema.' + objectPathToSchemaPath(f.field)}}" 
+				xpsui-model="$parent.d[f.field]">x</div>
 		<div class="psui-actions-holder flex-form-data-action">
 			<a ng-repeat="a in $parent.schema.clientActions" 
 					xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" 

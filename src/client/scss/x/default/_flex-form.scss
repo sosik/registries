@@ -1,5 +1,9 @@
 
 .flex-form-fieldset {
+	.flex-form-data-row.row-even {
+		background-color: $color-grey-light;
+	}
+
 	.flex-form-header:hover {
 		background: $color-main;
 	}

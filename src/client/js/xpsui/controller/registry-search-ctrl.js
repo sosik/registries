@@ -31,6 +31,17 @@
 					return null;
 				}
 			};
+			
+			$scope.fieldWeigth = function(field) {
+				if (field.render && field.render.width) {
+					if (field.render.width == 'narrow') {
+						return '2 0 100px';
+					} else if (field.render.width == 'wide') {
+						return '50 0 150px';
+					}
+				}
+				return '10 0 200px';
+			}
 
 			$scope.limit = 50;
 			$scope.moreData = false;

@@ -72,8 +72,8 @@
 		white-space: nowrap;
 		flex-direction: column;
 		-webkit-flex-direction: column;
-		flex: 1 0 150px;
-		-webkit-flex: 1 0 150px;
+		flex: 10 0 150px;
+		-webkit-flex: 10 0 150px;
 		overflow: hidden;
 		position: relative;
 		cursor: pointer;
@@ -112,8 +112,8 @@
 
 	.flex-form-data-action {
 		padding: 6px;
-		flex: 1 0 150px;
-		-webkit-flex: 1 0 150px;
+		flex: 10 0 150px;
+		-webkit-flex: 10 0 150px;
 		text-align: right;
 	}
 

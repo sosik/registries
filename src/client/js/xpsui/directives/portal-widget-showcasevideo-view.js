@@ -70,6 +70,7 @@
 					   }
 
 					   elm.empty();
+					   elm.append('<div class="portal-content-title"></div>');
 					   for (var i = 0; i < scope.model.length; i++) {
 							var article = angular.element('<article ng-show="visibleIndex == ' + i + '"></article>');
 					   		var item = angular.element(

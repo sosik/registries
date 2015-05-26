@@ -8,7 +8,8 @@
 			scope: {
 				data: '=xpsuiPortalWidgetShowcaseView'
 			},
-			template: '<article ng-repeat="c in model" ng-show="visibleIndex == $index || visibleIndex == \'no\'">'
+			template: '<div class="portal-content-title"></div>'
+				+ '<article ng-repeat="c in model" ng-show="visibleIndex == $index || visibleIndex == \'no\'">'
 				+ '<div class="x-portal-widget-showcase-diamond only-location"><div class="x-portal-widget-showcase-diamond-inner"></div></div>'
 				+ '<div ng-show="c.img.img" class="x-portal-widget-showcase-image" style="background: url(\'{{c.img.img}}\'); background-repeat: no-repeat; background-size: cover; height: 492px; width: 100%;"></div>'
 				+ '<div ng-show="c.img.img" class="x-portal-widget-showcase-textblock"><a ng-click="navigate(c.id)" ng-bind-html="makeSafe(c.title)"></a><div ng-bind-html="makeSafe(c.abstract)"></div></div>'

@@ -46,6 +46,7 @@
 			$scope.limit = 50;
 			$scope.moreData = false;
 			$scope.isSearching = false;
+			$scope.isExporting = false;
 
 			// current sort definition
 			$scope.currSort = {
@@ -90,34 +91,35 @@
 			};
 
 			$scope.exportCsv = function() {
-				fetchData(function(data) {
+				$scope.isExporting = true;
 
-					var htmlData='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table id="tblExport" style="border:1px solid black; "><thead><tr>';
-					for (var li in $scope.schema.listFields){
+				setTimeout(function() {
+					var data = $scope.data
+
+					var htmlData = [];
+					htmlData.push('<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta http-equiv=Content-Type content="text/html; charset=utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table id="tblExport" style="border:1px solid black; "><thead><tr>');
+					for (var li in $scope.schema.listFields) {
 						var lisDef=$scope.schema.listFields[li];
-						htmlData+='<th>'+lisDef.title+'</th>';
+						htmlData.push('<th>'+lisDef.title+'</th>');
 					}
-					htmlData+='<tr></thead><tbody>';
+					htmlData.push('<tr></thead><tbody>');
 
-					for (var item=0; item<data.data.length; item++) {
-						htmlData+='<tr>';
+					for (var item=0; item<data.length; item++) {
+						htmlData.push('<tr>');
 						for (var li=0; li<$scope.schema.listFields.length; li++) {
-							var components = $scope.schema.listFields[li].field.split('.');
-							var value = data.data[item];
-							for (var i=0; i<components.length; i++) {
-								value = value[components[i]];
-							}
+							var field = $scope.schema.listFields[li].field;
+							var value = data[item][field];
 							if (value || value === 0) {
-								htmlData += '<td>' + value +'</td>';
+								htmlData.push('<td>' + value +'</td>');
 							} else {
-								htmlData += '<td></td>';
+								htmlData.push('<td></td>');
 							}
 						}
-						htmlData+='</tr>';
+						htmlData.push('</tr>');
 					}
-					htmlData+='</tbody></table></body></html>';
+					htmlData.push('</tbody></table></body></html>');
 
-					var blob = new Blob([htmlData], {type: 'application/vnd.ms-excel;charset=utf-8'});
+					var blob = new Blob([htmlData.join('')], {type: 'application/vnd.ms-excel;charset=utf-8'});
 					var url  =  window.webkitURL||window.URL;
 					var link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
 					link.href = url.createObjectURL(blob);
@@ -127,7 +129,10 @@
 					event.initEvent('click', true, false);
 					link.dispatchEvent(event);
 
-				});
+					$scope.$apply(function () {
+						$scope.isExporting = false;
+					});
+				}, 10);
 			};
 
 			$scope.setSearch = function(field) {
@@ -154,7 +159,7 @@
 				}
 			};
 
-			function fetchData(fetchDataCallback) {
+			function fetchData() {
 				$scope.isSearching = true;
 
 				var qf = QueryFilter.create();
@@ -197,10 +202,6 @@
 					data: qf
 				}).then(function(data) {
 					//success
-					if (fetchDataCallback) {
-						fetchDataCallback(data);
-						return;
-					}
 
 					var d = data.data;
 					$scope.isSearching = false;

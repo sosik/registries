@@ -13,7 +13,6 @@ var errorhandler = require('errorhandler');
 var path = require('path');
 var fsController=require('./fsController.js');
 
-
 var mongoDriver = require(path.join(process.cwd(), '/build/server/mongoDriver.js'));
 var config = require(path.join(process.cwd(), '/build/server/config.js'));
 
@@ -98,7 +97,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use(cookieParser());
 	app.use(securityCtrl.authFilter);
 
-	app.put('/udao/saveBySchema/:schema',securityService.authenRequired, bodyParser.json(),udc.saveBySchema);
+	app.put('/udao/saveBySchema/:schema', bodyParser.json(),udc.saveBySchema);
 	app.get('/udao/getBySchema/:schema/:id',securityService.authenRequired, udc.getBySchema);
 	app.get('/udao/list/portalMenu',securityService.authenRequired, bodyParser.json(), udc.listPortalMenu);
 	app.get('/udao/get/portalArticles/:id',securityService.authenRequired, bodyParser.json(), udc.getPortalArticle);

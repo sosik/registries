@@ -9,6 +9,7 @@ var http = require('http');
 var path = require('path');
 var config = require('./config.js');
 var mongoDriver = require('./mongoDriver.js');
+var bodyParser = require('body-parser');
 
 
 // START
@@ -70,6 +71,8 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.use('/portal', express.static(path.join(process.cwd(), 'data', 'portal', 'client')));
 	app.use('/photos/get', express.static(path.join(process.cwd(), 'data', 'photos')));
 	app.use('/uploads/get', express.static(path.join(process.cwd(), 'data', 'uploads')));
+
+	app.put('/schema/:schema', bodyParser.json(), pageController.saveSchema);
 
 	// If nothing worked so far show 404
 	//app.use(pageController.renderNotFound);

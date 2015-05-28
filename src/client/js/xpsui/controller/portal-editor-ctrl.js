@@ -334,7 +334,7 @@
 
     $scope.findSurrogateTitle = function(pageBlocks) {
       if (pageBlocks) {
-        for(i = 0; i < pageBlocks.length; i++) {
+        for(var i = 0; i < pageBlocks.length; i++) {
           if (pageBlocks[i].meta.name == 'title') {
             return pageBlocks[i].data.replace('<h1>', '').replace('</h1>', '');
           }

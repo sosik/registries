@@ -7,6 +7,8 @@ var QueryFilter = require('../QueryFilter.js');
 var universalDaoModule = require('../UniversalDao.js');
 var swig = require('swig');
 var path = require('path');
+var request = require('request');
+var config = require(path.join(process.cwd(), '/build/server/config.js'));
 
 var articlesCollection = 'portalArticles';
 var menuCollection = 'portalMenu';
@@ -194,6 +196,34 @@ PageController.prototype.competitionResults = function(req, res, next) {
 	});
 
 };
+
+PageController.prototype.saveSchema = function(req, res, next) {
+	var schema = '';
+
+	if (req.params && req.params.schema) {
+		schema = req.params.schema;
+	}
+
+	request({ url: config.webserverPublicUrl + '/udao/saveBySchema/' + req.params.schema, method: 'PUT', 
+			json: true,
+			headers: {
+				"content-type": "application/json",
+			},
+			body: req.body,
+			rejectUnauthorized: false
+		},
+		function (err, response, body) {
+			if (err) {
+				log.error('error: %j ', err);
+				res.sendStatus(500);
+				return;
+			}
+
+			res.json(body);
+			res.end();
+		});
+};
+
 PageController.prototype.renderPage = function(req, res, next) {
 	var locals = {};
 
@@ -462,6 +492,13 @@ module.exports = {
 	renderPage: function(req, res, next) {
 		if (pageController) {
 			pageController.renderPage(req, res, next);
+		} else {
+			throw new Error('page-controller module not initialized');
+		}
+	},
+	saveSchema: function(req, res, next) {
+		if (pageController) {
+			pageController.saveSchema(req, res, next);
 		} else {
 			throw new Error('page-controller module not initialized');
 		}

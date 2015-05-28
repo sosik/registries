@@ -233,7 +233,11 @@ var UniversalDaoService = function(mongoDriver, schemaRegistry, eventRegistry) {
 
 					var auditEntity={};
 					auditEntity.obj = obj;
-					auditEntity.user = userCtx.user.id;
+					if (userCtx.user) {
+						auditEntity.user = userCtx.user.id ;
+					} else {
+						auditEntity.user = null;
+					}
 					auditEntity.action = "create";
 					auditEntity.timeStamp = new Date().getTime();
 					auditEntity.schemaName = schemaName;

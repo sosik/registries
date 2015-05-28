@@ -362,7 +362,8 @@ PageController.prototype.renderPage = function(req, res, next) {
 						next(err);
 						return;
 					}
-					swig.renderFile(path.join(config.portalTemplatesPath, 'index.html'), locals, function(err, output) {
+					var templateName = locals.article.meta.template + '.html';
+					swig.renderFile(path.join(config.portalTemplatesPath, templateName), locals, function(err, output) {
 						if (err) {
 							log.error('Failed to render %s', 'index.html', err);
 							next(err);

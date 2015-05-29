@@ -1,3 +1,6 @@
+### Improved speed of export functionality
+Speed and memory consumption of export improved. Visual indication of export process works now.
+
 ### Customizable width of column in search window
 Search form now recognizes definition fo relative width of column in search results grid. To render baseData.registrationID liitle more narrow then standard field, use `render.width` property:
 

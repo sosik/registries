@@ -12,7 +12,7 @@
       'index' : {
         name: 'Titulok',
         desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
-        icon: 'img/block-title.png',
+        icon: 'img/block-headline.svg',
         meta: {
           template: 'index',
           isIndex: false,
@@ -53,7 +53,7 @@
       article : {
         name: 'Article',
         desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
-        icon: 'img/block-title.png',
+        icon: 'img/block-article.svg',
         meta: {
           template: 'article',
           enabled: true,
@@ -96,8 +96,9 @@
             name: 'title',
             element: '<div></div>',
             type: 'pure-html',
-            desc: '<h1>Titulok</h1><p>Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov</p>',
-            icon: 'img/block-title.png',
+            title: 'Titulok',
+            desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
+            icon: 'img/block-headline.svg',
           },
           data: '<h1>...Titulok článku...</h1>',
           css: { cssClass: '' }
@@ -107,8 +108,9 @@
             name: 'abstract',
             element: '<section class="abstract"></section>',
             type: 'pure-html',
-            desc: '<h1>Abstrakt</h1><p>Krátke zhrnutie článku</p>',
-            icon: 'img/block-abstract.png',
+            title: 'Abstrakt',
+            desc: 'Krátke zhrnutie článku',
+            icon: 'img/block-abstract.svg',
           },
           data: '...Abstrakt článku...'
         },
@@ -117,8 +119,9 @@
             name: 'content',
             element: '<section class="content"></section>',
             type: 'pure-html',
-            desc: '<h1>Obsah</h1><p>Obsah článku obsahujúci hlavnú časť textu</p>',
-            icon: 'img/block-content.png',
+            title: 'Obsah',
+            desc: 'Obsah článku obsahujúci hlavnú časť textu',
+            icon: 'img/block-content.svg',
           },
           data: '<p>...Obsah článku...</p>'
         },
@@ -127,8 +130,9 @@
               name: 'match-results',
               element: '<section class="x-portal-competition-matches"><header>Výsledky</header></section>',
               type: 'match-results',
-              desc: '<h1>Výsledky</h1><p>Časť obsahujúa výsledky súťaží.</p>',
-              icon: 'img/block-content.png',
+              title: 'Výsledky',
+              desc: 'Časť obsahujúa výsledky súťaží.',
+              icon: 'img/block-content.svg',
             },
             data: '<h1>Výsledky súťaží</h1>'
           },
@@ -145,8 +149,9 @@
           link: {
               meta: {
                 name: 'link',
-                desc: '<h1>Linka</h1><p>Linka na inú stránku</p>',
-                icon: 'img/block-link.png',
+                title: 'Linka',
+                desc: 'Linka na inú stránku',
+                icon: 'img/block-link.svg',
                 type: 'link',
               },
               data: {
@@ -160,8 +165,9 @@
             name: 'image',
             element: '<div></div>',
             type: 'image',
-            desc: '<h1>Obrázok</h1><p>Veľký obrázok do článku</p>',
-            icon: 'img/block-image.png',
+            title: 'Obrázok',
+            desc: 'Veľký obrázok do článku',
+            icon: 'img/block-image.svg',
           },
           data: {
             img: ''
@@ -172,8 +178,9 @@
               name: 'image1170',
               element: '<div></div>',
               type: 'image',
-              desc: '<h1>Obrázok 1170px x 570px</h1><p>Obrázok 1170px x 570px.</p>',
-              icon: 'img/block-image.png',
+              title: 'Obrázok 1170px x 570px',
+              desc: 'Obrázok 1170px x 570px.',
+              icon: 'img/block-image.svg',
             },
             data: {
               img: ''
@@ -182,8 +189,9 @@
         video: {
             meta: {
               name: 'video',
-              desc: '<h1>Embedované video</h1><p>Embedované video s titulkom a textom</p>',
-              icon: 'img/block-image.png',
+              title: 'Embedované video',
+              desc: 'Embedované video s titulkom a textom',
+              icon: 'img/block-video.svg',
               type: 'video',
             },
             data: {
@@ -198,8 +206,9 @@
               name: 'file-list',
               element: '<div></div>',
               type: 'file-list',
-              desc: '<h1>Súbory</h1><p>Zoznam súborov</p>',
-              icon: 'img/block-content.png',
+              title: 'Súbory',
+              desc: 'Zoznam súborov',
+              icon: 'img/block-filelist.svg',
             },
             data: {
               files: []
@@ -210,8 +219,9 @@
             name: 'category',
             element: '<div></div>',
             type: 'category',
-            desc: '<h1>Kategória</h1><p>Zoznam článkov v danej kategórii</p>',
-            icon: 'img/block-category.png',
+            title: 'Kategória',
+            desc: 'Zoznam článkov v danej kategórii',
+            icon: 'img/block-category.svg',
           },
           data: {
             tags: []
@@ -222,8 +232,9 @@
               name: 'overview',
               element: '<div></div>',
               type: 'overview',
-              desc: '<h1>Prehľad</h1><p>Prehľad článkov pod sebou.</p>',
-              icon: 'img/block-category.png',
+              title: 'Prehľad',
+              desc: 'Prehľad článkov pod sebou.',
+              icon: 'img/block-overview.svg',
             },
             data: {
               tags: []
@@ -234,8 +245,9 @@
               name: 'ranking',
               element: '<div></div>',
               type: 'ranking',
-              desc: '<h1>Poradie</h1><p>Výsledky / poradie súťažiacich.</p>',
-              icon: 'img/block-content.png',
+              title: 'Poradie',
+              desc: 'Výsledky / poradie súťažiacich.',
+              icon: 'img/block-ranking.svg',
             },
             data: {
               results: []
@@ -246,8 +258,9 @@
             name: 'gallery',
             element: '<div></div>',
             type: 'gallery',
-            desc: '<h1>Galéria</h1><p>Galéria fotografií</p>',
-            icon: 'img/block-gallery.png',
+            title: 'Galéria',
+            desc: 'Galéria fotografií',
+            icon: 'img/block-gallery.svg',
           },
           data: {
             images: []
@@ -258,8 +271,9 @@
             name: 'showcase',
             element: '<div></div>',
             type: 'showcase',
-            desc: '<h1>Výklad</h1><p>Najhorúcejšie články v prelínajúcom zobrazení výkladného okna</p>',
-            icon: 'img/block-topics.png',
+            title: 'Výklad',
+            desc: 'Najhorúcejšie články v prelínajúcom zobrazení výkladného okna',
+            icon: 'img/block-topics.svg',
           },
           data: {
             tags: []
@@ -271,8 +285,9 @@
             name: 'showcasevideo',
             element: '<div></div>',
             type: 'showcasevideo',
-            desc: '<h1>Výklad s videami</h1><p>Videá v prelínajúcom zobrazení výkladného okna</p>',
-            icon: 'img/block-topics.png',
+            title: 'Výklad s videami',
+            desc: 'Videá v prelínajúcom zobrazení výkladného okna',
+            icon: 'img/block-videoshowcase.svg',
           },
           data: {
             tags: []
@@ -401,5 +416,23 @@
         return null;
       }
     };
+    // 05.28.2015 Add a hover effect to display descriptions. Added by Tom Tanaka.
+    $scope.hoverShowDesc = function(desc) {
+        // Shows/hides the delete div on hover
+    	$scope.msg = desc;
+    }
+    
+    $scope.hoverCloseWhite = function() {
+        // Change the color of the close button to white.
+    	$scope.color = "white";
+    }
+    
+    $scope.hoverCloseBlack = function() {
+        // Change the color of the close button to black.
+    	$scope.color = "black";
+    }
+    
+
+    
   }]);
 }(angular));

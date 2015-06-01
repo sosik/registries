@@ -1,3 +1,6 @@
+### Portal widget for email subscription
+Widget allows user to enter his email address (optentially other values) and stores it into schema.
+
 ### Improved speed of export functionality
 Speed and memory consumption of export improved. Visual indication of export process works now.
 

@@ -5,6 +5,8 @@
 			background-color: $modlaview-bg-color;
 
 			.x-modalview-window{
+				overflow-y: auto; 			// 06.01.2015 Added by Tom Tanaka to enable scrolling in iOS.
+				-webkit-overflow-y: scroll; // 06.01.2015 Added by Tom Tanaka to enable scrolling in iOS.
 				background-color: $modalview-body-bg-color;
 				
 				&, a {

@@ -95,6 +95,7 @@
 
 		$routeProvider.when('/portal/edit/:id?', {templateUrl: '/partials/x-portal-edit.html', controller: 'xpsui:PortalEditorCtrl',permissions:['Portal - write']});
 		$routeProvider.when('/portal/menu', {templateUrl: '/partials/x-portal-menu.html', controller: 'xpsui:PortalEditorMenuCtrl',permissions:['Portal - write']});
+		$routeProvider.when('/portal/list', {templateUrl: '/partials/x-portal-list.html', controller: 'xpsui:PortalEditorListCtrl',permissions:['Portal - write']});
 
 		$routeProvider.when('/schema/edit', {
 			templateUrl: 'partials/x-schema-editor-index.html',

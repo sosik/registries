@@ -1,0 +1,103 @@
+
+<section id="portal-editor-menu" class="container-fluid">
+	<h1>Zoznam článkov</h1>
+
+	<div class="flex-form">
+		<fieldset >
+			<span class="x-fieldset-title ">Vyhľadávanie (Článok)</span>
+			<div class="flex-form-row " ng-repeat="crit in searchCrits">
+				<div class="flex-form-col-left">
+					<select style="" ng-model="crit.field" >
+						<option value="article.meta.title" label="Názov">Názov</option>
+						<option value="article.meta.lastModTimestamp" label="D. posl. zmeny">D. posl. zmeny</option>
+						<option value="article.meta.tags" label="Tagy">Tagy</option>
+						<option value="article.meta.template" label="Template">Template</option>
+					</select>
+				</div>
+				<div class="flex-form-col-left">
+					<select ng-model="crit.op" >
+						<option value="0" selected="selected" label="je rovné (=)">je rovné (=)</option>
+					</select>
+				</div>
+				<div class="flex-form-col-middle" >
+					<div class="x-string-edit">
+						<input ng-model="crit.val" />
+					</div>
+				</div>
+				<div class="flex-form-col-right">
+					<button ng-click="removeCrit($index)" type="button" class="btn-clear"><i class="icon-remove"></i> Zrušiť</button>
+				</div>
+			</div>
+			<div class="flex-form-row" style="">
+				<div class="flex-form-col-middle">
+					<button ng-click="addNewCrit()" type="button" class="btn-secondary"><i class="icon-add"></i> Pridať</button>	
+				</div>
+				<div class="flex-form-col-content-end">
+					<button ng-click="search()" type="button" class="btn-primary">
+						<i ng-show="!isSearching" class="icon-search"></i><i ng-show="isSearching" class="fa fa-spinner fa-spin ng-hide"></i> 
+						Hľadať
+					</button>	
+				</div>
+			</div>
+		</fieldset>
+	</div>
+
+	<fieldset class="flex-form-fieldset">
+		<span class="x-fieldset-title">Výsledok vyhľadávania</span>
+		<div class="search-header flex-form-headers">
+			<div class="flex-form-header" ng-click="changeSort('article.meta.title');" style="flex: 10 0 200px; ">
+				Názov
+				<i ng-show="'article.meta.title' == currSort.field &amp;&amp; currSort.order == sort.ASC" class="icon-chevron-up"></i>
+				<i ng-show="'article.meta.title' == currSort.field &amp;&amp; currSort.order == sort.DESC" class="icon-chevron-down ng-hide"></i>
+			</div>
+			<div class="flex-form-header" ng-click="changeSort('article.meta.lastModTimestamp');" style="flex: 6 0 100px; ">
+				D. posl. zmeny
+				<i ng-show="'article.meta.lastModTimestamp' == currSort.field &amp;&amp; currSort.order == sort.ASC" class="icon-chevron-up"></i>
+				<i ng-show="'article.meta.lastModTimestamp' == currSort.field &amp;&amp; currSort.order == sort.DESC" class="icon-chevron-down ng-hide"></i>
+			</div>
+			<div class="flex-form-header" ng-click="changeSort('article.meta.tags');" style="flex: 10 0 200px; ">
+				Tagy
+				<i ng-show="'article.meta.tags' == currSort.field &amp;&amp; currSort.order == sort.ASC" class="icon-chevron-up"></i>
+				<i ng-show="'article.meta.tags' == currSort.field &amp;&amp; currSort.order == sort.DESC" class="icon-chevron-down ng-hide"></i>
+			</div>
+			<div class="flex-form-header" ng-click="changeSort('article.meta.template');" style="flex: 4 0 100px; ">
+				Template
+				<i ng-show="'article.meta.template' == currSort.field &amp;&amp; currSort.order == sort.ASC" class="icon-chevron-up"></i>
+				<i ng-show="'article.meta.template' == currSort.field &amp;&amp; currSort.order == sort.DESC" class="icon-chevron-down ng-hide"></i>
+			</div>
+			<div class="flex-form-header" style="flex: 4 0 100px; ">
+				Akcie
+			</div>
+		</div>
+
+		<div>
+			<div ng-repeat="article in model | filter:filterFn " class="flex-form-data-row {{$index}} row-{{ ($index%2)?'odd':'even' }}">
+				<div class="flex-form-data-col" style="flex: 10 0 200px;">
+					<div class="x-select-view">
+						{{ article.meta.title }}
+					</div>
+				</div>
+				<div class="flex-form-data-col" style="flex: 6 0 100px;">
+					<div class="x-select-view">
+						{{ dateToUI(article.meta.lastModTimestamp) }}
+					</div>
+				</div>
+				<div class="flex-form-data-col" style="flex: 10 0 200px;">
+					<div class="x-select-view">
+						{{ article.meta.tags.join(', ') }}
+					</div>
+				</div>
+				<div class="flex-form-data-col" style="flex: 4 0 100px;">
+					<div class="x-select-view">
+						{{ article.meta.template }}
+					</div>
+				</div>
+				<div class="flex-form-data-col" style="flex: 4 0 100px;">
+					<div class="flex-form-data-action">
+						<button ng-click="editArticle(article.id)" class="btn-primary">Zobraziť</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+<section>

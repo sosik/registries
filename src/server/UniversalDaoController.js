@@ -134,6 +134,10 @@ var UniversalDaoController = function(mongoDriver, schemaRegistry, eventRegistry
 		self.get(req, res, next, 'portalArticles');
 	}
 
+	this.getPortalArticleList = function(req, res, next) {
+		self.list(req, res, next, 'portalArticles');
+	}
+
 	this.get = function(req, res, next, table) {
 		_dao = new universalDaoModule.UniversalDao(
 			mongoDriver,

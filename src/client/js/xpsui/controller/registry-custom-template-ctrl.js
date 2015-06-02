@@ -44,11 +44,8 @@
 					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FtransferApplicant~2Fview'
 						+ '/' + $routeParams.id})
 				.success(function(data, status, headers, config) {
-					if (data.id) {
-						delete data.id;
-					}
 					var copyFields = [
-					                  { 'path': 'model.obj', 'value': data }
+					                  { 'path': 'model.obj.baseData', 'value': data.transferData }
 					];
 					var uri = '/registry/new/uri~3A~2F~2Fregistries~2Ftransfers~23views~2Ftransfers';
 					navigationService.navigateToPath(uri, copyFields);

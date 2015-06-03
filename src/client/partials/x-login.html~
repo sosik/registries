@@ -1,0 +1,59 @@
+<form id="login-form" novalidate>
+	<div>
+		<div>
+			<div>
+				<fieldset>
+					<span class="x-fieldset-title">{{'login.title'|translate}}</span>
+					<div ng-controller="langSelectCtrl" class="login-form-lang"><a href="#" ng-click="setLang('sk')">SK</a> | <a href="#" ng-click="setLang('cz')">CZ</a> | <a href="#" ng-click="setLang('en')">EN</a></div>
+
+					<div ng-disabled="profiles" class="x-fieldset-row">
+						<div class="x-fieldset-label">
+							<label for="name">{{'login.loginName' | translate}}</label>
+						</div>
+						<div class="x-fieldset-value">
+							<input ng-disabled="profiles" type="text" ng-model="user"
+								placeholder="{{'login.loginName' | translate}}"
+								autocomplete="off">
+						</div>
+					</div>
+
+					<div class="x-fieldset-row">
+						<div class="x-fieldset-label">
+							<label for="password">{{'login.password' | translate}}</label>
+						</div>
+						<div class="x-fieldset-value">
+							<input ng-disabled="profiles" type="password" ng-model="password" ng-keyup="$event.keyCode == 13 && login()"
+								placeholder="{{'login.password' | translate}}"
+								autocomplete="off">
+						</div>
+					</div>
+
+					<div ng-show="profiles" class="x-fieldset-row">
+						<div class="x-fieldset-label">
+							<label for="selectedProfile">{{'login.profile' | translate}}</label>
+						</div>
+						<div class="x-fieldset-value">
+							<select class="form-control"
+								ng-model="selectedProfile"
+								ng-Init="selectedProfile=profiles[0]"
+								ng-options="prof.name for prof in profiles"></select>
+						</div>
+					</div>
+
+					<div ng-disabled="profiles" class="x-fieldset-row">
+						<div class="x-fieldset-label">&nbsp;</div>
+						<div class="x-fieldset-value">
+							<div>
+								<button ng-show="profiles" ng-click="selectProfile()" class="btn-primary"><i></i> {{'login.selected.profile.continue' | translate}}</button>
+								<button ng-show="!profiles" ng-click="login()" class="btn-primary">
+									<i class="icon-login"></i> {{'login.title' | translate}}
+								</button>
+								<a class="forgotten" href="#/forgotten">{{'login.forgottenPassword'|translate}}</a>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</form>

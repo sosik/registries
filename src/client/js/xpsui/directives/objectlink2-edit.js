@@ -44,9 +44,7 @@
 					onClear: function(){
 						input.empty();
 						scope.$apply(function() {
-							ngModel.$setModelValue(
-								{}
-							);
+							ngModel.$modelValue = {};
 						});
 					}
 				});

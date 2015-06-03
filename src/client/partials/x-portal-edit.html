@@ -68,22 +68,40 @@
 </div>
 
 </div>
-<div id="portal-edit-block-selector" ng-show="blockSelectorShown" style="position:fixed; top:0; width: 100%; height: 100%; left:0; background-color: rgba(128,128,128,0.5); z-index: 5; display: table;">
-	<div class="portal-edit-block-outer">
-		<div class="portal-edit-block-inner">
-			<div style="float: right;">
-				<a ng-click="hideBlockSelector();"><i class="icon-remove"></i></a>
-			</div>
-			<div style="color: white;">Výber bloku</div>
-			<div class="portal-edit-block-scroller" >
-				<table class="portal-edit-block-selector-block" style="background-color: black;">
-					<tr ng-repeat="(name, block) in blocks" ng-click="selectBlock(name)">
-						<td style="padding: 10px;"><img ng-src="{{block.meta.icon}}" /></td>
-						<td style="padding: 10px; color: white;">
-							<div ng-bind-html="makeSafe(block.meta.desc);"></div>
-						</td>
-					</tr>
-				</table>
+	<div id="portal-edit-block-selector" ng-show="blockSelectorShown">
+		<div class="portal-edit-block-outer portal-edit-gridStyle">
+			<div class="portal-edit-block-inner" style="height: 100%;background: transparent;">
+				
+					<div class="portal-edit-modal-header">
+						<div style="float: right; height: 30px; font-size: 24px;  padding-left: 10px; margin-top: 0px;">
+							<a ng-click="hideBlockSelector();"><i ng-mouseover="hoverCloseWhite();" ng-mouseleave="hoverCloseBlack();" class="action-button icon-remove" style="color:{{color}};"></i></a>
+						</div>
+						<div style="font-size: 16px; font-weight: bold; color: #333333; height: 30px; padding-left: 10px; padding-right: 40px; margin-top: 7px;">Výber bloku</div>
+					</div>
+				<div class="portal-edit-modal">
+					<div class="portal-edit-scroller"><div style="position: relative; background-color: white; width: auto; height: auto;">
+				 		<div class="portal-edit-block-selector-block portal-edit-grid">
+							<div ng-repeat="(name, block) in blocks" ng-click="selectBlock(name)" class="portal-edit-col-1-1" >
+								<div ng-mouseover="hoverShowDesc(block.meta.desc);" align="center" style="padding: 10px; text-align=center; word-wrap: break-word; word-break: break-all;white-space:normal;" align="center">
+									<div>
+										<div>
+											<img ng-src="{{block.meta.icon}}" width="103px" height="103px"/>
+										</div>
+										<div style="color: black; font-size: 16px;align: top">
+											<h4 ng-bind-html="makeSafe(block.meta.title);"></h4>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div></div>
+					</div>
+
+				</div>
+				<div class="portal-edit-modal-footer">
+						<div class="portal-edit-block-footer">Description:
+							<div class="portal-edit-desc">{{msg}}</div>
+						</div>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -426,8 +426,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						return;
 					}
 					// if ('System User' in  permissions&&permissions['System User'] ){
-						self.createToken(user.systemCredentials.login.loginName, req.ip, function(token) {
-							self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.ip, function(err) {
+						self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
+							self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
 									resp.next('Internal Error');
@@ -1108,7 +1108,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					var token = tokens[0];
 					// TODO validate IP
 					var now = new Date().getTime();
-					if (token.valid && req.ip === token.ip && token.touched > (now - cfg.tokenExpiration)) {
+					if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - cfg.tokenExpiration)) {
 						token.touched = now;
 						// TODO maybe some filtering for updates
 						tokenDao.update(token, function(err) {

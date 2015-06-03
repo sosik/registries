@@ -4,7 +4,7 @@
 			<div>
 				<fieldset>
 					<span class="x-fieldset-title">{{'login.title'|translate}}</span>
-					<div ng-controller="langSelectCtrl" class="login-form-lang"><a href="#" ng-click="setLang('sk')">SK</a> | <a href="#" ng-click="setLang('cz')">CZ</a> | <a href="#" ng-click="setLang('ja')">日本語</a> | <a href="#" ng-click="setLang('en')">EN</a></div>
+					<div ng-controller="langSelectCtrl" class="login-form-lang"><a href="#" ng-click="setLang('sk')">SK</a> | <a href="#" ng-click="setLang('cz')">CZ</a> | <a href="#" ng-click="setLang('en')">EN</a></div>
 
 					<div ng-disabled="profiles" class="x-fieldset-row">
 						<div class="x-fieldset-label">

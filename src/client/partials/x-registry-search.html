@@ -35,7 +35,7 @@
 			<i ng-show="f.field == currSort.field && currSort.order == sort.ASC" class="icon-chevron-up" class="flex-form-header-icon"></i>
 			<i ng-show="f.field == currSort.field && currSort.order == sort.DESC" class="icon-chevron-down" class="flex-form-header-icon"></i>
 		</div>
-		<div class="flex-form-header">{{'generic.search.action' | translate}}</div>
+		<div class="flex-form-header-inactive">{{'generic.search.action' | translate}}</div>
 	</div>
 	<div ng-repeat="d in data" class="flex-form-data-row row-{{($index%2)?'odd':'even'}}">
 		<div ng-repeat="f in schema.listFields" 
@@ -45,13 +45,13 @@
 				xpsui-model="$parent.d[f.field]">x</div>
 		<div class="psui-actions-holder flex-form-data-action">
 			<a ng-repeat="a in $parent.schema.clientActions" 
-					xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" 
-					xpsui-schema="a" 
-					class="btn-primary">
-				{{'generic.search.view' | translate}}
+			xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]"
+			xpsui-schema="a" class="btn-primary" type="button"
+			ng-class="{'ibActive':btn-primary}" ng-mouseenter="btn-secondary=true"
+			style="background-color: #b0b0b0; border-color: #a3a3a3;">{{'generic.search.view' | translate}}
 			</a>
 		</div>	
-	</div>
+	</div></div></div>
 </fieldset>
 <fieldset class="flex-form-fieldset">
 	<div class="flex">

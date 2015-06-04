@@ -38,7 +38,8 @@
 				elm.css('height', '492px');
 
 				if (attrs.class.indexOf('portal-content-location') < 0
-						&& attrs.class.indexOf('portal-content-riderszone') < 0) {
+						&& attrs.class.indexOf('portal-content-riderszone') < 0
+						&& attrs.class.indexOf('portal-content-mediazone') < 0) {
 					$interval(function() {
 						++scope.visibleIndex;
 						if (scope.visibleIndex >= scope.model.length) {

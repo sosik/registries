@@ -23,6 +23,9 @@
 				
 				var imgCtrl = ctrls[0];
 
+				var resultImgWidth = attrs.psuiWidth || 0;
+				var resultImgHeight = attrs.psuiHeight || 0;
+
 				var imgWidth = attrs.psuiWidth || 0;
 				var imgHeight = attrs.psuiHeight || 0;
 				var resize = 1;
@@ -80,7 +83,7 @@
 				canvasContainer.append(resizorCanvas);
 				modalContentEl.append(canvasContainer);
 				
-				var canvasResult = angular.element('<canvas class="xpsui-imageresizor-result" width="' + imgWidth + '" height="' + imgHeight + '"></canvas>');
+				var canvasResult = angular.element('<canvas class="xpsui-imageresizor-result" width="' + resultImgWidth + '" height="' + resultImgHeight + '"></canvas>');
 				canvasResult.addClass('x-hidden');
 				wrapper.append(canvasResult);
 				
@@ -175,7 +178,7 @@
 					);
 					
 					ctx.rotate(-(Math.PI/2)* numberOfRot);
-					ctx2.drawImage(resizorCanvas[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,imgWidth,imgHeight);
+					ctx2.drawImage(resizorCanvas[0],(width - imgWidth)/2,(height - imgHeight)/2,imgWidth,imgHeight,0,0,resultImgWidth,resultImgHeight);
 					ctx.fillStyle = 'rgba(1,1,1,0.7)';
 					// left bar
 					ctx.fillRect(- width/2,- height/2,(width - imgWidth)/2,height);

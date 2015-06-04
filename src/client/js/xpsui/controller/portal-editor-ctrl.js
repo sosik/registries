@@ -11,7 +11,7 @@
     $scope.templates = {
       'index' : {
         name: 'Titulok',
-        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa aj ako link v zozname článkov',
         icon: 'img/block-headline.svg',
         meta: {
           template: 'index',
@@ -50,12 +50,202 @@
           }
         ]
       },
-      article : {
+      'article' : {
         name: 'Article',
-        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa ak ako link v zozname článkov',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa aj ako link v zozname článkov',
         icon: 'img/block-article.svg',
         meta: {
           template: 'article',
+          enabled: true,
+          publishFrom: dateUtils.nowToReverse(),
+          tags: []
+        },
+        data: [
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'title',
+              element: '<div></div>'
+            },
+            data: '<h1>...Titulok článku...</h1>'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'abstract',
+              element: '<section class="abstract"></section>'
+            },
+            data: '...Abstrakt článku, krátky popis a zhrnutie...'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'contentBlock',
+              element: '<section class="content"></section'
+
+            },
+            data: '<p>...Obsah článku...</p>'
+          }
+        ]
+      },
+      'location' : {
+        name: 'Location',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa aj ako link v zozname článkov',
+        icon: 'img/block-article.svg',
+        meta: {
+          template: 'location',
+          enabled: true,
+          publishFrom: dateUtils.nowToReverse(),
+          tags: []
+        },
+        data: [
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'title',
+              element: '<div></div>'
+            },
+            data: '<h1>...Titulok článku...</h1>'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'abstract',
+              element: '<section class="abstract"></section>'
+            },
+            data: '...Abstrakt článku, krátky popis a zhrnutie...'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'contentBlock',
+              element: '<section class="content"></section'
+
+            },
+            data: '<p>...Obsah článku...</p>'
+          }
+        ]
+      },
+      'news' : {
+        name: 'News',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa aj ako link v zozname článkov',
+        icon: 'img/block-article.svg',
+        meta: {
+          template: 'news',
+          enabled: true,
+          publishFrom: dateUtils.nowToReverse(),
+          tags: []
+        },
+        data: [
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'title',
+              element: '<div></div>'
+            },
+            data: '<h1>...Titulok článku...</h1>'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'abstract',
+              element: '<section class="abstract"></section>'
+            },
+            data: '...Abstrakt článku, krátky popis a zhrnutie...'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'contentBlock',
+              element: '<section class="content"></section'
+
+            },
+            data: '<p>...Obsah článku...</p>'
+          }
+        ]
+      },
+      'video' : {
+        name: 'Video',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa aj ako link v zozname článkov',
+        icon: 'img/block-article.svg',
+        meta: {
+          template: 'video',
+          enabled: true,
+          publishFrom: dateUtils.nowToReverse(),
+          tags: []
+        },
+        data: [
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'title',
+              element: '<div></div>'
+            },
+            data: '<h1>...Titulok článku...</h1>'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'abstract',
+              element: '<section class="abstract"></section>'
+            },
+            data: '...Abstrakt článku, krátky popis a zhrnutie...'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'contentBlock',
+              element: '<section class="content"></section'
+
+            },
+            data: '<p>...Obsah článku...</p>'
+          }
+        ]
+      },
+      'photo' : {
+        name: 'photo',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa aj ako link v zozname článkov',
+        icon: 'img/block-article.svg',
+        meta: {
+          template: 'photo',
+          enabled: true,
+          publishFrom: dateUtils.nowToReverse(),
+          tags: []
+        },
+        data: [
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'title',
+              element: '<div></div>'
+            },
+            data: '<h1>...Titulok článku...</h1>'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'abstract',
+              element: '<section class="abstract"></section>'
+            },
+            data: '...Abstrakt článku, krátky popis a zhrnutie...'
+          },
+          {
+            meta: {
+              type: 'pure-html',
+              name: 'contentBlock',
+              element: '<section class="content"></section'
+
+            },
+            data: '<p>...Obsah článku...</p>'
+          }
+        ]
+      },
+      'riderszone' : {
+        name: 'Riderszone',
+        desc: 'Nadpis článku, každý článok by mal mať aspoň jeden nadpis. Nadpis článku sa používa aj ako link v zozname článkov',
+        icon: 'img/block-article.svg',
+        meta: {
+          template: 'riderszone',
           enabled: true,
           publishFrom: dateUtils.nowToReverse(),
           tags: []

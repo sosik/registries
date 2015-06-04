@@ -78,6 +78,20 @@
 		position: relative;
 		cursor: pointer;
 	}
+	
+	.flex-form-header-inactive {
+		padding: 8px 10px 8px 10px;
+		white-space: nowrap;
+		flex-direction: column;
+		-webkit-flex-direction: column;
+		flex: 10 0 150px;
+		-webkit-flex: 10 0 150px;
+		overflow: hidden;
+		position: relative;
+		cursor: none;
+		background-color: #b0b0b0;
+		color: white;
+	}
 
 	.flex-form-header-icon {
 		position: absolute;

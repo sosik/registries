@@ -33,7 +33,7 @@
 			<i ng-show="f.field == currSort.field && currSort.order == sort.ASC" class="icon-chevron-up" class="flex-form-header-icon"></i>
 			<i ng-show="f.field == currSort.field && currSort.order == sort.DESC" class="icon-chevron-down" class="flex-form-header-icon"></i>
 		</div>
-		<div class="flex-form-header">Akcia</div>
+		<div class="flex-form-header-inactive" style=":hover: enabled{ background-color: #b0b0b0; border-color: #a3a3a3; };">Akcia</div>
 	</div>
 	<div ng-repeat="d in data" class="flex-form-data-row row-{{($index%2)?'odd':'even'}}">
 		<div ng-repeat="f in schema.listFields" 
@@ -43,10 +43,11 @@
 				xpsui-model="$parent.d[f.field]">x</div>
 		<div class="psui-actions-holder flex-form-data-action">
 			<a ng-repeat="a in $parent.schema.clientActions" 
-					xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" 
-					xpsui-schema="a" 
-					class="btn-primary">
-				Zobraziť
+			xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" 
+			xpsui-schema="a" class="btn-primary" type="button" 
+			ng-class="{'ibActive':btn-primary}" ng-mouseenter="btn-secondary=true" 
+			ng-mouseleave="btn-secondary=false" style="color: #ffffff; 
+			background-color: #b0b0b0; border-color: #a3a3a3;">Zobraziť</button>
 			</a>
 		</div>	
 	</div></div></div>

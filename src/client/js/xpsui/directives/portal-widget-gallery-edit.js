@@ -26,7 +26,7 @@
 								'<i class="action-button icon-trash" ng-click="photoRemove($index);"></i>'+
 								'<i class="action-button icon-chevron-right" ng-click="photoRight($index);"></i>'+
 							'</div>' +
-								'<div xpsui-uploadable-image xpsui-imageresizor psui-imageresizor-width="656" psui-imageresizor-height="492" ng-model="photo.img" style="width: 162px !important; height: 123px !important; background-image: url(https://localhost:3443/img/no_image.jpg); margin:0;">' +
+								'<div xpsui-uploadable-image xpsui-imageresizor psui-width="656" psui-height="492" ng-model="photo.img" style="width: 162px !important; height: 123px !important; background-image: url(/img/no_image.jpg); margin:0;">' +
 								'</div>' +
 						'</div>' +
 					'</div>');

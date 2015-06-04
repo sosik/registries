@@ -17,9 +17,11 @@
 				var imgWidth = attrs.psuiWidth || 0;
 				var imgHeight = attrs.psuiHeight || 0;
 
-				elm.attr('style', 
-					(imgHeight ? 'height:'+imgHeight+'px !important;':'')
-				);
+				if (!attrs.hasOwnProperty('style')) {
+					elm.attr('style', 
+							(imgHeight ? 'height:'+imgHeight+'px !important;':'')
+						);
+				}
 
 
 				elm.addClass('xpsui-uploadable-image');

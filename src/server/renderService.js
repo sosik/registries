@@ -14,8 +14,8 @@ var templates = {
 	MAIL_USER_PASSWORD_RESET: 'user-reset-password-txt.tmpl',
 	MAIL_USER_PASSWORD_RESET_HTML: 'user-reset-password-html.tmpl',
 	MAIL_FORGOTTEN_PASSWORD_HTML: 'user-forgotten-password-html.tmpl',
-	REQUISITION_CREATED_HTML: 'requisitions-created-html.tmpl',
-	REQUISITION_UPDATED_HTML: 'requisitions-updated-html.tmpl'
+	REQUEST_CREATED_HTML: 'requests-created-html.tmpl',
+	REQUEST_UPDATED_HTML: 'requests-updated-html.tmpl'
 };
 
 var RenderService = function( options) {

@@ -24,7 +24,7 @@
 
 			if ($routeParams.template == 'createMember.html') {
 				$http({ method : 'GET',
-					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FpeopleRegistrationApplicant~2Fview'
+					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequests~23views~2FpeopleRegistrationApplicant~2Fview'
 						+ '/' + $routeParams.id})
 				.success(function(data, status, headers, config) {
 					delete data.id;
@@ -42,7 +42,7 @@
 
 			if ($routeParams.template == 'createTransfer.html') {
 				$http({ method : 'GET',
-					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FtransferApplicant~2Fview'
+					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequests~23views~2FtransferApplicant~2Fview'
 						+ '/' + $routeParams.id})
 				.success(function(data, status, headers, config) {
 					var copyFields = [

@@ -109,8 +109,16 @@
 						for (var li=0; li<$scope.schema.listFields.length; li++) {
 							var field = $scope.schema.listFields[li].field;
 							var value = data[item][field];
-							if (value || value === 0) {
-								htmlData.push('<td>' + value +'</td>');
+							if (value && value.refData) {
+								var text = "";
+								var sep = "";
+								for (var key in value.refData) {
+									text = text + sep + value.refData[key];
+									sep = " | ";
+								}
+								htmlData.push('<td>' + text +'</td>');
+							} else if (value || value === 0) {
+								htmlData.push('<td>' + value + '</td>');
 							} else {
 								htmlData.push('<td></td>');
 							}

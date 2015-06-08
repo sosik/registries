@@ -9,7 +9,9 @@
 		<div class="flex-form-col-left">
 			<select ng-options="o.text for o in allOps" ng-model="crit.op"></select>
 		</div>
-		<div class="flex-form-col-middle" xpsui-by-schema-field-edit xpsui-schema="{{crit.field.path ? 'schema.' + objectPathToSchemaPath(crit.field.path) : null}}" xpsui-model="crit.val"></div>
+		<div class="flex-form-col-middle" 
+				xpsui-by-schema-field-edit xpsui-schema="{{crit.field.path ? 'schema.' + objectPathToSchemaPath(crit.field.path) : null}}" 
+				xpsui-model="crit.val" ng-keypress="filterKeyPressed($event)"></div>
 		<div class="flex-form-col-right">
 			<button ng-click="removeCrit($index)" type="button" class="btn-clear"><i class="icon-remove"></i> Zrušiť</button>
 		</div>

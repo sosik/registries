@@ -22,9 +22,9 @@
 			link: function(scope, elm, attrs, ctrls) {
 				scope.showRegistrations = function() {
 					navigationService.navigateToPath(
-							'/search/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FrequisitionApplicant', 
+							'/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FrequestApplicant', 
 							'search');
-					$location.path('/search/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FrequisitionApplicant');
+					$location.path('/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FrequestApplicant');
 				};
 
 				log.group('xpsui-dashboard-widget-membership-requests Widget');
@@ -68,7 +68,7 @@
 				elm.append(content);
 
 				$http({ method : 'POST',
-					url: '/search/' + schemaUtilFactory.encodeUri('uri://registries/requisitions#views/peopleRegistrationApplicant/search')})
+					url: '/search/' + schemaUtilFactory.encodeUri('uri://registries/requests#views/peopleRegistrationApplicant/search')})
 				.success(function(data, status, headers, config) {
 					contentBlock1Elm.empty();
 					if (data) {

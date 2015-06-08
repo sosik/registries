@@ -90,6 +90,12 @@
 				$scope.search();
 			};
 
+			$scope.filterKeyPressed = function (event) {
+				if(event.which === 13) {
+					$scope.search();
+				}
+			}
+
 			$scope.exportCsv = function() {
 				$scope.isExporting = true;
 

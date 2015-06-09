@@ -183,6 +183,7 @@
 					// skip criteria with empty field
 					if ($scope.searchCrits[i].field) {
 						var val = $scope.searchCrits[i].val;
+						var path = $scope.searchCrits[i].field.path;
 
 						var fieldDef = $scope.findFieldDefinition($scope.searchCrits[i].field.path);
 						if (fieldDef
@@ -190,8 +191,14 @@
 							&& val == parseInt(val)) {
 							val = parseInt(val);
 						}
+						if (fieldDef
+								&& fieldDef.fragment.type == 'object'
+								&& val.oid) {
+							val = $scope.searchCrits[i].val.oid;
+							path = $scope.searchCrits[i].field.path + '.oid';
+						}
 						qf.addCriterium(
-							$scope.searchCrits[i].field.path,
+							path,
 							QueryFilter.operation[$scope.searchCrits[i].op.op],
 							val
 						);

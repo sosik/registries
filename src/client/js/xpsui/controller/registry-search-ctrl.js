@@ -197,6 +197,22 @@
 							val = $scope.searchCrits[i].val.oid;
 							path = $scope.searchCrits[i].field.path + '.oid';
 						}
+						if (fieldDef
+								&& fieldDef.fragment.type == 'array'
+								&& val
+								&& val.length > 0) {
+							path = $scope.searchCrits[i].field.path + '.oid';
+							var oids = [];
+							for (var i=0; i<val.length; i++) {
+								oids.push(val[i].oid);
+							}
+							qf.addCriterium(
+									path,
+									'in',
+									oids
+								);
+							continue;
+						}
 						qf.addCriterium(
 							path,
 							QueryFilter.operation[$scope.searchCrits[i].op.op],

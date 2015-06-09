@@ -27,6 +27,7 @@
 					url: '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frequisitions~23views~2FpeopleRegistrationApplicant~2Fview'
 						+ '/' + $routeParams.id})
 				.success(function(data, status, headers, config) {
+					delete data.id;
 					var copyFields = [
 					                  { 'path': 'model.obj', 'value': data }
 					];

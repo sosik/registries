@@ -583,7 +583,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					}
 					//resolve groups
 					for ( var gr in profile.security.groups) {
-						t.resolveGroupPermissions(profile.security.groups[gr].id, groups, permissions);
+						self.resolveGroupPermissions(profile.security.groups[gr].id, groups, permissions);
 					}
 
 					//merge user rights

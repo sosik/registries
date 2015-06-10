@@ -3,7 +3,7 @@
 		<div>
 			<form>
 				<fieldset>
-					<span class="x-fieldset-title">{{'security.profile.edit.searching' |translate}} ({{entity}})</span>
+					<span class="x-fieldset-title">{{'generic.search.searching' | translate}} ({{schema.transCode || schema.title | translate}})</span>
 
 					<div ng-repeat="crit in searchCrit" class="x-fieldset-row">
 
@@ -58,21 +58,21 @@
 
 			<div ng-show='profileList'>
 				<fieldset>
-					<span class="x-fieldset-title">{{'security.profile.edit.result' |translate}} ({{entity}})</span>
+					<span class="x-fieldset-title">{{'generic.search.result.of.searching' | translate}}</span>
 
 					<div>
 						<table>
 							<thead>
 								<tr>
-									<th ng-repeat="header in headers">{{header.title}}</th>
+									<th ng-repeat="f in schema.listFields">{{f.transCode || f.title | translate}}</th>
 						<th>{{'security.profile.edit.actions' |translate}}</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-class="{'psui-active': (selectedProfile===obj)}" ng-repeat="obj in profileList" ng-click="goView($index)"
 									>
-									<td ng-repeat="header in headers">{{getVal("obj." +
-										header.field)}} {{$eval("obj."+header.field)}}</td>
+									<td ng-repeat="f in schema.listFields">{{getVal("obj." +
+										f.field)}} {{$eval("obj."+f.field)}}</td>
 
 									<td>
 										<span ng-click='selectProfile(obj)' class="item-clickable">

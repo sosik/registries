@@ -83,15 +83,15 @@
 								<th>
 										<input type="checkbox" ng-model="selectAll">&nbsp;{{'massmail.selection.all' | translate}} ({{recipientCount()}})</input>
 								</th>
-								<th ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="header in headers" ng-click="setSortBy(header)">{{header.title}}</th>
+								<th ng-class=" {'psui-action-sort':true, 'psui-icon-chevron-up':(sortBy.header===header && sortBy.direction=='asc'),'psui-icon-chevron-down':(sortBy.header===header && sortBy.direction=='desc')}" ng-repeat="f in schema.listFields" ng-click="setSortBy(f)">{{f.transCode || f.title | translate}}</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="obj in data" ng-click="goView($index)"
 								class="list-row">
 								<td><input ng-show="!selectAll" type="checkbox" ng-model="obj.selected"></td>
-								<td ng-repeat="header in headers">{{getVal("obj." +
-									header.field)}} {{$eval("obj."+header.field)}}</td>
+								<td ng-repeat="f in schema.listFields">{{getVal("obj." +
+									f.field)}} {{$eval("obj."+f.field)}}</td>
 							</tr>
 						</tbody>
 					</table>

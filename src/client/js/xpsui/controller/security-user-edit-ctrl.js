@@ -19,8 +19,6 @@
 
 			$scope.user = {};
 
-			$scope.headers = {};
-
 			$scope.profiles=[];
 			$scope.user.profiles=[];
 
@@ -42,9 +40,8 @@
 
 			schemaUtilFactory.getCompiledSchema(entityUri, 'search').success(function(data) {
 				$scope.searchDef = genericSearchFactory.parseSearchDef(data);
-				$scope.entity = data.title;
+				$scope.schema = data;
 				$scope.addCrit({});
-				$scope.headers = data.listFields;
 			}).error(function(err) {
 				notificationFactory.error(err);
 			});

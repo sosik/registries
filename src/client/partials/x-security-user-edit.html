@@ -4,7 +4,7 @@
 			<form>
 				<fieldset>
 				<!-- <div class="clearfix"> -->
-					<span class="x-fieldset-title">{{'security.user.edit.searching' |translate}} ({{entity}})</span>
+					<span class="x-fieldset-title">{{'generic.search.searching' | translate}} ({{schema.transCode || schema.title | translate}})</span>
 
 					<div ng-repeat="crit in searchCrit" class="x-fieldset-row">
 
@@ -47,19 +47,19 @@
 			<div ng-show="userList">
 				<!-- <div class="x-fieldset"> -->
 				<fieldset>
-					<spam class="x-fieldset-title ng-binding">{{'security.user.edit.result' |translate}} ({{entity}})</spam>
+					<spam class="x-fieldset-title ng-binding">{{'generic.search.result.of.searching' | translate}}</spam>
 					<div>
 						<table>
 							<thead>
 								<tr>
-									<th ng-repeat="header in headers">{{header.title}}</th>
-									<th>{{'security.user.edit.actions' |translate}}</th>
+									<th ng-repeat="f in schema.listFields">{{f.transCode || f.title | translate}}</th>
+									<th>{{'security.user.edit.actions' | translate}}</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr ng-class="{'psui-active': (selectedUser===obj)}" ng-repeat="obj in userList" ng-click="goView($index)">
-									<td ng-repeat="header in headers">{{getVal("obj." +
-										header.field)}} {{$eval("obj."+header.field)}}</td>
+									<td ng-repeat="f in schema.listFields">{{getVal("obj." +
+										f.field)}} {{$eval("obj."+f.field)}}</td>
 
 									<td>
 										<a ng-click='selectUser(obj)' class="item-clickable">
@@ -144,7 +144,7 @@
 				<div class="x-fieldset">
 					<div>
 						<div class="pull-right">
-							<button ng-click="resetPassword() " class="btn-secondary">Resetnúť heslo</button>
+							<button ng-click="resetPassword() " class="btn-secondary">{{'security.user.edit.reset.password' | translate}}</button>
 							<button ng-click="updateUserSecurity()" class="btn-primary">
 								<i class="icon-check"></i> {{'security.user.edit.save' |translate}}
 							</button>

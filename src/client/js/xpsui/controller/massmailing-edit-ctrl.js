@@ -19,7 +19,6 @@
 			$scope.searchDef = {};
 			$scope.searchCrit = [];
 			$scope.data = [];
-			$scope.headers = {};
 			$scope.forcedCriterias = [];
 			$scope.selectAll=true;
 
@@ -30,9 +29,8 @@
 				$scope.schema=data;
 				$scope.searchDef = genericSearchFactory.parseSearchDef(data);
 				$scope.entity = data.title;
-
+				
 				$scope.addCrit();
-				$scope.headers = data.listFields;
 				$scope.sortBy={header: data.listFields[0] , direction : 'asc' };
 				$scope.forcedCriterias = data.forcedCriterias || [];
 			}).error(function(err) {

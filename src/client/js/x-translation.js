@@ -117,6 +117,7 @@
 			"generic.search.operator": "Operátor",
 			"generic.search.value": "Hodnota",
 			"generic.search.view": "Zobraziť",
+			"generic.search.action": "Akcia",
 			"generic.search.result.of.searching": "Výsledok vyhľadávania",
 			"generic.search.export.csv": "Exportovať",
 			"generic.search.nodata.found":"Neboli najdené žiadne dáta.",
@@ -240,7 +241,7 @@
 			"security.user.edit.add":"Pridať",
 			"security.user.edit.attribute":"Atribút",
 			"security.user.edit.cancel":"Zrušiť",
-			"security.user.edit.reset.password":"Resetnúť heslo",
+			"security.user.edit.reset.password":"Resetovať heslo",
 			"security.user.edit.login.data":"Prihlasovacie údaje",
 			"security.user.edit.login":"Login",
 			"security.user.edit.email":"E-mail",
@@ -522,7 +523,24 @@
 
 			"dashboard.widget.notifications.title": "Notifikácie",
 			"dashboard.widget.members.openRequests": "Nové registrácie",
-			"dashboard.widget.members.noOpenRequests": "Žiadne žiadosti."
+			"dashboard.widget.members.noOpenRequests": "Žiadne žiadosti.",
+
+			"portal.edit.title":"Portálový editor",
+			"portal.edit.edit":"Editovať",
+			"portal.edit.new":"Nový",
+			"portal.edit.add.block":"Pridať blok",
+			"portal.edit.cancel":"Zrušiť",
+			"portal.edit.save":"Uložiť",
+			"portal.edit.new.name":"Názov:",
+			"portal.edit.new.template":"Template:",
+			"portal.edit.new.publish":"Publikovať:",
+			"portal.edit.new.publishFrom":"Publikovať od:",
+			"portal.edit.new.tags":"Tagy:",
+			"portal.edit.block.choice":"Výber bloku",
+			"portal.edit.block.description":"Popis:",
+			"portal.menu.title":"Portálové menu",
+			"portal.menu.cancel":"Zrušiť",
+			"portal.menu.send":"Odoslať"
 		});
 
 		$translateProvider.translations('cz', {
@@ -638,6 +656,7 @@
 			"generic.search.operator": "Operátor",
 			"generic.search.value": "Hodnota",
 			"generic.search.view": "Zobrazit",
+			"generic.search.action": "Akce",
 			"generic.search.result.of.searching": "Výsledek vyhledávání",
 			"generic.search.export.csv": "Exportovat",
 			"generic.search.nodata.found":"Data neboli nalezeny.",
@@ -1039,7 +1058,24 @@
 
 			"dashboard.widget.notifications.title": "Notifikace",
 			"dashboard.widget.members.openRequests": "Nové registrace",
-			"dashboard.widget.members.noOpenRequests": "Žádny žádosti."
+			"dashboard.widget.members.noOpenRequests": "Žádny žádosti.",
+
+			"portal.edit.title":"Portálový editor",
+			"portal.edit.edit":"Editovat",
+			"portal.edit.new":"Nový",
+			"portal.edit.add.block":"Přidat blok",
+			"portal.edit.cancel":"Zrušit",
+			"portal.edit.save":"Uložit",
+			"portal.edit.new.name":"Název:",
+			"portal.edit.new.template":"Template:",
+			"portal.edit.new.publish":"Publikovat:",
+			"portal.edit.new.publishFrom":"Publikovat od:",
+			"portal.edit.new.tags":"Tagy:",
+			"portal.edit.block.choice":"Výběr bloku",
+			"portal.edit.block.description":"Popis:",
+			"portal.menu.title":"Portálové menu",
+			"portal.menu.cancel":"Zrušit",
+			"portal.menu.send":"Odeslat"
 		});
 		
 		$translateProvider.translations('en', {
@@ -1130,11 +1166,14 @@
 			"generic.search.operator": "Operator",
 			"generic.search.value": "Value",
 			"generic.search.view": "View",
-			"generic.search.result.of.searching": "Search result",
+			"generic.search.action": "Action",
+			"generic.search.result.of.searching": "Search results",
 			"generic.search.export.csv": "Export",
 			"generic.search.nodata.found": "No data found",
 			"generic.loading": "Loading...",
 			"generic.more": "More",
+			"generic.file.choose": "Choose a file",
+			
 			"registry.new.new": "New",
 			"registry.new.cancel": "Cancel",
 			"registry.new.send": "Send",
@@ -1529,7 +1568,24 @@
 
 			"dashboard.widget.notifications.title": "Notifications",
 			"dashboard.widget.members.openRequests": "New registrations",
-			"dashboard.widget.members.noOpenRequests": "Žádny žádosti."
+			"dashboard.widget.members.noOpenRequests": "Žádny žádosti.",
+
+			"portal.edit.title":"Portal editor",
+			"portal.edit.edit":"Edit",
+			"portal.edit.new":"New",
+			"portal.edit.add.block":"Add a block",
+			"portal.edit.cancel":"Cancel",
+			"portal.edit.save":"Save",
+			"portal.edit.new.name":"Name:",
+			"portal.edit.new.template":"Template:",
+			"portal.edit.new.publish":"Publish:",
+			"portal.edit.new.publishFrom":"Publish from:",
+			"portal.edit.new.tags":"Tags:",
+			"portal.edit.block.choice":"Block choice",
+			"portal.edit.block.description":"Description:",
+			"portal.menu.title":"Portal menu",
+			"portal.menu.cancel":"Cancel",
+			"portal.menu.send":"Send"
 		});
 
 $translateProvider.translations('ja', {
@@ -1644,6 +1700,7 @@ $translateProvider.translations('ja', {
 			"generic.search.operator": "Operátor",
 			"generic.search.value": "Hodnota",
 			"generic.search.view": "Zobraziť",
+			"generic.search.action": "Akcia",
 			"generic.search.result.of.searching": "Výsledok vyhľadávania",
 			"generic.search.export.csv": "Exportovať",
 			"generic.search.nodata.found":"Neboli najdené žiadne dáta.",
@@ -1767,7 +1824,7 @@ $translateProvider.translations('ja', {
 			"security.user.edit.add":"Pridať",
 			"security.user.edit.attribute":"Atribút",
 			"security.user.edit.cancel":"Zrušiť",
-			"security.user.edit.reset.password":"Resetnúť heslo",
+			"security.user.edit.reset.password":"Resetovať heslo",
 			"security.user.edit.login.data":"Prihlasovacie údaje",
 			"security.user.edit.login":"Login",
 			"security.user.edit.email":"E-mail",
@@ -2049,7 +2106,25 @@ $translateProvider.translations('ja', {
 
 			"dashboard.widget.notifications.title": "Notifikácie",
 			"dashboard.widget.members.openRequests": "Nové registrácie",
-			"dashboard.widget.members.noOpenRequests": "Žiadne žiadosti."
+			"dashboard.widget.members.noOpenRequests": "Žiadne žiadosti.",
+
+			"portal.edit.title":"Portal editor",
+			"portal.edit.edit":"Edit",
+			"portal.edit.new":"New",
+			"portal.edit.add.block":"Add a block",
+			"portal.edit.cancel":"Cancel",
+			"portal.edit.save":"Save",
+			"portal.edit.new.name":"Name:",
+			"portal.edit.new.template":"Template:",
+			"portal.edit.new.publish":"Publish:",
+			"portal.edit.new.publishFrom":"Publish from:",
+			"portal.edit.new.tags":"Tags:",
+			"portal.edit.block.choice":"Block choice",
+			"portal.edit.block.description":"Description:",
+			"portal.menu.title":"Portal menu",
+			"portal.menu.cancel":"Cancel",
+			"portal.menu.send":"Send"
+
 		});
 	}])
 	.controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {

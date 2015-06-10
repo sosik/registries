@@ -19,7 +19,6 @@
 			$scope.profile = {};
 			$scope.profile.permissions = [];
 			$scope.profile.groups = [];
-			$scope.headers = {};
 
 
 
@@ -63,9 +62,8 @@
 
 			schemaUtilFactory.getCompiledSchema(entityUri, 'search').success(function(data) {
 				$scope.searchDef = genericSearchFactory.parseSearchDef(data);
-				$scope.entity = data.title;
+				$scope.schema = data;
 				$scope.addCrit({});
-				$scope.headers = data.listFields;
 
 			}).error(function(err) {
 				notificationFactory.error(err);

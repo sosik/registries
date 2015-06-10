@@ -1,7 +1,7 @@
 <section>
 <form novalidate class="flex-form">
 	<fieldset>
-	<span class="x-fieldset-title">{{'generic.search.searching' | translate}} ({{schema.transCode | translate}})</span>
+	<span class="x-fieldset-title">{{'generic.search.searching' | translate}} ({{schema.transCode || schema.title | translate}})</span>
 	<div class="flex-form-row" ng-repeat="crit in searchCrits">
 		<div class="flex-form-col-left">
 			<select style="" ng-options="d.name group by [d.group] for d in schemaFields" ng-model="crit.field" ng-change=""></select>
@@ -13,29 +13,29 @@
 				xpsui-by-schema-field-edit xpsui-schema="{{crit.field.path ? 'schema.' + objectPathToSchemaPath(crit.field.path) : null}}" 
 				xpsui-model="crit.val" ng-keypress="filterKeyPressed($event)"></div>
 		<div class="flex-form-col-right">
-			<button ng-click="removeCrit($index)" type="button" class="btn-clear"><i class="icon-remove"></i> Zrušiť</button>
+			<button ng-click="removeCrit($index)" type="button" class="btn-clear"><i class="icon-remove"></i> {{'generic.search.remove' | translate}}</button>
 		</div>
 	</div>
 	<div class="flex-form-row" style="">
 		<div class="flex-form-col-middle">
-			<button ng-click="addNewCrit()" type="button" class="btn-secondary"><i class="icon-add"></i> Pridať</button>	
+			<button ng-click="addNewCrit()" type="button" class="btn-secondary"><i class="icon-add"></i> {{'generic.search.add' | translate}}</button>	
 		</div>
 		<div class="flex-form-col-content-end">
-			<button ng-click="search()" type="button" class="btn-primary"><i ng-show="!isSearching" class="icon-search"></i><i ng-show="isSearching" class="fa fa-spinner fa-spin"></i> Hľadať</button>	
+			<button ng-click="search()" type="button" class="btn-primary"><i ng-show="!isSearching" class="icon-search"></i><i ng-show="isSearching" class="fa fa-spinner fa-spin"></i> {{'generic.search.search' | translate}}</button>	
 		</div>
 	</div>
 	</fieldset>
 </form>
 <fieldset class="flex-form-fieldset">
-	<span class="x-fieldset-title">Výsledok vyhľadávania</span>
+	<span class="x-fieldset-title">{{'generic.search.result.of.searching' | translate}}</span>
 	<div class="search-header flex-form-headers" >
 		<div ng-repeat="f in schema.listFields" class="flex-form-header" ng-click="changeSort(f.field);"
 				ng-style="{'flex': fieldWeigth(f), '-webkit-flex': fieldWeigth(f) }">
-			{{(f.transCode ? f.transCode : f.title) | translate}}
+			{{f.transCode || f.title | translate}}
 			<i ng-show="f.field == currSort.field && currSort.order == sort.ASC" class="icon-chevron-up" class="flex-form-header-icon"></i>
 			<i ng-show="f.field == currSort.field && currSort.order == sort.DESC" class="icon-chevron-down" class="flex-form-header-icon"></i>
 		</div>
-		<div class="flex-form-header">Akcia</div>
+		<div class="flex-form-header">{{'generic.search.action' | translate}}</div>
 	</div>
 	<div ng-repeat="d in data" class="flex-form-data-row row-{{($index%2)?'odd':'even'}}">
 		<div ng-repeat="f in schema.listFields" 
@@ -48,7 +48,7 @@
 					xpsui-record-action xpsui-model="$parent.$parent.model[$parent.$index]" 
 					xpsui-schema="a" 
 					class="btn-primary">
-				Zobraziť
+				{{'generic.search.view' | translate}}
 			</a>
 		</div>	
 	</div>

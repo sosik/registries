@@ -1,10 +1,10 @@
 <section>
 <form novalidate class="flex-form">
-	<fieldset>
+	<fieldset class="flex-form-fieldset-search-box">
 	<span class="x-fieldset-title">{{'generic.search.searching' | translate}} ({{schema.transCode || schema.title | translate}})</span>
 	<div class="flex-form-row" ng-repeat="crit in searchCrits">
 		<div class="flex-form-col-left">
-			<select style="" ng-options="d.name group by [d.group] for d in schemaFields" ng-model="crit.field" ng-change=""></select>
+			<select ng-options="d.name group by [d.group] for d in schemaFields" ng-model="crit.field" ng-change=""></select>
 		</div>
 		<div class="flex-form-col-left">
 			<select ng-options="o.text for o in allOps" ng-model="crit.op"></select>

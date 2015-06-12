@@ -1,52 +1,320 @@
-
-.flex-form {
-
-	.flex-form-row {
+@media screen and (max-width: 1960px){
+	.flex-form-fieldset-search-box {
 		display: flex;
 		display: -webkit-box;
 		display: -webkit-flex;
 		flex-direction: row;
 		-webkit-flex-direction: row;
-		padding-bottom: 3px;
-	}
+		flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		justify-content: space-around;
+		//max-width: 1960px;
+		width: auto;
+		position: relative;
+		flex-basis: 1960px;
+		.flex-form-row {
+			display: flex;
+			display: -webkit-box;
+			display: -webkit-flex;
+			flex-direction: row;
+			-webkit-flex-direction: row;
+			padding-bottom: 3px;
+		}
 
-	.flex-form-col-left {
-		flex-direction: column;
-		-webkit-flex-direction: column;
-		flex: 0 0 auto;
-		-webkit-flex: 0 0 auto;
-		padding-right: 3px;
-	}
+		.flex-form-col-left {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			padding-right: 3px;
+		}
 
-	.flex-form-col-middle {
-		flex-direction: column;
-		-webkit-flex-direction: column;
-		flex: 1 0 auto;
-		-webkit-flex: 1 0 auto;
-	}
+		.flex-form-col-middle {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 1 0 auto;
+			-webkit-flex: 1 0 auto;
+		}
 
-	.flex-form-col-right {
-		flex-direction: column;
-		-webkit-flex-direction: column;
-		flex: 0 0 auto;
-		-webkit-flex: 0 0 auto; 
-	}
+		.flex-form-col-right {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto; 
+		}
 
-	.flex-form-col-content-end {
-		flex-direction: column;
-		-webkit-flex-direction: column;
-		flex: 0 0 auto;
-		-webkit-flex: 0 0 auto;
-		align-content: flex-end;
-	}
+		.flex-form-col-content-end {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			align-content: flex-end;
+		}
 
-	select {
-		font-size: 1em;
-		line-height: 1.25em;
-		height: 32px;
-		background-color: #fafafa;
+		select {
+			font-size: 1em;
+			line-height: 1.25em;
+			width: 200px;
+			height: 32px;
+			background-color: #fafafa;
+		}
 	}
+}
 
+@media screen and (max-width: 1267px){
+	.flex-form-fieldset-search-box {
+		display: flex;
+		display: -webkit-box;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		justify-content: space-around;
+		//max-width: 1267px;
+		width: auto;
+		position: relative;
+		flex-basis: 1267px;
+		
+		.flex-form-row {
+			display: flex;
+			display: -webkit-box;
+			display: -webkit-flex;
+			flex-direction: row;
+			-webkit-flex-direction: row;
+			padding-bottom: 3px;
+		}
+
+		.flex-form-col-left {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			padding-right: 3px;
+		}
+
+		.flex-form-col-middle {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 1 0 auto;
+			-webkit-flex: 1 0 auto;
+		}
+
+		.flex-form-col-right {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto; 
+		}
+
+		.flex-form-col-content-end {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			align-content: flex-end;
+		}
+
+		select {
+			font-size: 1em;
+			line-height: 1.25em;
+			width:200px;
+			height: 32px;
+			background-color: #fafafa;
+		}
+	}
+}
+
+@media screen and (max-width: 960px){
+	.flex-form-fieldset-search-box {
+		display: flex;
+		display: -webkit-box;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		justify-content: space-around;
+		//max-width: 960px;
+		width: auto;
+		position: relative;
+		flex-basis: 960px;
+		
+		.flex-form-row {
+			display: flex;
+			display: -webkit-box;
+			display: -webkit-flex;
+			flex-direction: row;
+			-webkit-flex-direction: row;
+			padding-bottom: 3px;
+		}
+
+		.flex-form-col-left {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			padding-right: 3px;
+		}
+
+		.flex-form-col-middle {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 1 0 auto;
+			-webkit-flex: 1 0 auto;
+		}
+
+		.flex-form-col-right {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto; 
+		}
+
+		.flex-form-col-content-end {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			align-content: flex-end;
+		}
+
+		select {
+			font-size: 1em;
+			line-height: 1.25em;
+			width: 200px;
+			height: 32px;
+			background-color: #fafafa;
+		}
+	}
+}
+
+@media screen and (max-width: 500px){
+	.flex-form-fieldset-search-box {
+		display: flex;
+		display: -webkit-box;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		justify-content: space-around;
+		//max-width: 500px;
+		width: auto;
+		position: relative;
+		flex-basis: 40px;
+		
+		.flex-form-row {
+			display: flex;
+			display: -webkit-box;
+			display: -webkit-flex;
+			flex-direction: row;
+			-webkit-flex-direction: row;
+			padding-bottom: 3px;
+		}
+
+		.flex-form-col-left {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			padding-right: 3px;
+		}
+
+		.flex-form-col-middle {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 1 0 auto;
+			-webkit-flex: 1 0 auto;
+		}
+
+		.flex-form-col-right {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto; 
+		}
+
+		.flex-form-col-content-end {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			align-content: flex-end;
+		}
+
+		select {
+			font-size: 1em;
+			line-height: 1.25em;
+			width: 50px;
+			height: 32px;
+			background-color: #fafafa;
+		}
+	}
+}
+
+@media screen and (max-width: 320px){
+	.flex-form-fieldset-search-box {
+		display: flex;
+		display: -webkit-box;
+		display: -webkit-flex;
+		flex-direction: row;
+		-webkit-flex-direction: row;
+		flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		justify-content: space-around;
+		//max-width: 500px;
+		width: auto;
+		position: relative;
+		flex-basis: 320px;
+		
+		.flex-form-row {
+			display: flex;
+			display: -webkit-box;
+			display: -webkit-flex;
+			flex-direction: row;
+			-webkit-flex-direction: row;
+			padding-bottom: 3px;
+		}
+
+		.flex-form-col-left {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			padding-right: 3px;
+		}
+
+		.flex-form-col-middle {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 1 0 auto;
+			-webkit-flex: 1 0 auto;
+		}
+
+		.flex-form-col-right {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto; 
+		}
+
+		.flex-form-col-content-end {
+			flex-direction: column;
+			-webkit-flex-direction: column;
+			flex: 0 0 auto;
+			-webkit-flex: 0 0 auto;
+			align-content: flex-end;
+		}
+
+		select {
+			font-size: 1em;
+			line-height: 1.25em;
+			width: 50px;;
+			height: 32px;
+			background-color: #fafafa;
+		}
+	}
 }
 
 .flex-form-fieldset {

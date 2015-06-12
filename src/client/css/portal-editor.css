@@ -377,9 +377,7 @@
 		background-color: #333333; 
 		font-size: 20px; 
   		height: auto;
-  		//display: box;
 		display: flex;
-  		//display: -webkit-box;
   		display: -webkit-flex;
   		flex-direction: row;
   		-webkit-flex-direction: row;
@@ -393,8 +391,6 @@
 		left:0%;
 		right: 0%;
 		bottom: 70px;
-		//box-sizing: border-box;
-		//webkit-box-sizing: border-box;		
 	}
 }
 

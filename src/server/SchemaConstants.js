@@ -26,14 +26,14 @@ module.exports = {
 
 	//DATA types
 	TYPE_KEYWORD: 'type',
-	TYPE_NUMBER:'number',
-	TYPE_STRING:'string',
+	TYPE_NUMBER: 'number',
+	TYPE_STRING: 'string',
 
 	//Data generations & behaviour
 	DEFAULT_KEYWORD: 'default',
 	REQUIRED_KEYWORD: 'required', // marks required fileds
-	UNIQUE:'unique', // mark fiels which value needs to be unique in collection
-	SAVE_BY_SCHEMA: "saveBySchema", // redirects save to different schema
+	UNIQUE: 'unique', // mark fiels which value needs to be unique in collection
+	SAVE_BY_SCHEMA: 'saveBySchema', // redirects save to different schema
 
 	VARIABLE_SYMBOL: 'variableSymbol',  //marks fields which should be filled with generated VS
 	SEQUENCE: 'sequence', // marks fileds that will be assigned by specified seqence
@@ -42,8 +42,8 @@ module.exports = {
 	READ_ONLY: 'readOnly', // marks field as readonly field will not be editable in GUI
 
 	//Events
-	FIRE_EVENTS:"fireEvents",
-	FIRE_EVENTS_UPDATE:"update",
-	FIRE_EVENTS_CREATE:"create"
+	FIRE_EVENTS: 'fireEvents',
+	FIRE_EVENTS_UPDATE: 'update',
+	FIRE_EVENTS_CREATE: 'create'
 
 };

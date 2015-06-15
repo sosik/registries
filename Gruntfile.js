@@ -1,3 +1,6 @@
+var path = require('path');
+var extend = require('extend');
+
 module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-copy');
@@ -43,7 +46,12 @@ module.exports = function(grunt) {
 
 	grunt.registerTask('portal', ['uglify:xpsui', 'build:server', 'build:client']);
 
-	grunt.initConfig({
+
+	grunt.loadTasks(path.join(__dirname, 'grunt', 'tasks'));
+	var config = require(path.join(__dirname, 'grunt', 'configs'));
+	console.log(config);
+
+	var oldConfig = {
 		debug: {
 			options: {
 			  open: false // do not open node-inspector in Chrome automatically
@@ -302,5 +310,9 @@ module.exports = function(grunt) {
 				}
 			}
 		}
-	});
+	};
+
+
+	config = extend(config, oldConfig);
+	grunt.initConfig(config);
 };

@@ -529,6 +529,8 @@
 			"dashboard.widget.data.noOpenRequests": "Žiadne žiadosti.",
 			"dashboard.widget.transfer.noOpenRequests": "Žiadne žiadosti.",
 
+			"competition.part.generated.matches": "Vygenerované zápasy",
+
 			"portal.edit.title":"Portálový editor",
 			"portal.edit.edit":"Editovať",
 			"portal.edit.new":"Nový",
@@ -1068,6 +1070,8 @@
 			"dashboard.widget.data.noOpenRequests": "Žádné žádosti.",
 			"dashboard.widget.transfer.noOpenRequests": "Žádné žádosti.",
 
+			"competition.part.generated.matches": "Vygenerovány zápasy",
+
 			"portal.edit.title":"Portálový editor",
 			"portal.edit.edit":"Editovat",
 			"portal.edit.new":"Nový",
@@ -1581,6 +1585,8 @@
 			"dashboard.widget.members.noOpenRequests": "No requests.",
 			"dashboard.widget.data.noOpenRequests": "No requests.",
 			"dashboard.widget.transfer.noOpenRequests": "No requests.",
+
+			"competition.part.generated.matches": "Generated matches",
 
 			"portal.edit.title":"Portal editor",
 			"portal.edit.edit":"Edit",

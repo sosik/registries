@@ -41,6 +41,39 @@
 
 			};
 
+			function fillClubLogos() {
+				var clubIds = [];
+				for (var pos=0; pos<$scope.model.listOfTeam.team.length; pos++) {
+					(function (position) {
+						var rosterId = $scope.model.listOfTeam.team[position].oid;
+						$http({
+							method : 'GET',
+							url : '/udao/getBySchema/uri~3A~2F~2Fregistries~2Frosters~23views~2Frosters~2Fview/' + rosterId,
+							data : {
+							}
+						}).success(function(roster) {
+							fillForClub(position, roster.baseData.club.oid);
+						}).error(function(err) {
+							callback(err);
+						});
+					}(pos));
+				}
+
+			}
+
+			function fillForClub(position, clubOid) {
+				$http({
+					method : 'GET',
+					url : '/udao/getBySchema/uri~3A~2F~2Fregistries~2Forganizations~23views~2Fclub~2Fview/' + clubOid,
+					data : {
+					}
+				}).success(function(club) {
+					$scope.model.listOfTeam.team[position].photo = club.logoInfo.photo;
+				}).error(function(err) {
+					callback(err);
+				});
+			}
+
 			// /registry/generated/:schemaFrom/:idFrom/:generateBy/:template
 			$http({ method : 'GET',url: '/udao/getBySchema/'+$routeParams.schemaFrom+'/'+ $routeParams.idFrom})
 			.success(function(data, status, headers, config){
@@ -50,10 +83,12 @@
 						notificationFactory.error({translationCode:'registry.unsuccesfully.generated', time:3000});
 					} else
 					notificationFactory.info({translationCode:'registry.succesfully.generated', time:3000});
+					fillClubLogos();
 				});
 
 			}).error(function(err) {
 				notificationFactory.error(err);
+				fillClubLogos();
 			});
 		}
 	]);

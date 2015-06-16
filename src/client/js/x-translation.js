@@ -522,8 +522,12 @@
 			"schemas.countries.enum.ZWE": "Zimbabwe",
 
 			"dashboard.widget.notifications.title": "Notifikácie",
-			"dashboard.widget.members.openRequests": "Nové registrácie",
+			"dashboard.widget.members.openRequests": "Žiadosti o registráciu",
+			"dashboard.widget.data.openRequests":"Žiadosti o zmenu údajov",
+			"dashboard.widget.transfer.openRequests":"Žiadosti o transfer",
 			"dashboard.widget.members.noOpenRequests": "Žiadne žiadosti.",
+			"dashboard.widget.data.noOpenRequests": "Žiadne žiadosti.",
+			"dashboard.widget.transfer.noOpenRequests": "Žiadne žiadosti.",
 
 			"portal.edit.title":"Portálový editor",
 			"portal.edit.edit":"Editovať",
@@ -1057,8 +1061,12 @@
 			"schemas.countries.enum.ZWE":"Zimbabwe",
 
 			"dashboard.widget.notifications.title": "Notifikace",
-			"dashboard.widget.members.openRequests": "Nové registrace",
-			"dashboard.widget.members.noOpenRequests": "Žádny žádosti.",
+			"dashboard.widget.members.openRequests": "Žádosti o registraci",
+			"dashboard.widget.data.openRequests":"Žádosti o změnu údajů",
+			"dashboard.widget.transfer.openRequests":"Žádosti o transfer",
+			"dashboard.widget.members.noOpenRequests": "Žádné žádosti.",
+			"dashboard.widget.data.noOpenRequests": "Žádné žádosti.",
+			"dashboard.widget.transfer.noOpenRequests": "Žádné žádosti.",
 
 			"portal.edit.title":"Portálový editor",
 			"portal.edit.edit":"Editovat",
@@ -1567,8 +1575,12 @@
 			"schemas.countries.enum.ZWE": "Zimbabwe",
 
 			"dashboard.widget.notifications.title": "Notifications",
-			"dashboard.widget.members.openRequests": "New registrations",
-			"dashboard.widget.members.noOpenRequests": "Žádny žádosti.",
+			"dashboard.widget.members.openRequests": "Registration requests",
+			"dashboard.widget.data.openRequests":"Data change requests",
+			"dashboard.widget.transfer.openRequests":"Transfer requests",
+			"dashboard.widget.members.noOpenRequests": "No requests.",
+			"dashboard.widget.data.noOpenRequests": "No requests.",
+			"dashboard.widget.transfer.noOpenRequests": "No requests.",
 
 			"portal.edit.title":"Portal editor",
 			"portal.edit.edit":"Edit",
@@ -2104,9 +2116,13 @@ $translateProvider.translations('ja', {
 			"schemas.countries.enum.ESH": "Západná Sahara",
 			"schemas.countries.enum.ZWE": "Zimbabwe",
 
-			"dashboard.widget.notifications.title": "Notifikácie",
-			"dashboard.widget.members.openRequests": "Nové registrácie",
-			"dashboard.widget.members.noOpenRequests": "Žiadne žiadosti.",
+			"dashboard.widget.notifications.title": "Notifications",
+			"dashboard.widget.members.openRequests": "Registration requests",
+			"dashboard.widget.data.openRequests":"Data change requests",
+			"dashboard.widget.transfer.openRequests":"Transfer requests",
+			"dashboard.widget.members.noOpenRequests": "No requests.",
+			"dashboard.widget.data.noOpenRequests": "No requests.",
+			"dashboard.widget.transfer.noOpenRequests": "No requests.",
 
 			"portal.edit.title":"Portal editor",
 			"portal.edit.edit":"Edit",

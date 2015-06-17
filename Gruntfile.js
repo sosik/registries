@@ -49,7 +49,6 @@ module.exports = function(grunt) {
 
 	grunt.loadTasks(path.join(__dirname, 'grunt', 'tasks'));
 	var config = require(path.join(__dirname, 'grunt', 'configs'));
-	console.log(config);
 
 	var oldConfig = {
 		debug: {

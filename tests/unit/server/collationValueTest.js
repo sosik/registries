@@ -1,4 +1,4 @@
-var collation = require (process.cwd() + '/src/server/sortingValuesMaker.js');
+var collation = require (process.cwd() + '/build/server/sortingValuesMaker.js');
 var expect = require('chai').expect;
 
 describe('value making', function(){

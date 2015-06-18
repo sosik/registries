@@ -2140,8 +2140,23 @@ $translateProvider.translations('ja', {
 			"portal.menu.title":"Portal menu",
 			"portal.menu.cancel":"Cancel",
 			"portal.menu.send":"Send"
-
 		});
+
+		//fallback for individual missing transCodes
+		$translateProvider.fallbackLanguage(['en']);
+		
+		$translateProvider.registerAvailableLanguageKeys(['en','cz','sk','ja'], {
+			'en_US': 'en',
+			'en_GB': 'en',
+			'cs': 'cz',
+			'sk': 'sk',
+			'ja': 'ja',
+			'*': 'en' // must be last
+		});
+		$translateProvider.determinePreferredLanguage();
+		$translateProvider.useCookieStorage();
+
+
 	}])
 	.controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {
 		$scope.setLang = function(lang) {

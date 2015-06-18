@@ -23,6 +23,7 @@ module.exports = function (config) {
 			'../build/client/lib/angular-re-captcha/angular-re-captcha.js',
 			'../build/client/lib/angular-translate/angular-translate.js',
 			'../build/client/lib/angular-translate-handler-log/angular-translate-handler-log.min.js',
+			'../build/client/lib/angular-translate-storage-cookie/angular-translate-storage-cookie.js',
 			'../build/client/lib/ace-builds/src-min-noconflict/ace.js',
 			'../build/client/lib/angular-ui-ace/ui-ace.js',
 			'../build/client/js/safeUrlEncoder.js',

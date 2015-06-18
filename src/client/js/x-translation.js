@@ -2140,8 +2140,12 @@ $translateProvider.translations('ja', {
 			"portal.menu.title":"Portal menu",
 			"portal.menu.cancel":"Cancel",
 			"portal.menu.send":"Send"
-
 		});
+		$translateProvider.fallbackLanguage(['cz','sk']);
+		$translateProvider.determinePreferredLanguage();
+		$translateProvider.useCookieStorage();
+
+
 	}])
 	.controller('langSelectCtrl', ['$scope', '$translate', function($scope, $translate) {
 		$scope.setLang = function(lang) {

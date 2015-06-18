@@ -1,33 +1,60 @@
+/*global describe, it */
+'use strict';
+
 var expect = require('chai').expect;
 
 describe('SchemaTools', function() {
 	var SchemaToolsModule = require(process.cwd() + '/build/server/SchemaTools.js');
 
-	it('extend should work',function(done){
+	it('extend should work', function(done) {
 
 		var simpleSchema1 = {
-			"id": "uri://registries/simpleSchema1",
-			at1:"test",
-			atOver:"shouldBechaged",
-			atComplicated:{test:"simpleSchema1" , testOver:"simpleSchema1"},
-			shouldNotExist:"aaa"
+			'id': 'uri://registries/simpleSchema1',
+			at1: 'test',
+			atOver: 'shouldBechaged',
+			atComplicated: {test: 'simpleSchema1', testOver: 'simpleSchema1'},
+			shouldNotExist: 'aaa'
 		};
 		var simpleSchema2 = {
-			"id": "uri://registries/simpleSchema2",
-			extends: "uri://registries/simpleSchema1",
-			at2:"test",
-			atOver:"changed",
-			atComplicated:{ testOver:"simpleSchema2", test2:"test2"},
-			shouldNotExist:null
+			'id': 'uri://registries/simpleSchema2',
+			extends: 'uri://registries/simpleSchema1',
+			at2: 'test',
+			atOver: 'changed',
+			atComplicated: {testOver: 'simpleSchema2', test2: 'test2'},
+			shouldNotExist: null,
+			ref: {$ref: 'uri://registries/simpleSchema4'}
 		};
 
+		var simpleSchema3 = {
+			'id': 'uri://registries/simpleSchema3',
+			extends: 'uri://registries/nonExistingSchema'
+		};
+
+		var simpleSchema4 = {
+			'id': 'uri://registries/simpleSchema4',
+			ref: {$ref: 'uri://registries/simpleSchema5'},
+			title: 'test'
+		};
+
+		var simpleSchema5 = {
+			'id': 'uri://registries/simpleSchema5'
+		};
+
+
 		var schemaTools = new SchemaToolsModule.SchemaTools();
-		schemaTools.registerSchema(null,simpleSchema1);
-		schemaTools.registerSchema(null	,simpleSchema2);
+		schemaTools.registerSchema(null, simpleSchema3);
+		schemaTools.parse();
+		expect(function() {schemaTools.compile(); }).to.throw(Error, /schema not found/);
+
+		schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, simpleSchema2);
+		schemaTools.registerSchema(null, simpleSchema1);
+		schemaTools.registerSchema(null, simpleSchema4);
+		schemaTools.registerSchema(null, simpleSchema5);
 		schemaTools.parse();
 		schemaTools.compile();
 
-		var schema=schemaTools.getSchema('uri://registries/simpleSchema2');
+		var schema = schemaTools.getSchema('uri://registries/simpleSchema2');
 		expect(schema).to.be.not.null();
 		expect(schema.compiled).to.be.not.null();
 		expect(schema.compiled.at1).to.be.not.null();
@@ -35,15 +62,176 @@ describe('SchemaTools', function() {
 		expect(schema.compiled.atOver).to.be.eql('changed');
 		expect(schema.compiled).to.not.have.property('shouldNotExist');
 
+
 		// console.log(schemaTools.getSchema('uri://registries/simpleSchema2'));
 
 		done();
 
 	});
 
+	it('extend should work 2', function(done) {
+		var schema1 = {
+			'id': 'uri://registries/schema1',
+			extends: 'uri://registries/schema2',
+			complicated: {
+				new: {
+					at2: 'shouldBeChanged',
+					another: {
+						that: null
+					}
+				}
+			},
+
+			complicated2: {
+				prop2: 'changedByS1',
+				nest: {
+					onlyInS4: 'changedFromS4'
+				}
+			},
+			at1: 'test'
+		};
+
+		var schema2 = {
+			'id': 'uri://registries/schema2',
+			at2: 'test',
+			complicated: {
+				title: 'test',
+				new: {
+					at2: 'nestedAt2',
+					att2: 'shouldStayTheSame',
+					another: {
+						that: 'shouldNotExist'
+					}
+				}
+			},
+			complicated2: {
+				prop1: 'shouldNotChange',
+				prop2: 'shouldChange',
+				nest: {
+					extends: 'uri://registries/schema3',
+					prop1: 'overriden'
+				}
+			}
+		};
+
+		var schema3 = {
+			'id': 'uri://registries/schema3',
+			extends: 'uri://registries/schema4#props',
+			prop1: 'shouldBeChanged',
+			prop2: 'fromS3'
+		};
+
+		var schema4 = {
+			'id': 'uri://registries/schema4',
+			props: {
+				prop1: 'shouldBeChanged',
+				prop3: 'fromS4',
+				onlyInS4: 'shouldBeChanged'
+			},
+			prop4: 'shouldNotBeThere'
+		};
+
+		var schema5 = {
+			'id': 'uri://registries/schema5',
+			ref: {$ref: 'uri://registries/schema1'}
+		};
+
+		var schema6 = {
+			'id': 'uri://registries/schema6',
+			extends: 5
+		};
+
+		var schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, schema6);
+		schemaTools.parse();
+		expect(function() {schemaTools.compile(); }).to.throw(Error, /not number/);
+
+		schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, schema1);
+		schemaTools.registerSchema(null, schema2);
+		schemaTools.registerSchema(null, schema3);
+		schemaTools.registerSchema(null, schema4);
+		schemaTools.registerSchema(null, schema5);
+		schemaTools.parse();
+		schemaTools.compile();
+
+		var schema = schemaTools.getSchema('uri://registries/schema1');
+		expect(schema).to.be.not.null();
+		expect(schema.compiled.at1).to.eql('test');
+		expect(schema.compiled.complicated.new.at2).to.eql('shouldBeChanged');
+		expect(schema.compiled.complicated.new.att2).to.eql('shouldStayTheSame');
+		expect(schema.compiled).to.not.have.property('that');
+
+		expect(schema.compiled.complicated2.prop1).to.eql('shouldNotChange');
+		expect(schema.compiled.complicated2.prop2).to.eql('changedByS1');
+		expect(schema.compiled.complicated2.nest.prop1).to.eql('overriden');
+		expect(schema.compiled.complicated2.nest.prop2).to.eql('fromS3');
+		expect(schema.compiled.complicated2.nest.prop3).to.eql('fromS4');
+		expect(schema.compiled).to.not.have.property('prop4');
+		expect(schema.compiled.complicated2.nest.onlyInS4).to.eql('changedFromS4');
+
+		var refSchema = schemaTools.getSchema('uri://registries/schema5');
+		expect(refSchema.compiled.ref).to.eql(schema.compiled);
+
+		done();
+	});
+
+	it.skip('should correctly extend a $ref', function(done) {
+		var simpleSchema1 = {
+			'id': 'uri://registries/simpleSchema1',
+			ref: {$ref: 'uri://registries/simpleSchema2'}
+		};
+
+		var simpleSchema2 = {
+			'id': 'uri://registries/simpleSchema2',
+			field1: 'shouldBeChangedByS3',
+			field2: 'fromS2'
+		};
+
+		var simpleSchema3 = {
+			'id': 'uri://registries/simpleSchema3',
+			extends: 'uri://registries/simpleSchema1#ref',
+			field1: 'changedByS3'
+		};
+
+		var simpleSchema4 = {
+			'id': 'uri://registries/simpleSchema4',
+			'new': {$ref: 'uri://registries/simpleSchema4#view'},
+			'view': {
+				'properties': {
+					'photoInfo': 'TEST'
+				}
+			},
+			'search': {
+				'properties': {
+					'extends': 'uri://registries/simpleSchema4#new/properties',
+					'photoInfo': null
+				}
+			}
+		};
+
+		var schemaTools = new SchemaToolsModule.SchemaTools();
+		schemaTools.registerSchema(null, simpleSchema1);
+		schemaTools.registerSchema(null, simpleSchema2);
+		schemaTools.registerSchema(null, simpleSchema3);
+		schemaTools.registerSchema(null, simpleSchema4);
+
+		schemaTools.parse();
+		schemaTools.compile();
+
+		var schema = schemaTools.getSchema('uri://registries/simpleSchema3');
+		expect(schema.compiled.field1).to.eql('changedByS3');
+		expect(schema.compiled.field2).to.eql('fromS2');
+
+		schema = schemaTools.getSchema('uri://registries/simpleSchema4');
+		expect(schema.compiled.search.properties).to.not.have.property('photoInfo');
+
+		done();
+	});
+
 	it('Simple schema registration and retriaval', function(done) {
 		var simpleSchema1 = {
-			"id": "uri://registries/simpleSchema1"
+			'id': 'uri://registries/simpleSchema1'
 		};
 		var schemaTools = new SchemaToolsModule.SchemaTools();
 
@@ -67,37 +255,37 @@ describe('SchemaTools', function() {
 
 	it('Base schema parsing', function(done) {
 		var simpleSchema1 = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/simpleSchema1#",
-			"user": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string"
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/simpleSchema1#',
+			'user': {
+				'type': 'object',
+				'properties': {
+					'name': {
+						'type': 'string'
 					}
 				}
 			}
 		};
 		var simpleSchema2 = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/simpleSchema2#",
-			"user2": {
-				"type": "objeect",
-				"properties": {
-					"name": {
-						"id": "uri://registries/user2#name",
-						"type": "string"
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/simpleSchema2#',
+			'user2': {
+				'type': 'objeect',
+				'properties': {
+					'name': {
+						'id': 'uri://registries/user2#name',
+						'type': 'string'
 					},
-					"lastName": {
-						"id": "user2#lastName",
-						"type": "string"
+					'lastName': {
+						'id': 'user2#lastName',
+						'type': 'string'
 					},
-					"address": {
-						"id": "address",
-						"type": "object",
-						"properties": {
-							"street": {
-								"type": "object"
+					'address': {
+						'id': 'address',
+						'type': 'object',
+						'properties': {
+							'street': {
+								'type': 'object'
 							}
 						}
 					}
@@ -136,41 +324,41 @@ describe('SchemaTools', function() {
 
 	it('Base schema compilation', function(done) {
 		var schema1 = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#address",
-			"type": "object",
-			"properties": {
-				"street": {
-					"type": "string"
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#address',
+			'type': 'object',
+			'properties': {
+				'street': {
+					'type': 'string'
 				},
-				"houseNo": {
-					"type": "string"
+				'houseNo': {
+					'type': 'string'
 				},
-				"city": {
-					"type": "string"
+				'city': {
+					'type': 'string'
 				},
-				"zipCode": {
-					"type": "string"
+				'zipCode': {
+					'type': 'string'
 				},
-				"country": {
-					"type": "string"
+				'country': {
+					'type': 'string'
 				}
 			}
 		};
 
 		var schema2 = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#user",
-			"type": "object",
-			"properties": {
-				"firstName": {
-					"type": "string"
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#user',
+			'type': 'object',
+			'properties': {
+				'firstName': {
+					'type': 'string'
 				},
-				"lastName": {
-					"type": "string"
+				'lastName': {
+					'type': 'string'
 				},
-				"address": {
-					"$ref": "uri://registries/common#address"
+				'address': {
+					'$ref': 'uri://registries/common#address'
 				}
 			}
 		};
@@ -182,7 +370,7 @@ describe('SchemaTools', function() {
 		schemaTools.parse();
 		schemaTools.compile();
 
-		compSchema = schemaTools.getSchema('uri://registries/common#user').compiled;
+		var compSchema = schemaTools.getSchema('uri://registries/common#user').compiled;
 		expect(compSchema).to.have.deep.property('properties.address');
 		expect(compSchema).to.have.deep.property('properties.address.properties');
 		expect(compSchema).to.have.deep.property('properties.address.properties.street');
@@ -195,30 +383,30 @@ describe('SchemaTools', function() {
 
 	it('Simple default object extraction', function(done) {
 		var securityCredentialsSchema = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#securityCredentials",
-			"type": "object",
-			"properties": {
-				"permissions": {
-					"type": "object",
-					"properties": {
-						"System User": {
-							"title": "Systémový používateľ",
-							"description": "Oprávnenie pre interagovanie so systémom",
-							"type": "boolean",
-							"default": true
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#securityCredentials',
+			'type': 'object',
+			'properties': {
+				'permissions': {
+					'type': 'object',
+					'properties': {
+						'System User': {
+							'title': 'Systémový používateľ',
+							'description': 'Oprávnenie pre interagovanie so systémom',
+							'type': 'boolean',
+							'default': true
 						},
-						"Registry - read": {
-							"title": "Čítane registrov",
-							"description": "Oprávnenie pre čítanie dát v registroch",
-							"type": "boolean",
-							"default": false
+						'Registry - read': {
+							'title': 'Čítane registrov',
+							'description': 'Oprávnenie pre čítanie dát v registroch',
+							'type': 'boolean',
+							'default': false
 						},
-						"Registry - write": {
-							"title": "Zápis do registrov",
-							"description": "Oprávnenie zápis do registrov",
-							"type": "boolean",
-							"default": true
+						'Registry - write': {
+							'title': 'Zápis do registrov',
+							'description': 'Oprávnenie zápis do registrov',
+							'type': 'boolean',
+							'default': true
 						}
 					}
 				}
@@ -232,7 +420,7 @@ describe('SchemaTools', function() {
 		schemaTools.parse();
 		schemaTools.compile();
 
-		defObj = schemaTools.createDefaultObject("uri://registries/common#securityCredentials");
+		var defObj = schemaTools.createDefaultObject('uri://registries/common#securityCredentials');
 
 		expect(defObj).to.have.deep.property('permissions');
 		expect(defObj.permissions).to.have.deep.property('System User', true);
@@ -244,78 +432,78 @@ describe('SchemaTools', function() {
 
 	it('Complex schemas test', function(done) {
 		var commonSchema = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#",
-			"address": {
-				"type": "object",
-				"properties": {
-					"street": {
-						"type": "string"
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#',
+			'address': {
+				'type': 'object',
+				'properties': {
+					'street': {
+						'type': 'string'
 					},
-					"houseNo": {
-						"type": "string"
+					'houseNo': {
+						'type': 'string'
 					},
-					"city": {
-						"type": "string"
+					'city': {
+						'type': 'string'
 					},
-					"zipCode": {
-						"type": "string"
+					'zipCode': {
+						'type': 'string'
 					},
-					"country": {
-						"type": "string"
+					'country': {
+						'type': 'string'
 					}
 				}
 			},
-			"user": {
-				"type": "object",
-				"properties": {
-					"firstName": {
-						"type": "string"
+			'user': {
+				'type': 'object',
+				'properties': {
+					'firstName': {
+						'type': 'string'
 					},
-					"lastName": {
-						"type": "string"
+					'lastName': {
+						'type': 'string'
 					},
-					"securityCredentials": {
-						"type": "object",
-						"properties": {
-							"permissions": {
-								"$ref": "uri://registries/common#permissions"
+					'securityCredentials': {
+						'type': 'object',
+						'properties': {
+							'permissions': {
+								'$ref': 'uri://registries/common#permissions'
 							}
 						}
 					}
 				}
 			},
-			"permissions": {
-				"type": "object",
-				"properties": {
-					"System User": {
-						"title": "Systémový používateľ",
-						"description": "Oprávnenie pre interagovanie so systémom",
-						"type": "boolean",
-						"default": true
+			'permissions': {
+				'type': 'object',
+				'properties': {
+					'System User': {
+						'title': 'Systémový používateľ',
+						'description': 'Oprávnenie pre interagovanie so systémom',
+						'type': 'boolean',
+						'default': true
 					},
-					"Registry - read": {
-						"title": "Čítane registrov",
-						"description": "Oprávnenie pre čítanie dát v registroch",
-						"type": "boolean",
-						"default": false
+					'Registry - read': {
+						'title': 'Čítane registrov',
+						'description': 'Oprávnenie pre čítanie dát v registroch',
+						'type': 'boolean',
+						'default': false
 					},
-					"Registry - write": {
-						"title": "Zápis do registrov",
-						"description": "Oprávnenie zápis do registrov",
-						"type": "boolean",
-						"default": true
+					'Registry - write': {
+						'title': 'Zápis do registrov',
+						'description': 'Oprávnenie zápis do registrov',
+						'type': 'boolean',
+						'default': true
 					}
 				}
 			}
 		};
 
 		var redefSchema = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/commonRedef#",
-			"address": {"$ref": "uri://registries/common#address"},
-			"user": {"$ref": "uri://registries/common#user"},
-			"permissions": {"$ref": "uri://registries/common#permissions"}
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/commonRedef#',
+			'address': {'$ref': 'uri://registries/common#address'},
+			'user': {'$ref': 'uri://registries/common#user'},
+			'permissions': {'$ref': 'uri://registries/common#permissions'}
 		};
 
 
@@ -326,7 +514,7 @@ describe('SchemaTools', function() {
 		schemaTools.parse();
 		schemaTools.compile();
 
-		var defObj = schemaTools.createDefaultObject("uri://registries/commonRedef#user");
+		var defObj = schemaTools.createDefaultObject('uri://registries/commonRedef#user');
 
 		expect(defObj).to.have.deep.property('securityCredentials');
 		expect(defObj).to.have.deep.property('securityCredentials.permissions');
@@ -337,16 +525,16 @@ describe('SchemaTools', function() {
 
 	it('$objectLink compilation test', function(done) {
 		var objSchema = {
-			"id": "uri://test/objSchema#",
-			"properties": {
-				"name": {
-					"type": "string"
+			'id': 'uri://test/objSchema#',
+			'properties': {
+				'name': {
+					'type': 'string'
 				},
-				"club": {
-					"$objectLink": {
-						"registry": "xxx",
-						"name": "name",
-						"city": "address.city"
+				'club': {
+					'$objectLink': {
+						'registry': 'xxx',
+						'name': 'name',
+						'city': 'address.city'
 					}
 				}
 			}
@@ -359,7 +547,7 @@ describe('SchemaTools', function() {
 		schemaTools.parse();
 		schemaTools.compile();
 
-		var r = schemaTools.getSchema("uri://test/objSchema#");
+		var r = schemaTools.getSchema('uri://test/objSchema#');
 
 		expect(r.compiled.properties.club).to.have.property('$objectLink');
 		expect(r.compiled.properties.club.$objectLink).to.have.property('city');
@@ -368,29 +556,29 @@ describe('SchemaTools', function() {
 
 	it('[reg #7] id in properties', function(done) {
 		var commonSchema = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#",
-			"address": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "number"
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#',
+			'address': {
+				'type': 'object',
+				'properties': {
+					'id': {
+						'type': 'number'
 					},
-					"street": {
-						"type": "string"
-					},
+					'street': {
+						'type': 'string'
+					}
 				}
 			},
-			"user": {
-				"id": "uri://registries/common#user",
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "number"
+			'user': {
+				'id': 'uri://registries/common#user',
+				'type': 'object',
+				'properties': {
+					'id': {
+						'type': 'number'
 					},
-					"firstName": {
-						"type": "string"
-					},
+					'firstName': {
+						'type': 'string'
+					}
 				}
 			}
 		};
@@ -401,7 +589,7 @@ describe('SchemaTools', function() {
 		schemaTools.parse();
 		schemaTools.compile();
 
-		expect(schemaTools.getSchema('uri://registries/common#user').compiled).to.exist;
+		expect(schemaTools.getSchema('uri://registries/common#user').compiled).to.exist();
 
 		done();
 	});
@@ -413,22 +601,22 @@ describe('SchemaTools', function() {
 	it('Keyword $ref', function(done) {
 
 		var schema = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#",
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#',
 			siblings: {
 				properties: {
 					$ref: 'uri://registries/common#person'
 				}
 			},
-			"user": {
-				"properties": {
-					"firstName": {
-						"type": "string"
+			'user': {
+				'properties': {
+					'firstName': {
+						'type': 'string'
 					},
-					"surName": {
-						type: "number"
+					'surName': {
+						type: 'number'
 					},
-					"address": {
+					'address': {
 						$ref: 'uri://registries/common#address'
 					},
 					occupation: {
@@ -446,13 +634,13 @@ describe('SchemaTools', function() {
 					]
 				}
 			},
-			"address": {
-				"properties": {
-					"street": {
-						"type": "string",
+			'address': {
+				'properties': {
+					'street': {
+						'type': 'string'
 					},
-					"city": {
-						"type": "string"
+					'city': {
+						'type': 'string'
 					}
 				}
 			},
@@ -464,14 +652,14 @@ describe('SchemaTools', function() {
 			person: {
 				properties: {
 					firstName: {
-						type: "string"
+						type: 'string'
 					},
 					surName: {
-						type: "number"
+						type: 'number'
 					},
 					address: {
 						$ref: 'uri://registries/common#address'
-					},
+					}
 
 				}
 			}
@@ -486,7 +674,7 @@ describe('SchemaTools', function() {
 		var userSchema = schemaTools.getSchema('uri://registries/common#');
 
 		//console.log(require('util').inspect(userSchema, {depth: null}));
-		expect(userSchema).to.exist;
+		expect(userSchema).to.exist();
 		expect(userSchema.compiled.address.properties.street.type).to.be.equal('string');
 		expect(userSchema.compiled.address.properties.city.type).to.be.equal('string');
 		expect(userSchema.compiled.user.properties.address.properties.street.type).to.be.equal('string');
@@ -499,12 +687,12 @@ describe('SchemaTools', function() {
 		// Negative cases
 
 		var wrongSchemaRefNotOnlyProp = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#",
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#',
 			fff: {
 				properties: {
 					name: {
-						type: 'string',
+						type: 'string'
 					}
 				}
 			},
@@ -513,18 +701,18 @@ describe('SchemaTools', function() {
 					name: 'aa',
 					$ref: 'uri://registries/common#fff'
 				}
-			},
+			}
 		};
 
 		schemaTools = new SchemaToolsModule.SchemaTools();
 		schemaTools.registerSchema(null, wrongSchemaRefNotOnlyProp);
 
 		schemaTools.parse();
-		expect(function() {schemaTools.compile();}).to.throw(Error, /has to be only/);
+		expect(function() {schemaTools.compile(); }).to.throw(Error, /has to be only/);
 
 		wrongSchemaRefNotOnlyProp = {
-			"$schema": "http://json-schema.org/schema#",
-			"id": "uri://registries/common#",
+			'$schema': 'http://json-schema.org/schema#',
+			'id': 'uri://registries/common#',
 			ggg: {
 				properties: {
 					$ref: 'uri://registries/common#fff'
@@ -536,7 +724,7 @@ describe('SchemaTools', function() {
 		schemaTools.registerSchema(null, wrongSchemaRefNotOnlyProp);
 
 		schemaTools.parse();
-		expect(function() {schemaTools.compile();}).to.throw(Error, /schema not found/);
+		expect(function() {schemaTools.compile(); }).to.throw(Error, /schema not found/);
 
 		done();
 	});

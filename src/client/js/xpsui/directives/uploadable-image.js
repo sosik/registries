@@ -12,7 +12,7 @@
 					this.imageProcessed = function(blob) {}
 			},
 			link: function(scope, elm, attrs, ctrls) {
-				var fileButton = angular.element('<input type="file"></input>');
+				var fileButton = angular.element('<input type="file" accept="image/*"></input>');
 				var imgLink = '';
 				var imgWidth = attrs.psuiWidth || 0;
 				var imgHeight = attrs.psuiHeight || 0;

@@ -123,6 +123,7 @@
 				}]
 			}
 		});
+		$routeProvider.when('/help', {templateUrl : '/partials/x-help.html', controller : 'xpsui:HelpPageCtrl'});
 
 		$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 

@@ -2,14 +2,23 @@
 	'use strict';
 
 	angular.module('xpsui:directives')
-	.directive('xpsuiSelectEdit', ['xpsui:logging','$parse', 'xpsui:DropdownFactory', 'xpsui:SelectboxFactory','xpsui:SelectDataFactory', '$timeout', 
-		function(log, $parse, dropdownFactory, selectboxFactory, datafactory, $timeout) {
+		.directive('xpsuiSelectEdit', [
+			'xpsui:logging',
+			'$parse', 
+			'xpsui:DropdownFactory',
+			'xpsui:SelectboxFactory',
+			'xpsui:SelectDataFactory',
+			'$timeout',
+			'xpsui:RemoveButtonFactory',
+		function(log, $parse, dropdownFactory, selectboxFactory, datafactory, $timeout, removeButtonFactory) {
 		return {
 			restrict: 'A',
 			require: ['ngModel', '?^xpsuiFormControl', 'xpsuiSelectEdit'],
 			controller: function($scope, $element, $attrs) {
 				this.setup = function(){
 					this.$input = angular.element('<input></input>');
+					//this.$input = angular.element('<div tabindex="0"></div>');
+					this.$input.addClass('x-input');
 				}
 				
 				this.getInput = function(){
@@ -51,8 +60,18 @@
 				});
 				
 				dropdown.setInput(selfControl.getInput())
-					.render()
-				;
+					.render();
+				
+				var removeButton = removeButtonFactory.create(elm,{
+					enabled: !!!schemaFragment.required,
+					input: input,
+					onClear: function(){
+						input.val('');
+						scope.$apply(function() {
+							ngModel.$setViewValue('');
+						});
+					}
+				});
 
 				// selectbox
 				var selectbox = selectboxFactory.create(elm, {
@@ -60,11 +79,11 @@
 					// freeTextMode: true,
 					onSelected: function(value){
 						input.val(value.v);
-
 						scope.$apply(function() {
 							ngModel.$setViewValue(
 								value.k ? value.k : value.v
 							);
+							removeButton.show();
 						});
 					}
 				});
@@ -81,7 +100,27 @@
 				ngModel.$render = function() {
 					input.val(dataset.store.getValueByKey(ngModel.$viewValue) || ngModel.$viewValue || '');
 					formControl.oldValue = ngModel.$modelValue;
+					
 				};
+				
+				function render(data) {
+					input.empty();
+
+					if (data) {
+						// get fields schema fragments
+						schemaUtil.getFieldsSchemaFragment(
+							schemaFragment.objectLink2.schema, 
+							schemaFragment.objectLink2.fields, 
+							function(fields) {
+								objectlink2Factory.renderElement(
+									input,
+									fields,
+									data
+								);
+							}
+						);
+					}
+				}
 
 				// input.on('keypress',function(){
 				// 	$timeout(function(){

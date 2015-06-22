@@ -49,7 +49,8 @@ $icon-open: $fa-var-eye !default;
 $icon-check: $fa-var-check !default;
 $icon-error: $fa-var-exclamation-circle !default;
 $icon-tag: $fa-var-tag !default;
-
+$icon-question: $fa-var-question !default;
+$icon-question-circle: $fa-var-question-circle !default;
 
 // icons
 // -------------------------
@@ -89,3 +90,5 @@ $icon-tag: $fa-var-tag !default;
 .icon-tag:before { content: $icon-tag }
 .icon-calendar:before { content: $icon-calendar }
 .icon-massmail:before { content: $icon-massmail }
+.icon-question:before { content: $icon-question }
+.icon-question-circle:before { content: $icon-question-circle }

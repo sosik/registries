@@ -288,18 +288,22 @@
 
 							htmlNodes = rangy.getSelection().getAllRanges();
 							var htmlElements2 = [];
-							if (htmlNodes.length > 0){
+							if (htmlNodes.length > 0) {
 								htmlNodes = htmlNodes[0].endContainer;
-								while (htmlNodes != content[0] && htmlNodes.parentElement != content[0]){
+								while (htmlNodes != content[0] && htmlNodes.parentElement != content[0]) {
 									htmlNodes = htmlNodes.parentElement;
-									if (htmlNodes.getAttribute('align')){
+
+									if (getComputedStyle(htmlNodes).getPropertyValue('font-weight')) {
+										htmlElements.push(getComputedStyle(htmlNodes).getPropertyValue('font-weight'));
+									}
+									if (getComputedStyle(htmlNodes).getPropertyValue('font-style')) {
+										htmlElements.push(getComputedStyle(htmlNodes).getPropertyValue('font-style'));
+									}
+									if (htmlNodes.getAttribute('align')) {
 										htmlElements.push(htmlNodes.getAttribute('align'));
-
-									}else if(getComputedStyle(htmlNodes).getPropertyValue('text-align')){
-
+									} else if(getComputedStyle(htmlNodes).getPropertyValue('text-align')) {
 										htmlElements.push(getComputedStyle(htmlNodes).getPropertyValue('text-align'));
-
-									}else{
+									} else {
 										htmlElements2.push(htmlNodes.nodeName);
 									}
 								}

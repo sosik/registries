@@ -21,7 +21,7 @@
     "angular-route": "1.3.16",
     "angular-loader": "1.3.16",
     "angular-mocks": "1.3.16",
-    "ngRangy": "*",
+    "rangy": "*",
     "angular-cookies": "1.3.16",
     "angular-ui-ace": "*",
     "angular-translate": "*",

@@ -1,8 +1,8 @@
 (function(angular) {
 	//'use strict';
-
 	angular.module('x-registries')
 	.config(['$translateProvider', function($translateProvider) {
+		$translateProvider.useSanitizeValueStrategy('escaped');
 		$translateProvider.useMissingTranslationHandlerLog();
 		$translateProvider.translations('sk', {
 			"login.title": "Prihlásenie",

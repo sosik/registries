@@ -3,7 +3,7 @@
 
 	angular.module('xpsui:controllers')
 	.controller('xpsui:HelpPageCtrl', [
-		'$scope',
+		"$scope", 
 		function($scope) {
 			$scope.greeting = 'Help';
 			console.log($scope.greeting);

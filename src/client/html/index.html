@@ -62,6 +62,7 @@
 			<li ng-show="hasPermissions(['System User'])"><span class="text-block"
 				><span>{{security.currentUser.systemCredentials.login.loginName}}&nbsp;&nbsp;&nbsp;<i class="icon-user"></i> </span
 			></li>
+			<li ng-show="!hasPermissions(['System User'])"><a href="#/help" target="_blank"><i class="icon-question-circle"></i></a></li>
 			<li ng-show="hasPermissions(['System User'])"><a href="#/help"><i class="icon-question-circle"></i></a></li>
 			<li ng-show="hasPermissions(['System User'])" class="" ng-controller="xpsui:SecurityLogoutCtrl"><a
 				href="#" ng-click="logout();"><i class="icon-power-off"></i></a

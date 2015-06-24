@@ -56,7 +56,6 @@
 
 				if (value) {
 					self.setValue(value);
-					self.render();
 				}
 			});
 			

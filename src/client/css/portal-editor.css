@@ -644,4 +644,10 @@
 	:hover {
 		color: white;
 	}
+
+.icon-remove {
+	color:black;
+	:hover {
+		color: white;
+	}
 }

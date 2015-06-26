@@ -1185,6 +1185,7 @@
 			"generic.loading": "Loading...",
 			"generic.more": "More",
 			"generic.file.choose": "Choose a file",
+			"generic.nofiles.label": "No files.",
 			
 			"registry.new.new": "New",
 			"registry.new.cancel": "Cancel",

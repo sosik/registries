@@ -249,7 +249,8 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 			 	feesToPayValue:countToPay(personInfo.counted.toPay),
 				feesOverdue: personInfo.overDue.count,
 				feesOverdueValue:personInfo.overDue.sum,
-				credit: credit
+				credit: credit,
+				assocMember: personInfo.entity.otherInfo.stateOfPerson
 			};
 
 			overal.feesToPay+=personLine.feesToPay;

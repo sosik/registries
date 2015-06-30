@@ -22,44 +22,44 @@
 			link: function(scope, elm, attrs, ctrls) {
 				scope.showRegistrations = function() {
 					navigationService.navigateToPath(
-							'/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FpeopleRegistrationApplicant~2Fsearch', 
+							'/registry/search/uri~3A~2F~2Fregistries~2FregistrationRequests~23views~2FpeopleRegistrationApplicant~2Fsearch', 
 							'search');
-					$location.path('/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FpeopleRegistrationApplicant~2Fsearch');
+					$location.path('/registry/search/uri~3A~2F~2Fregistries~2FregistrationRequests~23views~2FpeopleRegistrationApplicant~2Fsearch');
 				};
 
 				scope.showDataChanges = function() {
 					navigationService.navigateToPath(
-							'/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FdataChangeApplicant~2Fsearch',
+							'/registry/search/uri~3A~2F~2Fregistries~2FdataChangeRequests~23views~2FdataChangeApplicant~2Fsearch',
 							'search');
-					$location.path('/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FdataChangeApplicant~2Fsearch');
+					$location.path('/registry/search/uri~3A~2F~2Fregistries~2FdataChangeRequests~23views~2FdataChangeApplicant~2Fsearch');
 				}
 
 				scope.showTransfers = function() {
 					navigationService.navigateToPath(
-							'/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FtransferApplicant~2Fsearch',
+							'/registry/search/uri~3A~2F~2Fregistries~2FtransferRequests~23views~2FtransferApplicant~2Fsearch',
 							'search');
-					$location.path('/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FtransferApplicant~2Fsearch');
+					$location.path('/registry/search/uri~3A~2F~2Fregistries~2FtransferRequests~23views~2FtransferApplicant~2Fsearch');
 				}
 
 				scope.showRegistrationsSolver = function(){
 					navigationService.navigateToPath(
-							'/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FpeopleRegistrationSolver~2Fsearch', 
+							'/registry/search/uri~3A~2F~2Fregistries~2FregistrationRequests~23views~2FpeopleRegistrationSolver~2Fsearch', 
 							'search');
-					$location.path('/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FpeopleRegistrationSolver~2Fsearch');
+					$location.path('/registry/search/uri~3A~2F~2Fregistries~2FregistrationRequests~23views~2FpeopleRegistrationSolver~2Fsearch');
 				}
 
 				scope.showDataChangesSolver = function(){
 					navigationService.navigateToPath(
-							'/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FdataChangeSolver~2Fsearch', 
+							'/registry/search/uri~3A~2F~2Fregistries~2FdataChangeRequests~23views~2FdataChangeSolver~2Fsearch', 
 							'search');
-					$location.path('/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FdataChangeSolver~2Fsearch');
+					$location.path('/registry/search/uri~3A~2F~2Fregistries~2FdataChangeRequests~23views~2FdataChangeSolver~2Fsearch');
 				}
 
 				scope.showTransfersSolver = function(){
 					navigationService.navigateToPath(
-							'/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FtransferSolver~2Fsearch', 
+							'/registry/search/uri~3A~2F~2Fregistries~2FtransferRequests~23views~2FtransferSolver~2Fsearch', 
 							'search');
-					$location.path('/registry/search/uri~3A~2F~2Fregistries~2Frequests~23views~2FtransferSolver~2Fsearch');
+					$location.path('/registry/search/uri~3A~2F~2Fregistries~2FtransferRequests~23views~2FtransferSolver~2Fsearch');
 				}
 				
 				// Gets the number of results for a search query specified by the URI.
@@ -108,9 +108,9 @@
 					var contentBlock2Title = $translate.instant('dashboard.widget.data.openRequests');
 					var contentBlock3Title = $translate.instant('dashboard.widget.transfer.openRequests');
 
-					getCount('uri://registries/requests#views/peopleRegistrationSolver/search', contentBlock1Elm, 'showRegistrationsSolver()');
-					getCount('uri://registries/requests#views/dataChangeSolver/search', contentBlock2Elm, 'showDataChangesSolver()');
-					getCount('uri://registries/requests#views/transferSolver/search', contentBlock3Elm, 'showTransfersSolver()');
+					getCount('uri://registries/registrationRequests#views/peopleRegistrationSolver/search', contentBlock1Elm, 'showRegistrationsSolver()');
+					getCount('uri://registries/dataChangeRequests#views/dataChangeSolver/search', contentBlock2Elm, 'showDataChangesSolver()');
+					getCount('uri://registries/transferRequests#views/transferSolver/search', contentBlock3Elm, 'showTransfersSolver()');
 				} 
 				// If the user can only create requests, the request applicant search results are used
 				else if (scope.hasPermissions(['Registry Requests'])){
@@ -118,9 +118,9 @@
 					var contentBlock2Title = $translate.instant('dashboard.widget.data.openRequests');
 					var contentBlock3Title = $translate.instant('dashboard.widget.transfer.openRequests');
 
-					getCount('uri://registries/requests#views/peopleRegistrationApplicant/search', contentBlock1Elm, 'showRegistrations()');
-					getCount('uri://registries/requests#views/dataChangeApplicant/search', contentBlock2Elm,'showDataChanges()');
-					getCount('uri://registries/requests#views/transferApplicant/search', contentBlock3Elm, 'showTransfers()');
+					getCount('uri://registries/registrationRequests#views/peopleRegistrationApplicant/search', contentBlock1Elm, 'showRegistrations()');
+					getCount('uri://registries/dataChangeRequests#views/dataChangeApplicant/search', contentBlock2Elm,'showDataChanges()');
+					getCount('uri://registries/transferRequests#views/transferApplicant/search', contentBlock3Elm, 'showTransfers()');
 				} 
 
 				var block1 = createWidgetBlock(contentBlock1Title, contentBlock1Elm)

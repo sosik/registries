@@ -48,6 +48,9 @@
 				if (!$scope.selectedProfile) return;
 				SecurityService.selectProfile($scope.selectedProfile.id).success(function(){
 					 SecurityService.getCurrentUser().success(function(data){
+						 //if($scope.checkboxModel == 'YES') {
+							 //$alert('Rememberme enabled.');
+						//};
 						$rootScope.security.currentUser=data;
 						if (!navigationService.back()) {
 							$location.path('/personal-page');

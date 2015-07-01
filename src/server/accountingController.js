@@ -195,6 +195,7 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 		qf.addCriterium('hockeyPlayerInfo.clubName.oid','eq',req.params.clubId)
 		qf.addCriterium('membershipFeeInfo.membershipFee','ex',null);
 		qf.addCriterium('hockeyPlayerInfo.isActivePlayer','eq','TRUE');
+		qf.addSort('baseData.surName.c', 'asc');
 
 		peopleDao.find(qf,function(error,players){
 
@@ -249,6 +250,7 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 			 	feesToPayValue:countToPay(personInfo.counted.toPay),
 				feesOverdue: personInfo.overDue.count,
 				feesOverdueValue:personInfo.overDue.sum,
+				paymentSum:personInfo.paymentSum,
 				credit: credit,
 				assocMember: personInfo.entity.otherInfo.stateOfPerson
 			};
@@ -293,9 +295,10 @@ var AccountingController = function(mongoDriver, schemaRegistry, options) {
 				qf.addCriterium('baseData.member.oid','eq',peopleId);
 
 
-
+				result.paymentSum = 0;
 				payments.forEach(function(payment){
 					va.credit(payment.baseData.accountingDate,payment.baseData.amount,payment);
+					result.paymentSum += payment.baseData.amount;
 				});
 
 				feesDao.find(qf,function (err,fees){

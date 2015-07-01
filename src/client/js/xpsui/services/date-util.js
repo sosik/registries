@@ -49,6 +49,17 @@
 			
 			return null;
 		}
+
+		function formatterEpoch(date){
+			date = new Date(date);
+
+			if (date instanceof Date){
+				return date.getDate() + '.' + (date.getMonth()+1) + '.' + date.getFullYear() + ' '
+				+ date.toLocaleTimeString();
+			}
+
+			return null;
+		}
 		
 		function formatterYYYYMMDD(date) {
 			if (date instanceof Date) {
@@ -107,7 +118,12 @@
 			},
 			formatter:function(value) {
 				if (value) {
-					var string = formatterDMYYYY(value);
+					var string = null;
+					if(angular.isNumber(value)){
+						string = formatterEpoch(value);
+					}else{
+						string = formatterDMYYYY(value);
+					}
 					if(string){
 						return string;
 					}

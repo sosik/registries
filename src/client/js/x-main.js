@@ -10,7 +10,8 @@
 		'xpsui:controllers',
 		'pascalprecht.translate',
 		'ui.ace',
-		'reCAPTCHA'
+		'reCAPTCHA',
+		'ngStorage',
 
 		// 'x-security',
 		// 'personal-page',

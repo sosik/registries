@@ -29,7 +29,6 @@ module.exports = function (config) {
 			'../build/client/js/safeUrlEncoder.js',
 			'../build/client/lib/node-uuid/uuid.js',
 			'../build/client/lib/ngstorage/ngStorage.min.js',
-			'../build/client/lib/ngCordova-IMEI/imei.js',
 
 			// Mock
 			'../build/client/lib/angular-mocks/angular-mocks.js',

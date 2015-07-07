@@ -23,6 +23,7 @@ var DEFAULT_CFG = {
 	securityTokenCookie : 'securityToken',
 	loginNameCookie : 'loginName',
 	profileCookie : 'profile',
+	remCookie : 'rem',
 	tokenExpiration : 3600000,
 	generatedPasswordLen : 8,
 	captchaSite:'6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
@@ -32,7 +33,8 @@ var DEFAULT_CFG = {
 //
 
 var transport = nodemailer.createTransport('Sendmail');
-
+var isMobile = false;
+var rem = false;
 /**
 * @module server
 * @submodule security
@@ -395,9 +397,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		
 		var ua = req.headers['user-agent'],
 		$ = {};
-
-		if (/mobile/i.test(ua))
+		// Check whether the client is a mobile device.
+		if (/mobile/i.test(ua)) {
 			$.Mobile = true;
+			isMobile = true;
+		}
 
 		if (/like Mac OS X/.test(ua)) {
 			$.iOS = /CPU( iPhone)? OS ([0-9\._]+) like Mac OS X/.exec(ua)[2].replace(/_/g, '.');
@@ -417,13 +421,18 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		if (/Windows NT/.test(ua))
 			$.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
 		
-		if($.Mobile)
+		if(isMobile)
 			log.debug('Mobile:', 'true');
 		else
 			log.debug('Mobile:', 'false');
 		
 		log.debug('UUID', req.body.uuid);
 		log.debug('Rememberme', req.body.rem);
+		if(req.body.rem === 'true'){
+			rem = true;
+		} else {
+			rem = false;
+		}
 
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
 			if (err) {
@@ -458,15 +467,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						return;
 					}
 					// if ('System User' in  permissions&&permissions['System User'] ){
-					if($.Mobile && req.body.rem == 'true') {
+					// If the client is a mobile and "Rememeber me" is checked, use UUID for the identifier.
+					if(isMobile && rem) {
 						self.createToken(user.systemCredentials.login.loginName, req.body.uuid, function(token) {
-							self.storeToken4Mobile(token, user.id,user.systemCredentials.login.loginName, req.body.uuid, function(err) {
+							self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.body.uuid, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
 									resp.next('Internal Error');
 									return;
 								}
-								self.setCookies(resp, token, user.systemCredentials.login.loginName);
+								log.debug('rem', req.body.rem);
+								self.setCookies(resp, token, user.systemCredentials.login.loginName, req.body.rem);
 								log.info('user logged in',user.id);
 
 								self.resolveProfiles(user,function(err,u){
@@ -482,11 +493,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 							});
 						});
 
-					// }
-					// else {
-					// 	log.warn('Not system user ',user.systemCredentials.login.loginName);
-					// 	resp.send(403, securityService.missingPermissionMessage('System User'));
-					// }
 						
 					} else {
 						self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
@@ -496,7 +502,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 									resp.next('Internal Error');
 									return;
 								}
-								self.setCookies(resp, token, user.systemCredentials.login.loginName);
+								self.setCookies(resp, token, user.systemCredentials.login.loginName, req.body.rem);
 								log.info('user logged in',user.id);
 
 								self.resolveProfiles(user,function(err,u){
@@ -799,8 +805,14 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	};
 
-	this.setCookies = function(resp, token, loginName) {
-
+	this.setCookies = function(resp, token, loginName, rem) {
+		//if(rem == 'true'){
+		//	window.localStorage.setItem('token', token);
+		//}
+		resp.cookie(cfg.remCookie, rem, {
+			httpOnly : true,
+			secure : process.env.NODE_ENV != 'test'
+		});
 		resp.cookie(cfg.securityTokenCookie, token, {
 				httpOnly : true,
 				secure : process.env.NODE_ENV != 'test'
@@ -1167,90 +1179,98 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.authFilter = function(req, res, next) {
 
-		req.authenticated = false;
-		req.loginName = 'Anonymous';
-		req.perm={};
-		var tokenId = req.cookies[cfg.securityTokenCookie];
+		if(rem){
+			req.authenticated = true;
+			req.loginName = 'Administrator';
+			req.perm={};
+			var tokenId = req.cookies[cfg.securityTokenCookie];
+		} else {
+			req.authenticated = false;
+			req.loginName = 'Anonymous';
+			req.perm={};
+			var tokenId = req.cookies[cfg.securityTokenCookie];
 
-		log.silly('Cookies received', req.cookies);
+			log.silly('Cookies received', req.cookies);
 
-		if (tokenId !== null) {
-			log.debug('security token found', tokenId);
-			tokenDao.list({
-				crits : [ {
-					op : 'eq',
-					v : tokenId,
-					f : cfg.tokenIdColumnName
-				} ]
-			}, function(err, tokens) {
-				if (err) {
-					log.error('Failed to get data from DB', err);
-					next(err);
-					return;
-				}
-				if (tokens.length === 1) {
-					var token = tokens[0];
-					// TODO validate IP
-					var now = new Date().getTime();
-					if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - cfg.tokenExpiration)) {
-						token.touched = now;
-						// TODO maybe some filtering for updates
-						tokenDao.update(token, function(err) {
-							if (err) {
-								log.debug('Failed to update security token in DB, sillently dropping', err);
-							}
-						});
-
-						log.silly('Setting auth info to', token);
-						req.authenticated = true;
-						req.loginName = token.user;
-
-						userDao.get(token.userId, function(err, user) {
-							if (err||user===null) {
-								log.error(err);
-								next(err);
-								return;
-							}
-							req.currentUser=user;
-
-							user.systemCredentials.profiles.map(function(profileId){
-								if (profileId==req.cookies[cfg.profileCookie]) {
-									req.selectedProfileId = profileId;
+			if (tokenId !== null) {
+				log.debug('security token found', tokenId);
+				tokenDao.list({
+					crits : [ {
+						op : 'eq',
+						v : tokenId,
+						f : cfg.tokenIdColumnName
+					} ]
+				}, function(err, tokens) {
+					if (err) {
+						log.error('Failed to get data from DB', err);
+						next(err);
+						return;
+					}
+					if (tokens.length === 1) {
+						var token = tokens[0];
+						// TODO validate IP
+						var now = new Date().getTime();
+						if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - cfg.tokenExpiration)) {
+							token.touched = now;
+							// TODO maybe some filtering for updates
+							tokenDao.update(token, function(err) {
+								if (err) {
+									log.debug('Failed to update security token in DB, sillently dropping', err);
 								}
-								log.debug('profile set to' , profileId);
 							});
 
-							self.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
-								if (err) {
+							log.silly('Setting auth info to', token);
+							req.authenticated = true;
+							req.loginName = token.user;
+
+							userDao.get(token.userId, function(err, user) {
+								if (err||user===null) {
 									log.error(err);
 									next(err);
 									return;
 								}
-								req.perm = perm;
-								req.profile = profile;
-								next();
-							});
-						});
+								req.currentUser=user;
 
-					} else {
-						log.debug('authFilter','Found token %s is not valid, removing cookies', tokenId, {});
-						res.clearCookie(cfg.securityTokenCookie);
-						res.clearCookie(cfg.loginNameCookie);
+								user.systemCredentials.profiles.map(function(profileId){
+									if (profileId==req.cookies[cfg.profileCookie]) {
+										req.selectedProfileId = profileId;
+									}
+									log.debug('profile set to' , profileId);
+								});
+
+								self.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
+									if (err) {
+										log.error(err);
+										next(err);
+										return;
+									}
+									req.perm = perm;
+									req.profile = profile;
+									next();
+								});
+							});
+
+						} else {
+							log.debug('authFilter','Found token %s is not valid, removing cookies', tokenId, {});
+							res.clearCookie(cfg.securityTokenCookie);
+							res.clearCookie(cfg.loginNameCookie);
+							next();
+						}
+
+					}else {
 						next();
 					}
 
-				}else {
-					next();
-				}
+				});
+			} else {
+				log.debug('authFilter','no security token found');
+				next();
+			}
 
-			});
-		} else {
-			log.debug('authFilter','no security token found');
-			next();
+		};
+
 		}
-
-	};
-
+		
 };
 
 module.exports = {

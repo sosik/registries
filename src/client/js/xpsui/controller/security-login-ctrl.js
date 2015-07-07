@@ -9,8 +9,8 @@
 		'xpsui:NotificationFactory', 
 		'xpsui:NavigationService' ,
 		'$localStorage',
-		'$cordovaIMEI',
-		function($scope, SecurityService, $rootScope, $location,notificationFactory, navigationService, $localStorage, $sessionStorage, $cordovaIMEI) {
+
+		function($scope, SecurityService, $rootScope, $location,notificationFactory, navigationService, $localStorage, $sessionStorage) {
 			// FIXME remove this in production
 			// $scope.user = 'johndoe';
 			// $scope.password = 'johndoe';
@@ -18,9 +18,8 @@
 			$scope.password = '';
 			var uuidbuffer = '';
 			var rem = 'false';
-			var imei = $cordovaIMEI.get();
-			onsole.log("the imei:", imei);
-			if($localStorage.uuid == null){
+
+			if($localStorage.uuid == null || $localStorage.uuid == ""){
 				uuidbuffer = uuid.v4(); // (or 'new Buffer' in node.js)
 				$scope.$storage = $localStorage.$default({
 					rememberme: false,
@@ -31,12 +30,12 @@
 				$scope.$storage = $localStorage;
 				
 			}
-			var uuidbuffer = uuid.v4(); // (or 'new Buffer' in node.js)
+			/*var uuidbuffer = uuid.v4(); // (or 'new Buffer' in node.js)
 			$scope.$storage = $localStorage.$default({
 				rememberme: false,
 				uuid: uuidbuffer,
 				profile: '',
-			});
+			});*/
 			$scope.checkboxModel = {
 					value : false
 			};

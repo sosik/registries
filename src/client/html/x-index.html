@@ -34,7 +34,6 @@
 	<script src="lib/angular-ui-ace/ui-ace.js"></script>
 	<script src="lib/node-uuid/uuid.js"></script>
 	<script src="lib/ngstorage/ngStorage.min.js"></script>
-	<script src="lib/ngCordova-IMEI/imei.js"></script>
 
 	<!-- javascript new libs-->
 	<script src="js/xpsui.min.js"></script>
@@ -45,6 +44,10 @@
 
 	<!-- javascript shared libs -->
 	<script src="js/safeUrlEncoder.js"></script>
+	<script>
+	if(localStorage.getItem('rem'))
+		login();
+	</script>
 
 </head>
 <body ng-app="x-registries" ng-class="{'login-page': !security.currentUser.systemCredentials.login.loginName}">

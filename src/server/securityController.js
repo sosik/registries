@@ -23,7 +23,7 @@ var DEFAULT_CFG = {
 	securityTokenCookie : 'securityToken',
 	loginNameCookie : 'loginName',
 	profileCookie : 'profile',
-	remCookie : 'rem',
+	remCookie : 'rememberMe',
 	tokenExpiration : 3600000,
 	generatedPasswordLen : 8,
 	captchaSite:'6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
@@ -33,8 +33,7 @@ var DEFAULT_CFG = {
 //
 
 var transport = nodemailer.createTransport('Sendmail');
-var isMobile = false;
-var rem = false;
+
 /**
 * @module server
 * @submodule security
@@ -69,7 +68,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			collectionName : cfg.forgottenTokens
 	});
 	var self=this;
-
+	var isMobile = false;
+	var rem = false;
+	var useruuid = '';
+	var loginname = '';
+	var password = '';
 	/**
 	* Method returns array of available permissions.
 	* <br> Permissions are loaded in schema uri://registries/security#permissions
@@ -425,15 +428,17 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			log.debug('Mobile:', 'true');
 		else
 			log.debug('Mobile:', 'false');
-		
+		useruuid = req.body.uuid;
 		log.debug('UUID', req.body.uuid);
-		log.debug('Rememberme', req.body.rem);
-		if(req.body.rem === 'true'){
+		//log.debug('Rememberme', req.body.rem);
+		if(req.body.rem==='true'){
 			rem = true;
+			log.debug('Rememberme', 'true');
 		} else {
 			rem = false;
+			log.debug('Rememberme', 'false');
 		}
-
+		log.debug('req.body.login: ', req.body.login);
 		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
 			if (err) {
 				log.warn('Failed to list users from DB', err);
@@ -451,33 +456,43 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			// we are sure there is exactly one user
 			var user = data[0];
-
-			self.verifyUserPassword(user, req.body.password, function(err) {
-				if (err) {
-					log.debug('Password verification failed', err);
-					resp.status(400).json({message:err,code:err});
-					return;
+			var tokenExist = false;
+			var tokenId = req.cookies.securityToken;
+			var userId = '';
+			var qf= QueryFilter.create();
+			qf.addCriterium("tokenId",QueryFilter.operation.EQUAL, tokenId);
+			qf.addCriterium("rememberMe",QueryFilter.operation.EQUAL, true);
+			
+			tokenDao.find(qf,function(err,tokens){
+				log.debug('tokenDao', 'begin');
+				if (err){
+					next(err);
+					tokenExist = false;
+					
+				} else {
+					tokenExist = true;
 				}
 
-				self.resolvePermissions(user,req.selectedProfileId,function (err,permissions){
+				if (tokens.length==0){
+					//resp.status(400);
+					//resp.json({error:'Token wasn\'t found '+ tokenId,code:'token.not.found'});
+					tokenExist = false;
+					self.resolvePermissions(user,userId,function (err,permissions){
 
-					if (err) {
-						log.warn('Failed to resolvePermissions permissions', err);
-						resp.next('Internal Error');
-						return;
-					}
-					// if ('System User' in  permissions&&permissions['System User'] ){
-					// If the client is a mobile and "Rememeber me" is checked, use UUID for the identifier.
-					if(isMobile && rem) {
-						self.createToken(user.systemCredentials.login.loginName, req.body.uuid, function(token) {
-							self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.body.uuid, function(err) {
+						if (err) {
+							log.warn('Failed to resolvePermissions permissions', err);
+							resp.next('Internal Error');
+							return;
+						}
+						self.createToken(user.systemCredentials.login.loginName, useruuid, function(token) {
+							self.storeToken(token, user.id,user.systemCredentials.login.loginName, useruuid, rem, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
 									resp.next('Internal Error');
 									return;
 								}
-								log.debug('rem', req.body.rem);
-								self.setCookies(resp, token, user.systemCredentials.login.loginName, req.body.rem);
+								log.debug('rem', rem);
+								self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
 								log.info('user logged in',user.id);
 
 								self.resolveProfiles(user,function(err,u){
@@ -492,42 +507,89 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 								return;
 							});
 						});
+					});
+				} else {
+					if(isMobile && rem && tokenExist) {
+						userId = data.userId;
+						log.debug('userId', userId);
+						userDao.get(userId, userObj);
+						user = userObj.systemCredentials.login.loginName;
+						passwordhash = userObj.systemCredentials.login.passwordHash;
+						log.debug('systemCredentials.login.loginName', user);
+						log.debug('password hash', passwordhash);
 
-						
+						self.resolvePermissions(user,userId,function (err,permissions){
+
+							if (err) {
+								log.warn('Failed to resolvePermissions permissions', err);
+								resp.next('Internal Error');
+								return;
+							}
+							self.resolveProfiles(user,function(err,u){
+								if (err) {
+									resp.next(err);
+									return;
+								}
+
+								resp.json(deflateUser(u,permissions));
+							});
+							
+						});
 					} else {
-						self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
-							self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(err) {
+						password = req.body.password;
+						self.verifyUserPassword(user, password, function(err) {
+							if (err) {
+								log.debug('Password verification failed', err);
+								resp.status(400).json({message:err,code:err});
+								return;
+							}
+
+							self.resolvePermissions(user,req.selectedProfileId,function (err,permissions){
+
 								if (err) {
-									log.error('Failed to store login token', err);
+									log.warn('Failed to resolvePermissions permissions', err);
 									resp.next('Internal Error');
 									return;
 								}
-								self.setCookies(resp, token, user.systemCredentials.login.loginName, req.body.rem);
-								log.info('user logged in',user.id);
+								// if ('System User' in  permissions&&permissions['System User'] ){
+								// If the client is a mobile and "Rememeber me" is checked, use UUID for the identifier.
+								
+								self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
+									self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, rem, function(err) {
+										if (err) {
+											log.error('Failed to store login token', err);
+											resp.next('Internal Error');
+											return;
+										}
+										self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
+										log.info('user logged in',user.id);
 
-								self.resolveProfiles(user,function(err,u){
-									if (err) {
-										resp.next(err);
+										self.resolveProfiles(user,function(err,u){
+											if (err) {
+												resp.next(err);
+												return;
+											}
+
+											resp.json(deflateUser(u,permissions));
+										});
+
 										return;
-									}
-
-									resp.json(deflateUser(u,permissions));
+									});
 								});
 
-								return;
+								// }
+								// else {
+								// 	log.warn('Not system user ',user.systemCredentials.login.loginName);
+								// 	resp.send(403, securityService.missingPermissionMessage('System User'));
+								// }
 							});
 						});
-
-					// }
-					// else {
-					// 	log.warn('Not system user ',user.systemCredentials.login.loginName);
-					// 	resp.send(403, securityService.missingPermissionMessage('System User'));
-					// }
 					}
-						
-				});
-
-			});
+				}
+				log.debug('tokenExist', tokenExist);
+			});	
+			
+			
 		});
 	};
 	/**
@@ -713,7 +775,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			}
 
 			if (data.length !== 1) {
-				log.verbose('Found more or less then 1 user with provided credentials', data.length);
+				log.verbose('Found more or less than 1 user with provided credentials', data.length);
 				resp.status(500).send('users found ' + data.length);
 				return;
 			}
@@ -768,17 +830,19 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		callback(uuid.v4());
 	};
 
-	this.storeToken = function(tokenId, userId, user, ip, callback) {
+	this.storeToken = function(tokenId, userId, user, ip, rem, callback) {
 
 		var now = new Date().getTime();
 		var token = {
+				_id : tokenId,
 				tokenId : tokenId,
 				userId : userId,
 				user : user,
 				ip : ip,
 				created : now,
 				valid : true,
-				touched : now
+				touched : now,
+				rememberMe: rem
 		};
 
 		log.verbose('Storing security token', token);
@@ -787,17 +851,19 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	};
 	
 	// Store a token for mobile
-	this.storeToken4Mobile = function(tokenId, userId, user, uuid, callback) {
+	this.storeToken4Mobile = function(tokenId, userId, user, uuid, rem, callback) {
 
 		var now = new Date().getTime();
 		var token = {
+				_id : tokenId,
 				tokenId : tokenId,
 				userId : userId,
 				user : user,
 				uuid : uuid,
 				created : now,
 				valid : true,
-				touched : now
+				touched : now,
+				rememberMe: rem
 		};
 
 		log.verbose('Storing security token', token);
@@ -806,9 +872,6 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	};
 
 	this.setCookies = function(resp, token, loginName, rem) {
-		//if(rem == 'true'){
-		//	window.localStorage.setItem('token', token);
-		//}
 		resp.cookie(cfg.remCookie, rem, {
 			httpOnly : true,
 			secure : process.env.NODE_ENV != 'test'

@@ -19,8 +19,7 @@
 			var uuidbuffer = '';
 			var rem = 'false';
 
-			if($localStorage.uuid == null || $localStorage.uuid == ""){
-				uuidbuffer = uuid.v4(); // (or 'new Buffer' in node.js)
+			if($localStorage.rememberme == null || $localStorage.rememberme == ""){
 				$scope.$storage = $localStorage.$default({
 					rememberme: false,
 					uuid: uuidbuffer,
@@ -58,15 +57,13 @@
 			 * Login button click
 			 */
 			$scope.login = function() {
-				SecurityService.getLogin($scope.user, $scope.password, uuidbuffer, rem).success(function(user) {
+				SecurityService.getLogin($scope.user, $scope.password, rem).success(function(user) {
 					if($scope.checkboxModel.value){
 						$scope.$storage.rememberme = true;
-						$scope.$storage.uuid = uuidbuffer;
 						$scope.$storage.profile = user.systemCredentials.profiles[0].id;
 					} else {
 						$localStorage.$reset();
 						$scope.$storage.rememberme = false;
-						$scope.$storage.uuid = uuidbuffer;
 						$scope.$storage.profile = user.systemCredentials.profiles[0].id;
 					}
 					if (user.systemCredentials.profiles.length>1){

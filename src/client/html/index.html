@@ -35,7 +35,6 @@
 	<script src="lib/angular-translate-storage-cookie/angular-translate-storage-cookie.js"></script>
 	<script src="lib/ace-builds/src-min-noconflict/ace.js"></script>
 	<script src="lib/angular-ui-ace/ui-ace.js"></script>
-	<script src="lib/node-uuid/uuid.js"></script>
 	<script src="lib/ngstorage/ngStorage.min.js"></script>
 
 	<!-- javascript new libs-->
@@ -48,10 +47,10 @@
 	<!-- javascript shared libs -->
 	<script src="js/safeUrlEncoder.js"></script>
 	<script src="js/QueryFilter.js"></script>
-	<!--<script>
+	<script>
 	if(localStorage.getItem('ngStorage-rememberme'))
 		login();
-	</script> -->
+	</script>
 
 </head>
 <body ng-app="x-registries" ng-class="{'login-page': !security.currentUser.systemCredentials.login.loginName}">

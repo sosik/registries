@@ -397,6 +397,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	this.login = function(req, resp,next) {
 		log.debug('login attempt', req.body.login);
 		log.debug('user-agent', req.headers['user-agent']);
+		log.debug('securityToken', req.cookies.securityToken);
 		
 		var ua = req.headers['user-agent'],
 		$ = {};
@@ -428,8 +429,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			log.debug('Mobile:', 'true');
 		else
 			log.debug('Mobile:', 'false');
-		useruuid = req.body.uuid;
-		log.debug('UUID', req.body.uuid);
+
 		//log.debug('Rememberme', req.body.rem);
 		if(req.body.rem==='true'){
 			rem = true;
@@ -439,62 +439,119 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			log.debug('Rememberme', 'false');
 		}
 		log.debug('req.body.login: ', req.body.login);
-		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
-			if (err) {
-				log.warn('Failed to list users from DB', err);
-				next(err);
-				return;
-			}
 
-
-			if (data.length !== 1) {
-				log.warn('Found more or less then 1 user with provided credentials', data.length);
-				// next( 'users found ' + data.length);
-				resp.status(400).json({code:'login.authentication.failed'});
-				return;
-			}
-
-			// we are sure there is exactly one user
-			var user = data[0];
+			
 			var tokenExist = false;
 			var tokenId = req.cookies.securityToken;
-			var userId = '';
+			log.debug('tokenId', tokenId);
 			var qf= QueryFilter.create();
 			qf.addCriterium("tokenId",QueryFilter.operation.EQUAL, tokenId);
+			qf.addCriterium("valid",QueryFilter.operation.EQUAL, true);
 			qf.addCriterium("rememberMe",QueryFilter.operation.EQUAL, true);
-			
-			tokenDao.find(qf,function(err,tokens){
+			tokenDao.find(qf,function(err,tokendata){
 				log.debug('tokenDao', 'begin');
+				log.debug('tokendata', tokendata);
 				if (err){
 					next(err);
 					tokenExist = false;
-					
+					log.debug('token', 'error');
 				} else {
 					tokenExist = true;
+					log.debug('token', 'hit');
 				}
 
-				if (tokens.length==0){
-					//resp.status(400);
-					//resp.json({error:'Token wasn\'t found '+ tokenId,code:'token.not.found'});
-					tokenExist = false;
-					self.resolvePermissions(user,userId,function (err,permissions){
-
+				if (tokendata.length !== 1){
+					//tokenExist = false;
+					// we are sure there is exactly one user
+					userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
+						var user = '';
+						var userId = '';
 						if (err) {
-							log.warn('Failed to resolvePermissions permissions', err);
-							resp.next('Internal Error');
+							log.warn('Failed to list users from DB', err);
+							next(err);
 							return;
 						}
-						self.createToken(user.systemCredentials.login.loginName, useruuid, function(token) {
-							self.storeToken(token, user.id,user.systemCredentials.login.loginName, useruuid, rem, function(err) {
+						log.debug('data--------', data);
+
+						if (data.length !== 1) {
+							log.warn('Found more or less then 1 user with provided credentials', data.length);
+							// next( 'users found ' + data.length);
+							resp.status(400).json({code:'login.authentication.failed'});
+							return;
+						} else {
+							user = data[0];
+							userId = user.id;
+						}
+					
+						self.resolvePermissions(user,userId,function (err,permissions){
+
+							if (err) {
+								log.warn('Failed to resolvePermissions permissions', err);
+								resp.next('Internal Error');
+								return;
+							}
+							self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip,  function(token) {
+								self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip,  rem, function(err) {
+									if (err) {
+										log.error('Failed to store login token', err);
+										resp.next('Internal Error');
+										return;
+									}
+									log.debug('rem', rem);
+									self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
+									log.info('user logged in',user.id);
+
+									self.resolveProfiles(user,function(err,u){
+										if (err) {
+											resp.next(err);
+											return;
+										}
+
+										resp.json(deflateUser(u,permissions));
+									});
+
+									return;
+								});
+							});
+						});
+					});
+				} else {
+					
+					if(isMobile && rem && tokenExist) {
+						var userId = tokendata[0].userId;
+						var loginName = tokendata[0].user;
+						log.debug('userId', userId);
+						//userDao.get(userId, userObj);
+						//user = tokens[0].user;
+						//passwordhash = userObj.systemCredentials.login.passwordHash;
+						//log.debug('systemCredentials.login.loginName', user);
+						//log.debug('password hash', passwordhash);
+						userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, loginName), function(err, data) {
+							log.debug('data', data);
+							var user = data[0];
+							log.debug('user', user);
+							var userId = user.id;
+							if (err) {
+								log.warn('Failed to list users from DB', err);
+								next(err);
+								return;
+							}
+							log.debug('data--------', data);
+
+							if (data.length !== 1) {
+								log.warn('Found more or less then 1 user with provided credentials', data.length);
+								// next( 'users found ' + data.length);
+								resp.status(400).json({code:'login.authentication.failed'});
+								return;
+							}
+							self.resolvePermissions(user,userId,function (err,permissions){
+								log.debug('req.selectedProfileId---', req.selectedProfileId);
+								log.debug('permissions---', permissions);
 								if (err) {
-									log.error('Failed to store login token', err);
+									log.warn('Failed to resolvePermissions permissions', err);
 									resp.next('Internal Error');
 									return;
 								}
-								log.debug('rem', rem);
-								self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
-								log.info('user logged in',user.id);
-
 								self.resolveProfiles(user,function(err,u){
 									if (err) {
 										resp.next(err);
@@ -503,37 +560,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 									resp.json(deflateUser(u,permissions));
 								});
-
-								return;
 							});
-						});
-					});
-				} else {
-					if(isMobile && rem && tokenExist) {
-						userId = data.userId;
-						log.debug('userId', userId);
-						userDao.get(userId, userObj);
-						user = userObj.systemCredentials.login.loginName;
-						passwordhash = userObj.systemCredentials.login.passwordHash;
-						log.debug('systemCredentials.login.loginName', user);
-						log.debug('password hash', passwordhash);
-
-						self.resolvePermissions(user,userId,function (err,permissions){
-
-							if (err) {
-								log.warn('Failed to resolvePermissions permissions', err);
-								resp.next('Internal Error');
-								return;
-							}
-							self.resolveProfiles(user,function(err,u){
-								if (err) {
-									resp.next(err);
-									return;
-								}
-
-								resp.json(deflateUser(u,permissions));
-							});
-							
 						});
 					} else {
 						password = req.body.password;
@@ -588,9 +615,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 				log.debug('tokenExist', tokenExist);
 			});	
-			
-			
-		});
+
 	};
 	/**
 	* Method should be use to select actuall user profile.
@@ -649,7 +674,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			var profiles=[];
 
-
+			log.debug('user.systemCredentials',user.systemCredentials);
 			user.systemCredentials.profiles.map(function(profileId){
 				data.map(function(pr){
 					if (pr.id===profileId){
@@ -834,32 +859,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 		var now = new Date().getTime();
 		var token = {
-				_id : tokenId,
 				tokenId : tokenId,
 				userId : userId,
 				user : user,
 				ip : ip,
-				created : now,
-				valid : true,
-				touched : now,
-				rememberMe: rem
-		};
-
-		log.verbose('Storing security token', token);
-		tokenDao.save(token, callback);
-
-	};
-	
-	// Store a token for mobile
-	this.storeToken4Mobile = function(tokenId, userId, user, uuid, rem, callback) {
-
-		var now = new Date().getTime();
-		var token = {
-				_id : tokenId,
-				tokenId : tokenId,
-				userId : userId,
-				user : user,
-				uuid : uuid,
 				created : now,
 				valid : true,
 				touched : now,

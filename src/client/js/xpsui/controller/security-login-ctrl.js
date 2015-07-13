@@ -16,36 +16,66 @@
 			// $scope.password = 'johndoe';
 			$scope.user = '';
 			$scope.password = '';
-			var uuidbuffer = '';
 			var rem = 'false';
 
 			if($localStorage.rememberme == null || $localStorage.rememberme == ""){
 				$scope.$storage = $localStorage.$default({
 					rememberme: false,
-					uuid: uuidbuffer,
 					profile: '',
 				});
 			} else {
 				$scope.$storage = $localStorage;
 				
 			}
-			/*var uuidbuffer = uuid.v4(); // (or 'new Buffer' in node.js)
-			$scope.$storage = $localStorage.$default({
-				rememberme: false,
-				uuid: uuidbuffer,
-				profile: '',
-			});*/
+
 			$scope.checkboxModel = {
 					value : false
 			};
+
 			$scope.$storage.rememberme = $localStorage.rememberme;
 			//console.log($scope.$storage.rememberme);
 			var remembermeelement = document.getElementById('x-rememberme-chk');
 			if($scope.$storage.rememberme){
+				//loginForm.setAttribute('style', 'visibility: hidden;');
+				
 				$scope.checkboxModel.value = true;
 				remembermeelement.setAttribute('checked','checked');
 				rem = 'true';
+				SecurityService.getLogin($scope.user, $scope.password, rem).success(function(user) {
+
+					if($scope.checkboxModel.value){
+						$scope.$storage.rememberme = true;
+						$scope.$storage.profile = user.systemCredentials.profiles[0].id;
+					} else {
+						$localStorage.$reset();
+						$scope.$storage.rememberme = false;
+						$scope.$storage.profile = user.systemCredentials.profiles[0].id;
+					}
+					
+					if (user.systemCredentials.profiles.length>1){
+						$scope.profiles=user.systemCredentials.profiles;
+					}
+					else {
+						SecurityService.selectProfile(user.systemCredentials.profiles[0].id).success(function(){
+							SecurityService.getCurrentUser().success(function(data){
+								$rootScope.security.currentUser=data;
+								console.log(data);
+								if (!navigationService.back()) {
+									$location.path('/personal-page');
+								}
+							});
+						});
+					}
+				}).error(function(err) {
+					if (err){
+						console.log(err);
+					}
+					delete $rootScope.security.currentUser;
+					var mes = {translationCode:'login.authentication.failed',time:5000};
+					notificationFactory.error(mes);
+				});
 			} else {
+				//loginForm.setAttribute('style', 'visibility: visible;');
 				$scope.checkboxModel.value = false;
 				$localStorage.$reset();
 				remembermeelement.setAttribute('checked','unchecked');

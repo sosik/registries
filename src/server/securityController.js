@@ -463,6 +463,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				if (tokendata.length !== 1){
 					//tokenExist = false;
 					// we are sure there is exactly one user
+					log.debug('req.body.login', req.body.login);
 					userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
 						var user = '';
 						var userId = '';
@@ -516,8 +517,9 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						});
 					});
 				} else {
-					
-					if(isMobile && rem && tokenExist) {
+					// Disable the mobile only condition temporarily.
+					//if(isMobile && rem && tokenExist) {
+					if(rem && tokenExist) {
 						var userId = tokendata[0].userId;
 						var loginName = tokendata[0].user;
 						log.debug('userId', userId);
@@ -583,6 +585,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						});
 					} else {
 						password = req.body.password;
+						user = req.body.user;
 						self.verifyUserPassword(user, password, function(err) {
 							if (err) {
 								log.debug('Password verification failed', err);
@@ -896,8 +899,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.setCookies = function(resp, token, loginName, rem) {
 		resp.cookie(cfg.remCookie, rem, {
-			httpOnly : true,
-			secure : process.env.NODE_ENV != 'test'
+			httpOnly : false
 		});
 		resp.cookie(cfg.securityTokenCookie, token, {
 				httpOnly : true,
@@ -953,6 +955,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 							}
 							resp.clearCookie(cfg.securityTokenCookie);
 							resp.clearCookie(cfg.loginNameCookie);
+							resp.clearCookie(cfg.remCookie);
 							log.info('user log out ',token.user);
 							resp.json();
 						});
@@ -1290,7 +1293,14 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					var token = tokens[0];
 					// TODO validate IP
 					var now = new Date().getTime();
-					if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - cfg.tokenExpiration)) {
+					var tokenExpiry = cfg.tokenExpiration;
+					// TODO if "Remember me" is true, set the token expiry to 0.
+					if(!req.cookies.rememberMe)  {
+						tokenExpiry = 0;
+					}
+					
+					//if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - cfg.tokenExpiration)) {
+					if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - tokenExpiry)) {
 						token.touched = now;
 						// TODO maybe some filtering for updates
 						tokenDao.update(token, function(err) {

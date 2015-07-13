@@ -1,6 +1,6 @@
 (function(angular) {
 	'use strict';
-
+	var rememberMe = false;
 	angular.module('x-registries', [
 		'ngRoute',
 		'ngCookies',
@@ -55,7 +55,7 @@
 					theme: 'clean'
 				});
 			}])
-	.config(['$routeProvider', 'xpsui:loggingProvider',function($routeProvider, loggingProvider) {
+	.config(['$routeProvider', 'xpsui:loggingProvider', function($routeProvider, loggingProvider) {
 		// $routeProvider.when('/view/:schema/:objId', {controller: 'xViewController', templateUrl: '/partials/x-view.html'});
 
 		$routeProvider.when('/dashboard', {templateUrl: '/partials/x-dashboard.html', controller: 'xpsui:DashboardCtrl', permissions:['System User']});
@@ -125,8 +125,14 @@
 			}
 		});
 		$routeProvider.when('/help', {templateUrl: '/dataset/get/partials/x-help.html', controller: 'xpsui:HelpPageCtrl'});
+		console.log('rememberMe: '+rememberMe);
+		if(rememberMe){
+			$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
+		} else {
+			$routeProvider.otherwise({templateUrl: '/partials/x-dashboard.html', controller: 'xpsui:DashboardCtrl', permissions:['System User']});
+		}
 
-		$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
+		//
 
 		loggingProvider.setLevel(5);
 	}])
@@ -139,6 +145,12 @@
 		// by default, current user is undefined, as there is noone logged in
 		$rootScope.hasPermissions=SecurityService.hasPermissions;
 		var changeRouteRuleActive=false;
+		console.log('run rememberme: ', $cookies.rememberMe);
+		if($cookies.rememberMe === 'true'){
+			rememberMe = true;
+		} else {
+			rememberMe = false;
+		}
 
 		if ($cookies.loginName){
 			SecurityService.getCurrentUser()

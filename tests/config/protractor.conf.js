@@ -7,14 +7,14 @@ var mongoDriver = require('./../../build/server/mongoDriver.js'),
 // Configuration for the protractor
 var config = {
 
-	baseUrl: 'http://localhost:3000',
+	baseUrl: 'https://localhost:3000',
 
 	capabilities: { browserName: 'firefox' },
-	multiCapabilities: [{
+	/*multiCapabilities: [{
 		browserName: 'firefox'
 	}, {
 		browserName: 'chrome'
-	}],
+	}],*/
 
 //	framework: 'mocha',
 

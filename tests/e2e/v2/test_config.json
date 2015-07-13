@@ -1,0 +1,14 @@
+{
+	"people": {
+		"url": "http://localhost:3000/schema/compiled/uri~3A~2F~2Fregistries~2Fpeople~23views~2Ffullperson~2Fnew",
+		"listNo": 0},
+	"club": {
+		"url": "http://localhost:3000/schema/compiled/uri~3A~2F~2Fregistries~2Forganizations~23views~2Fclub~2Fnew",
+		"listNo": 2},
+	"stadium": {
+		"url": "http://localhost:3000/schema/compiled/uri~3A~2F~2Fregistries~2Fstadiums~23views~2Fstadium~2Fnew",
+		"listNo": 1},
+	"assoc": {
+		"url":"http://localhost:3000/schema/compiled/uri~3A~2F~2Fregistries~2Forganizations~23views~2Fassociation~2Fnew",
+		"listNo": 3}
+}

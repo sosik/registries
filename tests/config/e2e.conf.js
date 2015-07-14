@@ -2,7 +2,7 @@
 var config = require('./protractor.conf');
 
 config.suites = [
-	'../e2e/**/*.spec.js'
+	'../e2e/v2/spec.js'
 ];
 
 if (process.env.TRAVIS) {

@@ -27,6 +27,7 @@ module.exports = function (config) {
 			'../build/client/lib/ace-builds/src-min-noconflict/ace.js',
 			'../build/client/lib/angular-ui-ace/ui-ace.js',
 			'../build/client/js/safeUrlEncoder.js',
+			'../build/client/lib/node-uuid/uuid.js',
 			'../build/client/lib/ngstorage/ngStorage.min.js',
 
 			// Mock

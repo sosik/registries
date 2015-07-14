@@ -123,7 +123,7 @@
 			$scope.resetPassword = function() {
 				SecurityService.getResetPassword($scope.user);
 			};
-		}
+		} 
 	]);
 
 }(window.angular));

@@ -470,44 +470,65 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						next(err);
 						return;
 					}
-
 					if (data.length !== 1) {
 						log.warn('Found more or less then 1 user with provided credentials', data.length);
 						resp.status(400).json({code: 'login.authentication.failed'});
 						return;
+			qf.addCriterium("valid",QueryFilter.operation.EQUAL, true);
+				log.debug('tokendata', tokendata);
 					} else {
 						user = data[0];
 						userId = user.id;
 					}
 
 					self.resolvePermissions(user, userId, function (err, permissions) {
+						var user = '';
+						var userId = '';
 						if (err) {
-							log.warn('Failed to resolvePermissions permissions', err);
-							resp.next('Internal Error');
+							log.warn('Failed to list users from DB', err);
+							next(err);
 							return;
 						}
+						log.debug('data--------', data);
+
+						if (data.length !== 1) {
+							log.warn('Found more or less then 1 user with provided credentials', data.length);
+							// next( 'users found ' + data.length);
+							resp.status(400).json({code:'login.authentication.failed'});
+							return;
+						} else {
+							user = data[0];
+							userId = user.id;
+						}
+						self.resolvePermissions(user,userId,function (err,permissions){
+							if (err) {
+								log.warn('Failed to resolvePermissions permissions', err);
+								resp.next('Internal Error');
+								return;
+							}
 						self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
 							self.storeToken(token, user.id, user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, rem, function(err) {
-								if (err) {
-									log.error('Failed to store login token', err);
-									resp.next('Internal Error');
-									return;
-								}
-								self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
-								log.info('user logged in', user.id);
-								self.resolveProfiles(user, function(err, u) {
+								self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip,  rem, function(err) {
 									if (err) {
-										resp.next(err);
+										log.error('Failed to store login token', err);
+										resp.next('Internal Error');
 										return;
 									}
+									self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
+								log.info('user logged in', user.id);
+								self.resolveProfiles(user, function(err, u) {
+										if (err) {
+											resp.next(err);
+											return;
+										}
 
 									resp.json(deflateUser(u, permissions));
-								});
+									});
 
-								return;
+									return;
+								});
 							});
 						});
-					});
 				});
 			} else {
 				// Disable the mobile only condition temporarily.
@@ -521,18 +542,35 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 							next(err);
 							return;
 						}
+						//userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, loginName), function(err, data) {
+						var ObjectId = require('mongodb').ObjectID(userId);
+						log.debug('ObjectId', ObjectId);
+						userDao.list(QueryFilter.create().addCriterium('_id', QueryFilter.operation.EQUAL, userId), function(err, data) {
+							log.debug('data', data);
+							var user = data[0];
+							log.debug('user', user);
+							var userId = user.id;
+							log.debug('userId', userId);
+							if (err) {
+								log.warn('Failed to list users from DB', err);
+								next(err);
+								return;
+							}
+							log.debug('data--------', data);
 
 						if (data.length !== 1) {
 							log.warn('Found more or less then 1 user with provided credentials', data.length);
 							resp.status(400).json({code: 'login.authentication.failed'});
 							return;
 						}
-						self.resolvePermissions(user, userId, function (err, permissions) {
-							if (err) {
-								log.warn('Failed to resolvePermissions permissions', err);
-								resp.next('Internal Error');
-								return;
 							}
+						self.resolvePermissions(user, userId, function (err, permissions) {
+								log.debug('permissions---', permissions);
+								if (err) {
+									log.warn('Failed to resolvePermissions permissions', err);
+									resp.next('Internal Error');
+									return;
+								}
 							self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
 								self.storeToken(token, user.id, user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, rem, function(err) {
 									if (err) {
@@ -541,6 +579,9 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 										return;
 									}
 									self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
+										self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
+										log.info('user logged in',user.id);
+
 									self.resolveProfiles(user, function(err, u) {
 										if (err) {
 											resp.next(err);

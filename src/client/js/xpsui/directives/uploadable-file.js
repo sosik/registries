@@ -137,6 +137,7 @@
 					commit = function(val) {
 						scope.$apply( function() {
 							ngModel.$setViewValue(val);
+							ngModel.$render();
 						});
 					};
 				}

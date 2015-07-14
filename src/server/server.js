@@ -112,7 +112,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	app.get('/logout', bodyParser.json(),securityCtrl.logout);
 	app.get('/user/current',securityService.authenRequired, bodyParser.json(),securityCtrl.getCurrentUser);
 	app.post('/user/profile',securityService.authenRequired, bodyParser.json(), securityCtrl.selectProfile);
-
+	
 	app.get('/info/accounting/user/:userId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getUserInfo);
 	app.get('/info/accounting/club/:clubId',securityService.authenRequired,bodyParser.json(), accountingCtrl.getClubInfo);
 
@@ -143,7 +143,7 @@ mongoDriver.init(config.mongoDbURI, function(err) {
 	var portalApi = new portalApiModule(mongoDriver);
 	app.post('/portalapi/getByTags', bodyParser.json(), function(req, res) {portalApi.getByTags(req, res);});
 	app.get('/portalapi/articleTagsDistinct',securityService.authenRequired, bodyParser.json(),function(req,res){udc.getArticleTagsDistinct(req,res);});
-
+	
 	// Static data
 //	app.use(express.static(path.join(process.cwd(), 'build', 'client')));
 

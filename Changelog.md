@@ -1,5 +1,5 @@
-### Search now allows to filter data by object link too
-Search by object link now works.
+### Portal widget for email subscription
+Widget allows user to enter his email address (optentially other values) and stores it into schema.
 
 ### Search form now display serach results on enter key
 Search can be initialized by Enter key in addition to clicking the search button.

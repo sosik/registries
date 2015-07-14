@@ -98,6 +98,23 @@ div.x-fieldset-row {
 			min-height: 100px;
 			resize:both;
 	}
+	
+	div.x-fieldset-rememberme-chk {
+		width: auto;
+		float: none;
+		position: relative;
+		margin-top: 9px;
+		margin-bottom: 8px;
+	}
+		
+	input.x-rememberme-chk {
+		width: 16px;
+		height: 16px;
+		position: relative;
+		top: 1px;
+		*overflow: hidden;
+		margin-left:18px;
+	}
 
 	@media (max-width: $screen-sm) {
 		div.x-fieldset-col-2 {
@@ -125,8 +142,27 @@ div.x-fieldset-row {
 			position: relative;
 			margin-top: 9px;
 			margin-bottom: 8px;
+			
+		}
+		div.x-fieldset-rememberme-chk {
+			width: auto;
+			float: none;
+			position: relative;
+			margin-top: 9px;
+			margin-bottom: 8px;
+		}
+		
+		input.x-rememberme-chk {
+			width: 16px;
+			height: 16px;
+			position: relative;
+			top: 1px;
+			*overflow: hidden;
+			margin-left:18px;
 		}
 	}
+	
+	
 }
 
 @media screen and (max-width: $screen-sm-max) and (min-width: $screen-sm) {
@@ -153,4 +189,23 @@ div.x-fieldset-row {
 	.x-fieldset-content {
 		.display: block;
 	}
+	
+	div.x-fieldset-rememberme-chk {
+		width: auto;
+		float: none;
+		position: relative;
+		margin-top: 9px;
+		margin-bottom: 8px;
+	}
+		
+	input.x-rememberme-chk {
+		width: 32px;
+		height: 32px;
+		position: relative;
+		top: 1px;
+		*overflow: hidden;
+		margin-left:18px;
+	}
 }
+
+

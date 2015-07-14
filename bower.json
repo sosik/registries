@@ -26,10 +26,11 @@
     "angular-ui-ace": "*",
     "angular-translate": "*",
     "angular-translate-handler-log": "*",
-    "angular-translate-storage-cookie": "*", 
+    "angular-translate-storage-cookie": "*",
     "components-font-awesome": "~4.3.0",
     "angular-sanitize": "1.3.16",
     "jquery": "~2.1.3",
-    "angular-re-captcha": "~0.2.0"
+    "angular-re-captcha": "~0.2.0",
+    "ngstorage": "*"
   }
 }

@@ -126,6 +126,7 @@
 		});
 		$routeProvider.when('/help', {templateUrl: '/dataset/get/partials/x-help.html', controller: 'xpsui:HelpPageCtrl'});
 		if($cookies.rememberMe) {
+		if(rememberMe){
 			$routeProvider.otherwise({templateUrl: '/partials/x-login.html', controller: 'xpsui:SecurityLoginCtrl'});
 		} else {
 			$routeProvider.otherwise({templateUrl: '/partials/x-dashboard.html', controller: 'xpsui:DashboardCtrl', permissions: ['System User']});
@@ -144,6 +145,12 @@
 		// by default, current user is undefined, as there is noone logged in
 		$rootScope.hasPermissions = SecurityService.hasPermissions;
 		var changeRouteRuleActive = false;
+		console.log('run rememberme: ', $cookies.rememberMe);
+		if($cookies.rememberMe === 'true'){
+			rememberMe = true;
+		} else {
+			rememberMe = false;
+		}
 		if ($cookies.loginName) {
 			SecurityService.getCurrentUser()
 			.success(function(data, status, headers, config) {

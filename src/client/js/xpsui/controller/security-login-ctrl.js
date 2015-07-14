@@ -33,6 +33,8 @@
 			$scope.$storage.rememberMe = $localStorage.rememberMe;
 			var remembermeElement = document.getElementById('x-rememberme-chk');
 			if($scope.$storage.rememberMe) {
+				//loginForm.setAttribute('style', 'visibility: hidden;');
+				
 				$scope.checkboxModel.value = true;
 				remembermeElement.setAttribute('checked', 'checked');
 				rem = 'true';
@@ -66,7 +68,36 @@
 					var mes = {translationCode: 'login.authentication.failed', time: 5000};
 					notificationFactory.error(mes);
 				});
+					} else {
+						$localStorage.$reset();
+						$scope.$storage.rememberme = false;
+						$scope.$storage.profile = user.systemCredentials.profiles[0].id;
+					}
+					
+					if (user.systemCredentials.profiles.length>1){
+						$scope.profiles=user.systemCredentials.profiles;
+					}
+					else {
+						SecurityService.selectProfile(user.systemCredentials.profiles[0].id).success(function(){
+							SecurityService.getCurrentUser().success(function(data){
+								$rootScope.security.currentUser=data;
+								console.log(data);
+								if (!navigationService.back()) {
+									$location.path('/personal-page');
+								}
+							});
+						});
+					}
+				}).error(function(err) {
+					if (err){
+						console.log(err);
+					}
+					delete $rootScope.security.currentUser;
+					var mes = {translationCode:'login.authentication.failed',time:5000};
+					notificationFactory.error(mes);
+				});
 			} else {
+				//loginForm.setAttribute('style', 'visibility: visible;');
 				$scope.checkboxModel.value = false;
 				$localStorage.$reset();
 				remembermeElement.setAttribute('checked', 'unchecked');

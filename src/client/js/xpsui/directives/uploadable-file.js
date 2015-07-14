@@ -45,8 +45,8 @@
 				elm.append(chooseFileButton);
 
 				chooseFileButton.on('click', function (evt) {
-					fileButton[0].files[0] = '';
-					fileButton[0].value = '';
+					// fileButton[0].files[0] = '';
+					// fileButton[0].value = '';
 					fileButton[0].click();
 				});
 

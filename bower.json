@@ -30,9 +30,7 @@
     "components-font-awesome": "~4.3.0",
     "angular-sanitize": "1.3.16",
     "jquery": "~2.1.3",
-    "angular-re-captcha": "~0.2.0"
-  },
-  "devDependencies": {
-    "ngCordova-IMEI": "git://github.com/konstantinkrassmann/ngCordova-IMEI"
+    "angular-re-captcha": "~0.2.0",
+    "ngstorage": "*"
   }
 }

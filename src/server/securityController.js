@@ -13,21 +13,21 @@ var renderModule = require('./renderService.js');
 var universalDaoModule = require('./UniversalDao.js');
 
 var DEFAULT_CFG = {
-	userCollection : 'people',
+	userCollection: 'people',
 	profileCollection: 'securityProfiles',
-	loginColumnName : 'systemCredentials.login.loginName',
-	groupCollection : 'groups',
-	tokenCollection : 'token',
+	loginColumnName: 'systemCredentials.login.loginName',
+	groupCollection: 'groups',
+	tokenCollection: 'token',
 	forgottenTokens: 'forgottenTokens',
-	tokenIdColumnName : 'tokenId',
-	securityTokenCookie : 'securityToken',
-	loginNameCookie : 'loginName',
-	profileCookie : 'profile',
-	remCookie : 'rememberMe',
-	tokenExpiration : 3600000,
-	generatedPasswordLen : 8,
-	captchaSite:'6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
-	captchaSecret:'6LfOUQITAAAAAMXVttdodZHJ1SbzKkQ00l43fzFl'
+	tokenIdColumnName: 'tokenId',
+	securityTokenCookie: 'securityToken',
+	loginNameCookie: 'loginName',
+	profileCookie: 'profile',
+	remCookie: 'rememberMe',
+	tokenExpiration: 3600000,
+	generatedPasswordLen: 8,
+	captchaSite: '6LfOUQITAAAAAOgMxsnYmhkSY0lZw0tej0C4N2XS',
+	captchaSecret: '6LfOUQITAAAAAMXVttdodZHJ1SbzKkQ00l43fzFl'
 };
 
 //
@@ -46,32 +46,30 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	var cfg = extend(true, {}, DEFAULT_CFG, options);
 
 	var userDao = new universalDaoModule.UniversalDao(mongoDriver, {
-		collectionName : cfg.userCollection
+		collectionName: cfg.userCollection
 	});
 
 	var profileDao = new universalDaoModule.UniversalDao(mongoDriver, {
-		collectionName : cfg.profileCollection
+		collectionName: cfg.profileCollection
 	});
 
 	var renderService = new renderModule.RenderService();
 
 	var tokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
-		collectionName : cfg.tokenCollection
+		collectionName: cfg.tokenCollection
 	});
 
 	var groupDao = new universalDaoModule.UniversalDao(mongoDriver, {
-		collectionName : cfg.groupCollection
+		collectionName: cfg.groupCollection
 	});
 
 
 	var forgottenTokenDao = new universalDaoModule.UniversalDao(mongoDriver, {
-			collectionName : cfg.forgottenTokens
+			collectionName: cfg.forgottenTokens
 	});
-	var self=this;
+	var self = this;
 	var isMobile = false;
 	var rem = false;
-	var useruuid = '';
-	var loginname = '';
 	var password = '';
 	/**
 	* Method returns array of available permissions.
@@ -98,8 +96,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	*/
 	this.getProfiles = function(req, resp) {
 
-		profileDao.list({},function(err,data){
-			if (err){
+		profileDao.list({}, function(err, data) {
+			if (err) {
 				resp.status(500).send(err);
 				return;
 			}
@@ -119,7 +117,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.status(500).send(err);
-				log.warn('getUserPermissions',userId,err);
+				log.warn('getUserPermissions', userId, err);
 			} else {
 				var userRes = {};
 				userRes.loginName = user.systemCredentials.loginName;
@@ -131,7 +129,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 					}
 				}
 				userRes.permissions = permissions;
-				log.verbose('getUserPermissions result',userId,permissions);
+				log.verbose('getUserPermissions result', userId, permissions);
 				resp.status(200).json(userRes);
 			}
 
@@ -151,7 +149,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.send(500, err);
-				log.warn('getUserGroups',userId,err);
+				log.warn('getUserGroups', userId, err);
 			} else {
 				var userRes = {};
 				userRes.loginName = user.systemCredentials.loginName;
@@ -171,7 +169,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	var hasPermission = function(coll, perm) {
 
-		for (var i = coll.length; i--;) {
+		for (var i = coll.length; i--; ) {
 			if (coll[i] === perm) {
 				return true;
 			}
@@ -190,7 +188,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.status(500).send(err);
-				log.warn('updateUserSecurity',userId,err);
+				log.warn('updateUserSecurity', userId, err);
 			} else {
 
 				if (!user.systemCredentials) {
@@ -207,21 +205,21 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 
 
-				if ('profiles' in req.body){
-					user.systemCredentials.profiles=req.body.profiles;
+				if ('profiles' in req.body) {
+					user.systemCredentials.profiles = req.body.profiles;
 				}
 
 				log.verbose('updating users security of', user.systemCredentials.login.loginName);
 
-				user.systemCredentials.login.loginName=req.body.loginName;
-				user.systemCredentials.login.email=req.body.email;
+				user.systemCredentials.login.loginName = req.body.loginName;
+				user.systemCredentials.login.email = req.body.email;
 
-				userDao.update(user, function(err) {
-					if (err) {
-						resp.status(500).send(err);
-						log.warn('updateUserSecurity',userId,err);
+				userDao.update(user, function(userErr) {
+					if (userErr) {
+						resp.status(500).send(userErr);
+						log.warn('updateUserSecurity', userId, userErr);
 					} else {
-						log.info('updateUserSecurity updated',userId);
+						log.info('updateUserSecurity updated', userId);
 						resp.send(200);
 					}
 
@@ -232,6 +230,21 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 
 	};
+	function getSchemaCrit(forced, schema) {
+		var found = null;
+
+		forced.map(function(f) {
+			if (f.applySchema === schema) {
+				found = f;
+			}
+		});
+
+		if (!found) {
+			found = {applySchema: schema, crits: []};
+			forced.push(found);
+		}
+		return found;
+	}
 	/**
 	* Method should be used to update security profile settings.
 	* @method updateSecurityProfile
@@ -243,7 +256,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.status(500).send(err);
-				log.warn('updateProfileSecurity',profileId,err);
+				log.warn('updateProfileSecurity', profileId, err);
 			} else {
 
 				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
@@ -263,12 +276,12 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 
 				for ( var per in defaultObj) {
-					profile.security.permissions[per] = (hasPermission(req.body.permissions, per)?true:null);
+					profile.security.permissions[per] = (hasPermission(req.body.permissions, per) ? true : null);
 				}
 
 				req.body.groups.map(function(group) {
 					profile.security.groups.push({
-						id : group.id
+						id: group.id
 					});
 				});
 
@@ -278,26 +291,26 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 				log.verbose('updating profiles security of', profile.baseData.name);
 
-				profile.baseData={};
-				profile.baseData.name=req.body.profileName;
+				profile.baseData = {};
+				profile.baseData.name = req.body.profileName;
 
 
-				profile.security.forcedCriteria=[];
+				profile.security.forcedCriteria = [];
 
-				if ('crits' in req.body){
-					req.body.crits.map(function(cc){
-						var schemaCrit= getSchemaCrit(profile.security.forcedCriteria,cc.schema);
-						schemaCrit.crits.push({f:cc.f,op:cc.op,v:cc.v,obj:cc.obj,expr:cc.expr});
+				if ('crits' in req.body) {
+					req.body.crits.map(function(cc) {
+						var schemaCrit = getSchemaCrit(profile.security.forcedCriteria, cc.schema);
+						schemaCrit.crits.push({f: cc.f, op: cc.op, v: cc.v, obj: cc.obj, expr: cc.expr});
 					});
 				}
 
-				log.verbose('updating profile',profile);
-				profileDao.update(profile, function(err) {
-					if (err) {
-						resp.status(500).send(err);
-						log.warn('updateprofileSecurity',profileId,err);
+				log.verbose('updating profile', profile);
+				profileDao.update(profile, function(profileErr) {
+					if (profileErr) {
+						resp.status(500).send(profileErr);
+						log.warn('updateprofileSecurity', profileId, profileErr);
 					} else {
-						log.info('updateprofileSecurity updated',profileId);
+						log.info('updateprofileSecurity updated', profileId);
 						resp.send(200);
 					}
 				});
@@ -307,24 +320,10 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		});
 
 	};
-	function getSchemaCrit (forced,schema){
-		var found= null;
 
-		forced.map(function(f){
-			if (f.applySchema==schema){
-				found = f;
-			}
-		});
-
-		if (!found){
-			found={applySchema:schema, crits:[]};
-			forced.push(found);
-		}
-		return found;
-	}
-	function checkPresentSchemaCrits(criteria,schema){
-		for(var crit in criteria){
-			if (criteria[crit].schema===schema){
+	function checkPresentSchemaCrits(criteria, schema) {
+		for(var crit in criteria) {
+			if (criteria[crit].schema === schema) {
 				return true;
 			}
 		}
@@ -335,7 +334,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	* Method returns array of schemas that can be used for search.
 	* @method getSearchSchemas
 	*/
-	this.getSearchSchemas=function(req,resp){
+	this.getSearchSchemas = function(req, resp) {
 		resp.status(200).json(schemaRegistry.getSchemaNamesBySuffix('search'));
 	};
 
@@ -350,7 +349,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.status(500).send(err);
-				log.warn('updateGroupSecurity',groupId,err);
+				log.warn('updateGroupSecurity', groupId, err);
 			} else {
 
 				var defaultObj = schemaRegistry.createDefaultObject('uri://registries/security#permissions');
@@ -375,13 +374,13 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				}
 
 				log.info('updating groups security of', group);
-				groupDao.update(group, function(err) {
-					if (err) {
+				groupDao.update(group, function(groupErr) {
+					if (groupErr) {
 						resp.status(500).send(err);
-						log.warn('Group update failed',groupId,err);
+						log.warn('Group update failed', groupId, groupErr);
 					} else {
 						resp.send(200);
-						log.info('Security group updated',groupId);
+						log.info('Security group updated', groupId);
 					}
 				});
 			}
@@ -389,15 +388,25 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	};
 
 	/**
+	* Minimalistic version of user return
+	*/
+	function deflateUser(user, permissions) {
+		log.silly(permissions);
+		return {id: user.id, systemCredentials: {login: {loginName: user.systemCredentials.login.loginName}, permissions: permissions, profiles: user.systemCredentials.profiles || []}};
+	}
+
+
+	/**
 	 * Does login based on provided password and login name. It queries DB and
 	 * if verification of crediatials successed it stores new security token
 	 * into DB and sets that token as cookies.
 	 * @method login
 	 */
-	this.login = function(req, resp,next) {
+	this.login = function(req, resp, next) {
 		log.debug('login attempt', req.body.login);
 		log.debug('user-agent', req.headers['user-agent']);
-		
+		log.debug('securityToken', req.cookies.securityToken);
+
 		var ua = req.headers['user-agent'],
 		$ = {};
 		// Check whether the client is a mobile device.
@@ -412,193 +421,193 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 			$.iPad = /iPad/.test(ua);
 		}
 
-		if (/Android/.test(ua))
+		if (/Android/.test(ua)) {
 			$.Android = /Android ([0-9\.]+)[\);]/.exec(ua)[1];
+		}
 
-		if (/webOS\//.test(ua))
+		if (/webOS\//.test(ua)) {
 			$.webOS = /webOS\/([0-9\.]+)[\);]/.exec(ua)[1];
+		}
 
-		if (/(Intel|PPC) Mac OS X/.test(ua))
+		if (/(Intel|PPC) Mac OS X/.test(ua)) {
 			$.Mac = /(Intel|PPC) Mac OS X ?([0-9\._]*)[\)\;]/.exec(ua)[2].replace(/_/g, '.') || true;
+		}
 
-		if (/Windows NT/.test(ua))
+		if (/Windows NT/.test(ua)) {
 			$.Windows = /Windows NT ([0-9\._]+)[\);]/.exec(ua)[1];
-		
-		if(isMobile)
-			log.debug('Mobile:', 'true');
-		else
-			log.debug('Mobile:', 'false');
-		useruuid = req.body.uuid;
-		log.debug('UUID', req.body.uuid);
-		//log.debug('Rememberme', req.body.rem);
-		if(req.body.rem==='true'){
+		}
+
+		if(req.body.rememberMe) {
 			rem = true;
-			log.debug('Rememberme', 'true');
 		} else {
 			rem = false;
-			log.debug('Rememberme', 'false');
 		}
-		log.debug('req.body.login: ', req.body.login);
-		userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
+
+		var tokenExist = false;
+		var tokenId = req.cookies.securityToken;
+		var qf = QueryFilter.create();
+		qf.addCriterium('tokenId', QueryFilter.operation.EQUAL, tokenId);
+		qf.addCriterium('valid', QueryFilter.operation.EQUAL, true);
+		qf.addCriterium('rememberMe', QueryFilter.operation.EQUAL, true);
+		tokenDao.find(qf, function(err, tokendata) {
 			if (err) {
-				log.warn('Failed to list users from DB', err);
 				next(err);
-				return;
+				tokenExist = false;
+				log.debug('token', 'error');
+			} else {
+				tokenExist = true;
+				log.debug('token', 'hit');
 			}
 
+			if (tokendata.length !== 1) {
+				// we are sure there is exactly one user
+				log.debug('req.body.login', req.body.login);
+				userDao.list(QueryFilter.create().addCriterium(cfg.loginColumnName, QueryFilter.operation.EQUAL, req.body.login), function(err, data) {
+					var user = '';
+					var userId = '';
+					if (err) {
+						log.warn('Failed to list users from DB', err);
+						next(err);
+						return;
+					}
 
-			if (data.length !== 1) {
-				log.warn('Found more or less then 1 user with provided credentials', data.length);
-				// next( 'users found ' + data.length);
-				resp.status(400).json({code:'login.authentication.failed'});
-				return;
-			}
+					if (data.length !== 1) {
+						log.warn('Found more or less then 1 user with provided credentials', data.length);
+						resp.status(400).json({code: 'login.authentication.failed'});
+						return;
+					} else {
+						user = data[0];
+						userId = user.id;
+					}
 
-			// we are sure there is exactly one user
-			var user = data[0];
-			var tokenExist = false;
-			var tokenId = req.cookies.securityToken;
-			var userId = '';
-			var qf= QueryFilter.create();
-			qf.addCriterium("tokenId",QueryFilter.operation.EQUAL, tokenId);
-			qf.addCriterium("rememberMe",QueryFilter.operation.EQUAL, true);
-			
-			tokenDao.find(qf,function(err,tokens){
-				log.debug('tokenDao', 'begin');
-				if (err){
-					next(err);
-					tokenExist = false;
-					
-				} else {
-					tokenExist = true;
-				}
-
-				if (tokens.length==0){
-					//resp.status(400);
-					//resp.json({error:'Token wasn\'t found '+ tokenId,code:'token.not.found'});
-					tokenExist = false;
-					self.resolvePermissions(user,userId,function (err,permissions){
-
+					self.resolvePermissions(user, userId, function (err, permissions) {
 						if (err) {
 							log.warn('Failed to resolvePermissions permissions', err);
 							resp.next('Internal Error');
 							return;
 						}
-						self.createToken(user.systemCredentials.login.loginName, useruuid, function(token) {
-							self.storeToken(token, user.id,user.systemCredentials.login.loginName, useruuid, rem, function(err) {
+						self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
+							self.storeToken(token, user.id, user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, rem, function(err) {
 								if (err) {
 									log.error('Failed to store login token', err);
 									resp.next('Internal Error');
 									return;
 								}
-								log.debug('rem', rem);
 								self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
-								log.info('user logged in',user.id);
-
-								self.resolveProfiles(user,function(err,u){
+								log.info('user logged in', user.id);
+								self.resolveProfiles(user, function(err, u) {
 									if (err) {
 										resp.next(err);
 										return;
 									}
 
-									resp.json(deflateUser(u,permissions));
+									resp.json(deflateUser(u, permissions));
 								});
 
 								return;
 							});
 						});
 					});
-				} else {
-					if(isMobile && rem && tokenExist) {
-						userId = data.userId;
-						log.debug('userId', userId);
-						userDao.get(userId, userObj);
-						user = userObj.systemCredentials.login.loginName;
-						passwordhash = userObj.systemCredentials.login.passwordHash;
-						log.debug('systemCredentials.login.loginName', user);
-						log.debug('password hash', passwordhash);
+				});
+			} else {
+				// Disable the mobile only condition temporarily.
+				//if(isMobile && rem && tokenExist) {
+				if(rem && tokenExist) {
+					userDao.list(QueryFilter.create().addCriterium('_id', QueryFilter.operation.EQUAL, tokendata[0].userId), function(err, data) {
+						var user = data[0];
+						var userId = user.id;
+						if (err) {
+							log.warn('Failed to list users from DB', err);
+							next(err);
+							return;
+						}
 
-						self.resolvePermissions(user,userId,function (err,permissions){
+						if (data.length !== 1) {
+							log.warn('Found more or less then 1 user with provided credentials', data.length);
+							resp.status(400).json({code: 'login.authentication.failed'});
+							return;
+						}
+						self.resolvePermissions(user, userId, function (err, permissions) {
+							if (err) {
+								log.warn('Failed to resolvePermissions permissions', err);
+								resp.next('Internal Error');
+								return;
+							}
+							self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
+								self.storeToken(token, user.id, user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, rem, function(err) {
+									if (err) {
+										log.error('Failed to store login token', err);
+										resp.next('Internal Error');
+										return;
+									}
+									self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
+									self.resolveProfiles(user, function(err, u) {
+										if (err) {
+											resp.next(err);
+											return;
+										}
+
+										resp.json(deflateUser(u, permissions));
+									});
+
+									return;
+								});
+							});
+						});
+					});
+				} else {
+					password = req.body.password;
+					var user = req.body.user;
+					self.verifyUserPassword(user, password, function(err) {
+						if (err) {
+							log.debug('Password verification failed', err);
+							resp.status(400).json({message: err, code: err});
+							return;
+						}
+
+						self.resolvePermissions(user, req.selectedProfileId, function(err, permissions) {
 
 							if (err) {
 								log.warn('Failed to resolvePermissions permissions', err);
 								resp.next('Internal Error');
 								return;
 							}
-							self.resolveProfiles(user,function(err,u){
-								if (err) {
-									resp.next(err);
-									return;
-								}
+							// if ('System User' in  permissions&&permissions['System User'] ){
+							self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
+								self.storeToken(token, user.id, user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, rem, function(err) {
+									if (err) {
+										log.error('Failed to store login token', err);
+										resp.next('Internal Error');
+										return;
+									}
+									self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
+									log.info('user logged in', user.id);
 
-								resp.json(deflateUser(u,permissions));
-							});
-							
-						});
-					} else {
-						password = req.body.password;
-						self.verifyUserPassword(user, password, function(err) {
-							if (err) {
-								log.debug('Password verification failed', err);
-								resp.status(400).json({message:err,code:err});
-								return;
-							}
-
-							self.resolvePermissions(user,req.selectedProfileId,function (err,permissions){
-
-								if (err) {
-									log.warn('Failed to resolvePermissions permissions', err);
-									resp.next('Internal Error');
-									return;
-								}
-								// if ('System User' in  permissions&&permissions['System User'] ){
-								// If the client is a mobile and "Rememeber me" is checked, use UUID for the identifier.
-								
-								self.createToken(user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, function(token) {
-									self.storeToken(token, user.id,user.systemCredentials.login.loginName, req.headers['x-forwarded-for'] || req.ip, rem, function(err) {
+									self.resolveProfiles(user, function(err, u) {
 										if (err) {
-											log.error('Failed to store login token', err);
-											resp.next('Internal Error');
+											resp.next(err);
 											return;
 										}
-										self.setCookies(resp, token, user.systemCredentials.login.loginName, rem);
-										log.info('user logged in',user.id);
 
-										self.resolveProfiles(user,function(err,u){
-											if (err) {
-												resp.next(err);
-												return;
-											}
-
-											resp.json(deflateUser(u,permissions));
-										});
-
-										return;
+										resp.json(deflateUser(u, permissions));
 									});
+									return;
 								});
-
-								// }
-								// else {
-								// 	log.warn('Not system user ',user.systemCredentials.login.loginName);
-								// 	resp.send(403, securityService.missingPermissionMessage('System User'));
-								// }
 							});
 						});
-					}
+					});
 				}
-				log.debug('tokenExist', tokenExist);
-			});	
-			
-			
+			}
+			log.debug('tokenExist', tokenExist);
 		});
 	};
 	/**
 	* Method should be use to select actuall user profile.
 	* @method selectProfile
 	*/
-	this.selectProfile=function(req,resp){
+	this.selectProfile = function(req, resp) {
 
-		log.silly('Selecting profile or user', req.loginName,req.body.profileId);
+		log.silly('Selecting profile or user', req.loginName, req.body.profileId);
 		if (!req.loginName) {
 			resp.status(500).send('User must be logged in for password change');
 			throw 'User must be logged in for password change';
@@ -608,28 +617,28 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 			if (err) {
 				resp.status(500).send(err);
-				log.debug('selectProfile',err);
+				log.debug('selectProfile', err);
 				return;
 			}
 
-			if (users.length != 1) {
+			if (users.length !== 1) {
 				resp.status(500).send('user not found');
 				log.debug('selectProfile', 'user not found');
 				return;
 			}
 
-			var user= users[0];
-			if (!('profiles' in user.systemCredentials)){
+			var user = users[0];
+			if (!('profiles' in user.systemCredentials)) {
 				resp.status(500).send( 'user has no profiles');
 				return;
 			}
 
-			if (user.systemCredentials.profiles.indexOf(req.body.profileId)<0){
+			if (user.systemCredentials.profiles.indexOf(req.body.profileId) < 0) {
 				resp.status(500).send( 'user has no profiles');
 				return;
 			}
 
-			self.setProfileCookie(resp,req.body.profileId);
+			self.setProfileCookie(resp, req.body.profileId);
 			resp.sendStatus(200);
 
 		});
@@ -638,59 +647,60 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	/**
 	* selectProfile
 	*/
-	this.resolveProfiles=function (user,callback){
+	this.resolveProfiles = function (user, callback) {
 
-		profileDao.list({},function(err,data){
+		profileDao.list({}, function(err, data) {
 
-			if (err){
+			if (err) {
 				callback(err);
 				return;
 			}
 
-			var profiles=[];
+			var profiles = [];
 
-
-			user.systemCredentials.profiles.map(function(profileId){
-				data.map(function(pr){
-					if (pr.id===profileId){
-						profiles.push({id:profileId,name:pr.baseData.name});
+			log.debug('user.systemCredentials', user.systemCredentials);
+			user.systemCredentials.profiles.map(function(profileId) {
+				data.map(function(pr) {
+					if (pr.id === profileId) {
+						profiles.push({id: profileId, name: pr.baseData.name});
+						log.debug('resolveProfiles', profiles);
 					}
 				});
 			});
 
-			user.systemCredentials.profiles=profiles;
-			callback(null,user);
+			user.systemCredentials.profiles = profiles;
+			callback(null, user);
 
 		});
 
 	};
 
 	//Traverses groups and collects permission, finally user permissions added.
-	this.resolvePermissions = function(user,selectedProfileId, callback) {
+	this.resolvePermissions = function(user, selectedProfileId, callback) {
 
-		if (!user){
-			callback(null,[]);
+		if (!user) {
+			callback(null, []);
 			return;
 		}
-		if (!selectedProfileId){
-			callback(null,[]);
+		if (!selectedProfileId) {
+			callback(null, []);
 			return;
 		}
 
-		profileDao.get(selectedProfileId,function(err,profile){
-			if (err){
+		profileDao.get(selectedProfileId, function(err, profile) {
+			if (err) {
 				callback(err);
-				log.error('resolvePermissions',err);
-					return;
-			}
-			if (!profile){
-				callback(null,{});
+				log.error('resolvePermissions', err);
 				return;
 			}
-			log.silly('profile to resolve security',profile);
+			if (!profile) {
+				callback(null, {});
+				return;
+			}
+			log.silly('profile to resolve security', profile);
 
 			if (!('security' in profile)) {
-					callback(null,{});
+				callback(null, {});
 				return;
 			}
 			var permissions = {};
@@ -704,36 +714,33 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 						}
 					}
 				}
-				log.verbose('user permissions resolved',permissions);
-				callback(null, permissions,profile);
+				log.verbose('user permissions resolved', permissions);
+				callback(null, permissions, profile);
 				return;
 			}
 
-				groupDao.list({}, function(err, groups) {
-					if (err) {
-						callback(err);
-						return;
-					}
-					//resolve groups
-					for ( var gr in profile.security.groups) {
-						self.resolveGroupPermissions(profile.security.groups[gr].id, groups, permissions);
-					}
+			groupDao.list({}, function(err, groups) {
+				if (err) {
+					callback(err);
+					return;
+				}
+				//resolve groups
+				for ( var gr in profile.security.groups) {
+					self.resolveGroupPermissions(profile.security.groups[gr].id, groups, permissions);
+				}
 
-					//merge user rights
-					if (profile.security.permissions) {
-						for ( var per in profile.security.permissions) {
-							if (profile.security.permissions[per] === true) {
-								permissions[per] = true;
-							}
+				//merge user rights
+				if (profile.security.permissions) {
+					for ( var per in profile.security.permissions) {
+						if (profile.security.permissions[per] === true) {
+							permissions[per] = true;
 						}
 					}
-					log.verbose('profile permissions resolved',permissions);
-					callback(null, permissions,profile);
-				});
-
+				}
+				log.verbose('profile permissions resolved', permissions);
+				callback(null, permissions, profile);
+			});
 		});
-
-
 	};
 
 	function findGroup(groupId, groups) {
@@ -780,23 +787,16 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				return;
 			}
 			var user = data[0];
-			self.resolvePermissions(user,req.selectedProfileId, function(err, permissions) {
+			self.resolvePermissions(user, req.selectedProfileId, function(err, permissions) {
 				if (err) {
 					resp.status(500).send(err);
 					return;
 				}
-				log.verbose('getCurrentUser result',deflateUser(user,permissions));
-				resp.status(200).send(deflateUser(user,permissions));
+				log.verbose('getCurrentUser result', deflateUser(user, permissions));
+				resp.status(200).send(deflateUser(user, permissions));
 			});
 		});
 	};
-	/**
-	* Minimalistic version of user return
-	*/
-	function deflateUser(user,permissions){
-		log.silly(permissions);
-		return {id:user.id,systemCredentials:{login:{loginName:user.systemCredentials.login.loginName},permissions:permissions,profiles:user.systemCredentials.profiles||[]}};
-	}
 
 	this.verifyUserPassword = function(user, passwordSample, callback) {
 		if (!user) {
@@ -811,8 +811,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 				return;
 			}
 
-			if(!hashPass){
-				log.error('Failed to hash password for',user, passwordSample);
+			if(!hashPass) {
+				log.error('Failed to hash password for', user, passwordSample);
 				callback(new Error('Failed to hash password'));
 				return;
 			}
@@ -834,35 +834,13 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 		var now = new Date().getTime();
 		var token = {
-				_id : tokenId,
-				tokenId : tokenId,
-				userId : userId,
-				user : user,
-				ip : ip,
-				created : now,
-				valid : true,
-				touched : now,
-				rememberMe: rem
-		};
-
-		log.verbose('Storing security token', token);
-		tokenDao.save(token, callback);
-
-	};
-	
-	// Store a token for mobile
-	this.storeToken4Mobile = function(tokenId, userId, user, uuid, rem, callback) {
-
-		var now = new Date().getTime();
-		var token = {
-				_id : tokenId,
-				tokenId : tokenId,
-				userId : userId,
-				user : user,
-				uuid : uuid,
-				created : now,
-				valid : true,
-				touched : now,
+				tokenId: tokenId,
+				userId: userId,
+				user: user,
+				ip: ip,
+				created: now,
+				valid: true,
+				touched: now,
 				rememberMe: rem
 		};
 
@@ -873,15 +851,14 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.setCookies = function(resp, token, loginName, rem) {
 		resp.cookie(cfg.remCookie, rem, {
-			httpOnly : true,
-			secure : process.env.NODE_ENV != 'test'
+			httpOnly: false
 		});
 		resp.cookie(cfg.securityTokenCookie, token, {
-				httpOnly : true,
-				secure : process.env.NODE_ENV != 'test'
+				httpOnly: true,
+				secure: process.env.NODE_ENV != 'test'
 		});
 		resp.cookie(cfg.loginNameCookie, loginName, {
-			httpOnly : false
+			httpOnly: false
 		});
 		log.verbose('setCookies',loginName );
 	};
@@ -889,11 +866,11 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 	this.setProfileCookie = function(resp, profile) {
 
 		resp.cookie(cfg.profileCookie, profile, {
-				httpOnly : true,
-				secure : process.env.NODE_ENV != 'test'
+				httpOnly: true,
+				secure: process.env.NODE_ENV !== 'test'
 		});
 
-		log.verbose('setProfileCookie',profile );
+		log.verbose('setProfileCookie', profile );
 	};
 
 	/**
@@ -906,7 +883,7 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 		if (tokenId !== null) {
 
 			tokenDao.list({
-				crits : [ {
+				crits: [ {
 						op : 'eq',
 						v : tokenId,
 						f : cfg.tokenIdColumnName
@@ -930,7 +907,8 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 							}
 							resp.clearCookie(cfg.securityTokenCookie);
 							resp.clearCookie(cfg.loginNameCookie);
-							log.info('user log out ',token.user);
+							resp.clearCookie(cfg.remCookie);
+							log.info('user log out ', token.user);
 							resp.json();
 						});
 					} else {
@@ -1242,98 +1220,95 @@ var SecurityController = function(mongoDriver, schemaRegistry, options) {
 
 	this.authFilter = function(req, res, next) {
 
-		if(rem){
-			req.authenticated = true;
-			req.loginName = 'Administrator';
-			req.perm={};
-			var tokenId = req.cookies[cfg.securityTokenCookie];
-		} else {
-			req.authenticated = false;
-			req.loginName = 'Anonymous';
-			req.perm={};
-			var tokenId = req.cookies[cfg.securityTokenCookie];
+		req.authenticated = false;
+		req.loginName = 'Anonymous';
+		req.perm={};
+		var tokenId = req.cookies[cfg.securityTokenCookie];
 
-			log.silly('Cookies received', req.cookies);
+		log.silly('Cookies received', req.cookies);
 
-			if (tokenId !== null) {
-				log.debug('security token found', tokenId);
-				tokenDao.list({
-					crits : [ {
-						op : 'eq',
-						v : tokenId,
-						f : cfg.tokenIdColumnName
-					} ]
-				}, function(err, tokens) {
-					if (err) {
-						log.error('Failed to get data from DB', err);
-						next(err);
-						return;
+		if (tokenId !== null) {
+			log.debug('security token found', tokenId);
+			tokenDao.list({
+				crits : [ {
+					op : 'eq',
+					v : tokenId,
+					f : cfg.tokenIdColumnName
+				} ]
+			}, function(err, tokens) {
+				if (err) {
+					log.error('Failed to get data from DB', err);
+					next(err);
+					return;
+				}
+				if (tokens.length === 1) {
+					var token = tokens[0];
+					// TODO validate IP
+					var now = new Date().getTime();
+					var tokenExpiry = cfg.tokenExpiration;
+					// TODO if "Remember me" is true, set the token expiry to 0.
+					if(!req.cookies.rememberMe)  {
+						tokenExpiry = 0;
 					}
-					if (tokens.length === 1) {
-						var token = tokens[0];
-						// TODO validate IP
-						var now = new Date().getTime();
-						if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - cfg.tokenExpiration)) {
-							token.touched = now;
-							// TODO maybe some filtering for updates
-							tokenDao.update(token, function(err) {
-								if (err) {
-									log.debug('Failed to update security token in DB, sillently dropping', err);
+					
+					//if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - cfg.tokenExpiration)) {
+					if (token.valid && (req.headers['x-forwarded-for'] || req.ip) === token.ip && token.touched > (now - tokenExpiry)) {
+						token.touched = now;
+						// TODO maybe some filtering for updates
+						tokenDao.update(token, function(err) {
+							if (err) {
+								log.debug('Failed to update security token in DB, sillently dropping', err);
+							}
+						});
+
+						log.silly('Setting auth info to', token);
+						req.authenticated = true;
+						req.loginName = token.user;
+
+						userDao.get(token.userId, function(err, user) {
+							if (err||user===null) {
+								log.error(err);
+								next(err);
+								return;
+							}
+							req.currentUser=user;
+
+							user.systemCredentials.profiles.map(function(profileId){
+								if (profileId==req.cookies[cfg.profileCookie]) {
+									req.selectedProfileId = profileId;
 								}
+								log.debug('profile set to' , profileId);
 							});
 
-							log.silly('Setting auth info to', token);
-							req.authenticated = true;
-							req.loginName = token.user;
-
-							userDao.get(token.userId, function(err, user) {
-								if (err||user===null) {
+							self.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
+								if (err) {
 									log.error(err);
 									next(err);
 									return;
 								}
-								req.currentUser=user;
-
-								user.systemCredentials.profiles.map(function(profileId){
-									if (profileId==req.cookies[cfg.profileCookie]) {
-										req.selectedProfileId = profileId;
-									}
-									log.debug('profile set to' , profileId);
-								});
-
-								self.resolvePermissions(user,req.selectedProfileId, function(err, perm,profile) {
-									if (err) {
-										log.error(err);
-										next(err);
-										return;
-									}
-									req.perm = perm;
-									req.profile = profile;
-									next();
-								});
+								req.perm = perm;
+								req.profile = profile;
+								next();
 							});
+						});
 
-						} else {
-							log.debug('authFilter','Found token %s is not valid, removing cookies', tokenId, {});
-							res.clearCookie(cfg.securityTokenCookie);
-							res.clearCookie(cfg.loginNameCookie);
-							next();
-						}
-
-					}else {
+					} else {
+						log.debug('authFilter','Found token %s is not valid, removing cookies', tokenId, {});
+						res.clearCookie(cfg.securityTokenCookie);
+						res.clearCookie(cfg.loginNameCookie);
 						next();
 					}
 
-				});
-			} else {
-				log.debug('authFilter','no security token found');
-				next();
-			}
+				}else {
+					next();
+				}
 
-		};
-
+			});
+		} else {
+			log.debug('authFilter','no security token found');
+			next();
 		}
-		
+	}
 };
 
 module.exports = {

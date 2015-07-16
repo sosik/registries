@@ -43,10 +43,12 @@
 				}
 
 				if (schemaFragment.unique) {
-					console.log('');
-					// FIXME why do i need this definition? whay i cannot simply use whole object options in xpsui-schema
-					field.attr('xpsui-unique', schemaPath + '.unique');
+					field.attr('xpsui-unique', '');
 					field.attr('xpsui-validity-mark', '');
+
+					// FIXME why do i need this definition? whay i cannot simply use whole object options in xpsui-schema
+					//field.attr('xpsui-unique', schemaPath + '.unique');
+					
 					// @todo it is replaced with recursive function (from down to up)
 					// field.attr('psui-unique-id', options.modelPath+'.id');
 				}
@@ -207,6 +209,7 @@
 			// @todo schema root missing type property
 			// if (schemaFragment && schemaFragment.type) {
 			if (schemaFragment) {
+
 				// schema fragment has defined type
 				// @todo schema root missing type property
 				//if (schemaFragment.type === 'object') {
